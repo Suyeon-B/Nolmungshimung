@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import styled from "styled-components";
 
 function SignIn() {
   const [id, setId] = useState("");
@@ -28,151 +29,142 @@ function SignIn() {
       .then((res) => res.json())
       .then((res) => {
         console.log("res : ", res);
-        // if (res.success === true) {
-        //   console.log("Sign Up Success");
-        //   // window.location.href = /
-        // }
+        if (res.loginSuccess === true) {
+          console.log("Sign In Success");
+          window.location.href = "/";
+          // window.location.href = /
+        }
       })
       .catch((err) => console.log(`err: ${err}`));
   };
+  const onClickSignUp = () => {
+    window.location.href = "/signup";
+  };
+
   return (
-    <div
-      style={{
-        width: "100vw",
-        height: "100vh",
-        backgroundImage: "url(/statics/images/signUpBackground.png)",
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        flexDirection: "column",
-      }}
-    >
-      <img
-        alt=""
-        src="/statics/images/loginTitle.png"
-        style={{
-          width: "457.78px",
-          height: "175.58px",
-          position: "relative",
-          top: "20px",
-        }}
-      />
-      <div
-        style={{
-          backgroundColor: "white",
-          borderRadius: "15px",
-          boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-          width: "504px",
-          height: "577px",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-evenly",
-          position: "relative",
-        }}
-      >
-        <section style={{ display: "flex", justifyContent: "center" }}>
-          <button
-            style={{
-              width: "219px",
-              height: "86px",
-              background: "linear-gradient(90deg, #FF7A00 0%, #FFBD80 100%)",
-              borderRadius: "30px 0px 0px 30px",
-              border: "0",
-              fontFamily: "Rounded Mplus 1c Bold",
-              fontStyle: "normal",
-              fontWeight: " 700",
-              fontSize: "20px",
-              lineHeight: "45px",
-              color: "white",
-            }}
-          >
-            Log in
-          </button>
-          <button
-            style={{
-              width: "219px",
-              height: "86px",
-              background: "#EBEBEB",
-              borderRadius: "0px 30px 30px 0px",
-              border: "0",
-              fontFamily: "Rounded Mplus 1c Bold",
-              fontStyle: "normal",
-              fontWeight: " 700",
-              fontSize: "20px",
-              lineHeight: "45px",
-              color: "#4A4A4A",
-            }}
-          >
-            Sign Up
-          </button>
-        </section>
-        <form
-          onSubmit={onSubmitSignUp}
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "white",
-          }}
-        >
-          <input
+    <Container>
+      <Title alt="" src="/statics/images/loginTitle.png" />
+      <Box>
+        <Btns>
+          <LogInBtn>Log in</LogInBtn>
+          <SignUpBtn onClick={onClickSignUp}>Sign Up</SignUpBtn>
+        </Btns>
+        <Form onSubmit={onSubmitSignUp}>
+          <Input
             placeholder="jeju@island.com"
             type="text"
             value={id}
             onChange={onchangeId}
             required
-            style={{
-              width: "420px",
-              height: "64px",
-              borderRadius: "30px",
-              background: "#EBEBEB",
-              border: "0",
-              paddingLeft: "20px",
-              marginTop: "15px",
-            }}
           />
-          <input
+          <Input
             placeholder="password"
             type="pass"
             value={password}
             onChange={onchangePassword}
             required
-            style={{
-              width: "420px",
-              height: "64px",
-              borderRadius: "30px",
-              background: "#EBEBEB",
-              border: "0",
-              paddingLeft: "20px",
-              marginTop: "15px",
-            }}
           />
-          <input
-            value="로그인"
-            type="submit"
-            style={{
-              width: "440px",
-              height: "64px",
-              borderRadius: "30px",
-              background:
-                "linear-gradient(90deg, #FF7A00 0%, #FFA149 50%, #FEBC7F 100%)",
-              border: "0",
-              fontFamily: "Rounded Mplus 1c Bold",
-              fontStyle: "normal",
-              fontWeight: " 700",
-              fontSize: "20px",
-              lineHeight: "45px",
-              color: "white",
-              marginTop: "15px",
-            }}
-          />
-        </form>
-      </div>
-    </div>
+          <SubmitInput value="로그인" type="submit" />
+        </Form>
+      </Box>
+    </Container>
   );
 }
 
+const Container = styled.div`
+  width: 100vw;
+  height: 100vh;
+  background-image: url(/statics/images/signUpBackground.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+`;
+
+const Title = styled.img`
+  width: 457.78px;
+  height: 175.58px;
+  position: relative;
+  top: 20px;
+`;
+
+const Box = styled.div`
+  background-color: white;
+  border-radius: 15px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  width: 504px;
+  height: 577px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  position: relative;
+`;
+
+const Btns = styled.section`
+  display: flex;
+  justify-content: center;
+`;
+
+const LogInBtn = styled.button`
+  width: 219px;
+  height: 86px;
+  background: linear-gradient(90deg, #ff7a00 0%, #ffbd80 100%);
+  border-radius: 30px 0px 0px 30px;
+  border: 0;
+  font-family: Rounded Mplus 1c Bold;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 45px;
+  color: white;
+`;
+
+const SignUpBtn = styled.button`
+  width: 219px;
+  height: 86px;
+  background: #ebebeb;
+  border-radius: 0px 30px 30px 0px;
+  border: 0;
+  font-family: Rounded Mplus 1c Bold;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 45px;
+  color: #4a4a4a;
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
+
+const Input = styled.input`
+  width: 420px;
+  height: 64px;
+  border-radius: 30px;
+  background: #ebebeb;
+  padding: 20px;
+  border: 0;
+  paddingleft: 20px;
+  margin-top: 15px;
+`;
+
+const SubmitInput = styled.input`
+  width: 440px;
+  height: 64px;
+  border-radius: 30px;
+  background: linear-gradient(90deg, #ff7a00 0%, #ffa149 50%, #febc7f 100%);
+  border: 0;
+  font-family: Rounded Mplus 1c Bold;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 45px;
+  color: white;
+  margin-top: 15px;
+`;
 export default SignIn;
