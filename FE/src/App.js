@@ -13,10 +13,13 @@ import PlanSideBar from "./components/PlanSideBar";
 import CreateProject from "./components/CreateProject";
 import "./App.css";
 import "./reset.css";
+import { QueryClient, QueryClientProvider } from "react-query";
+
+const queryClient = new QueryClient(); // 인스턴스 생성
 
 function App() {
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -28,7 +31,7 @@ function App() {
       {/* <Home />
       <SignIn />
       <SignUp /> */}
-    </>
+    </QueryClientProvider>
   );
 }
 

@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { useMutation } from "react-query";
+import { useNavigate } from "react-router-dom";
 
 function SignUp() {
+  let navigate = useNavigate();
   const [id, setId] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
@@ -20,6 +23,29 @@ function SignUp() {
     setConfirmPassword(event.target.value);
   };
 
+  const { isLoading, isError, error, mutate } = useMutation(singUpUser, {
+    retry: 1,
+  });
+
+  async function singUpUser(data) {
+    await fetch("http://localhost:8443/users/signup", {
+      method: "post",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(data),
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        console.log("res : ", res);
+        if (res.success === true) {
+          console.log("Sign Up Success");
+          navigate("/signin", { replace: true });
+        }
+      })
+      .catch((err) => console.log(`err: ${err}`));
+  }
+
   const onSubmitSignUp = (event) => {
     if (password !== confirmPassword) {
       alert("비밀번호 똑바로 ㅇㅂ력해라");
@@ -34,27 +60,10 @@ function SignUp() {
     console.log(`id : ${id}`);
     console.log(`name : ${name}`);
     console.log(`password : ${password}`);
-
-    fetch("http://localhost:8443/users/signup", {
-      method: "post",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(userForm),
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        console.log("res : ", res);
-        if (res.success === true) {
-          console.log("Sign Up Success");
-          window.location.href = "/signin";
-          // window.location.href = /
-        }
-      })
-      .catch((err) => console.log(`err: ${err}`));
+    mutate(userForm);
   };
   const onClickSignIn = () => {
-    window.location.href = "/signin";
+    navigate("/signin", { replace: true });
   };
   return (
     <Container>

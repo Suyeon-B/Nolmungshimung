@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { useMutation } from "react-query";
+import { useNavigate } from "react-router-dom";
 
 function SignIn() {
+  let navigate = useNavigate();
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const onchangeId = (event) => {
@@ -10,35 +13,41 @@ function SignIn() {
   const onchangePassword = (event) => {
     setPassword(event.target.value);
   };
-  const onSubmitSignUp = (event) => {
-    event.preventDefault();
-    // console.log(`id :${id}`);
-    // console.log(`password :${password}`);
-    // signin
-    let userForm = {
-      userEmail: id,
-      userPwd: password,
-    };
-    fetch("http://localhost:8443/users/signin", {
+  const { isLoading, isError, error, mutate } = useMutation(singInUser, {
+    retry: 1,
+  });
+
+  async function singInUser(data) {
+    await fetch("http://localhost:8443/users/signin", {
       method: "post",
       headers: {
         "content-type": "application/json",
       },
-      body: JSON.stringify(userForm),
+      body: JSON.stringify(data),
     })
       .then((res) => res.json())
       .then((res) => {
         console.log("res : ", res);
         if (res.loginSuccess === true) {
           console.log("Sign In Success");
-          window.location.href = "/";
+          // window.location.href = "/";
+          navigate("/", { replace: true });
           // window.location.href = /
         }
       })
       .catch((err) => console.log(`err: ${err}`));
+  }
+  const onSubmitSignUp = (event) => {
+    event.preventDefault();
+    let userForm = {
+      userEmail: id,
+      userPwd: password,
+    };
+    mutate(userForm);
   };
   const onClickSignUp = () => {
-    window.location.href = "/signup";
+    // window.location.href = "/signup";
+    navigate("/signup", { replace: true });
   };
 
   return (
