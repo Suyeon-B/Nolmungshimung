@@ -53,9 +53,9 @@ function SignUp() {
     event.preventDefault();
 
     let userForm = {
-      userEmail: id,
-      userNickName: name,
-      userPwd: password,
+      user_email: id,
+      user_name: name,
+      password: password,
     };
     console.log(`id : ${id}`);
     console.log(`name : ${name}`);

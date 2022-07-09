@@ -33,6 +33,8 @@ function SignIn() {
           // window.location.href = "/";
           navigate("/", { replace: true });
           // window.location.href = /
+          document.cookie = "myToken=" + res.token;
+          sessionStorage.setItem("myEmail", res.user_email);
         }
       })
       .catch((err) => console.log(`err: ${err}`));
@@ -40,8 +42,8 @@ function SignIn() {
   const onSubmitSignUp = (event) => {
     event.preventDefault();
     let userForm = {
-      userEmail: id,
-      userPwd: password,
+      user_email: id,
+      password: password,
     };
     mutate(userForm);
   };
