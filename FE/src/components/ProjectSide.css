@@ -1,7 +1,88 @@
 .side_bar {
-  width: 100px;
+  width: 288px;
   height: 100vh;
+  /* padding-top: 60px; */
   /* justify-content: center; */
   /* padding: 0px; */
   background-color: aqua;
+}
+.plan_title {
+  display: inline-flex;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 48px;
+
+  color: #000000;
+}
+.plan_title_wrapper {
+  display: flex;
+  background-color: blue;
+  justify-content: space-around;
+  align-items: center;
+}
+.side_button_div {
+  display: flex;
+  width: 288px;
+  height: 50px;
+  background-color: bisque;
+  justify-content: center;
+  align-items: center;
+}
+.side_plan_list_div {
+  height: 70%;
+  background-color: blueviolet;
+}
+
+.trip_title_input {
+  position: absolute;
+  width: 499px;
+  height: 80px;
+  left: 555px;
+  top: 200px;
+  box-shadow: inset 2px 4px 4px rgba(0, 0, 0, 0.25);
+  font-style: normal;
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 71px;
+  text-align: center;
+  color: #7d7a7a;
+
+  background: #ffffff;
+  border-radius: 10px;
+}
+.trip_calendar_select_div {
+  display: flex;
+  justify-content: space-evenly;
+
+  position: absolute;
+  width: 614px;
+  height: 100px;
+  left: 497px;
+  top: 300px;
+  background: #ffffff;
+
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  border-radius: 10px;
+}
+
+.trip_calendar_select_btn {
+  display: flex;
+  background: #ffffff;
+  border: 0px;
+  align-items: center;
+}
+.trip_calendar_select_span {
+  margin-left: 10px;
+}
+
+.line {
+  position: absolute;
+  width: 96px;
+  height: 0px;
+  /* left: 806px;
+  top: 307px; */
+
+  border: 1px solid #000000;
+  transform: rotate(90deg);
 }

@@ -11,18 +11,19 @@ function Logo() {
     />
   );
 }
-const items = [
-  {
-    key: "2",
-    label: <Logo />,
-    title: "logo",
-    style: {
-      height: "70px",
-    },
-    onClick: () => {
-      alert("logo");
-    },
+const LogoObj = {
+  key: "2",
+  label: <Logo />,
+  title: "logo",
+  style: {
+    height: "70px",
   },
+  onClick: () => {
+    alert("logo");
+  },
+};
+
+const items = [
   {
     key: "3",
     label: "테스트",
@@ -31,6 +32,7 @@ const items = [
     },
   },
 ];
+
 function ProjectSide() {
   return (
     <Menu
@@ -43,7 +45,7 @@ function ProjectSide() {
         justifyContent: "center",
         padding: "0px",
       }}
-      items={items}
+      items={[LogoObj, ...items]}
     />
   );
 }
