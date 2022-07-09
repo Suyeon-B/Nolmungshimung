@@ -50,6 +50,7 @@ function SignIn() {
       }}
     >
       <img
+        alt=""
         src="/statics/images/loginTitle.png"
         style={{
           width: "457.78px",

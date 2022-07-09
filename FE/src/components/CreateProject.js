@@ -6,7 +6,20 @@ import "./ProjectSide.css";
 const ProjectMake = () => {
   const [value, onChange] = useState(new Date());
   return (
-    <div>
+    <div
+      className="create_project_div"
+      style={{
+        width: "100vw",
+        height: "100vh",
+        backgroundImage: "url(/statics/images/signUpBackground.png)",
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
+      }}
+    >
       <input
         className="trip_title_input"
         placeholder="여행제목을 입력해주세요"
