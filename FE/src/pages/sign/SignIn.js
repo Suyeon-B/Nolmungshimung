@@ -34,7 +34,7 @@ function SignIn() {
           navigate("/", { replace: true });
           // window.location.href = /
           document.cookie = "myToken=" + res.token;
-          sessionStorage.setItem("myEmail", res.user_email);
+          sessionStorage.setItem("myName", res.user_name);
         }
       })
       .catch((err) => console.log(`err: ${err}`));
