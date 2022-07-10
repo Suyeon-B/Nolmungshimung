@@ -1,45 +1,185 @@
 import React, { useState } from "react";
 import Calendar from "react-calendar";
+import styled from "styled-components";
 import "react-calendar/dist/Calendar.css"; // css import
 import "./ProjectSide.css";
 
-const ProjectMake = () => {
+const PageContainer = styled.div`
+  width: 100vw;
+  height: 100vh;
+  background-image: url(statics/images/signUpBackground.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+`;
+const TitleInput = styled.input`
+  position: absolute;
+  width: 499px;
+  height: 80px;
+  left: 555px;
+  top: 200px;
+  box-shadow: inset 2px 4px 4px rgba(0, 0, 0, 0.25);
+  font-style: normal;
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 71px;
+  text-align: center;
+  color: #7d7a7a;
+
+  background: #ffffff;
+  border-radius: 10px;
+`;
+const CalendarBtnContainer = styled.div`
+  display: flex;
+  justify-content: space-evenly;
+
+  position: absolute;
+  width: 614px;
+  height: 100px;
+  left: 497px;
+  top: 300px;
+  background: #ffffff;
+
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  border-radius: 10px;
+`;
+const CalendarBtn = styled.div`
+  display: flex;
+  background: #ffffff;
+  border: 0px;
+  align-items: center;
+`;
+const CalendarBtnDay = styled.span`
+  margin-left: 20px;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 28px;
+  line-height: 48px;
+  /* identical to box height */
+
+  color: #7d7a7a;
+`;
+const CalendarContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  // width: 614px;
+  // height: 100px;
+  left: 497px;
+  top: 403px;
+`;
+const CreateProjectSubmit = styled.button`
+  position: absolute;
+  width: 220px;
+  left: 1124px;
+  top: 321px;
+  font-size: 30px;
+`;
+
+const setDay = (value) => {
+  const days = ["일", "월", "화", "수", "목", "금", "토"];
+
+  return [
+    value.getFullYear(),
+    value.getMonth() + 1,
+    value.getDate(),
+    value.getDay(),
+  ];
+};
+
+const CreateProject = () => {
+  const [projectTitle, setProjectTitle] = useState("");
+  const [showStartBtn, setShowStartBtn] = useState(false);
+  const [showEndtBtn, setShowEndtBtn] = useState(false);
   const [value, onChange] = useState(new Date());
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+
+  const settedStartDate = (value) => {
+    setStartDate(setDay(value));
+  };
+  const settedEndDate = (value) => {
+    setEndDate(setDay(value));
+  };
+  const onChangeProjectTitle = (event) => {
+    setProjectTitle(event.target.value);
+  };
+  const onSubmit = (event) => {
+    event.preventDefault();
+    if (projectTitle === "") {
+      alert("여행 제목을 입력해주세요");
+      return;
+    }
+    if (!startDate || !endDate) {
+      alert("여행 일정을 선택해주세요");
+      return;
+    }
+    let sDate = new Date(startDate[0], startDate[1], startDate[2]).getTime();
+    let eDate = new Date(endDate[0], endDate[1], endDate[2]).getTime();
+
+    let term = (eDate - sDate) / (1000 * 60 * 60 * 24);
+    const project = {
+      project_title: projectTitle,
+      start_date: startDate,
+      end_date: endDate,
+      term,
+    };
+
+    fetch("http://localhost:8443/projects", {
+      method: "post",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(project),
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
-    <div
-      className="create_project_div"
-      style={{
-        width: "100vw",
-        height: "100vh",
-        backgroundImage: "url(/statics/images/signUpBackground.png)",
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        flexDirection: "column",
-      }}
-    >
-      <input
-        className="trip_title_input"
-        placeholder="여행제목을 입력해주세요"
-      />
-      <div className="trip_calendar_select_div">
-        <button className="trip_calendar_select_btn">
-          <img width={"50px"} alt="" src="/statics/images/calender_start.png" />
-          <span className="trip_calendar_select_span">여행 시작 날짜</span>
-        </button>
-        {/* <span className="line"></span> */}
-        <button className="trip_calendar_select_btn">
-          <img width={"50px"} alt="" src="/statics/images/calender_end.png" />
-          <span className="trip_calendar_select_span">여행 종료 날짜</span>
-        </button>
-      </div>
-      <div>
-        <Calendar onChange={onChange} value={value} />
-      </div>
-    </div>
+    <PageContainer>
+      <form onSubmit={onSubmit}>
+        <TitleInput
+          placeholder="여행 제목을 입력해주세요"
+          value={projectTitle}
+          onChange={onChangeProjectTitle}
+        />
+        <CalendarBtnContainer>
+          <CalendarBtn onClick={() => setShowStartBtn(!showStartBtn)}>
+            <img
+              width={"50px"}
+              alt=""
+              src="/statics/images/calender_start.png"
+            />
+            <CalendarBtnDay>
+              {startDate
+                ? `${startDate[1]}월 ${startDate[2]}일`
+                : "여행 시작 날짜"}
+            </CalendarBtnDay>
+          </CalendarBtn>
+          <CalendarBtn onClick={() => setShowEndtBtn(!showEndtBtn)}>
+            <img width={"50px"} alt="" src="/statics/images/calender_end.png" />
+            <CalendarBtnDay>
+              {endDate ? `${endDate[1]}월 ${endDate[2]}일` : "여행 종료 날짜"}
+            </CalendarBtnDay>
+          </CalendarBtn>
+        </CalendarBtnContainer>
+        <CreateProjectSubmit type="submit">프로젝트 생성</CreateProjectSubmit>
+        <CalendarContainer>
+          {showStartBtn && (
+            <Calendar onChange={settedStartDate} value={value} />
+          )}
+          {showEndtBtn && <Calendar onChange={settedEndDate} value={value} />}
+        </CalendarContainer>
+      </form>
+    </PageContainer>
   );
 };
 
-export default ProjectMake;
+export default CreateProject;
