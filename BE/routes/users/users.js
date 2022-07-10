@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { User } = require(__base + "models/User");
+const { auth } = require("../../middleware/auth");
 // const { signupMail } = require(__base + "utils/mail");
 
 //=================================
@@ -204,15 +205,13 @@ router.post("/signout", (req, res) => {
   );
 });
 
-router.get("/auth", (req, res) => {
+router.get("/auth", auth, (req, res) => {
   // console.log('req.user : ' + req.user)
   res.status(200).json({
     _id: req.user._id,
-    isAdmin: req.user.userRole === 2 ? true : false,
-    isAuth: true,
     user_email: req.user.user_email,
     user_name: req.user.user_name,
-    userRole: req.user.userRole,
+    isAuth: true,
   });
 });
 

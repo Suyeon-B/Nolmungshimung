@@ -2,11 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 function ButtonGo(props) {
-  return (
-    <Button onClick={props.onClickGo}>
-      <Text>🍊{props.name}</Text>
-    </Button>
-  );
+  return <Button onClick={props.onClickGo}>🍊{props.name}</Button>;
 }
 
 const Button = styled.button`
@@ -21,9 +17,6 @@ const Button = styled.button`
   border-radius: 30px;
   border: 0;
   cursor: pointer;
-`;
-
-const Text = styled.text`
   font-family: "Rounded Mplus 1c Bold";
   font-style: normal;
   font-weight: 700;
