@@ -93,32 +93,50 @@ const setDay = (value) => {
 };
 
 const CreateProject = () => {
-  const [tripTitle, setTripTitle] = useState("");
+  const [projectTitle, setProjectTitle] = useState("");
   const [showStartBtn, setShowStartBtn] = useState(false);
   const [showEndtBtn, setShowEndtBtn] = useState(false);
   const [value, onChange] = useState(new Date());
-  const [startDay, setStartDay] = useState(null);
-  const [endDay, setEndDay] = useState(null);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
 
-  const settedStartDay = (value) => {
-    setStartDay(setDay(value));
+  const settedStartDate = (value) => {
+    setStartDate(setDay(value));
   };
-  const settedEndDay = (value) => {
-    setEndDay(setDay(value));
+  const settedEndDate = (value) => {
+    setEndDate(setDay(value));
   };
-  const onChangeTripTitle = (event) => {
-    setTripTitle(event.target.value);
+  const onChangeProjectTitle = (event) => {
+    setProjectTitle(event.target.value);
   };
   const onSubmit = (event) => {
     event.preventDefault();
-    if (tripTitle === "") {
+    if (projectTitle === "") {
       alert("여행 제목을 입력해주세요");
       return;
     }
-    if (!startDay || !endDay) {
+    if (!startDate || !endDate) {
       alert("여행 일정을 선택해주세요");
       return;
     }
+    const project = {
+      project_title: projectTitle,
+      start_date: startDate,
+      end_date: endDate,
+    };
+
+    fetch("http://localhost:8443/projects", {
+      method: "post",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(project),
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -126,8 +144,8 @@ const CreateProject = () => {
       <form onSubmit={onSubmit}>
         <TitleInput
           placeholder="여행 제목을 입력해주세요"
-          value={tripTitle}
-          onChange={onChangeTripTitle}
+          value={projectTitle}
+          onChange={onChangeProjectTitle}
         />
         <CalendarBtnContainer>
           <CalendarBtn onClick={() => setShowStartBtn(!showStartBtn)}>
@@ -137,22 +155,24 @@ const CreateProject = () => {
               src="/statics/images/calender_start.png"
             />
             <CalendarBtnDay>
-              {startDay
-                ? `${startDay[1]}월 ${startDay[2]}일`
+              {startDate
+                ? `${startDate[1]}월 ${startDate[2]}일`
                 : "여행 시작 날짜"}
             </CalendarBtnDay>
           </CalendarBtn>
           <CalendarBtn onClick={() => setShowEndtBtn(!showEndtBtn)}>
             <img width={"50px"} alt="" src="/statics/images/calender_end.png" />
             <CalendarBtnDay>
-              {endDay ? `${endDay[1]}월 ${endDay[2]}일` : "여행 종료 날짜"}
+              {endDate ? `${endDate[1]}월 ${endDate[2]}일` : "여행 종료 날짜"}
             </CalendarBtnDay>
           </CalendarBtn>
         </CalendarBtnContainer>
-        <CreateProjectSubmit type="submit">"프로젝트 생성"</CreateProjectSubmit>
+        <CreateProjectSubmit type="submit">프로젝트 생성</CreateProjectSubmit>
         <CalendarContainer>
-          {showStartBtn && <Calendar onChange={settedStartDay} value={value} />}
-          {showEndtBtn && <Calendar onChange={settedEndDay} value={value} />}
+          {showStartBtn && (
+            <Calendar onChange={settedStartDate} value={value} />
+          )}
+          {showEndtBtn && <Calendar onChange={settedEndDate} value={value} />}
         </CalendarContainer>
       </form>
     </PageContainer>

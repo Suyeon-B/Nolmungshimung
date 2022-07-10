@@ -13,7 +13,7 @@ import "./reset.css";
 function App() {
   return (
     <>
-      <CreateProject />
+      {/* <CreateProject /> */}
       {/* <div style={{ display: "flex" }}>
         <ProjectSide />
         <PlanSideBar />
@@ -24,6 +24,7 @@ function App() {
           <Route exact path="/" element={<Home />} />
           <Route path="signin/*" element={<SignIn />} />
           <Route path="signup/*" element={<SignUp />} />
+          <Route path="project/*" element={<CreateProject />} />
         </Routes>
       </Router>
     </>
