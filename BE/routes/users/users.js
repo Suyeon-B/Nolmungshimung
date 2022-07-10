@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { User } = require(__base + "models/User");
+const { auth } = require("../../middleware/auth");
 // const { signupMail } = require(__base + "utils/mail");
 
 //=================================
@@ -172,14 +173,13 @@ router.post("/signin", (req, res) => {
             message: "토큰 생성에 실패했습니다.",
           });
         }
-
+        // console.log("res : ", res.cookie);
         res.cookie("w_refresh", user.userRefreshToken);
         res.cookie("w_access", user.userAccessToken).status(200).json({
           loginSuccess: true,
           user_email: user.user_email,
           user_name: user.user_name,
           message: "성공적으로 로그인했습니다.",
-          token: user.userAccessToken,
         });
       });
     });
@@ -205,15 +205,13 @@ router.post("/signout", (req, res) => {
   );
 });
 
-router.get("/auth", (req, res) => {
+router.get("/auth", auth, (req, res) => {
   // console.log('req.user : ' + req.user)
   res.status(200).json({
     _id: req.user._id,
-    isAdmin: req.user.userRole === 2 ? true : false,
-    isAuth: true,
     user_email: req.user.user_email,
     user_name: req.user.user_name,
-    userRole: req.user.userRole,
+    isAuth: true,
   });
 });
 

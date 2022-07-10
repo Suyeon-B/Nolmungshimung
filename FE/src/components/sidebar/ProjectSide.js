@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
 const StyledMenu = styled(Menu)`
-  position: absolute;
+  // position: absolute;
   width: 100px;
   height: 100vh;
   justify-content: center;

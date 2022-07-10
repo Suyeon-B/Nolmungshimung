@@ -49,44 +49,45 @@ app.use("/travel", travelRouter);
 app.use("/common", commonRouter);
 
 // [수연][TextEditor] socket io 작업 | line 51~90
-const mongoose = require("mongoose");
-const Document = require("./models/Document");
+// const mongoose = require("mongoose");
+// const Document = require("./models/Document");
 
 // mongoose
-//   .connect("mongodb+srv://tndus4243:내비번이지롱@jungle.j4qlpgi.mongodb.net/?retryWrites=true&w=majority")
+//   //   .connect("mongodb+srv://tndus4243:내비번이지롱@jungle.j4qlpgi.mongodb.net/?retryWrites=true&w=majority")
+//   .connect("mongodb://localhost/shareMemo")
 //   .then(() => console.log("MongoDB Connected..."))
 //   .catch((err) => console.log(`connect err : ${err}`));
 
-const io = require("socket.io")(3001, {
-  cors: {
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST"],
-  },
-});
+// const io = require("socket.io")(3001, {
+//   cors: {
+//     origin: "http://localhost:3000",
+//     methods: ["GET", "POST"],
+//   },
+// });
 
-const defaultValue = "";
+// const defaultValue = "";
 
-io.on("connection", (socket) => {
-  socket.on("get-document", async (documentID) => {
-    const document = await findOrCreateDocument(documentID);
-    socket.join(documentID);
-    socket.emit("load-document", document.data);
+// io.on("connection", (socket) => {
+//   socket.on("get-document", async (documentID) => {
+//     const document = await findOrCreateDocument(documentID);
+//     socket.join(documentID);
+//     socket.emit("load-document", document.data);
 
-    socket.on("send-changes", (delta) => {
-      socket.broadcast.to(documentID).emit("receive-changes", delta);
-    });
+//     socket.on("send-changes", (delta) => {
+//       socket.broadcast.to(documentID).emit("receive-changes", delta);
+//     });
 
-    socket.on("save-document", async (data) => {
-      await Document.findByIdAndUpdate(documentID, { data });
-    });
-  });
-});
+//     socket.on("save-document", async (data) => {
+//       await Document.findByIdAndUpdate(documentID, { data });
+//     });
+//   });
+// });
 
-async function findOrCreateDocument(id) {
-  if (id == null) return;
-  const document = await Document.findById(id);
-  if (document) return document;
-  return await Document.create({ _id: id, data: defaultValue });
-}
+// async function findOrCreateDocument(id) {
+//   if (id == null) return;
+//   const document = await Document.findById(id);
+//   if (document) return document;
+//   return await Document.create({ _id: id, data: defaultValue });
+// }
 
 module.exports = app;
