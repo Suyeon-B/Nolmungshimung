@@ -119,10 +119,15 @@ const CreateProject = () => {
       alert("여행 일정을 선택해주세요");
       return;
     }
+    let sDate = new Date(startDate[0], startDate[1], startDate[2]).getTime();
+    let eDate = new Date(endDate[0], endDate[1], endDate[2]).getTime();
+
+    let term = (eDate - sDate) / (1000 * 60 * 60 * 24);
     const project = {
       project_title: projectTitle,
       start_date: startDate,
       end_date: endDate,
+      term,
     };
 
     fetch("http://localhost:8443/projects", {
