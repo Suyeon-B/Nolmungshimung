@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import "../ProjectSide.css";
 import { Layout, Menu } from "antd";
 import styled from "styled-components";
 import { useNavigate, Link } from "react-router-dom";

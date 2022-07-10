@@ -39,6 +39,7 @@ function SignIn() {
       })
       .catch((err) => console.log(`err: ${err}`));
   }
+
   const onSubmitSignUp = (event) => {
     event.preventDefault();
     let userForm = {
