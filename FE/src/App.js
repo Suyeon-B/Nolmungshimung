@@ -18,6 +18,7 @@ import styled from "styled-components";
 import "./App.css";
 import "./reset.css";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { AuthProvider, RequireAuth } from "./components/auth/Auth";
 
 const queryClient = new QueryClient(); // 인스턴스 생성
 const BodyDiv = styled.div`
