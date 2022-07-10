@@ -22,10 +22,12 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
+        <ProjectSide />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="signin/*" element={<SignIn />} />
           <Route path="signup/*" element={<SignUp />} />
+          <Route path="project/*" element={<CreateProject />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Router>

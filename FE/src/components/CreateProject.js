@@ -15,7 +15,6 @@ const PageContainer = styled.div`
   align-items: center;
   flex-direction: column;
 `;
-
 const TitleInput = styled.input`
   position: absolute;
   width: 499px;
@@ -63,7 +62,6 @@ const CalendarBtnDay = styled.span`
 
   color: #7d7a7a;
 `;
-
 const CalendarContainer = styled.div`
   display: flex;
   flex-direction: row;
