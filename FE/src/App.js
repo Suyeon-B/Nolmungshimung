@@ -8,8 +8,8 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import ProjectSide from "./components/ProjectSide";
-import PlanSideBar from "./components/PlanSideBar";
+import ProjectSide from "./components/sidebar/ProjectSide";
+import PlanSideBar from "./components/sidebar/PlanSideBar";
 import CreateProject from "./components/CreateProject";
 
 import "./App.css";
