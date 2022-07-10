@@ -13,6 +13,7 @@ import {
 import ProjectSide from "./components/sidebar/ProjectSide";
 import PlanSideBar from "./components/sidebar/PlanSideBar";
 import CreateProject from "./components/CreateProject";
+import SpotList from "./components/SpotList";
 import styled from "styled-components";
 
 import "./App.css";
@@ -39,6 +40,7 @@ function App() {
               <Route path="signup/*" element={<SignUp />} />
               <Route path="shareMemo/*" element={<Editor />} />
               <Route path="project/*" element={<CreateProject />} />
+              <Route path="hyuk/*" element={<SpotList />} />
               {/* 로그인안했을시 로그인 페이지로 이동 */}
               <Route
                 path="search/*"
