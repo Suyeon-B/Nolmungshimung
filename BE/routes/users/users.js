@@ -172,14 +172,13 @@ router.post("/signin", (req, res) => {
             message: "토큰 생성에 실패했습니다.",
           });
         }
-
+        // console.log("res : ", res.cookie);
         res.cookie("w_refresh", user.userRefreshToken);
         res.cookie("w_access", user.userAccessToken).status(200).json({
           loginSuccess: true,
           user_email: user.user_email,
           user_name: user.user_name,
           message: "성공적으로 로그인했습니다.",
-          token: user.userAccessToken,
         });
       });
     });

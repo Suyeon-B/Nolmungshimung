@@ -23,6 +23,7 @@ function SignIn() {
       headers: {
         "content-type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify(data),
     })
       .then((res) => res.json())
@@ -30,10 +31,7 @@ function SignIn() {
         console.log("res : ", res);
         if (res.loginSuccess === true) {
           console.log("Sign In Success");
-          // window.location.href = "/";
           navigate("/", { replace: true });
-          // window.location.href = /
-          document.cookie = "myToken=" + res.token;
           sessionStorage.setItem("myName", res.user_name);
         }
       })
