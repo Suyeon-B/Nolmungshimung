@@ -13,27 +13,34 @@ import {
 import ProjectSide from "./components/sidebar/ProjectSide";
 import PlanSideBar from "./components/sidebar/PlanSideBar";
 import CreateProject from "./components/CreateProject";
+import styled from "styled-components";
 
 import "./App.css";
 import "./reset.css";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 const queryClient = new QueryClient(); // 인스턴스 생성
-
+const BodyDiv = styled.div`
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+`;
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
-        <ProjectSide />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="signin/*" element={<SignIn />} />
-          <Route path="signup/*" element={<SignUp />} />
-          <Route path="shareMemo/*" element={<Editor />} />
-          <Route path="project/*" element={<CreateProject />} />
-          <Route path="search/*" element={<SearchMap />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+        <BodyDiv>
+          <ProjectSide />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="signin/*" element={<SignIn />} />
+            <Route path="signup/*" element={<SignUp />} />
+            <Route path="shareMemo/*" element={<Editor />} />
+            <Route path="project/*" element={<CreateProject />} />
+            <Route path="search/*" element={<SearchMap />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </BodyDiv>
       </Router>
     </QueryClientProvider>
   );
