@@ -3,6 +3,7 @@ import SignUp from "./pages/sign/SignUp";
 import SignIn from "./pages/sign/SignIn";
 import SearchMap from "./pages/search/Search";
 import Home from "./pages/Home";
+import Editor from "./pages/shareMemo/shareMemo";
 import {
   BrowserRouter as Router,
   Routes,
@@ -28,14 +29,12 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="signin/*" element={<SignIn />} />
           <Route path="signup/*" element={<SignUp />} />
+          <Route path="shareMemo/*" element={<Editor />} />
           <Route path="project/*" element={<CreateProject />} />
           <Route path="search/*" element={<SearchMap />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Router>
-      {/* <Home />
-      <SignIn />
-      <SignUp /> */}
     </QueryClientProvider>
   );
 }
