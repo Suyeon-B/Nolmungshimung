@@ -29,20 +29,30 @@ const BodyDiv = styled.div`
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Router>
-        <BodyDiv>
-          <ProjectSide />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="signin/*" element={<SignIn />} />
-            <Route path="signup/*" element={<SignUp />} />
-            <Route path="shareMemo/*" element={<Editor />} />
-            <Route path="project/*" element={<CreateProject />} />
-            <Route path="search/*" element={<SearchMap />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </BodyDiv>
-      </Router>
+      <AuthProvider>
+        <Router>
+          <BodyDiv>
+            <ProjectSide />
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="signin/*" element={<SignIn />} />
+              <Route path="signup/*" element={<SignUp />} />
+              <Route path="shareMemo/*" element={<Editor />} />
+              <Route path="project/*" element={<CreateProject />} />
+              {/* 로그인안했을시 로그인 페이지로 이동 */}
+              <Route
+                path="search/*"
+                element={
+                  <RequireAuth>
+                    <SearchMap />
+                  </RequireAuth>
+                }
+              />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </BodyDiv>
+        </Router>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

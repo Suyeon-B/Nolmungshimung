@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import ProjectSide from "../components/ProjectSide";
 import ButtonGo from "../atomics/ButtonGo";
 import { useNavigate } from "react-router-dom";
 
@@ -14,7 +13,6 @@ function Home() {
   };
   return (
     <Container>
-      <ProjectSide />
       <Main />
       <Section>
         <ButtonGo name="나만의 계획 만들기" onClickGo={goSignIn} />
@@ -30,7 +28,7 @@ const Container = styled.div`
 `;
 
 const Main = styled.div`
-  width: 78vw;
+  width: calc(80% - 20px);
   height: 100vh;
   background-image: url(/statics/images/main.png);
   background-size: cover;
