@@ -4,15 +4,15 @@ const saltRounds = 10;
 const jwt = require("jsonwebtoken");
 
 const userSchema = mongoose.Schema({
-  userNickName: {
+  user_name: {
     type: String,
   },
-  userEmail: {
+  user_email: {
     type: String,
     trim: true,
     unique: 1,
   },
-  userPwd: {
+  password: {
     type: String,
     // minlength: 6,
   },
@@ -39,14 +39,14 @@ const userSchema = mongoose.Schema({
 userSchema.pre("save", function (next) {
   var user = this;
 
-  if (user.isModified("userPwd")) {
-    // console.log('userPwd changed')
+  if (user.isModified("password")) {
+    // console.log('password changed')
     bcryptjs.genSalt(saltRounds, function (err, salt) {
       if (err) return next(err);
 
-      bcryptjs.hash(user.userPwd, salt, function (err, hash) {
+      bcryptjs.hash(user.password, salt, function (err, hash) {
         if (err) return next(err);
-        user.userPwd = hash;
+        user.password = hash;
         next();
       });
     });
@@ -56,7 +56,7 @@ userSchema.pre("save", function (next) {
 });
 
 userSchema.methods.comparePassword = function (plainPassword, cb) {
-  bcryptjs.compare(plainPassword, this.userPwd, function (err, isMatch) {
+  bcryptjs.compare(plainPassword, this.password, function (err, isMatch) {
     if (err) return cb(err);
     cb(null, isMatch);
   });

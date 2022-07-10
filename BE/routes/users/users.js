@@ -20,9 +20,9 @@ const { User } = require(__base + "models/User");
 //     });
 // });
 
-function checkUserNickName(userNickName) {
+function checkUserNickName(user_name) {
   return new Promise((resolve, reject) => {
-    User.findOne({ userNickName: userNickName }, function (err, data) {
+    User.findOne({ user_name: user_name }, function (err, data) {
       if (err) {
         console.log("err : " + err);
         return reject(false);
@@ -33,9 +33,9 @@ function checkUserNickName(userNickName) {
   });
 }
 
-function checkUserEmail(userEmail) {
+function checkUserEmail(user_email) {
   return new Promise((resolve, reject) => {
-    User.findOne({ userEmail: userEmail }, function (err, data) {
+    User.findOne({ user_email: user_email }, function (err, data) {
       if (err) {
         console.log("err : " + err);
         return reject(false);
@@ -55,7 +55,7 @@ router.post("/signup", async (req, res) => {
 
   const user = new User(req.body);
 
-  if ((await checkUserEmail(user.userEmail)) !== null) {
+  if ((await checkUserEmail(user.user_email)) !== null) {
     return res.status(403).json({
       success: false,
       message: "이미 존재하는 이메일입니다!!",
@@ -63,7 +63,7 @@ router.post("/signup", async (req, res) => {
     });
   }
 
-  if ((await checkUserNickName(user.userNickName)) !== null) {
+  if ((await checkUserNickName(user.user_name)) !== null) {
     return res.status(403).json({
       success: false,
       message: "닉네임이 중복되었습니다.",
@@ -116,7 +116,7 @@ router.post("/checkCertificationNumber", (req, res) => {
 
   User.findOneAndUpdate(
     {
-      userEmail: req.body.userEmail,
+      user_email: req.body.user_email,
       certificationNumber: req.body.certificationNumber,
     },
     {
@@ -145,9 +145,9 @@ router.post("/checkCertificationNumber", (req, res) => {
 // 1. 성공 로그인 -> 이메일 인증 유무 확인
 router.post("/signin", (req, res) => {
   console.log("signin : " + JSON.stringify(req.body));
-  console.log("userEmail : " + JSON.stringify(req.body.userEmail));
+  console.log("user_email : " + JSON.stringify(req.body.user_email));
 
-  User.findOne({ userEmail: req.body.userEmail }, async (err, user) => {
+  User.findOne({ user_email: req.body.user_email }, async (err, user) => {
     if (!user) {
       return res.status(403).json({
         loginSuccess: false,
@@ -156,7 +156,7 @@ router.post("/signin", (req, res) => {
       });
     }
 
-    user.comparePassword(req.body.userPwd, (err, isMatch) => {
+    user.comparePassword(req.body.password, (err, isMatch) => {
       console.log("isMatch : " + isMatch);
       if (!isMatch) {
         return res.json({
@@ -176,9 +176,10 @@ router.post("/signin", (req, res) => {
         res.cookie("w_refresh", user.userRefreshToken);
         res.cookie("w_access", user.userAccessToken).status(200).json({
           loginSuccess: true,
-          userEmail: user.userEmail,
-          userNickName: user.userNickName,
+          user_email: user.user_email,
+          user_name: user.user_name,
           message: "성공적으로 로그인했습니다.",
+          token: user.userAccessToken,
         });
       });
     });
@@ -210,8 +211,8 @@ router.get("/auth", (req, res) => {
     _id: req.user._id,
     isAdmin: req.user.userRole === 2 ? true : false,
     isAuth: true,
-    userEmail: req.user.userEmail,
-    userNickName: req.user.userNickName,
+    user_email: req.user.user_email,
+    user_name: req.user.user_name,
     userRole: req.user.userRole,
   });
 });
