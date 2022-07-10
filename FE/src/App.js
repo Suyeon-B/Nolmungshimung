@@ -4,12 +4,7 @@ import SignIn from "./pages/sign/SignIn";
 import SearchMap from "./pages/search/Search";
 import Home from "./pages/Home";
 import Editor from "./pages/shareMemo/shareMemo";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import ProjectSide from "./components/sidebar/ProjectSide";
 import PlanSideBar from "./components/sidebar/PlanSideBar";
 import CreateProject from "./components/CreateProject";
@@ -24,7 +19,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
-        <ProjectSide />
+        {/* <ProjectSide /> */}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="signin/*" element={<SignIn />} />
