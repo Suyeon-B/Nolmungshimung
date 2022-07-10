@@ -1,5 +1,5 @@
 import React from "react";
-import "./ProjectSide.css";
+import "../ProjectSide.css";
 
 function PlanSideBar() {
   return (

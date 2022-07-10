@@ -9,9 +9,10 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import ProjectSide from "./components/ProjectSide";
-import PlanSideBar from "./components/PlanSideBar";
-import ProjectMake from "./components/CreateProject";
+import ProjectSide from "./components/sidebar/ProjectSide";
+import PlanSideBar from "./components/sidebar/PlanSideBar";
+import CreateProject from "./components/CreateProject";
+
 import "./App.css";
 import "./reset.css";
 import { QueryClient, QueryClientProvider } from "react-query";
@@ -22,10 +23,12 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
+        <ProjectSide />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="signin/*" element={<SignIn />} />
           <Route path="signup/*" element={<SignUp />} />
+          <Route path="project/*" element={<CreateProject />} />
           <Route path="search/*" element={<SearchMap />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
