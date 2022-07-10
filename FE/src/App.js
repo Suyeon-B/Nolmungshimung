@@ -18,6 +18,7 @@ import styled from "styled-components";
 import "./App.css";
 import "./reset.css";
 import { QueryClient, QueryClientProvider } from "react-query";
+import ProjectPage from "./pages/project/ProjectPage";
 
 const queryClient = new QueryClient(); // 인스턴스 생성
 const BodyDiv = styled.div`
@@ -36,8 +37,10 @@ function App() {
             <Route path="signin/*" element={<SignIn />} />
             <Route path="signup/*" element={<SignUp />} />
             <Route path="shareMemo/*" element={<Editor />} />
-            <Route path="project/*" element={<CreateProject />} />
+            <Route path="project/" element={<CreateProject />} />
             <Route path="search/*" element={<SearchMap />} />
+            <Route path="project/:projectId" element={<ProjectPage />} />
+
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </BodyDiv>
