@@ -13,7 +13,7 @@ import {
 import ProjectSide from "./components/sidebar/ProjectSide";
 import PlanSideBar from "./components/sidebar/PlanSideBar";
 import CreateProject from "./components/CreateProject";
-import SpotList from "./components/SpotList";
+import SpotList from "./components/spot/SpotList";
 import styled from "styled-components";
 
 import "./App.css";
