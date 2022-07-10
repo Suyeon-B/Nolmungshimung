@@ -32,7 +32,7 @@ app.use(express.static(path.join(__dirname, "public")));
 var db;
 const connect = mongoose
   .connect(
-    "mongodb+srv://dnjsdud2257:mongomongo@cluster0.zqmheld.mongodb.net/?retryWrites=true&w=majority"
+    "mongodb+srv://dbsgur:djatnr24@utubeclone.ig1r5.mongodb.net/?retryWrites=true&w=majority"
   )
   .then(() => console.log("MongoDB Connected..."))
   .catch((err) => console.log(`connect err : ${err}`));

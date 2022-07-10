@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../components/auth/Auth";
 
 function SignIn() {
   let navigate = useNavigate();
+  const { login } = useAuth();
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const onchangeId = (event) => {
@@ -23,6 +25,7 @@ function SignIn() {
       headers: {
         "content-type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify(data),
     })
       .then((res) => res.json())
@@ -30,11 +33,9 @@ function SignIn() {
         console.log("res : ", res);
         if (res.loginSuccess === true) {
           console.log("Sign In Success");
-          // window.location.href = "/";
+          sessionStorage.setItem("myName", res.user_name);
+
           navigate("/", { replace: true });
-          // window.location.href = /
-          document.cookie = "myToken=" + res.token;
-          sessionStorage.setItem("myEmail", res.user_email);
         }
       })
       .catch((err) => console.log(`err: ${err}`));
@@ -47,6 +48,7 @@ function SignIn() {
       password: password,
     };
     mutate(userForm);
+    login(id);
   };
   const onClickSignUp = () => {
     // window.location.href = "/signup";

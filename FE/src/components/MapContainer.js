@@ -9,6 +9,7 @@ const MapContainer = ({ searchPlace }) => {
   // 검색결과 배열에 담아줌
 
   const [Places, setPlaces] = useState([]);
+  console.log('---', Places);
 
   useEffect(() => {
     var infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
@@ -21,10 +22,18 @@ const MapContainer = ({ searchPlace }) => {
     const map = new kakao.maps.Map(container, options);
 
     const ps = new kakao.maps.services.Places();
+    
+    const searchOption = {
+      // location: currentPos,
+      radius: 1000,
+      size: 15,
+      page: 10
+    };
 
     ps.keywordSearch(
-      searchPlace ? "제주도 " + searchPlace : "제주도 ",
-      placesSearchCB
+      searchPlace ? '제주도' + searchPlace : '제주도',
+      placesSearchCB,
+      searchOption
     );
 
     function placesSearchCB(data, status, pagination) {
@@ -74,17 +83,6 @@ const MapContainer = ({ searchPlace }) => {
       paginationEl.appendChild(fragment);
     }
 
-    // function displaySearchList(places) {
-    //   const searchList = document.getElementById("result-list");
-    //   while (searchList.hasChildNodes()) {
-    //     searchList.removeChild(searchList.lastChild);
-    //   }
-    //   places.map((item, i) => {
-    //     searchList.appendChild(searchPlaceList(item, i)
-    //   })
-
-    // }
-
     function displayMarker(place) {
       let marker = new kakao.maps.Marker({
         map: map,
@@ -101,8 +99,6 @@ const MapContainer = ({ searchPlace }) => {
       });
     }
   }, [searchPlace]);
-
-
   return (
     <div style={{ positon: "absolute" }}>
       <div
@@ -135,4 +131,4 @@ const MapContainer = ({ searchPlace }) => {
   );
 };
 
-export default MapContainer;
+export default React.memo(MapContainer);
