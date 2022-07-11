@@ -4,8 +4,7 @@ import { DeleteOutlined } from "@ant-design/icons";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const SidePlanListDiv = styled.div`
-  height: 75vh;
-  overflow: scroll;
+  height: 450px;
 `;
 const StyledDragDropContext = styled(DragDropContext)``;
 
@@ -86,7 +85,7 @@ const getListStyle = (isDraggingOver) => ({
   boxShadow: " inset 2px 4px 4px 2px rgba(0, 0, 0, 0.25)",
   borderRadius: "15px",
   padding: grid,
-  height: "50%",
+  height: "99%",
   width: 250,
   overflow: "scroll",
 });
