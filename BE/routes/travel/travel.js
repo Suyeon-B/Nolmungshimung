@@ -33,7 +33,8 @@ router.post('/:id', async function(req, res, next) {
     // photo_reference: body.result.photos ? body.result.photos[0].photo_reference : null,
     rating: body.result? body.result.rating : null,
     reviews: body.result? body.result.reviews : null,
-    user_ratings_total: body.result? body.result.user_ratings_total : null
+    user_ratings_total: body.result? body.result.user_ratings_total : null,
+    opening_hours: body.result? body.result.opening_hours : null
   }
 
   const travel = new Travel(insertForm);

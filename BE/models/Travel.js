@@ -38,6 +38,9 @@ const travelSchema = mongoose.Schema({
   user_ratings_total: {
     type: String,
   },
+  opening_hours: {
+    type: Object
+  }
 });
 
 //useFlag 값 : 0(삭제), 1(이메일 인증 필요), 2(정상적으로 사용 가능한 상태)
