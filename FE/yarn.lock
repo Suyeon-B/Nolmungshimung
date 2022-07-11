@@ -10533,7 +10533,7 @@
     "y18n" "^5.0.5"
     "yargs-parser" "^20.2.2"
 
-"yjs@^13.5.13":
+"yjs@^13.5.13", "yjs@^13.5.39":
   "integrity" "sha512-EoVT856l301lomtjjVspgTdSRiFqZ7gNKnmVPX4/V8NHI5EYS39/MdjB9iNv0Mw1weKDZRU8NgxgerqwJ3y2xA=="
   "resolved" "https://registry.npmjs.org/yjs/-/yjs-13.5.39.tgz"
   "version" "13.5.39"

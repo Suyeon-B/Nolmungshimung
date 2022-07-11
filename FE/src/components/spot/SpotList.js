@@ -91,6 +91,25 @@ const getListStyle = (isDraggingOver) => ({
   overflow: "scroll",
 });
 
+const configuration = {
+  iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
+};
+const peerConnection = new RTCPeerConnection(configuration);
+// console.log(`peerConnection`);
+// console.log(peerConnection.createDataChannel("test"));
+const dataChannel = peerConnection.createDataChannel("MyApp Channel");
+
+// Enable textarea and button when opened
+dataChannel.addEventListener("open", (event) => {
+  console.log(event);
+  console.log(`data channel open`);
+});
+
+// Disable input when closed
+dataChannel.addEventListener("close", (event) => {
+  console.log(`data channel close`);
+});
+
 export default function SpotList() {
   // const [state, setState] = useState([testItem, testItem2]);
   const [state, setState] = useState([testItem]);

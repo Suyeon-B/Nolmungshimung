@@ -31,6 +31,7 @@ export const AuthProvider = ({ children }) => {
         }
       });
   }, []);
+  // }, [user]);
 
   const login = (user) => {
     setUser(user);
