@@ -37,7 +37,6 @@ function SignIn() {
         if (res.loginSuccess === true) {
           console.log("Sign In Success");
           sessionStorage.setItem("myName", res.user_name);
-
           navigate("/", { replace: true });
         }
       })
@@ -51,7 +50,7 @@ function SignIn() {
       password: password,
     };
     mutate(userForm);
-    login(id);
+    login({ user: id });
   };
   const onClickSignUp = () => {
     // window.location.href = "/signup";
