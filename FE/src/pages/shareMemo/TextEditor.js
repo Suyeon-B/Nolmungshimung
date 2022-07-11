@@ -9,12 +9,10 @@ import { useParams } from "react-router-dom";
 
 const EditorContainer = styled.div`
   div#container {
-    position: fixed;
-    right: 0;
-    bottom: 45px;
-    width: 70%;
-    height: 30%;
+    height: 300px;
+    width: max-content;
     padding: 1%;
+    margin-top: 530px;
   }
   .ql-toolbar.ql-snow {
     border-radius: 5px 5px 0px 0px;
@@ -39,7 +37,7 @@ const TOOLBAR_OPTIONS = [
 
 export default function TextEditor() {
   // [수연][TextEditor] 추후 projectID 기준으로 변경 예정
-  const { id: documentID } = useParams();
+  const { projectId: projectID } = useParams();
 
   const [socket, setSocket] = useState();
   const [quill, setQuill] = useState();
@@ -56,13 +54,13 @@ export default function TextEditor() {
   useEffect(() => {
     if (socket == null || quill == null) return;
 
-    socket.once("load-document", (document) => {
-      quill.setContents(document);
+    socket.once("load-project", (project) => {
+      quill.setContents(project);
       quill.enable();
     });
 
-    socket.emit("get-document", documentID);
-  }, [socket, quill, documentID]);
+    socket.emit("get-project", projectID);
+  }, [socket, quill, projectID]);
 
   useEffect(() => {
     if (socket == null || quill == null) return;
@@ -81,7 +79,7 @@ export default function TextEditor() {
     if (socket == null || quill == null) return;
 
     const interval = setInterval(() => {
-      socket.emit("save-document", quill.getContents());
+      socket.emit("save-project", quill.getContents());
     }, SAVE_INTERVAL_MS);
 
     return () => {

@@ -60,30 +60,29 @@ const io = require("socket.io")(3001, {
   },
 });
 
-const Document = require("./models/Document");
+const projectSchema = require("./models/Project");
 const defaultValue = "";
 
 io.on("connection", (socket) => {
-  socket.on("get-document", async (documentID) => {
-    const document = await findOrCreateDocument(documentID);
-    socket.join(documentID);
-    socket.emit("load-document", document.data);
+  socket.on("get-project", async (projectId) => {
+    const project = await findProjectById(projectId);
+    socket.emit("load-project", project.memo);
 
     socket.on("send-changes", (delta) => {
-      socket.broadcast.to(documentID).emit("receive-changes", delta);
+      socket.broadcast.to(projectId).emit("receive-changes", delta);
     });
 
-    socket.on("save-document", async (data) => {
-      await Document.findByIdAndUpdate(documentID, { data });
+    socket.on("save-project", async (memo) => {
+      await projectSchema.findByIdAndUpdate(projectId, { memo });
     });
   });
 });
 
-async function findOrCreateDocument(id) {
+async function findProjectById(id) {
   if (id == null) return;
-  const document = await Document.findById(id);
-  if (document) return document;
-  return await Document.create({ _id: id, data: defaultValue });
+  const project = await projectSchema.findById(id);
+  if (project) return project;
+  return await projectSchema.findByIdAndUpdate(id, { memo: defaultValue });
 }
 
 module.exports = app;
