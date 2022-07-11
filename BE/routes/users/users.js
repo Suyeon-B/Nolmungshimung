@@ -51,6 +51,7 @@ function checkUserEmail(user_email) {
 // 2. 인증 번호 보내기
 router.post("/signup", async (req, res) => {
   // 이메일 인증 번호 랜덤 생성
+  console.log("Enter signup");
   var certificationNumber = Math.floor(Math.random() * (999999 - 0)) + 99999;
   req.body.certificationNumber = certificationNumber;
 
