@@ -4,7 +4,7 @@ import SignIn from "./pages/sign/SignIn";
 import SearchMap from "./pages/search/Search";
 import Home from "./pages/Home";
 import TextEditor from "./pages/shareMemo/TextEditor";
-import KakaoSignIn from "./pages/sign/KakaoSignIn";
+import KakaoSignIn from "./components/sign/KakaoSignIn";
 import {
   BrowserRouter as Router,
   Routes,
