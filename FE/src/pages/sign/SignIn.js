@@ -37,6 +37,7 @@ function SignIn() {
         if (res.loginSuccess === true) {
           console.log("Sign In Success");
           sessionStorage.setItem("myName", res.user_name);
+          sessionStorage.setItem("user_email", res.user_email);
           navigate("/", { replace: true });
         }
       })

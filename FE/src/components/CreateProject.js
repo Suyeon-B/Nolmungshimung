@@ -3,94 +3,6 @@ import Calendar from "react-calendar";
 import styled from "styled-components";
 import "react-calendar/dist/Calendar.css"; // css import
 
-const PageContainer = styled.div`
-  width: 100vw;
-  height: 100vh;
-  background-image: url(statics/images/signUpBackground.png);
-  background-size: cover;
-  background-repeat: no-repeat;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-`;
-const CalenderForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-const TitleInput = styled.input`
-  margin-bottom: 20px;
-  width: 499px;
-  height: 80px;
-  box-shadow: inset 2px 4px 4px rgba(0, 0, 0, 0.25);
-  border: 0;
-  font-style: normal;
-  font-weight: 700;
-  font-size: 30px;
-  line-height: 71px;
-  text-align: center;
-  color: #7d7a7a;
-  background: #ffffff;
-  border-radius: 10px;
-`;
-const CalendarBtnContainer = styled.div`
-  display: flex;
-  justify-content: space-evenly;
-  width: 614px;
-  height: 100px;
-  left: 497px;
-  top: 300px;
-  background: #ffffff;
-  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
-  border-radius: 10px;
-`;
-const CalendarBtn = styled.div`
-  display: flex;
-  background: #ffffff;
-  border: 0px;
-  align-items: center;
-`;
-const CalendarBtnDay = styled.span`
-  margin-left: 20px;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 28px;
-  line-height: 48px;
-  /* identical to box height */
-  color: #7d7a7a;
-`;
-const CalendarContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  margin-top: 20px;
-`;
-const CreateProjectSubmit = styled.button`
-  width: 151px;
-  height: 131px;
-  font-size: 30px;
-  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
-  border: 0;
-  background: #ff8830;
-  border-radius: 20px;
-  font-family: "Rounded Mplus 1c Bold";
-  font-style: normal;
-  font-weight: 700;
-  font-size: 25px;
-  line-height: 37px;
-  text-align: center;
-  color: #ffffff;
-`;
-
-const CreateBtns = styled.div`
-  display: flex;
-  flex-direciont: row;
-  align-items: center;
-  width: 810px;
-  justify-content: space-between;
-`;
-
 const setDay = (value) => {
   const days = ["일", "월", "화", "수", "목", "금", "토"];
 
@@ -201,5 +113,93 @@ const CreateProject = () => {
     </PageContainer>
   );
 };
+
+const PageContainer = styled.div`
+  width: 100vw;
+  height: 100vh;
+  background-image: url(statics/images/signUpBackground.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+`;
+const CalenderForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+const TitleInput = styled.input`
+  margin-bottom: 20px;
+  width: 499px;
+  height: 80px;
+  box-shadow: inset 2px 4px 4px rgba(0, 0, 0, 0.25);
+  border: 0;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 71px;
+  text-align: center;
+  color: #7d7a7a;
+  background: #ffffff;
+  border-radius: 10px;
+`;
+const CalendarBtnContainer = styled.div`
+  display: flex;
+  justify-content: space-evenly;
+  width: 614px;
+  height: 100px;
+  left: 497px;
+  top: 300px;
+  background: #ffffff;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  border-radius: 10px;
+`;
+const CalendarBtn = styled.div`
+  display: flex;
+  background: #ffffff;
+  border: 0px;
+  align-items: center;
+`;
+const CalendarBtnDay = styled.span`
+  margin-left: 20px;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 28px;
+  line-height: 48px;
+  /* identical to box height */
+  color: #7d7a7a;
+`;
+const CalendarContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin-top: 20px;
+`;
+const CreateProjectSubmit = styled.button`
+  width: 151px;
+  height: 131px;
+  font-size: 30px;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  border: 0;
+  background: #ff8830;
+  border-radius: 20px;
+  font-family: "Rounded Mplus 1c Bold";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 25px;
+  line-height: 37px;
+  text-align: center;
+  color: #ffffff;
+`;
+
+const CreateBtns = styled.div`
+  display: flex;
+  flex-direciont: row;
+  align-items: center;
+  width: 810px;
+  justify-content: space-between;
+`;
 
 export default CreateProject;
