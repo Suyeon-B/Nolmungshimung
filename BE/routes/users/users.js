@@ -181,6 +181,7 @@ router.post("/signin", (req, res) => {
           loginSuccess: true,
           user_email: user.user_email,
           user_name: user.user_name,
+          user_projects: user.user_projects,
           message: "성공적으로 로그인했습니다.",
         });
       });
@@ -310,6 +311,22 @@ router.post("/kakao", async (req, res) => {
       error: err.toString(),
     });
   }
+});
+
+router.get("/", (req, res) => {
+  User.findOne({ user_email: "a" })
+    .then((user) => {
+      console.log(user);
+      const userInfo = {
+        user_name: user.user_name,
+        user_projects: user.user_projects,
+      };
+      res.json(user);
+    })
+    .catch((err) => {
+      console.error(err);
+      next(err);
+    });
 });
 
 module.exports = router;
