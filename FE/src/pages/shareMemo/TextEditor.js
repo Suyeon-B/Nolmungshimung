@@ -12,7 +12,7 @@ const EditorContainer = styled.div`
     height: 300px;
     width: max-content;
     padding: 1%;
-    margin-top: 530px;
+    margin-top: 53px;
   }
   .ql-toolbar.ql-snow {
     border-radius: 5px 5px 0px 0px;
