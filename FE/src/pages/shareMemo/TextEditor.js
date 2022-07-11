@@ -20,6 +20,9 @@ const EditorContainer = styled.div`
   .ql-container.ql-snow {
     border-radius: 0 0 5px 5px;
   }
+  .ql-editor strong {
+    font-weight: bold;
+  }
 `;
 
 const SAVE_INTERVAL_MS = 2000;
