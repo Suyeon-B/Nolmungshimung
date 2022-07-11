@@ -5,16 +5,17 @@ import SearchMap from "./pages/search/Search";
 import Home from "./pages/Home";
 // import Editor from "./pages/shareMemo/shareMemo";
 import TextEditor from "./pages/shareMemo/TextEditor";
-import { BrowserRouter as Router, Switch, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import ProjectSide from "./components/sidebar/ProjectSide";
 import PlanSideBar from "./components/sidebar/PlanSideBar";
 import CreateProject from "./components/CreateProject";
-import SpotList from "./components/SpotList";
+import SpotList from "./components/spot/SpotList";
 import styled from "styled-components";
 
 import "./App.css";
 import "./reset.css";
 import { QueryClient, QueryClientProvider } from "react-query";
+import ProjectPage from "./pages/project/ProjectPage";
 import { AuthProvider, RequireAuth } from "./components/auth/Auth";
 
 // [수연][TextEditor] socket io 작업
@@ -43,6 +44,7 @@ function App() {
               <Route path="/shareMemo/:id" element={<TextEditor />} />
               <Route path="project/*" element={<CreateProject />} />
               <Route path="hyuk/*" element={<SpotList />} />
+              <Route path="project/:projectId" element={<ProjectPage />} />
               {/* 로그인안했을시 로그인 페이지로 이동 */}
               <Route
                 path="search/*"
