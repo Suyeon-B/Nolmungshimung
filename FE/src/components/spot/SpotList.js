@@ -171,6 +171,7 @@ export default function SpotList() {
                               <SpotCategory>{item.category}</SpotCategory>
                             </SpotItemDiv>
                             <DeleteOutlined
+                              style={{ fontSize: "25px" }}
                               onClick={() => {
                                 const newState = [...state];
                                 newState[ind].splice(index, 1);
