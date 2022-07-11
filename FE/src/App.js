@@ -58,9 +58,9 @@ function App() {
               <Route
                 path="search/*"
                 element={
-                  <RequireAuth>
+                  // <RequireAuth>
                     <SearchMap />
-                  </RequireAuth>
+                  // </RequireAuth>
                 }
               />
               <Route path="*" element={<Navigate to="/" replace />} />
