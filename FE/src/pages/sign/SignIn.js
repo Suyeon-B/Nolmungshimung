@@ -6,7 +6,7 @@ import { useAuth } from "../../components/auth/Auth";
 
 function SignIn() {
   let navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, user } = useAuth();
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const onchangeId = (event) => {
@@ -34,7 +34,6 @@ function SignIn() {
         if (res.loginSuccess === true) {
           console.log("Sign In Success");
           sessionStorage.setItem("myName", res.user_name);
-
           navigate("/", { replace: true });
         }
       })
@@ -48,7 +47,9 @@ function SignIn() {
       password: password,
     };
     mutate(userForm);
-    login(id);
+    login({ user: id });
+    console.log(user);
+    alert("");
   };
   const onClickSignUp = () => {
     // window.location.href = "/signup";
