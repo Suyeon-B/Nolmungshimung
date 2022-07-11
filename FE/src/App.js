@@ -3,6 +3,7 @@ import SignUp from "./pages/sign/SignUp";
 import SignIn from "./pages/sign/SignIn";
 import SearchMap from "./pages/search/Search";
 import Home from "./pages/Home";
+import Test from "./pages/test";
 import TextEditor from "./pages/shareMemo/TextEditor";
 import KakaoSignIn from "./components/sign/KakaoSignIn";
 import {
@@ -40,6 +41,7 @@ function App() {
           <BodyDiv>
             <ProjectSide />
             <Routes>
+              <Route path="/test" element={<Test />} />
               <Route path="/" element={<Home />} />
               <Route path="/kakao/signin" element={<KakaoSignIn />} />
               <Route path="signin/*" element={<SignIn />} />
