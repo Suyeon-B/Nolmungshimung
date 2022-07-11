@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const request = require("request");
 const { User } = require(__base + "models/User");
 const { auth } = require("../../middleware/auth");
 // const { signupMail } = require(__base + "utils/mail");
@@ -217,7 +218,6 @@ router.get("/auth", auth, (req, res) => {
 
 //유저 프로필 정보 받기?
 function getProfile(accessToken) {
-  console.log("들어온다" + accessToken);
   return new Promise((resolve, reject) => {
     request(
       {
@@ -272,8 +272,6 @@ router.post("/kakao", async (req, res) => {
       userAccessToken: req.body.token,
     });
 
-    // console.log("!!!!!!!!!! " + user.userAccessToken);
-    let create = false;
     if ((await checkUserEmail(user.user_email)) !== null) {
       console.log("있어용");
     } else {
@@ -283,8 +281,6 @@ router.post("/kakao", async (req, res) => {
           console.log(`err : ${err}`);
           console.log(err.code);
           console.log("회원가입 시 에러 발생!");
-        } else {
-          create = true;
         }
       });
     }
@@ -307,8 +303,6 @@ router.post("/kakao", async (req, res) => {
         token: user.userAccessToken,
       });
     }
-
-    // return res.status(create ? 201 : 200).json(responseData);
   } catch (err) {
     return res.status(500).json({
       success: false,

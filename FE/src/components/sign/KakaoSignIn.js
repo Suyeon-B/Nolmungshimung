@@ -1,9 +1,15 @@
 import * as React from "react";
+import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../components/auth/Auth";
 
 const qs = require("qs");
 
 function KakaoSignIn(props) {
+  const { login } = useAuth();
+  // const { isLoading, isError, error, mutate } = useMutation(singInUser, {
+  //   retry: 1,
+  // });
   let navigate = useNavigate();
   // const href = window.location.href;
   let params = new URL(document.URL).searchParams;
@@ -20,7 +26,7 @@ function KakaoSignIn(props) {
     const data = {
       grant_type: "authorization_code",
       client_id: "2d1c91f12a4c8020dbcc39ddb0c368b0",
-      redirect_uri: "http://localhost:3000/auth",
+      redirect_uri: "http://localhost:3000/kakao/signin",
       code: code,
     };
     await fetch("https://kauth.kakao.com/oauth/token", {
@@ -38,7 +44,7 @@ function KakaoSignIn(props) {
 
   //발급받은 access 토큰을 서버로 넘기고, 서버에서 JWT 토큰 값(추가로 user정보)을 받아 localstorage에 저장
   const sendKakaoTokenToServer = async (token) => {
-    console.log(token);
+    // console.log(token);
     await fetch("http://localhost:8443/users/kakao", {
       method: "post",
       headers: {
@@ -48,14 +54,15 @@ function KakaoSignIn(props) {
     })
       .then((res) => res.json())
       .then((data) => {
-        // console.log(JSON.stringify(data));
         if (data.loginSuccess === true) {
           console.log("Sign In Success");
           navigate("/", { replace: true });
           document.cookie = "myToken=" + data.token;
           sessionStorage.setItem("myEmail", data.user_email);
+          login(data.user_email);
         } else {
           window.alert("로그인에 실패하였습니다.");
+          navigate("/signin");
         }
       })
       .catch((err) => console.log(`err: ${err}`));
@@ -63,7 +70,7 @@ function KakaoSignIn(props) {
 
   return (
     <div>
-      <h1> 로그인 중입니다아아아아아아아ㅏㅇ</h1>
+      <h1> error </h1>
     </div>
   );
 }
