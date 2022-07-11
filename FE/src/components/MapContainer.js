@@ -100,7 +100,7 @@ const MapContainer = ({ searchPlace }) => {
     }
   }, [searchPlace]);
   return (
-    <div style={{ positon: "absolute" }}>
+    <div style={{ positon: "relative", marginLeft: 30, marginRight: 0}}>
       <div
         id="myMap"
         style={{
@@ -113,7 +113,7 @@ const MapContainer = ({ searchPlace }) => {
       <ul
         id="result-list"
         style={{
-          position: "absolute",
+          position: "relative",
           zIndex: 2,
           overflow: "scroll",
           width: "30%",
@@ -125,7 +125,7 @@ const MapContainer = ({ searchPlace }) => {
         }}
       >
         {Places? searchList(Places): null}
-        <div id="pagination" style={{ position: "absolute", zIndex: 2 }}></div>
+        <div id="pagination" style={{ position: "relative", zIndex: 2 }}></div>
       </ul>
     </div>
   );
