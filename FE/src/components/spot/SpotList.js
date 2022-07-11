@@ -4,8 +4,7 @@ import { DeleteOutlined } from "@ant-design/icons";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const SidePlanListDiv = styled.div`
-  height: 75vh;
-  overflow: scroll;
+  height: 450px;
 `;
 const StyledDragDropContext = styled(DragDropContext)``;
 
@@ -86,9 +85,28 @@ const getListStyle = (isDraggingOver) => ({
   boxShadow: " inset 2px 4px 4px 2px rgba(0, 0, 0, 0.25)",
   borderRadius: "15px",
   padding: grid,
-  height: "50%",
+  height: "99%",
   width: 250,
   overflow: "scroll",
+});
+
+const configuration = {
+  iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
+};
+const peerConnection = new RTCPeerConnection(configuration);
+// console.log(`peerConnection`);
+// console.log(peerConnection.createDataChannel("test"));
+const dataChannel = peerConnection.createDataChannel("MyApp Channel");
+
+// Enable textarea and button when opened
+dataChannel.addEventListener("open", (event) => {
+  console.log(event);
+  console.log(`data channel open`);
+});
+
+// Disable input when closed
+dataChannel.addEventListener("close", (event) => {
+  console.log(`data channel close`);
 });
 
 export default function SpotList() {
