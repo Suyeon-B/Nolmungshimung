@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { DeleteOutlined } from "@ant-design/icons";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { useSyncedStore } from "@syncedstore/react";
-import { store } from "./store";
+
 const SidePlanListDiv = styled.div`
   height: 75vh;
   overflow: scroll;
@@ -171,6 +170,7 @@ export default function SpotList() {
                               <SpotCategory>{item.category}</SpotCategory>
                             </SpotItemDiv>
                             <DeleteOutlined
+                              style={{ fontSize: "25px" }}
                               onClick={() => {
                                 const newState = [...state];
                                 newState[ind].splice(index, 1);

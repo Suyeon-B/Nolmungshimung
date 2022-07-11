@@ -14,34 +14,35 @@ const PageContainer = styled.div`
   align-items: center;
   flex-direction: column;
 `;
+const CalenderForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
 const TitleInput = styled.input`
-  position: absolute;
+  margin-bottom: 20px;
   width: 499px;
   height: 80px;
-  left: 555px;
-  top: 200px;
   box-shadow: inset 2px 4px 4px rgba(0, 0, 0, 0.25);
+  border: 0;
   font-style: normal;
   font-weight: 700;
   font-size: 30px;
   line-height: 71px;
   text-align: center;
   color: #7d7a7a;
-
   background: #ffffff;
   border-radius: 10px;
 `;
 const CalendarBtnContainer = styled.div`
   display: flex;
   justify-content: space-evenly;
-
-  position: absolute;
   width: 614px;
   height: 100px;
   left: 497px;
   top: 300px;
   background: #ffffff;
-
   filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
   border-radius: 10px;
 `;
@@ -58,24 +59,36 @@ const CalendarBtnDay = styled.span`
   font-size: 28px;
   line-height: 48px;
   /* identical to box height */
-
   color: #7d7a7a;
 `;
 const CalendarContainer = styled.div`
   display: flex;
   flex-direction: row;
-  position: absolute;
-  // width: 614px;
-  // height: 100px;
-  left: 497px;
-  top: 403px;
+  margin-top: 20px;
 `;
 const CreateProjectSubmit = styled.button`
-  position: absolute;
-  width: 220px;
-  left: 1124px;
-  top: 321px;
+  width: 151px;
+  height: 131px;
   font-size: 30px;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  border: 0;
+  background: #ff8830;
+  border-radius: 20px;
+  font-family: "Rounded Mplus 1c Bold";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 25px;
+  line-height: 37px;
+  text-align: center;
+  color: #ffffff;
+`;
+
+const CreateBtns = styled.div`
+  display: flex;
+  flex-direciont: row;
+  align-items: center;
+  width: 810px;
+  justify-content: space-between;
 `;
 
 const setDay = (value) => {
@@ -143,40 +156,48 @@ const CreateProject = () => {
 
   return (
     <PageContainer>
-      <form onSubmit={onSubmit}>
+      <CalenderForm onSubmit={onSubmit}>
         <TitleInput
           placeholder="여행 제목을 입력해주세요"
           value={projectTitle}
           onChange={onChangeProjectTitle}
         />
-        <CalendarBtnContainer>
-          <CalendarBtn onClick={() => setShowStartBtn(!showStartBtn)}>
-            <img
-              width={"50px"}
-              alt=""
-              src="/statics/images/calender_start.png"
-            />
-            <CalendarBtnDay>
-              {startDate
-                ? `${startDate[1]}월 ${startDate[2]}일`
-                : "여행 시작 날짜"}
-            </CalendarBtnDay>
-          </CalendarBtn>
-          <CalendarBtn onClick={() => setShowEndtBtn(!showEndtBtn)}>
-            <img width={"50px"} alt="" src="/statics/images/calender_end.png" />
-            <CalendarBtnDay>
-              {endDate ? `${endDate[1]}월 ${endDate[2]}일` : "여행 종료 날짜"}
-            </CalendarBtnDay>
-          </CalendarBtn>
-        </CalendarBtnContainer>
-        <CreateProjectSubmit type="submit">프로젝트 생성</CreateProjectSubmit>
+        <CreateBtns>
+          <CalendarBtnContainer>
+            <CalendarBtn onClick={() => setShowStartBtn(!showStartBtn)}>
+              <img
+                width={"50px"}
+                alt=""
+                src="/statics/images/calender_start.png"
+              />
+              <CalendarBtnDay>
+                {startDate
+                  ? `${startDate[1]}월 ${startDate[2]}일`
+                  : "여행 시작 날짜"}
+              </CalendarBtnDay>
+            </CalendarBtn>
+            <CalendarBtn onClick={() => setShowEndtBtn(!showEndtBtn)}>
+              <img
+                width={"50px"}
+                alt=""
+                src="/statics/images/calender_end.png"
+              />
+              <CalendarBtnDay>
+                {endDate ? `${endDate[1]}월 ${endDate[2]}일` : "여행 종료 날짜"}
+              </CalendarBtnDay>
+            </CalendarBtn>
+          </CalendarBtnContainer>
+          <CreateProjectSubmit type="submit">
+            프로젝트<br></br> 생성
+          </CreateProjectSubmit>
+        </CreateBtns>
         <CalendarContainer>
           {showStartBtn && (
             <Calendar onChange={settedStartDate} value={value} />
           )}
           {showEndtBtn && <Calendar onChange={settedEndDate} value={value} />}
         </CalendarContainer>
-      </form>
+      </CalenderForm>
     </PageContainer>
   );
 };
