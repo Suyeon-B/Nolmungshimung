@@ -9,7 +9,6 @@ const MapContainer = ({ searchPlace }) => {
   // 검색결과 배열에 담아줌
 
   const [Places, setPlaces] = useState([]);
-  console.log('---', Places);
 
   useEffect(() => {
     var infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
@@ -100,12 +99,12 @@ const MapContainer = ({ searchPlace }) => {
     }
   }, [searchPlace]);
   return (
-    <div style={{ positon: "absolute" }}>
+    <div style={{ positon: "relative"}}>
       <div
         id="myMap"
         style={{
-          width: "70%",
-          height: "500px",
+          width: "71.5vw",
+          height: "100vh",
           position: "relative",
           float: "right",
         }}
@@ -113,19 +112,17 @@ const MapContainer = ({ searchPlace }) => {
       <ul
         id="result-list"
         style={{
-          position: "absolute",
+          position: "relative",
           zIndex: 2,
           overflow: "scroll",
-          width: "30%",
-          height: "500px",
+          width: "20vw",
+          height: "95vh",
           float: "left",
-          margin: 0,
-          padding: 0,
-          paddingTop: 26,
+          marginTop: 26,
         }}
       >
         {Places? searchList(Places): null}
-        <div id="pagination" style={{ position: "absolute", zIndex: 2 }}></div>
+        <div id="pagination" style={{ position: "relative", zIndex: 2 }}></div>
       </ul>
     </div>
   );

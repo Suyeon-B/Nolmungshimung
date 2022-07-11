@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import LandingPage from "../../components/LandingPage";
-import MapContainer from "../../components/MapContainer";
+import LandingPage from "../../components/searchMap/LandingPage";
+
 function Search() {
   return (
     <div>
