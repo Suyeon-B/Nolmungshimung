@@ -4,6 +4,9 @@ import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../components/auth/Auth";
 
+const kauthUrl =
+  "https://kauth.kakao.com/oauth/authorize?client_id=2d1c91f12a4c8020dbcc39ddb0c368b0&redirect_uri=http://localhost:3000/kakao/signin&response_type=code";
+
 function SignIn() {
   let navigate = useNavigate();
   const { login } = useAuth();
@@ -34,7 +37,6 @@ function SignIn() {
         if (res.loginSuccess === true) {
           console.log("Sign In Success");
           sessionStorage.setItem("myName", res.user_name);
-
           navigate("/", { replace: true });
         }
       })
@@ -48,7 +50,7 @@ function SignIn() {
       password: password,
     };
     mutate(userForm);
-    login(id);
+    login({ user: id });
   };
   const onClickSignUp = () => {
     // window.location.href = "/signup";
@@ -79,6 +81,18 @@ function SignIn() {
             required
           />
           <SubmitInput value="로그인" type="submit" />
+          <br />
+          <a href={kauthUrl}>
+            <img
+              src="/statics/images/kakao_login_medium_wide.png"
+              style={{
+                width: "420px",
+                height: "64px",
+                borderRadius: "30px",
+                objectFit: "contain",
+              }}
+            />
+          </a>
         </Form>
       </Box>
     </Container>
@@ -168,7 +182,7 @@ const Input = styled.input`
 `;
 
 const SubmitInput = styled.input`
-  width: 440px;
+  width: 420px;
   height: 64px;
   border-radius: 30px;
   background: linear-gradient(90deg, #ff7a00 0%, #ffa149 50%, #febc7f 100%);
