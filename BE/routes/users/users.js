@@ -215,4 +215,106 @@ router.get("/auth", auth, (req, res) => {
   });
 });
 
+//유저 프로필 정보 받기?
+function getProfile(accessToken) {
+  console.log("들어온다" + accessToken);
+  return new Promise((resolve, reject) => {
+    request(
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
+        },
+        url: "https://kapi.kakao.com/v2/user/me",
+        method: "GET",
+      },
+      (error, response, body) => {
+        if (!error && response.statusCode === 200) {
+          resolve(body);
+        }
+        reject(error);
+      }
+    );
+  });
+}
+
+router.post("/kakao", async (req, res) => {
+  try {
+    console.log("try" + JSON.stringify(req.body.token));
+    let userEmail = "";
+    let userNickName = "";
+    if (req.body.token) {
+      //초기 로그인
+      console.log("초기로그인");
+      const result = await getProfile(req.body.token);
+      console.log(result);
+      const kakaoUser = JSON.parse(result).kakao_account;
+      userEmail = kakaoUser.email;
+      userNickName = kakaoUser.profile.nickname;
+    }
+    // else {
+    //   //자동 로그인
+    //   console.log("자동로그인");
+    //   const user = jwt.verify(
+    //     req.headers.authorization,
+    //     process.env.JWT_SECRET,
+    //     {
+    //       ignoreExpiration: true,
+    //     }
+    //   );
+    //   userEmail = user.email;
+    // }
+
+    const user = new User({
+      provider: "kakao",
+      user_email: userEmail,
+      user_name: userNickName,
+      userAccessToken: req.body.token,
+    });
+
+    // console.log("!!!!!!!!!! " + user.userAccessToken);
+    let create = false;
+    if ((await checkUserEmail(user.user_email)) !== null) {
+      console.log("있어용");
+    } else {
+      console.log("없어용");
+      user.save(async (err, data) => {
+        if (err) {
+          console.log(`err : ${err}`);
+          console.log(err.code);
+          console.log("회원가입 시 에러 발생!");
+        } else {
+          create = true;
+        }
+      });
+    }
+
+    // let responseData = {
+    //   success: true,
+    //   user,
+    // };
+    // console.log(responseData.user);
+
+    //초기로그인일 경우 JWT토큰 발급
+    if (req.body.token) {
+      console.log("들어옴");
+      res.cookie("w_refresh", user.userRefreshToken);
+      res.cookie("w_access", user.userAccessToken).status(200).json({
+        loginSuccess: true,
+        user_email: user.user_email,
+        user_name: user.user_name,
+        message: "성공적으로 로그인했습니다.",
+        token: user.userAccessToken,
+      });
+    }
+
+    // return res.status(create ? 201 : 200).json(responseData);
+  } catch (err) {
+    return res.status(500).json({
+      success: false,
+      error: err.toString(),
+    });
+  }
+});
+
 module.exports = router;
