@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import "../ProjectSide.css";
 import { Layout, Menu } from "antd";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const StyledMenu = styled(Menu)`
   // position: absolute;
@@ -58,8 +57,12 @@ function ProjectSide() {
     },
   };
 
-  const Label = (title) => {
-    return <h1 style={{ fontSize: "25px" }}> {title[0]}</h1>;
+  const Label = (el) => {
+    return (
+      <Link to={`project/${el._id}`}>
+        <h1 style={{ fontSize: "25px" }}> {el.project_title[0]}</h1>
+      </Link>
+    );
   };
 
   const [items, setItems] = useState([]);
@@ -68,7 +71,7 @@ function ProjectSide() {
     const projectItems = mookProject.map((el, idx) => {
       return {
         key: idx + 1,
-        label: Label(el.project_title),
+        label: Label(el),
         style: {
           height: "60px",
           textAlign: "center",

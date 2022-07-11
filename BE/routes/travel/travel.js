@@ -32,6 +32,7 @@ router.post('/:id', async function(req, res, next) {
     phone : body.phone,
     place_url : body.place_url,
     // photo: body.result.photos ? body.result.photos[0].html_attributions[0]: null,
+    photo: body.result.photos,
     // photo_reference: body.result.photos ? body.result.photos[0].photo_reference : null,
     rating: body.result.rating,
     reviews: body.result.reviews,

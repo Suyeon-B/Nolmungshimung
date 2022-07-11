@@ -24,7 +24,7 @@ const travelSchema = mongoose.Schema({
     type: String,
   },
   photo: {
-    type: String,
+    type: Array,
   },
   photo_reference: {
     type: String ,

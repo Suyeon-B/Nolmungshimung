@@ -2,20 +2,31 @@ import React from "react";
 import styled from "styled-components";
 import ButtonGo from "../atomics/ButtonGo";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../components/auth/Auth";
 
 function Home() {
+  const auth = useAuth();
   let navigate = useNavigate();
   const goSignIn = () => {
     navigate("/signin", { replace: false });
   };
+  const goProject = () => {
+    navigate("/project", { replace: false });
+  };
   const goSignUp = () => {
     navigate("/signup", { replace: false });
   };
+
   return (
     <Container>
       <Main />
       <Section>
-        <ButtonGo name="나만의 계획 만들기" onClickGo={goSignIn} />
+        {auth.user ? (
+          <ButtonGo name="나만의 계획 만들기" onClickGo={goProject} />
+        ) : (
+          <ButtonGo name="로그인" onClickGo={goSignIn} />
+        )}
+
         <ButtonGo name="추천계획 둘러보기" onClickGo={goSignUp} />
       </Section>
     </Container>
