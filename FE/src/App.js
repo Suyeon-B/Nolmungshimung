@@ -23,6 +23,9 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import ProjectPage from "./pages/project/ProjectPage";
 import { AuthProvider, RequireAuth } from "./components/auth/Auth";
 
+// react query devtool
+import { ReactQueryDevtools } from "react-query/devtools";
+
 // [수연][TextEditor] socket io 작업
 import { v4 as uuidV4 } from "uuid";
 
@@ -44,7 +47,7 @@ function App() {
               <Route path="/kakao/signin" element={<KakaoSignIn />} />
               <Route path="signin/*" element={<SignIn />} />
               <Route path="signup/*" element={<SignUp />} />
-              {/* <Route path="shareMemo/*" element={<TextEditor />} /> */}
+              <Route path="shareMemo/*" element={<TextEditor />} />
               {/* [수연][TextEditor] 추후 projectID 기준으로 변경 예정 */}
               <Route
                 path="shareMemo/*"
@@ -59,7 +62,7 @@ function App() {
                 path="search/*"
                 element={
                   // <RequireAuth>
-                    <SearchMap />
+                  <SearchMap />
                   // </RequireAuth>
                 }
               />
@@ -68,6 +71,7 @@ function App() {
           </BodyDiv>
         </Router>
       </AuthProvider>
+      <ReactQueryDevtools />
     </QueryClientProvider>
   );
 }

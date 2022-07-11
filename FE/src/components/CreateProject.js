@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Calendar from "react-calendar";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 import "react-calendar/dist/Calendar.css"; // css import
 
 const setDay = (value) => {
@@ -15,6 +16,7 @@ const setDay = (value) => {
 };
 
 const CreateProject = () => {
+  const navigate = useNavigate();
   const [projectTitle, setProjectTitle] = useState("");
   const [showStartBtn, setShowStartBtn] = useState(false);
   const [showEndtBtn, setShowEndtBtn] = useState(false);
@@ -45,12 +47,15 @@ const CreateProject = () => {
     let eDate = new Date(endDate[0], endDate[1], endDate[2]).getTime();
 
     let term = (eDate - sDate) / (1000 * 60 * 60 * 24);
-    const project = {
-      project_title: projectTitle,
-      start_date: startDate,
-      end_date: endDate,
-      term,
-    };
+    const project = [
+      sessionStorage.getItem("user_email"),
+      {
+        project_title: projectTitle,
+        start_date: startDate,
+        end_date: endDate,
+        term,
+      },
+    ];
 
     fetch("http://localhost:8443/projects", {
       method: "post",
@@ -61,7 +66,7 @@ const CreateProject = () => {
     })
       .then((res) => res.json())
       .then((res) => {
-        console.log(res);
+        navigate(`${res.projectId}`);
       })
       .catch((err) => console.log(err));
   };
