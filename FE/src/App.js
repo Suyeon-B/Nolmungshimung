@@ -25,6 +25,9 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import ProjectPage from "./pages/project/ProjectPage";
 import { AuthProvider, RequireAuth } from "./components/auth/Auth";
 
+// react query devtool
+import { ReactQueryDevtools } from "react-query/devtools";
+
 // [수연][TextEditor] socket io 작업
 import { v4 as uuidV4 } from "uuid";
 
@@ -63,9 +66,9 @@ function App() {
               <Route
                 path="search/*"
                 element={
-                  <RequireAuth>
-                    <SearchMap />
-                  </RequireAuth>
+                  // <RequireAuth>
+                  <SearchMap />
+                  // </RequireAuth>
                 }
               />
               <Route path="*" element={<Navigate to="/" replace />} />
@@ -73,6 +76,7 @@ function App() {
           </BodyDiv>
         </Router>
       </AuthProvider>
+      <ReactQueryDevtools />
     </QueryClientProvider>
   );
 }
