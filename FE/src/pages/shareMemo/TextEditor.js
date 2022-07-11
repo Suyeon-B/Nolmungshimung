@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import Quill from "quill";
+import QuillCursors from "quill-cursors";
 import "quill/dist/quill.snow.css";
 import styled from "styled-components";
 import { io } from "socket.io-client";
@@ -27,11 +28,12 @@ const SAVE_INTERVAL_MS = 2000;
 const TOOLBAR_OPTIONS = [
   [{ header: [1, 2, 3, 4, 5, 6, false] }],
   [{ font: [] }],
+  [{ indent: "+1" }, { indent: "-1" }],
   [{ list: "ordered" }, { list: "bullet" }],
   ["bold", "italic", "underline"],
   [{ color: [] }, { background: [] }],
   [{ align: [] }],
-  ["blockquote", "code-block"],
+  ["link", "blockquote", "code-block"],
   ["clean"],
 ];
 
@@ -108,7 +110,20 @@ export default function TextEditor() {
     const editor = document.createElement("div");
     wrapper.append(editor);
 
-    const q = new Quill(editor, { theme: "snow", modules: { toolbar: TOOLBAR_OPTIONS } });
+    // [수연][TextEditor] Implement quill-cursors
+    Quill.register("modules/cursors", QuillCursors);
+
+    const q = new Quill(editor, {
+      theme: "snow",
+      modules: {
+        toolbar: TOOLBAR_OPTIONS,
+        cursors: true,
+        history: {
+          userOnly: true, // only user changes will be undone or redone.
+        },
+      },
+      placeholder: "친구들과 메모를 적어보세요! :)",
+    });
     q.disable();
     q.setText("메모를 가져오는 중...");
     setQuill(q);
