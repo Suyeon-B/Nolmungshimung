@@ -53,9 +53,15 @@ export const useAuth = () => {
 
 export const RequireAuth = ({ children }) => {
   const auth = useAuth();
+  console.log(`auth : ${JSON.stringify(auth)}`);
+  console.log(`auth.user : ${auth.user}`);
 
   if (!auth.user) {
-    return <Navigate to="/signin" />;
+    console.log(`auth : ${JSON.stringify(auth)}`);
+    console.log(`auth : ${JSON.stringify(auth.user)}`);
+
+    return children;
+    // return <Navigate to="/signin" />;
   }
   return children;
 };
