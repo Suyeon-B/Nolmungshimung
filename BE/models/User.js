@@ -88,6 +88,7 @@ userSchema.methods.generateToken = function (cb) {
 
 userSchema.statics.verifyToken = function (token, cb) {
   try {
+    console.log("tokens are good");
     return jwt.verify(token, "SECRET");
   } catch (e) {
     if (e.name === "TokenExpiredError") {
