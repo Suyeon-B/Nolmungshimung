@@ -16,6 +16,7 @@ import ProjectSide from "./components/sidebar/ProjectSide";
 import PlanSideBar from "./components/sidebar/PlanSideBar";
 import CreateProject from "./components/CreateProject";
 import SpotList from "./components/spot/SpotList";
+import SpotRoute from "./pages/spotRoute/SpotRoute";
 import styled from "styled-components";
 
 import "./App.css";
@@ -52,6 +53,7 @@ function App() {
               <Route path="project/*" element={<CreateProject />} />
               <Route path="hyuk/*" element={<SpotList />} />
               <Route path="project/:projectId" element={<ProjectPage />} />
+              <Route path="spotroute/*" element={<SpotRoute />} />
               {/* 로그인안했을시 로그인 페이지로 이동 */}
               <Route
                 path="search/*"
