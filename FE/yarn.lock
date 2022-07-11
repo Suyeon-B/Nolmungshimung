@@ -6645,7 +6645,11 @@
     "prelude-ls" "~1.1.2"
     "type-check" "~0.3.2"
 
+<<<<<<< HEAD
 "lib0@^0.2.42", "lib0@^0.2.49":
+=======
+"lib0@^0.2.42":
+>>>>>>> 73314c4485a217e94d7e1f1504c5fe149a0ab62c
   "integrity" "sha512-05Erb3465CxJa38LQlMz4EbetNvRna1S3BzqEjC0/pmp5cQuQSfNNmeS0722Wev1dRlMUp2Cql0gQ55krSXf2Q=="
   "resolved" "https://registry.npmjs.org/lib0/-/lib0-0.2.51.tgz"
   "version" "0.2.51"
@@ -8089,6 +8093,14 @@
   "resolved" "https://registry.npmjs.org/quick-lru/-/quick-lru-5.1.1.tgz"
   "version" "5.1.1"
 
+<<<<<<< HEAD
+=======
+"quill-cursors@^3.1.2":
+  "integrity" "sha512-oyANfYhqYiRp7OIrX/BurBPb0bvcpqSiS042fGm+T9FNy9UR6MCBzXpCyG7RmnK6OrV2idsdxMbogJ1XSktN5Q=="
+  "resolved" "https://registry.npmjs.org/quill-cursors/-/quill-cursors-3.1.2.tgz"
+  "version" "3.1.2"
+
+>>>>>>> 73314c4485a217e94d7e1f1504c5fe149a0ab62c
 "quill-delta@^3.6.2":
   "integrity" "sha512-wdIGBlcX13tCHOXGMVnnTVFtGRLoP0imqxM696fIPwIf5ODIYUHIvHbZcyvGlZFiFhK5XzDC2lpjbxRhnM05Tg=="
   "resolved" "https://registry.npmjs.org/quill-delta/-/quill-delta-3.6.3.tgz"
@@ -10574,6 +10586,7 @@
     "y18n" "^5.0.5"
     "yargs-parser" "^20.2.2"
 
+<<<<<<< HEAD
 "yjs@^13.5.39":
   "integrity" "sha512-EoVT856l301lomtjjVspgTdSRiFqZ7gNKnmVPX4/V8NHI5EYS39/MdjB9iNv0Mw1weKDZRU8NgxgerqwJ3y2xA=="
   "resolved" "https://registry.npmjs.org/yjs/-/yjs-13.5.39.tgz"
@@ -10581,6 +10594,8 @@
   dependencies:
     "lib0" "^0.2.49"
 
+=======
+>>>>>>> 73314c4485a217e94d7e1f1504c5fe149a0ab62c
 "yocto-queue@^0.1.0":
   "integrity" "sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q=="
   "resolved" "https://registry.npmjs.org/yocto-queue/-/yocto-queue-0.1.0.tgz"
