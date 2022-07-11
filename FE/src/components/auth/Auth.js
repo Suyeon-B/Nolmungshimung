@@ -7,7 +7,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     console.log("auth auth");
     //To know my current status, send Auth request
-    fetch("http://localhost:5000/user/auth", {
+    fetch("http://localhost:8443/users/auth", {
       method: "get",
       headers: {
         "content-type": "application/json",

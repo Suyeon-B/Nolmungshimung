@@ -41,7 +41,7 @@ function App() {
             <ProjectSide />
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/auth" element={<KakaoSignIn />} />
+              <Route path="/kakao/signin" element={<KakaoSignIn />} />
               <Route path="signin/*" element={<SignIn />} />
               <Route path="signup/*" element={<SignUp />} />
               {/* <Route path="shareMemo/*" element={<TextEditor />} /> */}
