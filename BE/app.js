@@ -11,6 +11,7 @@ var usersRouter = require("./routes/users/users");
 var projectsRouter = require("./routes/projects/projects");
 var travelRouter = require("./routes/travel/travel");
 var commonRouter = require("./routes/common/common");
+var mongodb = require("dotenv").config();
 
 var app = express();
 
@@ -31,8 +32,8 @@ app.use(express.static(path.join(__dirname, "public")));
 
 var db;
 mongoose
-  // .connect("mongodb+srv://tndus4243:내비번이지롱@jungle.j4qlpgi.mongodb.net/?retryWrites=true&w=majority")
-  .connect("mongodb://localhost/shareMemo")
+  // .connect("mongodb://localhost/shareMemo")
+  .connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB Connected..."))
   .catch((err) => console.log(`connect err : ${err}`));
 
