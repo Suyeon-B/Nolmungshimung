@@ -32,6 +32,9 @@ const userSchema = mongoose.Schema({
   updatedBy: {
     type: String,
   },
+  provider: {
+    type: String,
+  },
 });
 
 //useFlag 값 : 0(삭제), 1(이메일 인증 필요), 2(정상적으로 사용 가능한 상태)
