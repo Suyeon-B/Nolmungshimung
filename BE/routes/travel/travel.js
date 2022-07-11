@@ -5,19 +5,16 @@ const { Travel } = require(__base + "models/Travel");
 
 /* GET home page. */
 router.get('/:id', async function(req, res, next) {
-  let query = req.query;
-  let data = await Travel.findOne({ travel_id: query.id})
-  console.log(data)
-  let resForm = {
-    status: 500,
-    message: null
+  let id = req.params.id;
+  let data = await Travel.findOne({ travel_id: id})
+  if (data){
+    return res.status(200).send(JSON.stringify({
+      message: 'success',
+    }));
   }
-  // if (data){
-  //   resForm.status = 200
-  //   resForm.message = data
-  // }
-  console.log('get /id');
-  return res.send(JSON.stringify(resForm));
+  res.status(404).send(JSON.stringify({
+    message: 'fail'
+  }))
 });
 
 
@@ -32,31 +29,27 @@ router.post('/:id', async function(req, res, next) {
     phone : body.phone,
     place_url : body.place_url,
     // photo: body.result.photos ? body.result.photos[0].html_attributions[0]: null,
-    photo: body.result.photos,
+    photo: body.result? body.result.photos : null,
     // photo_reference: body.result.photos ? body.result.photos[0].photo_reference : null,
-    rating: body.result.rating,
-    reviews: body.result.reviews,
-    user_ratings_total: body.result.user_ratings_total
-  }
-  console.log(insertForm);
-
-  let resForm = {
-    status: 500,
-    message: null
+    rating: body.result? body.result.rating : null,
+    reviews: body.result? body.result.reviews : null,
+    user_ratings_total: body.result? body.result.user_ratings_total : null
   }
 
   const travel = new Travel(insertForm);
   travel.save()
   .then(() => {
-    console.log('success');
-    resForm.status = 200
-    resForm.message = insertForm
+    return res.status(200).send(JSON.stringify({
+      message: 'success',
+    }));
   })
   .catch((err) => {
     console.log(err);
+    res.status(500).send({
+      message: 'fail'
+    })
   })
   
-  return res.send(JSON.stringify(resForm));
 });
 
 module.exports = router;

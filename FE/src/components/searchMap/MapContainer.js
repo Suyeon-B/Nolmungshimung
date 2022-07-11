@@ -9,7 +9,6 @@ const MapContainer = ({ searchPlace }) => {
   // 검색결과 배열에 담아줌
 
   const [Places, setPlaces] = useState([]);
-  console.log('---', Places);
 
   useEffect(() => {
     var infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });

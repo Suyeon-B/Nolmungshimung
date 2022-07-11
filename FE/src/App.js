@@ -4,7 +4,7 @@ import SignIn from "./pages/sign/SignIn";
 import SearchMap from "./pages/search/Search";
 import Home from "./pages/Home";
 import TextEditor from "./pages/shareMemo/TextEditor";
-import KakaoSignIn from "./pages/sign/KakaoSignIn";
+import KakaoSignIn from "./components/sign/KakaoSignIn";
 import {
   BrowserRouter as Router,
   Routes,
@@ -41,7 +41,7 @@ function App() {
             <ProjectSide />
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/auth" element={<KakaoSignIn />} />
+              <Route path="/kakao/signin" element={<KakaoSignIn />} />
               <Route path="signin/*" element={<SignIn />} />
               <Route path="signup/*" element={<SignUp />} />
               {/* <Route path="shareMemo/*" element={<TextEditor />} /> */}

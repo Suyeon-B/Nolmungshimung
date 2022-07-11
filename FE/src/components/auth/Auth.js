@@ -7,13 +7,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     console.log("auth auth");
     //To know my current status, send Auth request
-    fetch("http://localhost:5000/user/auth", {
-      method: "get",
-      headers: {
-        "content-type": "application/json",
-      },
-      credentials: "include",
-    })
+    fetch("http://localhost:8443/users/auth",)
       .then((response) => response.json())
       .then((response) => {
         console.log("response : " + JSON.stringify(response));
@@ -53,9 +47,15 @@ export const useAuth = () => {
 
 export const RequireAuth = ({ children }) => {
   const auth = useAuth();
+  console.log(`auth : ${JSON.stringify(auth)}`);
+  console.log(`auth.user : ${auth.user}`);
 
   if (!auth.user) {
-    return <Navigate to="/signin" />;
+    console.log(`auth : ${JSON.stringify(auth)}`);
+    console.log(`auth : ${JSON.stringify(auth.user)}`);
+
+    return children;
+    // return <Navigate to="/signin" />;
   }
   return children;
 };

@@ -6,6 +6,7 @@ import { useAuth } from "../components/auth/Auth";
 
 function Home() {
   const auth = useAuth();
+  console.log(`auth.user in Home : ${JSON.stringify(auth.user)}`);
   let navigate = useNavigate();
   const goSignIn = () => {
     navigate("/signin", { replace: false });
@@ -14,7 +15,7 @@ function Home() {
     navigate("/project", { replace: false });
   };
   const goSignUp = () => {
-    navigate("/signup", { replace: false });
+    navigate("/search", { replace: false });
   };
 
   return (

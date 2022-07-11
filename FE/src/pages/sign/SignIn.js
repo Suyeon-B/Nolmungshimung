@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../components/auth/Auth";
 
 const kauthUrl =
-  "https://kauth.kakao.com/oauth/authorize?client_id=2d1c91f12a4c8020dbcc39ddb0c368b0&redirect_uri=http://localhost:3000/auth&response_type=code";
+  "https://kauth.kakao.com/oauth/authorize?client_id=2d1c91f12a4c8020dbcc39ddb0c368b0&redirect_uri=http://localhost:3000/kakao/signin&response_type=code";
 
 function SignIn() {
   let navigate = useNavigate();
@@ -37,7 +37,6 @@ function SignIn() {
         if (res.loginSuccess === true) {
           console.log("Sign In Success");
           sessionStorage.setItem("myName", res.user_name);
-
           navigate("/", { replace: true });
         }
       })
@@ -51,7 +50,7 @@ function SignIn() {
       password: password,
     };
     mutate(userForm);
-    login(id);
+    login({ user: id });
   };
   const onClickSignUp = () => {
     // window.location.href = "/signup";

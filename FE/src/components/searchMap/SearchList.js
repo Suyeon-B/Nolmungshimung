@@ -9,17 +9,10 @@ const SearchList = (Places) => {
     const api_key = "AIzaSyAFeyVrH7cjDHGVVLqhifBI-DFlTUwEn8E";
     url =
       url + "input=" + props.input + "&inputtype=textquery" + "&key=" + api_key;
-    fetch(`http://localhost:8443/travel/${props.id}`, {
-      method: "get",
-      headers: {
-        "content-type": "application/json",
-      },
-      credentials: "include",
-    })
+    fetch(`http://localhost:8443/travel/`+ props.id)
       .then((response) => response.json())
       .then((data) => {
-          console.log(data);
-        if (data.status != 200) {
+        if (data.message != 'success') {
           fetch(url)
             .then((response) => response.json())
             .then((data) => {
@@ -29,7 +22,6 @@ const SearchList = (Places) => {
                 fetch(url + data.candidates[0].place_id + "&key=" + api_key)
                   .then((res) => res.json())
                   .then((data) => {
-                    console.log("-----", data);
                     data.id = props.id;
                     data.place_name = props.place_name;
                     data.road_address_name = props.road_address_name;
@@ -41,27 +33,45 @@ const SearchList = (Places) => {
                       method: "post",
                       headers: {
                         "content-type": "application/json",
+                        // "Access-Control-Allow-Origin" : '*'
                       },
                       body: JSON.stringify(data),
-                      credentials: "include",
+                      // credentials: "include",
                     })
                     .catch((error) => console.log("error:", error))
-                    return 0;
                   })
                   .catch((error) => {
                     console.log("error:", error);
-                    return 0;
                   });
               }
-              return 0;
+              else{
+                let kakaoData = {
+                    id : props.id,
+                    place_name : props.place_name,
+                    road_address_name : props.road_address_name,
+                    category_group_name : props.category_group_name,
+                    phone : props.phone,
+                    place_url : props.place_url,
+                    result : null,
+                }
+                fetch(`http://localhost:8443/travel/${props.id}`, {
+                      method: "post",
+                      headers: {
+                        "content-type": "application/json",
+                        // "Access-Control-Allow-Origin" : '*'
+                      },
+                      body: JSON.stringify(kakaoData),
+                      // credentials: "include",
+                    })
+                    .catch((error) => console.log("error:", error))
+              }
             })
             .catch((error) => {
               console.log("error:", error);
-              return 0;
             });
-          return 0;
         }
-      });
+      })
+      .catch(error => console.log(error))
   }
 
   function makeLI(item, i) {
@@ -107,7 +117,15 @@ const SearchList = (Places) => {
               phone: item.phone,
               place_url: item.place_url,
             })
-          : null}
+          : GetGooglePlaceId({
+            input: item.address_name + "" + item.place_name,
+            id: item.id,
+            place_name: item.place_name,
+            road_address_name: item.address_name,
+            category_group_name: item.category_group_name,
+            phone: item.phone,
+            place_url: item.place_url,
+          })}
       </li>
     );
   }
