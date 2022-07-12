@@ -13,8 +13,8 @@ const StyledMenu = styled(Menu)`
 
 const mookProject = [
   {
-    _id: "1",
-    project_title: "우정여행",
+    _id: "62cd2a4e91c62a94ab81fd63",
+    project_title: "테스트",
   },
   {
     _id: "2",

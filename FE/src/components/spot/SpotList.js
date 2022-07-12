@@ -109,9 +109,10 @@ dataChannel.addEventListener("close", (event) => {
   console.log(`data channel close`);
 });
 
-export default function SpotList() {
+export default function SpotList({ dayItem }) {
   // const [state, setState] = useState([testItem, testItem2]);
-  const [state, setState] = useState([testItem]);
+  console.log(dayItem[0]);
+  const [state, setState] = useState([dayItem[0]]);
 
   function onDragEnd(result) {
     const { source, destination } = result;
@@ -152,8 +153,8 @@ export default function SpotList() {
                 >
                   {el.map((item, index) => (
                     <Draggable
-                      key={item.id}
-                      draggableId={item.id}
+                      key={item.travel_id}
+                      draggableId={item.travel_id}
                       index={index}
                     >
                       {(provided, snapshot) => (
@@ -183,7 +184,7 @@ export default function SpotList() {
                                   console.log("dd");
                                 }}
                               >
-                                {item.title}
+                                {item.place_name}
                               </SpotTitle>
                               <SpotCategory>{item.category}</SpotCategory>
                             </SpotItemDiv>

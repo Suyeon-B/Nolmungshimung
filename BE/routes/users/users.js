@@ -10,7 +10,7 @@ const middlewares = require("../../middleware");
 //             User
 //=================================
 
-// router.get("/auth", auth, (req, res) => {
+// router.get("/auth", auth, (req, res) =>{
 //     res.status(200).json({
 //         _id: req.user._id,
 //         isAdmin: req.user.role === 0 ? false : true,
