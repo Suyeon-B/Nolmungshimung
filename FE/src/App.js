@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import Test from "./pages/test";
 import TextEditor from "./pages/shareMemo/TextEditor";
 import KakaoSignIn from "./components/sign/KakaoSignIn";
+import VoiceTalk from "./components/voiceTalk/sessionFunc";
 import {
   BrowserRouter as Router,
   Routes,
@@ -47,8 +48,7 @@ function App() {
             <Routes>
               <Route path="signin/*" element={<SignIn />} />
               <Route path="signup/*" element={<SignUp />} />
-
-              <Route path="/test" element={<Test />} />
+              <Route path="voicetalk/*" element={<VoiceTalk />} />
               <Route
                 path="/"
                 element={
