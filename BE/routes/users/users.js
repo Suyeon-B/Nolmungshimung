@@ -274,30 +274,17 @@ router.post("/kakao", async (req, res) => {
       RefreshToken: "",
     });
 
-    if ((await checkUserEmail(user.user_email)) !== null) {
-      console.log("있어용");
-    } else {
-      console.log("없어용");
-      user.save(async (err, data) => {
-        if (err) {
-          console.log(`err : ${err}`);
-          console.log(err.code);
-          console.log("회원가입 시 에러 발생!");
-        }
-      });
-    }
+    const c_user = await checkUserEmail(user.user_email);
 
-    await User.findOne({ user_email: userEmail }, (err, user) => {
-      user.generateToken((err, user) => {
+    if (c_user !== null) {
+      console.log("있어용");
+      c_user.generateToken((err, user) => {
         if (err) {
           return res.status(400).json({
             loginSuccess: false,
             message: "토큰 생성에 실패했습니다.",
           });
         }
-        console.log("refresh = " + user.userRefreshToken);
-        console.log("access = " + user.userAccessToken);
-        console.log(res.cookie);
         res.cookie("w_refresh", user.userRefreshToken);
         res.cookie("w_access", user.userAccessToken).status(200).json({
           loginSuccess: true,
@@ -307,7 +294,32 @@ router.post("/kakao", async (req, res) => {
           token: user.userAccessToken,
         });
       });
-    });
+    } else {
+      console.log("없어용");
+      await user.save(async (err, data) => {
+        if (err) {
+          console.log(`err : ${err}`);
+          console.log(err.code);
+          console.log("회원가입 시 에러 발생!");
+        }
+        data.generateToken((err, user) => {
+          if (err) {
+            return res.status(400).json({
+              loginSuccess: false,
+              message: "토큰 생성에 실패했습니다.",
+            });
+          }
+          res.cookie("w_refresh", user.userRefreshToken);
+          res.cookie("w_access", user.userAccessToken).status(200).json({
+            loginSuccess: true,
+            user_email: user.user_email,
+            user_name: user.user_name,
+            message: "성공적으로 로그인했습니다.",
+            token: user.userAccessToken,
+          });
+        });
+      });
+    }
   } catch (err) {
     return res.status(500).json({
       loginSuccess: false,
