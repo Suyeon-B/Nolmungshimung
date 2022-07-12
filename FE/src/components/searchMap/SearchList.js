@@ -1,4 +1,3 @@
-import { resolveOnChange } from "rc-input/lib/utils/commonUtils";
 import React, { useEffect, useState } from "react";
 import dragFunction from "./DragAndDrop";
 
@@ -9,10 +8,10 @@ const SearchList = (Places) => {
     const api_key = "AIzaSyAFeyVrH7cjDHGVVLqhifBI-DFlTUwEn8E";
     url =
       url + "input=" + props.input + "&inputtype=textquery" + "&key=" + api_key;
-    fetch(`http://${process.env.REACT_APP_SERVER_IP}:8443/travel/`+ props.id)
+    fetch(`http://${process.env.REACT_APP_SERVER_IP}:8443/travel/` + props.id)
       .then((response) => response.json())
       .then((data) => {
-        if (data.message != 'success') {
+        if (data.message != "success") {
           fetch(url)
             .then((response) => response.json())
             .then((data) => {
@@ -28,42 +27,45 @@ const SearchList = (Places) => {
                     data.category_group_name = props.category_group_name;
                     data.phone = props.phone;
                     data.place_url = props.place_url;
-              
-                    fetch(`http://${process.env.REACT_APP_SERVER_IP}:8443/travel/${props.id}`, {
-                      method: "post",
-                      headers: {
-                        "content-type": "application/json",
-                        // "Access-Control-Allow-Origin" : '*'
-                      },
-                      body: JSON.stringify(data),
-                      // credentials: "include",
-                    })
-                    .catch((error) => console.log("error:", error))
+
+                    fetch(
+                      `http://${process.env.REACT_APP_SERVER_IP}:8443/travel/${props.id}`,
+                      {
+                        method: "post",
+                        headers: {
+                          "content-type": "application/json",
+                          // "Access-Control-Allow-Origin" : '*'
+                        },
+                        body: JSON.stringify(data),
+                        // credentials: "include",
+                      }
+                    ).catch((error) => console.log("error:", error));
                   })
                   .catch((error) => {
                     console.log("error:", error);
                   });
-              }
-              else{
+              } else {
                 let kakaoData = {
-                    id : props.id,
-                    place_name : props.place_name,
-                    road_address_name : props.road_address_name,
-                    category_group_name : props.category_group_name,
-                    phone : props.phone,
-                    place_url : props.place_url,
-                    result : null,
-                }
-                fetch(`http://${process.env.REACT_APP_SERVER_IP}:8443/travel/${props.id}`, {
-                      method: "post",
-                      headers: {
-                        "content-type": "application/json",
-                        // "Access-Control-Allow-Origin" : '*'
-                      },
-                      body: JSON.stringify(kakaoData),
-                      // credentials: "include",
-                    })
-                    .catch((error) => console.log("error:", error))
+                  id: props.id,
+                  place_name: props.place_name,
+                  road_address_name: props.road_address_name,
+                  category_group_name: props.category_group_name,
+                  phone: props.phone,
+                  place_url: props.place_url,
+                  result: null,
+                };
+                fetch(
+                  `http://${process.env.REACT_APP_SERVER_IP}:8443/travel/${props.id}`,
+                  {
+                    method: "post",
+                    headers: {
+                      "content-type": "application/json",
+                      // "Access-Control-Allow-Origin" : '*'
+                    },
+                    body: JSON.stringify(kakaoData),
+                    // credentials: "include",
+                  }
+                ).catch((error) => console.log("error:", error));
               }
             })
             .catch((error) => {
@@ -71,7 +73,7 @@ const SearchList = (Places) => {
             });
         }
       })
-      .catch(error => console.log(error))
+      .catch((error) => console.log(error));
   }
 
   function makeLI(item, i) {
@@ -118,25 +120,19 @@ const SearchList = (Places) => {
               place_url: item.place_url,
             })
           : GetGooglePlaceId({
-            input: item.address_name + "" + item.place_name,
-            id: item.id,
-            place_name: item.place_name,
-            road_address_name: item.address_name,
-            category_group_name: item.category_group_name,
-            phone: item.phone,
-            place_url: item.place_url,
-          })}
+              input: item.address_name + "" + item.place_name,
+              id: item.id,
+              place_name: item.place_name,
+              road_address_name: item.address_name,
+              category_group_name: item.category_group_name,
+              phone: item.phone,
+              place_url: item.place_url,
+            })}
       </li>
     );
   }
 
-  return (
-    <div>
-      {Places.map(
-        (item, i) => makeLI(item, i)
-      )}
-    </div>
-  );
+  return <div>{Places.map((item, i) => makeLI(item, i))}</div>;
 };
 
 export default SearchList;
