@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import Test from "./pages/test";
 import TextEditor from "./pages/shareMemo/TextEditor";
 import KakaoSignIn from "./components/sign/KakaoSignIn";
+import VoiceTalk from "./components/voiceTalk/sessionFunc";
 import {
   BrowserRouter as Router,
   Routes,
@@ -46,6 +47,7 @@ function App() {
               <Route path="/kakao/signin" element={<KakaoSignIn />} />
               <Route path="signin/*" element={<SignIn />} />
               <Route path="signup/*" element={<SignUp />} />
+              <Route path="voicetalk/*" element={<VoiceTalk />} />
               {/* <Route path="shareMemo/*" element={<TextEditor />} /> */}
               {/* [수연][TextEditor] 추후 projectID 기준으로 변경 예정 */}
               <Route

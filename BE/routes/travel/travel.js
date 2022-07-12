@@ -19,10 +19,10 @@ router.get('/:id', async function(req, res, next) {
 
 
 router.post('/:id', async function(req, res, next) {
-  let query = req.query;
+  // let query = req.query;
   let body = req.body;
   let insertForm = {
-    travel_id : body.id,
+    travel_id : req.params.id,
     place_name : body.place_name,
     road_address_name : body.road_address_name,
     category_group_name : body.category_group_name,
