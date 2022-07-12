@@ -55,7 +55,7 @@ app.use("/common", commonRouter);
 // [수연][TextEditor] socket io 작업 | line 51~90
 const io = require("socket.io")(3001, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: `http://143.248.194.44:3000`,
     methods: ["GET", "POST"],
   },
 });
