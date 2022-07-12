@@ -1,6 +1,11 @@
 import { useState, createContext, useContext, useEffect } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
+<<<<<<< HEAD
+import { getCookie, deleteCookie } from "./cookie";
+
+=======
 import { getCookie } from "./cookie";
+>>>>>>> develop
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
@@ -17,7 +22,7 @@ export const AuthProvider = ({ children }) => {
     })
       .then((response) => response.json())
       .then((response) => {
-        console.log("response : " + JSON.stringify(response));
+        // console.log("response : " + JSON.stringify(response));
         //Not Loggined in Status
         if (!response.isAuth) {
           console.log("로그인 해주세요");
@@ -41,6 +46,10 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
+    // cookie 삭제
+    console.log("auth logout");
+    deleteCookie("w_access");
+    deleteCookie("w_refresh");
     setUser(null);
   };
 
@@ -57,11 +66,11 @@ export const useAuth = () => {
 
 export const RequireAuth = ({ children }) => {
   const auth = useAuth();
-  console.log(`auth in Auth: ${JSON.stringify(auth)}`);
+  // console.log(`auth in Auth: ${JSON.stringify(auth)}`);
 
   if (!auth.user) {
-    console.log(`auth in Auth : ${JSON.stringify(auth)}`);
-    console.log(`auth.user in Auth: ${JSON.stringify(auth.user)}`);
+    // console.log(`auth in Auth : ${JSON.stringify(auth)}`);
+    // console.log(`auth.user in Auth: ${JSON.stringify(auth.user)}`);
 
     return children;
     // return <Navigate to="/signin" />;
