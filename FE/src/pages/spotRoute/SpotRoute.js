@@ -21,9 +21,10 @@ function SpotRoute({ item }) {
   );
 }
 
+// width: calc(100% - 100px);
 const SpotRouteContainer = styled.div`
   height: 100vh;
-  width: calc(81% - 100px);
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -34,6 +35,7 @@ const SpotRouteMap = styled.div`
   height: 100%;
   margin-left: 19px;
   border-radius: 15px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 `;
 
 const SpotRouteSection = styled.section`
@@ -41,6 +43,7 @@ const SpotRouteSection = styled.section`
   display: flex;
   flex-direction: row;
   width: 100%;
+  height: calc(50% - 37px);
   justify-content: center;
 `;
 
