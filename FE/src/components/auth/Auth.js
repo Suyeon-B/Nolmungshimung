@@ -1,7 +1,6 @@
 import { useState, createContext, useContext, useEffect } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { getCookie } from "./cookie";
-
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
@@ -9,7 +8,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     console.log("auth auth");
     //To know my current status, send Auth request
-    fetch("http://localhost:8443/users/auth", {
+    fetch(`http://${process.env.REACT_APP_SERVER_IP}:8443/users/auth`, {
       method: "get",
       headers: {
         "content-type": "application/json",
