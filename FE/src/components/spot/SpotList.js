@@ -80,13 +80,13 @@ const getItemStyle = (isDragging, draggableStyle) => ({
 });
 const getListStyle = (isDraggingOver) => ({
   // background: isDraggingOver ? "rgba(183, 183, 183, 0.45)" : "white",
-  margin: "50px",
+  // margin: "50px",
   // textAlign: "center",
   boxShadow: " inset 2px 4px 4px 2px rgba(0, 0, 0, 0.25)",
   borderRadius: "15px",
   padding: grid,
   height: "99%",
-  width: 250,
+  width: 343,
   overflow: "scroll",
 });
 
@@ -140,77 +140,75 @@ export default function SpotList({ dayItem }) {
   }
 
   return (
-    <div>
-      <SidePlanListDiv>
-        <StyledDragDropContext onDragEnd={onDragEnd}>
-          {state.map((el, ind) => (
-            <Droppable key={ind} droppableId={`${ind}`}>
-              {(provided, snapshot) => (
-                <div
-                  ref={provided.innerRef}
-                  style={getListStyle(snapshot.isDragging)}
-                  {...provided.droppableProps}
-                >
-                  {el.map((item, index) => (
-                    <Draggable
-                      key={item.travel_id}
-                      draggableId={item.travel_id}
-                      index={index}
-                    >
-                      {(provided, snapshot) => (
+    <SidePlanListDiv>
+      <StyledDragDropContext onDragEnd={onDragEnd}>
+        {state.map((el, ind) => (
+          <Droppable key={ind} droppableId={`${ind}`}>
+            {(provided, snapshot) => (
+              <div
+                ref={provided.innerRef}
+                style={getListStyle(snapshot.isDragging)}
+                {...provided.droppableProps}
+              >
+                {el.map((item, index) => (
+                  <Draggable
+                    key={item.travel_id}
+                    draggableId={item.travel_id}
+                    index={index}
+                  >
+                    {(provided, snapshot) => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        style={getItemStyle(
+                          snapshot.isDragging,
+                          provided.draggableProps.style
+                        )}
+                      >
                         <div
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          style={getItemStyle(
-                            snapshot.isDragging,
-                            provided.draggableProps.style
-                          )}
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-evenly",
+                          }}
+                          onMouseOver={() => {
+                            <button>TEST</button>;
+                          }}
+                          onMouseOut={() => {}}
                         >
-                          <div
-                            style={{
-                              display: "flex",
-                              justifyContent: "space-evenly",
-                            }}
-                            onMouseOver={() => {
-                              <button>TEST</button>;
-                            }}
-                            onMouseOut={() => {}}
-                          >
-                            <SpotItemDiv>
-                              <SpotTitle
-                                className="spotTitle"
-                                onClick={() => {
-                                  console.log("dd");
-                                }}
-                              >
-                                {item.place_name}
-                              </SpotTitle>
-                              <SpotCategory>{item.category}</SpotCategory>
-                            </SpotItemDiv>
-                            <DeleteOutlined
-                              style={{ fontSize: "25px" }}
+                          <SpotItemDiv>
+                            <SpotTitle
+                              className="spotTitle"
                               onClick={() => {
-                                const newState = [...state];
-                                newState[ind].splice(index, 1);
-                                setState(
-                                  newState.filter((group) => group.length)
-                                );
+                                console.log("dd");
                               }}
-                            />
-                          </div>
+                            >
+                              {item.place_name}
+                            </SpotTitle>
+                            <SpotCategory>{item.category}</SpotCategory>
+                          </SpotItemDiv>
+                          <DeleteOutlined
+                            style={{ fontSize: "25px" }}
+                            onClick={() => {
+                              const newState = [...state];
+                              newState[ind].splice(index, 1);
+                              setState(
+                                newState.filter((group) => group.length)
+                              );
+                            }}
+                          />
                         </div>
-                      )}
-                    </Draggable>
-                  ))}
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
-          ))}
-        </StyledDragDropContext>
-      </SidePlanListDiv>
-    </div>
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        ))}
+      </StyledDragDropContext>
+    </SidePlanListDiv>
   );
 }
 
@@ -219,7 +217,7 @@ const SpotItemDiv = styled.div`
   flex-direction: column;
   justify-content: center;
   height: 30px;
-  width: 150px;
+  width: 250px;
 `;
 
 const SpotTitle = styled.text`
