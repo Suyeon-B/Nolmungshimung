@@ -6,6 +6,7 @@ const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [userProjects, setUserProjects] = useState([]);
   useEffect(() => {
     // console.log("auth auth");
     //To know my current status, send Auth request
@@ -26,9 +27,11 @@ export const AuthProvider = ({ children }) => {
           // navigate("/signin", { replace: true });
           //Loggined in Status
         } else {
-          // console.log(response);
-          // console.log(JSON.stringify(response));
+          // console.log(JSON.stringify(response.user_name.user_projects));
+          // console.log("sss", response.user_name.user_projects);
           setUser(response.user_name); // isAuth가 true임이 증명되어야 화면을 나타내도록 처리
+          // setUserProjects(response.user_name.user_projects);
+
           //supposed to be Admin page, but not admin person wants to go inside
           // navigate("/", { replace: true });
           // window.location.replace("/");
@@ -37,16 +40,21 @@ export const AuthProvider = ({ children }) => {
   }, []);
   // }, [user]);
 
+  console.log("AuthProvider");
+  // console.log("ss", userProjects);
+
+  // sessionStorage.setItem("information", userProjects);
   const login = (user) => {
     setUser(user);
   };
 
   const logout = () => {
     // cookie 삭제
-    console.log("auth logout");
+    // console.log("auth logout");
     deleteCookie("w_access");
     deleteCookie("w_refresh");
     setUser(null);
+    sessionStorage.clear();
   };
 
   return (

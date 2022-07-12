@@ -39,6 +39,7 @@ function SignIn() {
           sessionStorage.setItem("myName", res.user_name);
           sessionStorage.setItem("user_email", res.user_email);
           navigate("/", { replace: true });
+          login({ user: id });
         }
       })
       .catch((err) => console.log(`err: ${err}`));
@@ -51,7 +52,6 @@ function SignIn() {
       password: password,
     };
     mutate(userForm);
-    login({ user: id });
   };
   const onClickSignUp = () => {
     // window.location.href = "/signup";
@@ -60,7 +60,7 @@ function SignIn() {
 
   return (
     <Container>
-      <Title alt="" src="/statics/images/loginTitle.png" />
+      <Title src="/statics/images/loginTitle.png" />
       <Box>
         <Btns>
           <LogInBtn>Log in</LogInBtn>

@@ -4,33 +4,8 @@ import styled from "styled-components";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../auth/Auth";
 
-const mookProject = [
-  {
-    _id: "62cd2a4e91c62a94ab81fd63",
-    project_title: "테스트",
-  },
-  {
-    _id: "2",
-    project_title: "가족여행",
-  },
-  {
-    _id: "3",
-    project_title: "친구여행",
-  },
-  {
-    _id: "4",
-    project_title: "효도여행",
-  },
-  {
-    _id: "5",
-    project_title: "여행여행",
-  },
-];
-
 function ProfileDetail(props) {
   const auth = useAuth();
-  // console.log(`auth.user : ${auth.user}`);
-  let navigate = useNavigate();
 
   const goMypage = () => {
     console.log("마이페이지로 이동 넣어야함");
@@ -53,22 +28,17 @@ function ProfileDetail(props) {
 
 function Profile() {
   const auth = useAuth();
-  // console.log(`auth.user : ${auth.user}`);
-  let navigate = useNavigate();
   const [profileView, setProfileView] = useState(false);
+
   const onMouseOverCircle = () => {
     setProfileView(true);
-    console.log("in circle");
   };
-  const onMouseOutCircle = () => {
-    setProfileView(false);
-    console.log("out circle");
-  };
+  // console.log(`auth.user:${JSON.stringify(auth.user.user_name)}`);
   return (
     <section>
       {auth.user ? (
         <ProfileCircle onMouseEnter={onMouseOverCircle}>
-          <span>허</span>
+          <span>{sessionStorage.getItem("myName")}</span>
         </ProfileCircle>
       ) : (
         <ProfileImg
@@ -109,50 +79,62 @@ function ProjectSide() {
   const Label = (el) => {
     return (
       <Link to={`project/${el._id}`}>
-        <h1 style={{ fontSize: "25px" }}> {el.project_title[0]}</h1>
+        <h1 style={{ fontSize: "25px" }}> {el.project_title.slice(0, 2)}</h1>
       </Link>
     );
   };
 
-  const profileObj = {
-    key: "10",
-    label: <Profile />,
-    title: "profile",
-    style: {
-      height: "70px",
-    },
-    onClick: () => {
-      navigate("/");
-    },
-  };
-
   const [items, setItems] = useState([]);
-
+  const auth = useAuth();
+  let projectsInfo = null;
   useEffect(() => {
-    const projectItems = mookProject.map((el, idx) => {
-      return {
-        key: idx + 1,
-        label: Label(el),
-        style: {
-          height: "60px",
-          textAlign: "center",
-          padding: "0px",
-        },
-        onClick: () => {
-          alert(`${idx + 1} project`);
-        },
-      };
-    });
-    setItems(projectItems);
-  }, []);
+    // auth.user 불러오질 못함.
+    // 세션은 ..? 안됨
+    // -> auth.user가 변경될때마다 재랜더링 ㄲ
+    let projects = auth.user?.user_projects;
+
+    fetch(`http://${process.env.REACT_APP_SERVER_IP}:8443/projects/title`, {
+      method: "post",
+      headers: {
+        "content-type": "application/json",
+      },
+      // credentials: "include",
+      body: JSON.stringify(projects),
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.success === true) {
+          projectsInfo = res.projectInfo;
+          const projectItems = projectsInfo.map((el, idx) => {
+            return {
+              key: idx + 1,
+              label: Label(el),
+              style: {
+                height: "60px",
+                textAlign: "center",
+                padding: "0px",
+              },
+              onClick: () => {
+                alert(`${idx + 1} project`);
+              },
+            };
+          });
+          setItems(projectItems);
+        }
+      })
+      .catch((err) => console.log(`err: ${err}`));
+  }, [auth.user]);
 
   return (
-    <StyledMenu
-      theme="Light"
-      mode="inline"
-      defaultSelectedKeys={["1"]}
-      items={[LogoObj, ...items, profileObj]}
-    />
+    <>
+      <StyledMenu
+        theme="Light"
+        mode="inline"
+        defaultSelectedKeys={["1"]}
+        items={[LogoObj, ...items]}
+      />
+      <Profile />
+    </>
   );
 }
 
@@ -191,6 +173,7 @@ const ProfileCircle = styled.div`
   position: fixed;
   bottom: 0;
   margin-bottom: 20px;
+  left: 20px;
 `;
 
 const ProfileDetailContainer = styled.div`
