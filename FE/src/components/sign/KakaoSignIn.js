@@ -61,7 +61,7 @@ function KakaoSignIn(props) {
           sessionStorage.setItem("myEmail", data.user_email);
           login(data.user_email);
         } else {
-          window.alert("로그인에 실패하였습니다.");
+          window.alert("로그인에 실패하였습니다 : " + data.message);
           navigate("/signin");
         }
       })
