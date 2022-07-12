@@ -19,7 +19,6 @@ function SpotRoute() {
     >
       <SpotRouteSection>
         <SpotList />
-        {/* 지도 api 연결안하면 에러떠서 주석처리함 */}
         <div
           id="myMap"
           style={{

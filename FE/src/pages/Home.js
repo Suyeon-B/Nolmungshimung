@@ -6,36 +6,7 @@ import { useAuth } from "../components/auth/Auth";
 
 function Home() {
   const auth = useAuth();
-  // useEffect(() => {
-  //   console.log("dd");
-  //   fetch("http://localhost:8443/users/auth", {
-  //     method: "get",
-  //     headers: {
-  //       "content-type": "application/json",
-  //     },
-  //     credentials: "include",
-  //   })
-  //     .then((response) => response.json())
-  //     .then((response) => {
-  //       console.log("response : " + JSON.stringify(response));
-  //       //Not Loggined in Status
-  //       if (!response.isAuth) {
-  //         console.log("로그인 해주세요");
-  //         window.location.replace("/signin");
-  //         // navigate("/signin", { replace: true });
-  //         //Loggined in Status
-  //       } else {
-  //         console.log(`response :${response}`);
-  //         auth.login(response.user_name); // isAuth가 true임이 증명되어야 화면을 나타내도록 처리
-  //         //supposed to be Admin page, but not admin person wants to go inside
-  //         // navigate("/", { replace: true });
-  //         // window.location.replace("/");
-  //       }
-  //     });
-  // }, []);
 
-  // console.log("Home");
-  // console.log(`auth.user in Home : ${JSON.stringify(auth.user)}`);
   let navigate = useNavigate();
   const goSignIn = () => {
     navigate("/signin", { replace: false });
