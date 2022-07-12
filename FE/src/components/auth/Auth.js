@@ -26,8 +26,8 @@ export const AuthProvider = ({ children }) => {
           // navigate("/signin", { replace: true });
           //Loggined in Status
         } else {
-          console.log(response);
-          console.log(JSON.stringify(response));
+          // console.log(response);
+          // console.log(JSON.stringify(response));
           setUser(response.user_name); // isAuth가 true임이 증명되어야 화면을 나타내도록 처리
           //supposed to be Admin page, but not admin person wants to go inside
           // navigate("/", { replace: true });
