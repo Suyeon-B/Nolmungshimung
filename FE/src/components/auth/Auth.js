@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
       headers: {
         "content-type": "application/json",
       },
-      // credentials: "include",
+      credentials: "include",
     })
       .then((response) => response.json())
       .then((response) => {
