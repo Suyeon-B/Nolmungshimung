@@ -32,7 +32,8 @@ const PlanSideBar = ({ item, toggleIsPage, isFirstPage }) => {
 };
 
 const SideBar = styled.div`
-  width: 288px;
+  width: 19%;
+  min-width: 280px;
   height: 100vh;
   /* background-color: #e7e7e7; */
 `;
@@ -55,7 +56,7 @@ const PlanTitle = styled.h1`
 `;
 const SideBarBtnDIv = styled.div`
   display: flex;
-  width: 288px;
+  width: 100%;
   height: 50px;
   background-color: #ebebeb;
   justify-content: center;

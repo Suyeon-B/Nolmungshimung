@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import dragFunction from "./DragAndDrop";
+import styled from "styled-components";
 
 const SearchList = (Places) => {
   function GetGooglePlaceId(props) {
@@ -76,9 +77,10 @@ const SearchList = (Places) => {
       .catch((error) => console.log(error));
   }
 
-  function makeLI(item, i) {
+  function makeLI(item, idx) {
     return (
-      <li
+      <StyledLi
+        draggable
         onDragOver={(event) => {
           return dragFunction(event, "over");
         }}
@@ -86,18 +88,12 @@ const SearchList = (Places) => {
         onDragEnter={(event) => dragFunction(event, "enter")}
         onDragLeave={(event) => dragFunction(event, "leave")}
         className="dragAndDrop"
-        key={i}
-        style={{
-          border: "1px solid black",
-          height: "auto",
-          width: "100%",
-          border: "1px solid black",
-        }}
+        key={idx}
       >
         {/* <span>{i + 1}</span> */}
-        <h5>{item.place_name}</h5>
+        <StyledTile>{item.place_name}</StyledTile>
         {item.road_address_name ? (
-          <div style={{ margin: "10px 90px 0 0" }}>
+          <div>
             <p title={item.road_address_name}>{item.road_address_name}</p>
             {/* <p title = {item.address_name}>{item.address_name}</p> */}
           </div>
@@ -109,7 +105,7 @@ const SearchList = (Places) => {
         <a target="_blank" href={item.place_url}>
           카카오맵에서 상세보기
         </a>
-        {item.road_address_name
+        {/* {item.road_address_name
           ? GetGooglePlaceId({
               input: item.road_address_name + "" + item.place_name,
               id: item.id,
@@ -127,12 +123,27 @@ const SearchList = (Places) => {
               category_group_name: item.category_group_name,
               phone: item.phone,
               place_url: item.place_url,
-            })}
-      </li>
+            })} */}
+      </StyledLi>
     );
   }
 
-  return <div>{Places.map((item, i) => makeLI(item, i))}</div>;
+  return <>{Places.map((item, i) => makeLI(item, i))}</>;
 };
+
+const StyledLi = styled.li`
+  border-bottom: 2px solid #ebebeb;
+  padding-top: 20px;
+  padding-bottom: 10px;
+  padding-left: 12px;
+`;
+
+const StyledTile = styled.h2`
+  font-style: normal;
+  font-weight: 700;
+  font-size: 18px;
+  color: #2d56bc;
+  margin-bottom: 14px;
+`;
 
 export default SearchList;
