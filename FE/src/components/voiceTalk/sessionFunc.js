@@ -10,12 +10,13 @@ var token;			// Token retrieved from OpenVidu Server
 
 /* OPENVIDU METHODS */
 
-function joinSession() {
+function joinSession(nickName, sessionName) {
 
-	document.getElementById("join-btn").disabled = true;
-	document.getElementById("join-btn").innerHTML = "Joining...";
+	// document.getElementById("join-btn").disabled = true;
+	// document.getElementById("join-btn").innerHTML = "Joining...";
+	console.log(`joinSesstion, name : ${nickName}, sessionName: ${sessionName}`)
 
-	getToken((token) => {
+	getToken((token, nickName, sessionName) => {
 
 		// --- 1) Get an OpenVidu object ---
 
@@ -56,12 +57,12 @@ function joinSession() {
 		//        the client (in this case a JSON with the nickname chosen by the user) ---
 
 		// var nickName = $("#nickName").val();
-		var nickName = document.getElementById('nickName').val();
+		// var nickName = document.getElementById('nickName').val();
 		session.connect(token, { clientData: nickName })
 			.then(() => {
-
+				console.log('session Conn')
 				// --- 5) Set page layout for active call ---
-				var userName = document.getElementById("user").val();
+				var userName = 'JG';
 				document.getElementById('session-title').text(sessionName);
 				document.getElementById('join').hide();
 				document.getElementById('session').show();
@@ -149,7 +150,7 @@ function logIn() {
 	var pass = document.getElementById("pass").val(); // Password
 
 	httpPostRequest(
-		'http://localhost:7443//api-login/login',
+		`http://${process.env.REACT_APP_SERVER_IP}:7443//api-login/login`,
 		{user: user, pass: pass},
 		'Login WRONG',
 		(response) => {
@@ -165,7 +166,7 @@ function logIn() {
 
 function logOut() {
 	httpPostRequest(
-		'http://localhost:7443/api-login/logout',
+		`http://${process.env.REACT_APP_SERVER_IP}:7443/api-login/logout`,
 		{},
 		'Logout WRONG',
 		(response) => {
@@ -177,11 +178,12 @@ function logOut() {
 	enableBtn();
 }
 
-function getToken(callback) {
-	sessionName = document.getElementById('sessionName').val; // Video-call chosen by the user
-	loggedUser = document.getElementById('nickName').val();
+function getToken(callback, loggedUser, sessionName) {
+	// sessionName = document.getElementById('sessionName').val; // Video-call chosen by the user
+	// loggedUser = document.getElementById('nickName').val();
+	console.log(`getToken - loggedUser : ${loggedUser}, sessionName : ${sessionName}`)
 	httpPostRequest(
-		'http://localhost:7443/api-sessions/get-token',
+		`http://${process.env.REACT_APP_SERVER_IP}:7443/api-sessions/get-token`,
 		{sessionName: sessionName,
 			loggedUser: loggedUser},
 		'Request of TOKEN gone WRONG:',
@@ -195,7 +197,7 @@ function getToken(callback) {
 
 function removeUser() {
 	httpPostRequest(
-		'http://localhost:7443/api-sessions/remove-user',
+		`http://${process.env.REACT_APP_SERVER_IP}:7443/api-sessions/remove-user`,
 		{sessionName: sessionName, token: token},
 		'User couldn\'t be removed from session',
 		(response) => {
@@ -336,11 +338,12 @@ export default function() {
 	};
 	
 	const onReset = () => {
-		setInputs({
-		nickname: '',
-		sessionName: ''
-		});
-		nameInput.current.focus();
+		// setInputs({
+		// nickname: '',
+		// sessionName: ''
+		// });
+		joinSession(nickname, sessionName);
+		// console.log(nickname, sessionName)
 	};
 
 	  return (

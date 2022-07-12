@@ -28,7 +28,7 @@ function SignUp() {
   });
 
   async function singUpUser(data) {
-    await fetch("http://localhost:8443/users/signup", {
+    await fetch(`http://${process.env.REACT_APP_SERVER_IP}:8443/users/signup`, {
       method: "post",
       headers: {
         "content-type": "application/json",
