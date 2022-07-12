@@ -346,7 +346,7 @@ export default function() {
 	  return (
 		<div>
 		<input
-		  name="nickName"
+		  name="nickname"
 		  placeholder="이름"
 		  onChange={onChange}
 		  value={nickname}
