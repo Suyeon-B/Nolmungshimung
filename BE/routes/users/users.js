@@ -2,14 +2,15 @@ const express = require("express");
 const router = express.Router();
 const request = require("request");
 const { User } = require(__base + "models/User");
-const { auth } = require("../../middleware/auth");
+const { authMain } = require("../../middleware/auth");
+const middlewares = require("../../middleware");
 // const { signupMail } = require(__base + "utils/mail");
 
 //=================================
 //             User
 //=================================
 
-// router.get("/auth", auth, (req, res) => {
+// router.get("/auth", auth, (req, res) =>{
 //     res.status(200).json({
 //         _id: req.user._id,
 //         isAdmin: req.user.role === 0 ? false : true,
@@ -52,6 +53,7 @@ function checkUserEmail(user_email) {
 // 2. 인증 번호 보내기
 router.post("/signup", async (req, res) => {
   // 이메일 인증 번호 랜덤 생성
+  console.log("Enter signup");
   var certificationNumber = Math.floor(Math.random() * (999999 - 0)) + 99999;
   req.body.certificationNumber = certificationNumber;
 
@@ -146,7 +148,7 @@ router.post("/checkCertificationNumber", (req, res) => {
 
 // 1. 성공 로그인 -> 이메일 인증 유무 확인
 router.post("/signin", (req, res) => {
-  console.log("signin : " + JSON.stringify(req.body));
+  // console.log("signin : " + JSON.stringify(req.body));
   console.log("user_email : " + JSON.stringify(req.body.user_email));
 
   User.findOne({ user_email: req.body.user_email }, async (err, user) => {
@@ -174,12 +176,13 @@ router.post("/signin", (req, res) => {
             message: "토큰 생성에 실패했습니다.",
           });
         }
-        // console.log("res : ", res.cookie);
+        // console.log("res : ", res.userRefreshToken);
         res.cookie("w_refresh", user.userRefreshToken);
         res.cookie("w_access", user.userAccessToken).status(200).json({
           loginSuccess: true,
           user_email: user.user_email,
           user_name: user.user_name,
+          user_projects: user.user_projects,
           message: "성공적으로 로그인했습니다.",
         });
       });
@@ -206,12 +209,14 @@ router.post("/signout", (req, res) => {
   );
 });
 
-router.get("/auth", auth, (req, res) => {
-  // console.log('req.user : ' + req.user)
-  res.status(200).json({
-    _id: req.user._id,
-    user_email: req.user.user_email,
-    user_name: req.user.user_name,
+router.get("/auth", authMain, (req, res) => {
+  // router.get("/auth", (req, res) => {
+  // console.log("req.user : " + req);
+  // console.log("return auth");
+  return res.status(200).json({
+    // _id: req.user._id,
+    // user_email: req.user.user_email,
+    user_name: req.user,
     isAuth: true,
   });
 });
@@ -243,72 +248,100 @@ router.post("/kakao", async (req, res) => {
     console.log("try" + JSON.stringify(req.body.token));
     let userEmail = "";
     let userNickName = "";
-    if (req.body.token) {
-      //초기 로그인
-      console.log("초기로그인");
-      const result = await getProfile(req.body.token);
-      console.log(result);
-      const kakaoUser = JSON.parse(result).kakao_account;
-      userEmail = kakaoUser.email;
-      userNickName = kakaoUser.profile.nickname;
+    if (!req.body.token) {
+      //초기 로그인이 아닐경우.. 어떤경우???
+      console.log("초기로그인이 아니다....?????");
     }
-    // else {
-    //   //자동 로그인
-    //   console.log("자동로그인");
-    //   const user = jwt.verify(
-    //     req.headers.authorization,
-    //     process.env.JWT_SECRET,
-    //     {
-    //       ignoreExpiration: true,
-    //     }
-    //   );
-    //   userEmail = user.email;
-    // }
+    console.log("초기로그인");
+    const result = await getProfile(req.body.token);
+    console.log(result);
+    const kakaoUser = JSON.parse(result).kakao_account;
+    userEmail = kakaoUser.email;
+    userNickName = kakaoUser.profile.nickname;
+    if (!userEmail) {
+      return res.status(400).json({
+        loginSuccess: false,
+        message:
+          "사용자 이메일을 제공하지않을 경우 카카오 로그인이 불가능합니다.",
+      });
+    }
 
     const user = new User({
       provider: "kakao",
       user_email: userEmail,
       user_name: userNickName,
-      userAccessToken: req.body.token,
+      userAccessToken: "",
+      RefreshToken: "",
     });
 
-    if ((await checkUserEmail(user.user_email)) !== null) {
+    const c_user = await checkUserEmail(user.user_email);
+
+    if (c_user !== null) {
       console.log("있어용");
+      c_user.generateToken((err, user) => {
+        if (err) {
+          return res.status(400).json({
+            loginSuccess: false,
+            message: "토큰 생성에 실패했습니다.",
+          });
+        }
+        res.cookie("w_refresh", user.userRefreshToken);
+        res.cookie("w_access", user.userAccessToken).status(200).json({
+          loginSuccess: true,
+          user_email: user.user_email,
+          user_name: user.user_name,
+          message: "성공적으로 로그인했습니다.",
+          token: user.userAccessToken,
+        });
+      });
     } else {
       console.log("없어용");
-      user.save(async (err, data) => {
+      await user.save(async (err, data) => {
         if (err) {
           console.log(`err : ${err}`);
           console.log(err.code);
           console.log("회원가입 시 에러 발생!");
         }
-      });
-    }
-
-    // let responseData = {
-    //   success: true,
-    //   user,
-    // };
-    // console.log(responseData.user);
-
-    //초기로그인일 경우 JWT토큰 발급
-    if (req.body.token) {
-      console.log("들어옴");
-      res.cookie("w_refresh", user.userRefreshToken);
-      res.cookie("w_access", user.userAccessToken).status(200).json({
-        loginSuccess: true,
-        user_email: user.user_email,
-        user_name: user.user_name,
-        message: "성공적으로 로그인했습니다.",
-        token: user.userAccessToken,
+        data.generateToken((err, user) => {
+          if (err) {
+            return res.status(400).json({
+              loginSuccess: false,
+              message: "토큰 생성에 실패했습니다.",
+            });
+          }
+          res.cookie("w_refresh", user.userRefreshToken);
+          res.cookie("w_access", user.userAccessToken).status(200).json({
+            loginSuccess: true,
+            user_email: user.user_email,
+            user_name: user.user_name,
+            message: "성공적으로 로그인했습니다.",
+            token: user.userAccessToken,
+          });
+        });
       });
     }
   } catch (err) {
     return res.status(500).json({
-      success: false,
-      error: err.toString(),
+      loginSuccess: false,
+      message: err.toString(),
     });
   }
+});
+
+router.get("/", (req, res) => {
+  User.findOne({ user_email: "a" })
+    .then((user) => {
+      console.log(user);
+      const userInfo = {
+        user_name: user.user_name,
+        user_projects: user.user_projects,
+      };
+      res.json(user);
+    })
+    .catch((err) => {
+      console.error(err);
+      next(err);
+    });
 });
 
 module.exports = router;

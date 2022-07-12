@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import ButtonGo from "../atomics/ButtonGo";
 import { useNavigate } from "react-router-dom";
@@ -6,7 +6,7 @@ import { useAuth } from "../components/auth/Auth";
 
 function Home() {
   const auth = useAuth();
-  console.log(`auth.user in Home : ${JSON.stringify(auth.user)}`);
+
   let navigate = useNavigate();
   const goSignIn = () => {
     navigate("/signin", { replace: false });
@@ -17,7 +17,7 @@ function Home() {
   const goSignUp = () => {
     navigate("/search", { replace: false });
   };
-
+  // console.log(`auth.user in HOME : ${JSON.stringify(auth.user)} `);
   return (
     <Container>
       <Main />

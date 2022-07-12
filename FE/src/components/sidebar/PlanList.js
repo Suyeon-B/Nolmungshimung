@@ -1,82 +1,162 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 
-const PlanItemStyled = styled.li`
-  width: 100%;
-  height: 30px;
-  background-color: white;
-  border: 1px solid;
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+
+const SidePlanListDiv = styled.div`
+  height: 75vh;
+  overflow: scroll;
 `;
+const StyledDragDropContext = styled(DragDropContext)``;
 
-const SidePlanListUl = styled.ul`
-  height: 70%;
-  background-color: blueviolet;
-`;
+const getItems = (count, offset = 0) =>
+  Array.from({ length: count }, (v, k) => k).map((k) => ({
+    id: `item-${k + offset}-${new Date().getTime()}`,
+    content: `item ${k + offset}`,
+  }));
 
-const testItem = [
-  { id: 1, title: "장소1" },
-  { id: 2, title: "장소2" },
-  { id: 3, title: "장소3" },
-  { id: 4, title: "장소4" },
-  { id: 5, title: "장소5" },
-  { id: 6, title: "장소6" },
-  { id: 7, title: "장소7" },
-];
+const reorder = (list, startIndex, endIndex) => {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
 
-const PlanList = () => {
-  const [lists, setLists] = useState(testItem);
-  const [grab, setGrab] = React.useState(null);
+  return result;
+};
 
-  const _onDragOver = (e) => {
-    e.preventDefault();
-  };
+/**
+ * Moves an item from one list to another list.
+ */
+const move = (source, destination, droppableSource, droppableDestination) => {
+  const sourceClone = Array.from(source);
+  const destClone = Array.from(destination);
+  const [removed] = sourceClone.splice(droppableSource.index, 1);
 
-  const _onDragStart = (e) => {
-    setGrab(e.target);
-    e.target.classList.add("grabbing");
-    e.dataTransfer.effectAllowed = "move";
-    e.dataTransfer.setData("text/html", e.target);
-  };
+  destClone.splice(droppableDestination.index, 0, removed);
 
-  const _onDragEnd = (e) => {
-    e.target.classList.remove("grabbing");
+  const result = {};
+  result[droppableSource.droppableId] = sourceClone;
+  result[droppableDestination.droppableId] = destClone;
 
-    e.dataTransfer.dropEffect = "move";
-  };
+  return result;
+};
+const grid = 8;
 
-  const _onDrop = (e) => {
-    let grabPosition = Number(grab.dataset.position);
-    let targetPosition = Number(e.target.dataset.position);
+const getItemStyle = (isDragging, draggableStyle) => ({
+  // some basic styles to make the items look a bit nicer
 
-    let _list = [...lists];
-    _list[grabPosition] = _list.splice(
-      targetPosition,
-      1,
-      _list[grabPosition]
-    )[0];
+  userSelect: "none",
 
-    setLists(_list);
-    console.log(lists);
-  };
+  margin: `0 0 ${grid}px 0`,
+
+  // change background colour if dragging
+  background: isDragging ? "lightgreen" : "white",
+
+  // styles we need to apply on draggables
+  ...draggableStyle,
+});
+const getListStyle = (isDraggingOver) => ({
+  // background: isDraggingOver ? "lightblue" : "lightgrey",
+  padding: grid,
+  // width: 250,
+  width: "100%",
+});
+
+const culTripTermData = (startData, term) => {
+  const sDate = new Date(startData.slice(0, 3));
+  console.log(sDate);
+};
+
+function PlanList({ startData, term, routes }) {
+  const [state, setState] = useState([[], ...routes]);
+  const tripTermDate = [];
+
+  function onDragEnd(result) {
+    const { source, destination } = result;
+
+    // dropped outside the list
+    if (!destination) {
+      return;
+    }
+    const sInd = +source.droppableId;
+    const dInd = +destination.droppableId;
+
+    if (sInd === dInd) {
+      const items = reorder(state[sInd], source.index, destination.index);
+      const newState = [...state];
+      newState[sInd] = items;
+      setState(newState);
+    } else {
+      const result = move(state[sInd], state[dInd], source, destination);
+      const newState = [...state];
+      newState[sInd] = result[sInd];
+      newState[dInd] = result[dInd];
+
+      setState(newState.filter((group) => group.length));
+    }
+  }
 
   return (
-    <SidePlanListUl>
-      {lists.map((el, index) => (
-        <PlanItemStyled
-          key={index}
-          data-position={index}
-          onDragOver={_onDragOver}
-          onDragStart={_onDragStart}
-          onDragEnd={_onDragEnd}
-          onDrop={_onDrop}
-          draggable
-        >
-          {el.title}
-        </PlanItemStyled>
-      ))}
-      {}
-    </SidePlanListUl>
+    <div>
+      <SidePlanListDiv>
+        <StyledDragDropContext onDragEnd={onDragEnd}>
+          {state.map((el, ind) => (
+            <Droppable key={ind} droppableId={`${ind}`}>
+              {(provided, snapshot) => (
+                <div
+                  ref={provided.innerRef}
+                  style={getListStyle(snapshot.isDragging)}
+                  {...provided.droppableProps}
+                >
+                  <button>7월 {ind + 1}일</button>
+                  {el.map((item, index) => (
+                    <Draggable
+                      key={item.travel_id}
+                      draggableId={item.travel_id}
+                      index={index}
+                    >
+                      {(provided, snapshot) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          style={getItemStyle(
+                            snapshot.isDragging,
+                            provided.draggableProps.style
+                          )}
+                        >
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-around",
+                            }}
+                          >
+                            {item.place_name}
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const newState = [...state];
+                                newState[ind].splice(index, 1);
+                                setState(
+                                  newState.filter((group) => group.length)
+                                );
+                              }}
+                            >
+                              delete
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          ))}
+        </StyledDragDropContext>
+      </SidePlanListDiv>
+    </div>
   );
-};
+}
 
 export default PlanList;

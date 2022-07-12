@@ -6,7 +6,13 @@ import Home from "./pages/Home";
 import Test from "./pages/test";
 import TextEditor from "./pages/shareMemo/TextEditor";
 import KakaoSignIn from "./components/sign/KakaoSignIn";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import VoiceTalk from "./components/voiceTalk/sessionFunc";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import ProjectSide from "./components/sidebar/ProjectSide";
 import PlanSideBar from "./components/sidebar/PlanSideBar";
 import CreateProject from "./components/CreateProject";
@@ -19,6 +25,9 @@ import "./reset.css";
 import { QueryClient, QueryClientProvider } from "react-query";
 import ProjectPage from "./pages/project/ProjectPage";
 import { AuthProvider, RequireAuth } from "./components/auth/Auth";
+
+// react query devtool
+import { ReactQueryDevtools } from "react-query/devtools";
 
 // [수연][TextEditor] socket io 작업
 import { v4 as uuidV4 } from "uuid";
@@ -37,11 +46,18 @@ function App() {
           <BodyDiv>
             <ProjectSide />
             <Routes>
-              <Route path="/test" element={<Test />} />
-              <Route path="/" element={<Home />} />
-              <Route path="/kakao/signin" element={<KakaoSignIn />} />
               <Route path="signin/*" element={<SignIn />} />
               <Route path="signup/*" element={<SignUp />} />
+              <Route path="voicetalk/*" element={<VoiceTalk />} />
+              <Route
+                path="/"
+                element={
+                  <RequireAuth>
+                    <Home />
+                  </RequireAuth>
+                }
+              />
+              <Route path="/kakao/signin" element={<KakaoSignIn />} />
               <Route path="project/*" element={<CreateProject />} />
               <Route path="hyuk/*" element={<SpotList />} />
               <Route path="project/:projectId" element={<ProjectPage />} />
@@ -60,6 +76,7 @@ function App() {
           </BodyDiv>
         </Router>
       </AuthProvider>
+      <ReactQueryDevtools />
     </QueryClientProvider>
   );
 }

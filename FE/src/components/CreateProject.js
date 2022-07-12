@@ -1,7 +1,123 @@
 import React, { useState } from "react";
 import Calendar from "react-calendar";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 import "react-calendar/dist/Calendar.css"; // css import
+
+const setDay = (value) => {
+  const days = ["일", "월", "화", "수", "목", "금", "토"];
+
+  return [
+    value.getFullYear(),
+    value.getMonth() + 1,
+    value.getDate(),
+    value.getDay(),
+  ];
+};
+
+const CreateProject = () => {
+  const navigate = useNavigate();
+  const [projectTitle, setProjectTitle] = useState("");
+  const [showStartBtn, setShowStartBtn] = useState(false);
+  const [showEndtBtn, setShowEndtBtn] = useState(false);
+  const [value, onChange] = useState(new Date());
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+
+  const settedStartDate = (value) => {
+    setStartDate(setDay(value));
+  };
+  const settedEndDate = (value) => {
+    setEndDate(setDay(value));
+  };
+  const onChangeProjectTitle = (event) => {
+    setProjectTitle(event.target.value);
+  };
+  const onSubmit = (event) => {
+    event.preventDefault();
+    if (projectTitle === "") {
+      alert("여행 제목을 입력해주세요");
+      return;
+    }
+    if (!startDate || !endDate) {
+      alert("여행 일정을 선택해주세요");
+      return;
+    }
+    let sDate = new Date(startDate[0], startDate[1], startDate[2]).getTime();
+    let eDate = new Date(endDate[0], endDate[1], endDate[2]).getTime();
+
+    let term = (eDate - sDate) / (1000 * 60 * 60 * 24);
+    const project = [
+      sessionStorage.getItem("user_email"),
+      {
+        project_title: projectTitle,
+        start_date: startDate,
+        end_date: endDate,
+        term,
+      },
+    ];
+
+    fetch(`http://${process.env.REACT_APP_SERVER_IP}:8443/projects`, {
+      method: "post",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(project),
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        navigate(`${res.projectId}`);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  return (
+    <PageContainer>
+      <CalenderForm onSubmit={onSubmit}>
+        <TitleInput
+          placeholder="여행 제목을 입력해주세요"
+          value={projectTitle}
+          onChange={onChangeProjectTitle}
+        />
+        <CreateBtns>
+          <CalendarBtnContainer>
+            <CalendarBtn onClick={() => setShowStartBtn(!showStartBtn)}>
+              <img
+                width={"50px"}
+                alt=""
+                src="/statics/images/calender_start.png"
+              />
+              <CalendarBtnDay>
+                {startDate
+                  ? `${startDate[1]}월 ${startDate[2]}일`
+                  : "여행 시작 날짜"}
+              </CalendarBtnDay>
+            </CalendarBtn>
+            <CalendarBtn onClick={() => setShowEndtBtn(!showEndtBtn)}>
+              <img
+                width={"50px"}
+                alt=""
+                src="/statics/images/calender_end.png"
+              />
+              <CalendarBtnDay>
+                {endDate ? `${endDate[1]}월 ${endDate[2]}일` : "여행 종료 날짜"}
+              </CalendarBtnDay>
+            </CalendarBtn>
+          </CalendarBtnContainer>
+          <CreateProjectSubmit type="submit">
+            프로젝트<br></br> 생성
+          </CreateProjectSubmit>
+        </CreateBtns>
+        <CalendarContainer>
+          {showStartBtn && (
+            <Calendar onChange={settedStartDate} value={value} />
+          )}
+          {showEndtBtn && <Calendar onChange={settedEndDate} value={value} />}
+        </CalendarContainer>
+      </CalenderForm>
+    </PageContainer>
+  );
+};
 
 const PageContainer = styled.div`
   width: 100vw;
@@ -90,116 +206,5 @@ const CreateBtns = styled.div`
   width: 810px;
   justify-content: space-between;
 `;
-
-const setDay = (value) => {
-  const days = ["일", "월", "화", "수", "목", "금", "토"];
-
-  return [
-    value.getFullYear(),
-    value.getMonth() + 1,
-    value.getDate(),
-    value.getDay(),
-  ];
-};
-
-const CreateProject = () => {
-  const [projectTitle, setProjectTitle] = useState("");
-  const [showStartBtn, setShowStartBtn] = useState(false);
-  const [showEndtBtn, setShowEndtBtn] = useState(false);
-  const [value, onChange] = useState(new Date());
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
-
-  const settedStartDate = (value) => {
-    setStartDate(setDay(value));
-  };
-  const settedEndDate = (value) => {
-    setEndDate(setDay(value));
-  };
-  const onChangeProjectTitle = (event) => {
-    setProjectTitle(event.target.value);
-  };
-  const onSubmit = (event) => {
-    event.preventDefault();
-    if (projectTitle === "") {
-      alert("여행 제목을 입력해주세요");
-      return;
-    }
-    if (!startDate || !endDate) {
-      alert("여행 일정을 선택해주세요");
-      return;
-    }
-    let sDate = new Date(startDate[0], startDate[1], startDate[2]).getTime();
-    let eDate = new Date(endDate[0], endDate[1], endDate[2]).getTime();
-
-    let term = (eDate - sDate) / (1000 * 60 * 60 * 24);
-    const project = {
-      project_title: projectTitle,
-      start_date: startDate,
-      end_date: endDate,
-      term,
-    };
-
-    fetch("http://localhost:8443/projects", {
-      method: "post",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(project),
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => console.log(err));
-  };
-
-  return (
-    <PageContainer>
-      <CalenderForm onSubmit={onSubmit}>
-        <TitleInput
-          placeholder="여행 제목을 입력해주세요"
-          value={projectTitle}
-          onChange={onChangeProjectTitle}
-        />
-        <CreateBtns>
-          <CalendarBtnContainer>
-            <CalendarBtn onClick={() => setShowStartBtn(!showStartBtn)}>
-              <img
-                width={"50px"}
-                alt=""
-                src="/statics/images/calender_start.png"
-              />
-              <CalendarBtnDay>
-                {startDate
-                  ? `${startDate[1]}월 ${startDate[2]}일`
-                  : "여행 시작 날짜"}
-              </CalendarBtnDay>
-            </CalendarBtn>
-            <CalendarBtn onClick={() => setShowEndtBtn(!showEndtBtn)}>
-              <img
-                width={"50px"}
-                alt=""
-                src="/statics/images/calender_end.png"
-              />
-              <CalendarBtnDay>
-                {endDate ? `${endDate[1]}월 ${endDate[2]}일` : "여행 종료 날짜"}
-              </CalendarBtnDay>
-            </CalendarBtn>
-          </CalendarBtnContainer>
-          <CreateProjectSubmit type="submit">
-            프로젝트<br></br> 생성
-          </CreateProjectSubmit>
-        </CreateBtns>
-        <CalendarContainer>
-          {showStartBtn && (
-            <Calendar onChange={settedStartDate} value={value} />
-          )}
-          {showEndtBtn && <Calendar onChange={settedEndDate} value={value} />}
-        </CalendarContainer>
-      </CalenderForm>
-    </PageContainer>
-  );
-};
 
 export default CreateProject;

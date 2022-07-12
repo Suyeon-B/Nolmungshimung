@@ -4,13 +4,14 @@ import SpotList from "../../components/spot/SpotList";
 import MarkMap from "../../components/MarkMap/MarkMap";
 import TextEditor from "../shareMemo/TextEditor";
 
-function SpotRoute() {
-  MarkMap();
+function SpotRoute({ item }) {
+  console.log(item);
+  MarkMap(item.routes[0]);
   return (
     <div
       style={{
         height: "100vh",
-        width: "97vw",
+        width: "80vw",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -18,7 +19,7 @@ function SpotRoute() {
       }}
     >
       <SpotRouteSection>
-        <SpotList />
+        <SpotList dayItem={item.routes} />
         {/* 지도 api 연결안하면 에러떠서 주석처리함 */}
         <div
           id="myMap"

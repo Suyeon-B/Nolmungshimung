@@ -12,7 +12,7 @@ function MarkMap(props) {
     { map_x: 33.452671, map_y: 126.574792 },
     { map_x: 33.451744, map_y: 126.572441 },
   ];
-  const linePath = test.map(function (place) {
+  const linePath = props.map(function (place) {
     //test를 props으로
     return new kakao.maps.LatLng(place.map_x, place.map_y);
   });
@@ -30,7 +30,7 @@ function MarkMap(props) {
     const container = document.getElementById("myMap");
     const options = {
       center: new kakao.maps.LatLng(33.450701, 126.570667),
-      draggable: false,
+      // draggable: false,
       level: 3,
     };
     const map = new kakao.maps.Map(container, options);
