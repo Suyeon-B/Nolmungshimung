@@ -4,8 +4,7 @@ import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../components/auth/Auth";
 
-const kauthUrl =
-  `https://kauth.kakao.com/oauth/authorize?client_id=2d1c91f12a4c8020dbcc39ddb0c368b0&redirect_uri=http://${process.env.REACT_APP_SERVER_IP}:3000/kakao/signin&response_type=code`;
+const kauthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=2d1c91f12a4c8020dbcc39ddb0c368b0&redirect_uri=http://${process.env.REACT_APP_SERVER_IP}:3000/kakao/signin&response_type=code`;
 
 function SignIn() {
   let navigate = useNavigate();
@@ -38,7 +37,8 @@ function SignIn() {
           console.log("Sign In Success");
           sessionStorage.setItem("myName", res.user_name);
           sessionStorage.setItem("user_email", res.user_email);
-          navigate("/", { replace: true });
+          // navigate("/", { replace: true });
+          window.location.href = "/";
           login({ user: id });
         }
       })
@@ -52,6 +52,7 @@ function SignIn() {
       password: password,
     };
     mutate(userForm);
+    // window.location.href = "/";
   };
   const onClickSignUp = () => {
     // window.location.href = "/signup";
@@ -67,20 +68,8 @@ function SignIn() {
           <SignUpBtn onClick={onClickSignUp}>Sign Up</SignUpBtn>
         </Btns>
         <Form onSubmit={onSubmitSignUp}>
-          <Input
-            placeholder="jeju@island.com"
-            type="text"
-            value={id}
-            onChange={onchangeId}
-            required
-          />
-          <Input
-            placeholder="password"
-            type="pass"
-            value={password}
-            onChange={onchangePassword}
-            required
-          />
+          <Input placeholder="jeju@island.com" type="text" value={id} onChange={onchangeId} required />
+          <Input placeholder="password" type="pass" value={password} onChange={onchangePassword} required />
           <SubmitInput value="로그인" type="submit" />
           <br />
           <a href={kauthUrl}>

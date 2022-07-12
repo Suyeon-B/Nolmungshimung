@@ -8,9 +8,7 @@ import SpotRoute from "../spotRoute/SpotRoute";
 
 async function fetchProjectById(_id) {
   // const response = await fetch(`http://localhost:8443/projects/${_id}`);
-  const response = await fetch(
-    `https://438e69a6-c891-4d7e-bfd2-f30c4eba330f.mock.pstmn.io/projects/mokc`
-  );
+  const response = await fetch(`https://438e69a6-c891-4d7e-bfd2-f30c4eba330f.mock.pstmn.io/projects/mokc`);
   return response.json();
 }
 
@@ -58,11 +56,7 @@ const ProjectPage = (props) => {
   return (
     <>
       {/* {data ? <div>is data</div> : <div>not data</div>} */}
-      <PlanSideBar
-        item={items}
-        isFirstPage={isFirstPage}
-        toggleIsPage={toggleIsPage}
-      />
+      <PlanSideBar item={items} isFirstPage={isFirstPage} toggleIsPage={toggleIsPage} />
       {isFirstPage && <Search />}
       {!isFirstPage && <SpotRoute item={items} />}
       {/* <Search /> */}

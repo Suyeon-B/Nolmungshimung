@@ -55,13 +55,10 @@ export const AuthProvider = ({ children }) => {
     deleteCookie("w_refresh");
     setUser(null);
     sessionStorage.clear();
+    window.location.href = "/";
   };
 
-  return (
-    <AuthContext.Provider value={{ user, login, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={{ user, login, logout }}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => {

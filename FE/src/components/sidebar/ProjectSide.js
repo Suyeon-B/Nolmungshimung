@@ -127,12 +127,7 @@ function ProjectSide() {
 
   return (
     <>
-      <StyledMenu
-        theme="Light"
-        mode="inline"
-        defaultSelectedKeys={["1"]}
-        items={[LogoObj, ...items]}
-      />
+      <StyledMenu theme="Light" mode="inline" defaultSelectedKeys={["1"]} items={[LogoObj, ...items]} />
       <Profile />
     </>
   );
