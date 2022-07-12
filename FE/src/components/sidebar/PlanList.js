@@ -1,12 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import styled from "styled-components";
 
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
-const SidePlanListDiv = styled.div`
-  height: 75vh;
-  overflow: scroll;
-`;
 const StyledDragDropContext = styled(DragDropContext)``;
 
 const getItems = (count, offset = 0) =>
@@ -46,11 +42,11 @@ const getItemStyle = (isDragging, draggableStyle) => ({
 
   userSelect: "none",
 
-  margin: `0 0 ${grid}px 0`,
+  // margin: `0 0 ${grid}px 0`,
 
   // change background colour if dragging
-  background: isDragging ? "lightgreen" : "white",
-
+  background: isDragging ? "#EBEBEB" : "none",
+  // paddingLeft: "25px",
   // styles we need to apply on draggables
   ...draggableStyle,
 });
@@ -94,6 +90,13 @@ function PlanList({ startData, term, routes }) {
       setState(newState.filter((group) => group.length));
     }
   }
+  const btnRef = useRef();
+
+  const onMouseEnter = (e) => {
+    // console.log(e.target);
+    console.log(btnRef.current);
+  };
+  const onMouseLeave = (e) => {};
 
   return (
     <div>
@@ -107,7 +110,15 @@ function PlanList({ startData, term, routes }) {
                   style={getListStyle(snapshot.isDragging)}
                   {...provided.droppableProps}
                 >
-                  <button>7월 {ind + 1}일</button>
+                  <DateDetailBtnDiv>
+                    <DateDetailBtn># 7월 {ind + 1}일</DateDetailBtn>
+                    <NoneStyleBtn>
+                      <img
+                        style={{ width: "15px" }}
+                        src="\statics\images\date_arrow.png"
+                      />
+                    </NoneStyleBtn>
+                  </DateDetailBtnDiv>
                   {el.map((item, index) => (
                     <Draggable
                       key={item.travel_id}
@@ -116,6 +127,8 @@ function PlanList({ startData, term, routes }) {
                     >
                       {(provided, snapshot) => (
                         <div
+                          onMouseEnter={onMouseEnter}
+                          onMouseLeave={onMouseLeave}
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
@@ -124,14 +137,10 @@ function PlanList({ startData, term, routes }) {
                             provided.draggableProps.style
                           )}
                         >
-                          <div
-                            style={{
-                              display: "flex",
-                              justifyContent: "space-around",
-                            }}
-                          >
+                          <ItemInnerDiv>
                             {item.place_name}
-                            <button
+
+                            <div
                               type="button"
                               onClick={() => {
                                 const newState = [...state];
@@ -140,10 +149,14 @@ function PlanList({ startData, term, routes }) {
                                   newState.filter((group) => group.length)
                                 );
                               }}
+                              ref={btnRef}
                             >
-                              delete
-                            </button>
-                          </div>
+                              <img
+                                style={{ width: "16px" }}
+                                src="\statics\images\trash_can.png"
+                              />
+                            </div>
+                          </ItemInnerDiv>
                         </div>
                       )}
                     </Draggable>
@@ -158,5 +171,50 @@ function PlanList({ startData, term, routes }) {
     </div>
   );
 }
+
+const SidePlanListDiv = styled.div`
+  height: 75vh;
+  overflow: scroll;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+`;
+const NoneStyleBtn = styled.button`
+  outline: 0;
+  border: none;
+  background-color: white;
+`;
+const DateDetailBtnDiv = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+`;
+
+const DateDetailBtn = styled(NoneStyleBtn)`
+  font-weight: 700;
+  font-size: 20px;
+  border: none;
+  outline: 0;
+
+  color: #757575;
+  background-color: white;
+`;
+
+const ItemInnerDiv = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding-top: 10px;
+  padding-left: 25px;
+
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  align-items: center;
+
+  &:hover {
+    background-color: #ebebeb;
+  }
+`;
 
 export default PlanList;
