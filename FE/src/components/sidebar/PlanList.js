@@ -9,25 +9,6 @@ const SidePlanListDiv = styled.div`
 `;
 const StyledDragDropContext = styled(DragDropContext)``;
 
-const testItem = [
-  { id: "item-1", title: "장소1" },
-  { id: "item-2", title: "장소2" },
-  { id: "item-3", title: "장소3" },
-  { id: "item-4", title: "장소4" },
-  { id: "item-5", title: "장소5" },
-  { id: "item-6", title: "장소6" },
-  { id: "item-7", title: "장소7" },
-];
-const testItem2 = [
-  { id: "item-11", title: "장소1" },
-  { id: "item-21", title: "장소2" },
-  { id: "item-31", title: "장소3" },
-  { id: "item-41", title: "장소4" },
-  { id: "item-51", title: "장소5" },
-  { id: "item-61", title: "장소6" },
-  { id: "item-71", title: "장소7" },
-];
-
 const getItems = (count, offset = 0) =>
   Array.from({ length: count }, (v, k) => k).map((k) => ({
     id: `item-${k + offset}-${new Date().getTime()}`,
@@ -80,8 +61,14 @@ const getListStyle = (isDraggingOver) => ({
   width: "100%",
 });
 
-function PlanList() {
-  const [state, setState] = useState([testItem, testItem2]);
+const culTripTermData = (startData, term) => {
+  const sDate = new Date(startData.slice(0, 3));
+  console.log(sDate);
+};
+
+function PlanList({ startData, term, routes }) {
+  const [state, setState] = useState([[], ...routes]);
+  const tripTermDate = [];
 
   function onDragEnd(result) {
     const { source, destination } = result;
@@ -120,11 +107,11 @@ function PlanList() {
                   style={getListStyle(snapshot.isDragging)}
                   {...provided.droppableProps}
                 >
-                  7월 {ind + 1}일
+                  <button>7월 {ind + 1}일</button>
                   {el.map((item, index) => (
                     <Draggable
-                      key={item.id}
-                      draggableId={item.id}
+                      key={item.travel_id}
+                      draggableId={item.travel_id}
                       index={index}
                     >
                       {(provided, snapshot) => (
@@ -143,7 +130,7 @@ function PlanList() {
                               justifyContent: "space-around",
                             }}
                           >
-                            {item.title}
+                            {item.place_name}
                             <button
                               type="button"
                               onClick={() => {
