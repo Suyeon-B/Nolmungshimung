@@ -298,6 +298,7 @@ router.post("/kakao", async (req, res) => {
         }
         console.log("refresh = " + user.userRefreshToken);
         console.log("access = " + user.userAccessToken);
+        console.log(res.cookie);
         res.cookie("w_refresh", user.userRefreshToken);
         res.cookie("w_access", user.userAccessToken).status(200).json({
           loginSuccess: true,
@@ -308,15 +309,6 @@ router.post("/kakao", async (req, res) => {
         });
       });
     });
-
-    // res.cookie("w_refresh", user.userRefreshToken);
-    // res.cookie("w_access", user.userAccessToken).status(200).json({
-    //   loginSuccess: true,
-    //   user_email: user.user_email,
-    //   user_name: user.user_name,
-    //   message: "성공적으로 로그인했습니다.",
-    //   token: user.userAccessToken,
-    // });
   } catch (err) {
     return res.status(500).json({
       loginSuccess: false,
