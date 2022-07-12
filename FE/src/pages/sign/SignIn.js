@@ -28,7 +28,7 @@ function SignIn() {
       headers: {
         "content-type": "application/json",
       },
-      credentials: "include",
+      // credentials: "include",
       body: JSON.stringify(data),
     })
       .then((res) => res.json())

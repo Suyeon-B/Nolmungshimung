@@ -28,7 +28,7 @@ function SpotRoute() {
           }}
         />
       </SpotRouteSection>
-      {/* <TextEditor /> */}
+      <TextEditor />
       {/* hyeok socket io 연결안하면 에러떠서 주석처리함 */}
     </div>
   );
