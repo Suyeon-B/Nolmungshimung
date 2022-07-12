@@ -12,18 +12,27 @@ import PlanList from "./PlanList";
 //   originalX = e.target.offsetLeft;
 //   originalY = e.target.offsetTop;
 // };
-const PlanSideBar = () => {
+const PlanSideBar = ({ item, toggleIsPage, isFirstPage }) => {
   return (
     <SideBar>
       <PlanTitleWrap>
-        <PlanTitle>우정 여행</PlanTitle>
-        <span>접</span>
+        <PlanTitle>{item.project_title}</PlanTitle>
+        <span>접기</span>
       </PlanTitleWrap>
       <SideBarBtnDIv>
-        <p>상세 일정 보러가기</p>
+        {isFirstPage && (
+          <button onClick={toggleIsPage}>상세 일정 보러가기</button>
+        )}
+        {!isFirstPage && (
+          <button onClick={toggleIsPage}>장소 찾으러 가기</button>
+        )}
       </SideBarBtnDIv>
 
-      <PlanList />
+      <PlanList
+        startData={item.statr_data}
+        term={item.term}
+        routes={item.routes}
+      />
 
       <div>사이드바 footer</div>
     </SideBar>
