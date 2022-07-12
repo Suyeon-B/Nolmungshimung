@@ -5,6 +5,7 @@ import Search from "../search/Search";
 import TextEditor from "../shareMemo/TextEditor";
 import { useQuery } from "react-query";
 import SpotRoute from "../spotRoute/SpotRoute";
+import styled from "styled-components";
 
 async function fetchProjectById(_id) {
   // const response = await fetch(`http://localhost:8443/projects/${_id}`);
@@ -63,11 +64,15 @@ const ProjectPage = (props) => {
         isFirstPage={isFirstPage}
         toggleIsPage={toggleIsPage}
       />
-      {isFirstPage && <Search />}
-      {!isFirstPage && <SpotRoute item={items} />}
-      {/* <Search /> */}
+      <PlanSection>
+        {isFirstPage && <Search />}
+        {!isFirstPage && <SpotRoute item={items} />}
+      </PlanSection>
     </>
   );
 };
+const PlanSection = styled.section`
+  width: 81%;
+`;
 
 export default ProjectPage;
