@@ -26,7 +26,7 @@ function KakaoSignIn(props) {
     const data = {
       grant_type: "authorization_code",
       client_id: "2d1c91f12a4c8020dbcc39ddb0c368b0",
-      redirect_uri: "http://localhost:3000/kakao/signin",
+      redirect_uri: `http://${process.env.REACT_APP_SERVER_IP}:3000/kakao/signin`,
       code: code,
     };
     await fetch("https://kauth.kakao.com/oauth/token", {
@@ -45,11 +45,12 @@ function KakaoSignIn(props) {
   //발급받은 access 토큰을 서버로 넘기고, 서버에서 JWT 토큰 값(추가로 user정보)을 받아 localstorage에 저장
   const sendKakaoTokenToServer = async (token) => {
     // console.log(token);
-    await fetch("http://localhost:8443/users/kakao", {
+    await fetch(`http://${process.env.REACT_APP_SERVER_IP}:8443/users/kakao`, {
       method: "post",
       headers: {
         "content-type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify({ token }),
     })
       .then((res) => res.json())
@@ -57,11 +58,12 @@ function KakaoSignIn(props) {
         if (data.loginSuccess === true) {
           console.log("Sign In Success");
           navigate("/", { replace: true });
-          document.cookie = "myToken=" + data.token;
-          sessionStorage.setItem("myEmail", data.user_email);
-          login(data.user_email);
+          sessionStorage.setItem("myName", data.user_name);
+          sessionStorage.setItem("user_email", data.user_email);
+          console.log(data.token);
+          login({ user: data.user_email });
         } else {
-          window.alert("로그인에 실패하였습니다 : " + data.message);
+          window.alert(data.message);
           navigate("/signin");
         }
       })

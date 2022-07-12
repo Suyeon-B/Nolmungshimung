@@ -23,12 +23,12 @@ function SignIn() {
   });
 
   async function singInUser(data) {
-    await fetch("http://localhost:8443/users/signin", {
+    await fetch(`http://${process.env.REACT_APP_SERVER_IP}:8443/users/signin`, {
       method: "post",
       headers: {
         "content-type": "application/json",
       },
-      credentials: "include",
+      // credentials: "include",
       body: JSON.stringify(data),
     })
       .then((res) => res.json())

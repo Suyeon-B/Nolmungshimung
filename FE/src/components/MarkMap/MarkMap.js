@@ -30,7 +30,7 @@ function MarkMap(props) {
     const container = document.getElementById("myMap");
     const options = {
       center: new kakao.maps.LatLng(33.450701, 126.570667),
-      draggable: false,
+      // draggable: false,
       level: 3,
     };
     const map = new kakao.maps.Map(container, options);
