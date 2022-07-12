@@ -1,4 +1,5 @@
 /* JG - openVidu voicetalk */
+var cors = require("cors");
 
 var OpenVidu = require("openvidu-node-client").OpenVidu;
 var OpenViduRole = require("openvidu-node-client").OpenViduRole;
@@ -38,7 +39,7 @@ app.use(
     type: "application/vnd.api+json",
   })
 ); // Parse application/vnd.api+json as json
-
+app.use(cors({ credentials: true, origin: true }));
 // Listen (start app with node server.js)
 // var options = {
 //   key: fs.readFileSync("openvidukey.pem"),
@@ -72,7 +73,7 @@ var users = [
 ];
 
 // Environment variable: URL where our OpenVidu server is listening
-var OPENVIDU_URL = 'https://3.34.132.124:4443';
+var OPENVIDU_URL = 'https://54.180.137.53:4443';
 // Environment variable: secret shared with our OpenVidu server
 var OPENVIDU_SECRET = 'MY_SECRET';
 
@@ -92,7 +93,6 @@ console.log("App listening on port 7443");
 // JG -> 로그인 로그아웃 기능 우선 생략 - 세션도 아직 못정함
 // Login
 app.get("/api", function (req, res){
-    console.log("asdasd");
     return res.status(200).send({
         'a':1
     })
@@ -144,7 +144,7 @@ app.post("/api-sessions/get-token", function (req, res) {
     // In this case, a JSON with the value we stored in the req.session object on login
     var serverData = JSON.stringify({ serverData: loggedUser });
 
-    console.log("Getting a token | {projectId}={" + sessionName + "}");
+    console.log("Getting a token | {projectId}={" + sessionName + "}, {loggedUser}={" + loggedUser);
 
     // Build connectionProperties object with the serverData and the role
     var connectionProperties = {
@@ -177,7 +177,7 @@ app.post("/api-sessions/get-token", function (req, res) {
     } else {
       // New session
       console.log("New session " + sessionName);
-
+      
       // Create a new OpenVidu Session asynchronously
       OV.createSession()
         .then((session) => {
