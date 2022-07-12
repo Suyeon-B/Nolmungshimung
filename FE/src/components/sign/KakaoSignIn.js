@@ -50,6 +50,7 @@ function KakaoSignIn(props) {
       headers: {
         "content-type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify({ token }),
     })
       .then((res) => res.json())
@@ -57,9 +58,10 @@ function KakaoSignIn(props) {
         if (data.loginSuccess === true) {
           console.log("Sign In Success");
           navigate("/", { replace: true });
-          document.cookie = "myToken=" + data.token;
-          sessionStorage.setItem("myEmail", data.user_email);
-          login(data.user_email);
+          sessionStorage.setItem("myName", data.user_name);
+          sessionStorage.setItem("user_email", data.user_email);
+          console.log(data.token);
+          login({ user: data.user_email });
         } else {
           window.alert("로그인에 실패하였습니다 : " + data.message);
           navigate("/signin");
