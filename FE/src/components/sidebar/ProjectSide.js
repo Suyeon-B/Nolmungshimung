@@ -10,19 +10,19 @@ const mookProject = [
     project_title: "테스트",
   },
   {
-    _id: "2",
+    _id: "62cda217f46641aeb3ed53ce",
     project_title: "가족여행",
   },
   {
-    _id: "3",
+    _id: "62cd9dbedfaa0666c2a963fd",
     project_title: "친구여행",
   },
   {
-    _id: "4",
+    _id: "62cd87e744942481738f578d",
     project_title: "효도여행",
   },
   {
-    _id: "5",
+    _id: "62cdb1eeea7abd8529793cb9",
     project_title: "여행여행",
   },
 ];
@@ -146,14 +146,7 @@ function ProjectSide() {
     setItems(projectItems);
   }, []);
 
-  return (
-    <StyledMenu
-      theme="Light"
-      mode="inline"
-      defaultSelectedKeys={["1"]}
-      items={[LogoObj, ...items, profileObj]}
-    />
-  );
+  return <StyledMenu theme="Light" mode="inline" defaultSelectedKeys={["1"]} items={[LogoObj, ...items, profileObj]} />;
 }
 
 const StyledMenu = styled(Menu)`

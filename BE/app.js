@@ -61,7 +61,6 @@ const io = require("socket.io")(3001, {
 });
 
 const projectSchema = require("./models/Project");
-const defaultValue = "";
 
 io.on("connection", (socket) => {
   socket.on("get-project", async (projectId) => {
