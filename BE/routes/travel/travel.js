@@ -21,16 +21,17 @@ router.get("/:id", async function (req, res, next) {
   );
 });
 
-router.post("/:id", async function (req, res, next) {
-  let query = req.query;
+
+router.post('/:id', async function(req, res, next) {
+  // let query = req.query;
   let body = req.body;
   let insertForm = {
-    travel_id: body.id,
-    place_name: body.place_name,
-    road_address_name: body.road_address_name,
-    category_group_name: body.category_group_name,
-    phone: body.phone,
-    place_url: body.place_url,
+    travel_id : req.params.id,
+    place_name : body.place_name,
+    road_address_name : body.road_address_name,
+    category_group_name : body.category_group_name,
+    phone : body.phone,
+    place_url : body.place_url,
     // photo: body.result.photos ? body.result.photos[0].html_attributions[0]: null,
     photo: body.result ? body.result.photos : null,
     // photo_reference: body.result.photos ? body.result.photos[0].photo_reference : null,

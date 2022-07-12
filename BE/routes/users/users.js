@@ -148,7 +148,7 @@ router.post("/checkCertificationNumber", (req, res) => {
 
 // 1. 성공 로그인 -> 이메일 인증 유무 확인
 router.post("/signin", (req, res) => {
-  console.log("signin : " + JSON.stringify(req.body));
+  // console.log("signin : " + JSON.stringify(req.body));
   console.log("user_email : " + JSON.stringify(req.body.user_email));
 
   User.findOne({ user_email: req.body.user_email }, async (err, user) => {
@@ -176,7 +176,7 @@ router.post("/signin", (req, res) => {
             message: "토큰 생성에 실패했습니다.",
           });
         }
-        // console.log("res : ", res.cookie);
+        // console.log("res : ", res.userRefreshToken);
         res.cookie("w_refresh", user.userRefreshToken);
         res.cookie("w_access", user.userAccessToken).status(200).json({
           loginSuccess: true,
@@ -211,8 +211,8 @@ router.post("/signout", (req, res) => {
 
 router.get("/auth", authMain, (req, res) => {
   // router.get("/auth", (req, res) => {
-  console.log("req.user : " + req);
-  console.log("return auth");
+  // console.log("req.user : " + req);
+  // console.log("return auth");
   return res.status(200).json({
     // _id: req.user._id,
     // user_email: req.user.user_email,
@@ -270,35 +270,21 @@ router.post("/kakao", async (req, res) => {
       provider: "kakao",
       user_email: userEmail,
       user_name: userNickName,
-      // userAccessToken: "",
-      // RefreshToken: "",
+      userAccessToken: "",
+      RefreshToken: "",
     });
 
-    if ((await checkUserEmail(user.user_email)) !== null) {
-      console.log("있어용");
-    } else {
-      console.log("없어용");
-      user.save(async (err, data) => {
-        if (err) {
-          console.log(`err : ${err}`);
-          console.log(err.code);
-          console.log("회원가입 시 에러 발생!");
-        }
-      });
-    }
+    const c_user = await checkUserEmail(user.user_email);
 
-    User.findOne({ user_email: user.user_email }, async (err, user) => {
-      console.log("유저있다........");
-      user.generateToken((err, user) => {
+    if (c_user !== null) {
+      console.log("있어용");
+      c_user.generateToken((err, user) => {
         if (err) {
           return res.status(400).json({
             loginSuccess: false,
             message: "토큰 생성에 실패했습니다.",
           });
         }
-        console.log("refresh = " + user.userRefreshToken);
-        console.log("access = " + user.userAccessToken);
-        console.log(res.cookie);
         res.cookie("w_refresh", user.userRefreshToken);
         res.cookie("w_access", user.userAccessToken).status(200).json({
           loginSuccess: true,
@@ -308,7 +294,32 @@ router.post("/kakao", async (req, res) => {
           token: user.userAccessToken,
         });
       });
-    });
+    } else {
+      console.log("없어용");
+      await user.save(async (err, data) => {
+        if (err) {
+          console.log(`err : ${err}`);
+          console.log(err.code);
+          console.log("회원가입 시 에러 발생!");
+        }
+        data.generateToken((err, user) => {
+          if (err) {
+            return res.status(400).json({
+              loginSuccess: false,
+              message: "토큰 생성에 실패했습니다.",
+            });
+          }
+          res.cookie("w_refresh", user.userRefreshToken);
+          res.cookie("w_access", user.userAccessToken).status(200).json({
+            loginSuccess: true,
+            user_email: user.user_email,
+            user_name: user.user_name,
+            message: "성공적으로 로그인했습니다.",
+            token: user.userAccessToken,
+          });
+        });
+      });
+    }
   } catch (err) {
     return res.status(500).json({
       loginSuccess: false,

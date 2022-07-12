@@ -28,17 +28,17 @@ function SignUp() {
   });
 
   async function singUpUser(data) {
-    await fetch("http://localhost:8443/users/signup", {
+    await fetch(`http://${process.env.REACT_APP_SERVER_IP}:8443/users/signup`, {
       method: "post",
       headers: {
         "content-type": "application/json",
       },
-      credentials: "include",
+      // credentials: "include",
       body: JSON.stringify(data),
     })
       .then((res) => res.json())
       .then((res) => {
-        console.log("res : ", res);
+        // console.log("res : ", res);
         if (res.success === true) {
           console.log("Sign Up Success");
           navigate("/signin", { replace: true });
