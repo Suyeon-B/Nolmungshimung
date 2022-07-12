@@ -1,4 +1,5 @@
 var express = require("express");
+const { restart } = require("nodemon");
 
 var router = express.Router();
 const Project = require(__base + "models/Project");
@@ -6,7 +7,8 @@ const { User } = require(__base + "models/User");
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
-  res.render("index", { title: "Express" });
+  res.json({ id: "123" });
+  // res.render("index", { title: "Express" });
 });
 
 router.post("/", async (req, res) => {
@@ -63,6 +65,17 @@ router.post("/title", async (req, res) => {
       }
     }
   );
+});
+router.get("/:id", async (req, res, next) => {
+  const { id } = req.params;
+
+  const projectInfo = await Project.findById({ _id: id });
+  console.log(projectInfo);
+  if (projectInfo) {
+    return res.json(projectInfo);
+  }
+
+  res.status(404).send("fail");
 });
 
 // User.findOne({ user_email: "a" }).then((data) => {
