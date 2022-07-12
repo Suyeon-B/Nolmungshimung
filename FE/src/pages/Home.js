@@ -17,7 +17,7 @@ function Home() {
   const goSignUp = () => {
     navigate("/search", { replace: false });
   };
-  console.log(`auth.user in HOME : ${JSON.stringify(auth.user)} `);
+  // console.log(`auth.user in HOME : ${JSON.stringify(auth.user)} `);
   return (
     <Container>
       <Main />
