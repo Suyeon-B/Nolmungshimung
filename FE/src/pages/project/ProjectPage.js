@@ -11,7 +11,6 @@ const ProjectPage = (props) => {
     <>
       <PlanSideBar />
       <Search />
-      <TextEditor />
     </>
   );
 };
