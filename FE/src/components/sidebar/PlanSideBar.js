@@ -1,7 +1,34 @@
 import React from "react";
 import styled from "styled-components";
 import PlanList from "./PlanList";
-import ListTest from "./ListTest";
+
+// const dragStartHandler = (e) => {
+//   const img = new Image();
+//   e.dataTransfer.setDragImage(img, 0, 0);
+
+//   posX = e.clientX;
+//   posY = e.clientY;
+
+//   originalX = e.target.offsetLeft;
+//   originalY = e.target.offsetTop;
+// };
+const PlanSideBar = () => {
+  return (
+    <SideBar>
+      <PlanTitleWrap>
+        <PlanTitle>우정 여행</PlanTitle>
+        <span>접</span>
+      </PlanTitleWrap>
+      <SideBarBtnDIv>
+        <p>상세 일정 보러가기</p>
+      </SideBarBtnDIv>
+
+      <PlanList />
+
+      <div>사이드바 footer</div>
+    </SideBar>
+  );
+};
 
 const SideBar = styled.div`
   width: 288px;
@@ -31,33 +58,5 @@ const SideBarBtnDIv = styled.div`
   justify-content: center;
   align-items: center;
 `;
-
-// const dragStartHandler = (e) => {
-//   const img = new Image();
-//   e.dataTransfer.setDragImage(img, 0, 0);
-
-//   posX = e.clientX;
-//   posY = e.clientY;
-
-//   originalX = e.target.offsetLeft;
-//   originalY = e.target.offsetTop;
-// };
-const PlanSideBar = () => {
-  return (
-    <SideBar>
-      <PlanTitleWrap>
-        <PlanTitle>우정 여행</PlanTitle>
-        <span>접</span>
-      </PlanTitleWrap>
-      <SideBarBtnDIv>
-        <p>상세 일정 보러가기</p>
-      </SideBarBtnDIv>
-
-      <ListTest />
-
-      <div>사이드바 footer</div>
-    </SideBar>
-  );
-};
 
 export default PlanSideBar;
