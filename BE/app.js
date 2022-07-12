@@ -66,6 +66,7 @@ const defaultValue = "";
 io.on("connection", (socket) => {
   socket.on("get-project", async (projectId) => {
     const project = await findProjectById(projectId);
+    socket.join(projectId);
     socket.emit("load-project", project.memo);
 
     socket.on("send-changes", (delta) => {
