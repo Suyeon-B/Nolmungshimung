@@ -23,8 +23,14 @@ const MapContainer = ({ searchPlace }) => {
   }
 
   useEffect(() => {
-    // var infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
+    var infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
     // 검색 결과 목록이나 마커를 클릭했을 때 장소명을 표출할 인포윈도우를 생성합니다
+    function displayInfowindow(marker, title) {
+      var content = '<div style="padding:5px;z-index:1;">' + title + "</div>";
+
+      infowindow.setContent(content);
+      infowindow.open(map, marker);
+    }
 
     const container = document.getElementById("searchMap");
     const options = {
@@ -102,14 +108,13 @@ const MapContainer = ({ searchPlace }) => {
         position: new kakao.maps.LatLng(place.y, place.x),
       });
       markers.push(marker);
-      // kakao.maps.event.addListener(marker, "click", function () {
-      //   infowindow.setContent(
-      //     '<div style="padding:5px;font-size:12px;">' +
-      //       place.place_name +
-      //       "</div>"
-      //   );
-      //   infowindow.open(map, marker);
-      // });
+      kakao.maps.event.addListener(marker, "mouseover", function () {
+        displayInfowindow(marker, place.place_name);
+      });
+
+      kakao.maps.event.addListener(marker, "mouseout", function () {
+        infowindow.close();
+      });
     }
   }, [searchPlace]);
 
