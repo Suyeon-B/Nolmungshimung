@@ -51,6 +51,7 @@ const getItemStyle = (isDragging, draggableStyle) => ({
   ...draggableStyle,
 });
 const getListStyle = (isDraggingOver) => ({
+  // 드래그 영역으로 들어왔을 때
   // background: isDraggingOver ? "lightblue" : "lightgrey",
   padding: grid,
   // width: 250,
@@ -90,13 +91,13 @@ function PlanList({ startData, term, routes }) {
       setState(newState.filter((group) => group.length));
     }
   }
-  const btnRef = useRef();
+  // const btnRef = useRef();
 
-  const onMouseEnter = (e) => {
-    // console.log(e.target);
-    console.log(btnRef.current);
-  };
-  const onMouseLeave = (e) => {};
+  // const onMouseEnter = (e) => {
+  //   // console.log(e.target);
+  //   console.log(btnRef.current);
+  // };
+  // const onMouseLeave = (e) => {};
 
   return (
     <div>
@@ -127,8 +128,6 @@ function PlanList({ startData, term, routes }) {
                     >
                       {(provided, snapshot) => (
                         <div
-                          onMouseEnter={onMouseEnter}
-                          onMouseLeave={onMouseLeave}
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
@@ -149,7 +148,6 @@ function PlanList({ startData, term, routes }) {
                                   newState.filter((group) => group.length)
                                 );
                               }}
-                              ref={btnRef}
                             >
                               <img
                                 style={{ width: "16px" }}

@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import searchList from "./SearchList";
+import SearchBar from "./SearchBar";
+import styled from "styled-components";
 
 const { kakao } = window;
 
-const MapContainer = ({ searchPlace }) => {
+const MapContainer = () => {
+  const [searchPlace, setSearchPlace] = useState("");
   // 검색결과 배열에 담아줌
   var markers = [];
   const [Places, setPlaces] = useState([]);
@@ -119,33 +122,42 @@ const MapContainer = ({ searchPlace }) => {
   }, [searchPlace]);
 
   return (
-    <div style={{ positon: "relative" }}>
-      <div
-        id="searchMap"
-        style={{
-          width: "71.5vw",
-          height: "100vh",
-          position: "relative",
-          float: "right",
-        }}
-      ></div>
-      <ul
-        id="result-list"
-        style={{
-          position: "relative",
-          zIndex: 2,
-          overflow: "scroll",
-          width: "20vw",
-          height: "95vh",
-          float: "left",
-          marginTop: 26,
-        }}
-      >
-        {Places ? searchList(Places) : null}
-        <div id="pagination" style={{ position: "relative", zIndex: 2 }}></div>
-      </ul>
-    </div>
+    <Wapper>
+      <SearchListDiv>
+        <SearchBar changePlace={setSearchPlace} />
+        <ul>
+          {Places && searchList(Places)}
+          <div
+            id="pagination"
+            style={{ position: "relative", zIndex: 2 }}
+          ></div>
+        </ul>
+      </SearchListDiv>
+      <StyledMapDiv id="searchMap"></StyledMapDiv>
+    </Wapper>
   );
 };
+
+const Wapper = styled.div`
+  display: flex;
+`;
+
+const SearchListDiv = styled.div`
+  width: 30%;
+  height: 100vh;
+  overflow: scroll;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  /* background-color: red; */
+`;
+
+const StyledMapDiv = styled.div`
+  width: 70%;
+  height: 100vh;
+  position: relative;
+`;
+
+const StyledUl = styled.ul``;
 
 export default React.memo(MapContainer);
