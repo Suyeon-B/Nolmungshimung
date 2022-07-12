@@ -4,7 +4,7 @@ import { DeleteOutlined } from "@ant-design/icons";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const SidePlanListDiv = styled.div`
-  height: 450px;
+  height: 100%;
 `;
 const StyledDragDropContext = styled(DragDropContext)``;
 
