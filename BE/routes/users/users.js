@@ -270,8 +270,8 @@ router.post("/kakao", async (req, res) => {
       provider: "kakao",
       user_email: userEmail,
       user_name: userNickName,
-      // userAccessToken: "",
-      // RefreshToken: "",
+      userAccessToken: "",
+      RefreshToken: "",
     });
 
     if ((await checkUserEmail(user.user_email)) !== null) {
@@ -287,8 +287,7 @@ router.post("/kakao", async (req, res) => {
       });
     }
 
-    User.findOne({ user_email: user.user_email }, async (err, user) => {
-      console.log("유저있다........");
+    await User.findOne({ user_email: userEmail }, (err, user) => {
       user.generateToken((err, user) => {
         if (err) {
           return res.status(400).json({
