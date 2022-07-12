@@ -7,7 +7,7 @@ const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   useEffect(() => {
-    console.log("auth auth");
+    // console.log("auth auth");
     //To know my current status, send Auth request
     fetch(`http://${process.env.REACT_APP_SERVER_IP}:8443/users/auth`, {
       method: "get",
