@@ -243,33 +243,30 @@ router.post("/kakao", async (req, res) => {
     console.log("try" + JSON.stringify(req.body.token));
     let userEmail = "";
     let userNickName = "";
-    if (req.body.token) {
-      //초기 로그인
-      console.log("초기로그인");
-      const result = await getProfile(req.body.token);
-      console.log(result);
-      const kakaoUser = JSON.parse(result).kakao_account;
-      userEmail = kakaoUser.email;
-      userNickName = kakaoUser.profile.nickname;
+    if (!req.body.token) {
+      //초기 로그인이 아닐경우.. 어떤경우???
+      console.log("초기로그인이 아니다....?????");
     }
-    // else {
-    //   //자동 로그인
-    //   console.log("자동로그인");
-    //   const user = jwt.verify(
-    //     req.headers.authorization,
-    //     process.env.JWT_SECRET,
-    //     {
-    //       ignoreExpiration: true,
-    //     }
-    //   );
-    //   userEmail = user.email;
-    // }
+    console.log("초기로그인");
+    const result = await getProfile(req.body.token);
+    console.log(result);
+    const kakaoUser = JSON.parse(result).kakao_account;
+    userEmail = kakaoUser.email;
+    userNickName = kakaoUser.profile.nickname;
+    if (!userEmail) {
+      return res.status(400).json({
+        loginSuccess: false,
+        message:
+          "사용자 이메일을 제공하지않을 경우 카카오 로그인이 불가능합니다.",
+      });
+    }
 
     const user = new User({
       provider: "kakao",
       user_email: userEmail,
       user_name: userNickName,
-      userAccessToken: req.body.token,
+      // userAccessToken: "",
+      // RefreshToken: "",
     });
 
     if ((await checkUserEmail(user.user_email)) !== null) {
@@ -285,28 +282,40 @@ router.post("/kakao", async (req, res) => {
       });
     }
 
-    // let responseData = {
-    //   success: true,
-    //   user,
-    // };
-    // console.log(responseData.user);
-
-    //초기로그인일 경우 JWT토큰 발급
-    if (req.body.token) {
-      console.log("들어옴");
-      res.cookie("w_refresh", user.userRefreshToken);
-      res.cookie("w_access", user.userAccessToken).status(200).json({
-        loginSuccess: true,
-        user_email: user.user_email,
-        user_name: user.user_name,
-        message: "성공적으로 로그인했습니다.",
-        token: user.userAccessToken,
+    User.findOne({ user_email: user.user_email }, async (err, user) => {
+      console.log("유저있다........");
+      user.generateToken((err, user) => {
+        if (err) {
+          return res.status(400).json({
+            loginSuccess: false,
+            message: "토큰 생성에 실패했습니다.",
+          });
+        }
+        console.log("refresh = " + user.userRefreshToken);
+        console.log("access = " + user.userAccessToken);
+        res.cookie("w_refresh", user.userRefreshToken);
+        res.cookie("w_access", user.userAccessToken).status(200).json({
+          loginSuccess: true,
+          user_email: user.user_email,
+          user_name: user.user_name,
+          message: "성공적으로 로그인했습니다.",
+          token: user.userAccessToken,
+        });
       });
-    }
+    });
+
+    // res.cookie("w_refresh", user.userRefreshToken);
+    // res.cookie("w_access", user.userAccessToken).status(200).json({
+    //   loginSuccess: true,
+    //   user_email: user.user_email,
+    //   user_name: user.user_name,
+    //   message: "성공적으로 로그인했습니다.",
+    //   token: user.userAccessToken,
+    // });
   } catch (err) {
     return res.status(500).json({
-      success: false,
-      error: err.toString(),
+      loginSuccess: false,
+      message: err.toString(),
     });
   }
 });
