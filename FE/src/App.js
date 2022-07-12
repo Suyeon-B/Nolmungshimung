@@ -45,13 +45,13 @@ function App() {
               <Route path="project/*" element={<CreateProject />} />
               <Route path="hyuk/*" element={<SpotList />} />
               <Route path="project/:projectId" element={<ProjectPage />} />
-              <Route path="spotroute/*" element={<SpotRoute />} />
+              <Route path="spotroute/:projectId" element={<SpotRoute />} />
               {/* 로그인안했을시 로그인 페이지로 이동 */}
               <Route
                 path="search/*"
                 element={
                   // <RequireAuth>
-                    <SearchMap />
+                  <SearchMap />
                   // </RequireAuth>
                 }
               />

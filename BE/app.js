@@ -66,24 +66,31 @@ const defaultValue = "";
 io.on("connection", (socket) => {
   socket.on("get-project", async (projectId) => {
     const project = await findProjectById(projectId);
-    socket.join(projectId);
-    socket.emit("load-project", project.memo);
+    if (project) {
+      socket.join(projectId);
+      socket.emit("load-project", project.memo);
 
-    socket.on("send-changes", (delta) => {
-      socket.broadcast.to(projectId).emit("receive-changes", delta);
-    });
+      socket.on("send-changes", (delta) => {
+        socket.broadcast.to(projectId).emit("receive-changes", delta);
+      });
 
-    socket.on("save-project", async (memo) => {
-      await projectSchema.findByIdAndUpdate(projectId, { memo });
-    });
+      socket.on("save-project", async (memo) => {
+        await projectSchema.findByIdAndUpdate(projectId, { memo });
+      });
+    } else {
+      console.log("없는 프로젝트입니다.");
+    }
   });
 });
 
 async function findProjectById(id) {
-  if (id == null) return;
-  const project = await projectSchema.findById(id);
-  if (project) return project;
-  return await projectSchema.findByIdAndUpdate(id, { memo: defaultValue });
+  try {
+    if (id == null) return;
+    const project = await projectSchema.findById(id);
+    if (project) return project;
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 module.exports = app;
