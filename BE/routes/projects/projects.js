@@ -30,6 +30,42 @@ router.post("/", async (req, res) => {
   });
 });
 
+router.post("/title", async (req, res) => {
+  const ids = req.body;
+  Project.find(
+    {
+      _id: {
+        $in: ids,
+      },
+    },
+    function (err, data) {
+      if (err) {
+        return res.status(400).json({
+          success: false,
+          message: "프로젝트 제목을 불러오는데 실패했습니다.",
+        });
+      }
+      if (Object.keys(data).length === 0) {
+        res.status(200).json({
+          success: false,
+          message: "프로젝트가 없다 냥.",
+        });
+      } else {
+        let projectInfo = [];
+        data.forEach((el) => {
+          let tmpObj = { _id: el._id, project_title: el.project_title };
+
+          projectInfo.push(tmpObj);
+        });
+        res.status(200).json({
+          success: true,
+          projectInfo: projectInfo,
+          message: "프로젝트 제목을 성공적으로 불러왔습니다.",
+        });
+      }
+    }
+  );
+});
 router.get("/:id", async (req, res, next) => {
   const { id } = req.params;
 
