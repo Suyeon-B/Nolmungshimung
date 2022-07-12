@@ -45,11 +45,19 @@ function App() {
           <BodyDiv>
             <ProjectSide />
             <Routes>
-              <Route path="/test" element={<Test />} />
-              <Route path="/" element={<Home />} />
-              <Route path="/kakao/signin" element={<KakaoSignIn />} />
               <Route path="signin/*" element={<SignIn />} />
               <Route path="signup/*" element={<SignUp />} />
+
+              <Route path="/test" element={<Test />} />
+              <Route
+                path="/"
+                element={
+                  <RequireAuth>
+                    <Home />
+                  </RequireAuth>
+                }
+              />
+              <Route path="/kakao/signin" element={<KakaoSignIn />} />
               <Route path="project/*" element={<CreateProject />} />
               <Route path="hyuk/*" element={<SpotList />} />
               <Route path="project/:projectId" element={<ProjectPage />} />
