@@ -149,7 +149,7 @@ router.post("/checkCertificationNumber", (req, res) => {
 // 1. 성공 로그인 -> 이메일 인증 유무 확인
 router.post("/signin", (req, res) => {
   // console.log("signin : " + JSON.stringify(req.body));
-  console.log("user_email : " + JSON.stringify(req.body.user_email));
+  // console.log("user_email : " + JSON.stringify(req.body.user_email));
 
   User.findOne({ user_email: req.body.user_email }, async (err, user) => {
     if (!user) {

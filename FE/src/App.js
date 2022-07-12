@@ -49,14 +49,7 @@ function App() {
               <Route path="signin/*" element={<SignIn />} />
               <Route path="signup/*" element={<SignUp />} />
               <Route path="voicetalk/*" element={<VoiceTalk />} />
-              <Route
-                path="/"
-                element={
-                  <RequireAuth>
-                    <Home />
-                  </RequireAuth>
-                }
-              />
+              <Route path="/" element={<Home />} />
               <Route path="/kakao/signin" element={<KakaoSignIn />} />
               <Route path="project/*" element={<CreateProject />} />
               <Route path="hyuk/*" element={<SpotList />} />
