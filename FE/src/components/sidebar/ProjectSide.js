@@ -197,13 +197,15 @@ const ProfileDetailContainer = styled.div`
   position: fixed;
   bottom: 0;
   left: 0;
-  margin-left: 100px;
+  margin-left: 80px;
   margin-bottom: 70px;
   border-radius: 15px;
   display: flex;
+  width: 65px;
   flex-direction: column;
   background-color: #000000;
-  opacity: 0.5;
+  opacity: 0.8;
+  z-index: 4;
 `;
 
 const ProfileDetailBtn = styled.span`
@@ -211,6 +213,7 @@ const ProfileDetailBtn = styled.span`
   color: white;
   padding: 5px;
   border-bottom: 1px solid white;
+  text-align: center;
 `;
 const ProfileDetailXBtn = styled.span`
   border: 0px;

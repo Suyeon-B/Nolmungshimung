@@ -33,11 +33,12 @@ function SignUp() {
       headers: {
         "content-type": "application/json",
       },
+      // credentials: "include",
       body: JSON.stringify(data),
     })
       .then((res) => res.json())
       .then((res) => {
-        console.log("res : ", res);
+        // console.log("res : ", res);
         if (res.success === true) {
           console.log("Sign Up Success");
           navigate("/signin", { replace: true });

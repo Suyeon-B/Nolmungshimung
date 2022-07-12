@@ -28,12 +28,12 @@ function SignIn() {
       headers: {
         "content-type": "application/json",
       },
-      // credentials: "include",
+      credentials: "include",
       body: JSON.stringify(data),
     })
       .then((res) => res.json())
       .then((res) => {
-        console.log("res : ", res);
+        // console.log("res : ", res);
         if (res.loginSuccess === true) {
           console.log("Sign In Success");
           sessionStorage.setItem("myName", res.user_name);

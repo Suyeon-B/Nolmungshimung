@@ -7,14 +7,14 @@ const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   useEffect(() => {
-    console.log("auth auth");
+    // console.log("auth auth");
     //To know my current status, send Auth request
     fetch(`http://${process.env.REACT_APP_SERVER_IP}:8443/users/auth`, {
       method: "get",
       headers: {
         "content-type": "application/json",
       },
-      // credentials: "include",
+      credentials: "include",
     })
       .then((response) => response.json())
       .then((response) => {
@@ -26,8 +26,8 @@ export const AuthProvider = ({ children }) => {
           // navigate("/signin", { replace: true });
           //Loggined in Status
         } else {
-          console.log(response);
-          console.log(JSON.stringify(response));
+          // console.log(response);
+          // console.log(JSON.stringify(response));
           setUser(response.user_name); // isAuth가 true임이 증명되어야 화면을 나타내도록 처리
           //supposed to be Admin page, but not admin person wants to go inside
           // navigate("/", { replace: true });
