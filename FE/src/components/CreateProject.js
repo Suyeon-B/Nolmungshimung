@@ -66,7 +66,8 @@ const CreateProject = () => {
     })
       .then((res) => res.json())
       .then((res) => {
-        navigate(`${res.projectId}`);
+        // navigate(`${res.projectId}`);
+        window.location.href = `project/${res.projectId}`;
       })
       .catch((err) => console.log(err));
   };

@@ -1,5 +1,3 @@
-import Search from "antd/lib/transfer/search";
-import { func } from "prop-types";
 import React, { useEffect, useState } from "react";
 import searchList from "./SearchList";
 
@@ -7,47 +5,69 @@ const { kakao } = window;
 
 const MapContainer = ({ searchPlace }) => {
   // 검색결과 배열에 담아줌
-
+  var markers = [];
   const [Places, setPlaces] = useState([]);
+
+  const searchOption = {
+    // location: currentPos,
+    radius: 1000,
+    size: 15,
+    page: 10,
+  };
+
+  function removeMarker() {
+    for (var i = 0; i < markers.length; i++) {
+      markers[i].setMap(null);
+    }
+    markers = [];
+  }
 
   useEffect(() => {
     var infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
-    var markers = [];
-    const container = document.getElementById("myMap");
+    // 검색 결과 목록이나 마커를 클릭했을 때 장소명을 표출할 인포윈도우를 생성합니다
+    function displayInfowindow(marker, title) {
+      var content = '<div style="padding:5px;z-index:1;">' + title + "</div>";
+
+      infowindow.setContent(content);
+      infowindow.open(map, marker);
+    }
+
+    const container = document.getElementById("searchMap");
     const options = {
       center: new kakao.maps.LatLng(33.450701, 126.570667),
-      level: 3,
+      level: 6,
     };
     const map = new kakao.maps.Map(container, options);
-
     const ps = new kakao.maps.services.Places();
-    
-    const searchOption = {
-      // location: currentPos,
-      radius: 1000,
-      size: 15,
-      page: 10
-    };
 
     ps.keywordSearch(
-      searchPlace ? '제주도' + searchPlace : '제주도',
+      searchPlace ? "제주도" + searchPlace : "제주도",
       placesSearchCB,
       searchOption
     );
 
+    // 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
     function placesSearchCB(data, status, pagination) {
+      setPlaces([]);
       if (status === kakao.maps.services.Status.OK) {
+        //정상 검색되면
+        removeMarker();
         let bounds = new kakao.maps.LatLngBounds();
-
         for (let i = 0; i < data.length; i++) {
-          displayMarker(data[i]);
+          displayMarker(data[i]); //데이터 마커 표시
           bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
         }
-
         map.setBounds(bounds);
-        // 페이지 목록 보여주는 displayPagination() 추가
-        displayPagination(pagination);
+        displayPagination(pagination); //데이터 목록 표시
         setPlaces(data);
+      } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+        displayPagination(pagination);
+        alert("검색 결과가 존재하지 않습니다.");
+        return;
+      } else if (status === kakao.maps.services.Status.ERROR) {
+        displayPagination(pagination);
+        alert("검색 결과 중 오류가 발생했습니다.");
+        return;
       }
     }
 
@@ -76,9 +96,9 @@ const MapContainer = ({ searchPlace }) => {
             };
           })(i);
         }
-
         fragment.appendChild(el);
       }
+
       paginationEl.appendChild(fragment);
     }
 
@@ -87,21 +107,21 @@ const MapContainer = ({ searchPlace }) => {
         map: map,
         position: new kakao.maps.LatLng(place.y, place.x),
       });
+      markers.push(marker);
+      kakao.maps.event.addListener(marker, "mouseover", function () {
+        displayInfowindow(marker, place.place_name);
+      });
 
-      kakao.maps.event.addListener(marker, "click", function () {
-        infowindow.setContent(
-          '<div style="padding:5px;font-size:12px;">' +
-            place.place_name +
-            "</div>"
-        );
-        infowindow.open(map, marker);
+      kakao.maps.event.addListener(marker, "mouseout", function () {
+        infowindow.close();
       });
     }
   }, [searchPlace]);
+
   return (
-    <div style={{ positon: "relative"}}>
+    <div style={{ positon: "relative" }}>
       <div
-        id="myMap"
+        id="searchMap"
         style={{
           width: "71.5vw",
           height: "100vh",
@@ -121,7 +141,7 @@ const MapContainer = ({ searchPlace }) => {
           marginTop: 26,
         }}
       >
-        {Places? searchList(Places): null}
+        {Places ? searchList(Places) : null}
         <div id="pagination" style={{ position: "relative", zIndex: 2 }}></div>
       </ul>
     </div>
