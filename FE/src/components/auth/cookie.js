@@ -12,3 +12,10 @@ export function getCookie(Name) {
     }
   }
 }
+
+//쿠키 삭제
+//쿠키는 삭제가 없어서 현재 시각으로 만료 처리를 함.
+export function deleteCookie(key) {
+  let todayDate = new Date();
+  document.cookie = key + "=; path=/; expires=" + todayDate.toGMTString() + ";"; // 현재 시각 이전이면 쿠키가 만료되어 사라짐.
+}

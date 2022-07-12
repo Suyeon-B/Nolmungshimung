@@ -63,7 +63,7 @@ function KakaoSignIn(props) {
           console.log(data.token);
           login({ user: data.user_email });
         } else {
-          window.alert("로그인에 실패하였습니다 : " + data.message);
+          window.alert(data.message);
           navigate("/signin");
         }
       })
