@@ -102,7 +102,7 @@ export default function TextEditor() {
 
     const handler = (delta, oldDelta, source) => {
       if (source !== "user") return;
-      socket.emit("send-changes", delta);
+      socket.emit("send-changes", delta); // user id 가져오기
     };
     quill.on("text-change", handler);
 
