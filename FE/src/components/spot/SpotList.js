@@ -106,21 +106,12 @@ export default function SpotList({ dayItem, setItemRoute, selectedIndex }) {
     const dInd = +destination.droppableId;
 
     if (sInd === dInd) {
-      const items = reorder(
-        [dayItem[selectedIndex]][sInd],
-        source.index,
-        destination.index
-      );
+      const items = reorder([dayItem[selectedIndex]][sInd], source.index, destination.index);
       const newState = [...[dayItem[selectedIndex]]];
       newState[sInd] = items;
       setItemRoute(newState);
     } else {
-      const result = move(
-        [dayItem[selectedIndex]][sInd],
-        [dayItem[selectedIndex]][dInd],
-        source,
-        destination
-      );
+      const result = move([dayItem[selectedIndex]][sInd], [dayItem[selectedIndex]][dInd], source, destination);
       const newState = [...[dayItem[selectedIndex]]];
       newState[sInd] = result[sInd];
       newState[dInd] = result[dInd];
@@ -135,26 +126,15 @@ export default function SpotList({ dayItem, setItemRoute, selectedIndex }) {
         {[dayItem[selectedIndex]].map((el, ind) => (
           <Droppable key={ind} droppableId={`${ind}`}>
             {(provided, snapshot) => (
-              <div
-                ref={provided.innerRef}
-                style={getListStyle(snapshot.isDragging)}
-                {...provided.droppableProps}
-              >
+              <div ref={provided.innerRef} style={getListStyle(snapshot.isDragging)} {...provided.droppableProps}>
                 {el.map((item, index) => (
-                  <Draggable
-                    key={item.uid}
-                    draggableId={item.uid}
-                    index={index}
-                  >
+                  <Draggable key={item.uid} draggableId={item.uid} index={index}>
                     {(provided, snapshot) => (
                       <div
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
-                        style={getItemStyle(
-                          snapshot.isDragging,
-                          provided.draggableProps.style
-                        )}
+                        style={getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
                       >
                         <div
                           style={{
@@ -183,9 +163,7 @@ export default function SpotList({ dayItem, setItemRoute, selectedIndex }) {
                             onClick={() => {
                               const newState = [...[dayItem[selectedIndex]]];
                               newState[ind].splice(index, 1);
-                              setItemRoute(
-                                newState.filter((group) => group.length)
-                              );
+                              setItemRoute(newState.filter((group) => group.length));
                             }}
                           />
                         </div>
@@ -208,10 +186,11 @@ const SpotItemIndex = styled.div`
   width: 25px;
   height: 25px;
   border-radius: 50%;
-  background: #00d3d3;
+  background: #ff8830;
   text-align: center;
   font-size: 18px;
   margin-right: 10px;
+  color: white;
   justify-content: center;
   align-items: center;
 `;

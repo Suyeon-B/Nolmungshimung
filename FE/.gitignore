@@ -7,6 +7,7 @@
 
 # testing
 /coverage
+FE/src/pages/shareMemo/test.js
 
 # production
 /build
