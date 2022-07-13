@@ -65,9 +65,7 @@ const culTripTermData = (startDate, day) => {
 
 function PlanList({ toggleIsPage, startDate, term, routes, setRoutes, setSelectedIndex, isFirstPage }) {
   const [state, setState] = useState([...routes]);
-  const tripTermDate = [];
   const droppableRef = useRef([]);
-  const detailBtnDivRef = useRef([]);
   const [selectedDay, setSelectedDay] = useState(0);
 
   function onDragEnd(result) {
@@ -116,7 +114,7 @@ function PlanList({ toggleIsPage, startDate, term, routes, setRoutes, setSelecte
       <SidePlanListDiv>
         <StyledDragDropContext onDragEnd={onDragEnd}>
           {[...routes].map((el, ind) => (
-            <div ref={(el) => (droppableRef.current[+ind] = el)}>
+            <div key={ind} ref={(el) => (droppableRef.current[+ind] = el)}>
               <Droppable key={ind} droppableId={`${ind}`}>
                 {(provided, snapshot) => (
                   <div ref={provided.innerRef} style={getListStyle(snapshot.isDragging)} {...provided.droppableProps}>
