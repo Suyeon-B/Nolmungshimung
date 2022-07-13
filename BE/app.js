@@ -11,6 +11,7 @@ var usersRouter = require("./routes/users/users");
 var projectsRouter = require("./routes/projects/projects");
 var travelRouter = require("./routes/travel/travel");
 var commonRouter = require("./routes/common/common");
+var voiceRouter = require("./routes/voicetalk/voicetalk");
 var mongodb = require("dotenv").config();
 
 var app = express();
@@ -49,6 +50,7 @@ app.use("/users", usersRouter);
 app.use("/projects", projectsRouter);
 app.use("/travel", travelRouter);
 app.use("/common", commonRouter);
+app.use("/voicetalk", voiceRouter);
 
 // [수연] share-memo with collaborative cursors
 // create and start server on 7899 port by default

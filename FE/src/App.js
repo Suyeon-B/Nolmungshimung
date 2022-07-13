@@ -6,8 +6,13 @@ import Home from "./pages/Home";
 import Test from "./pages/test";
 import TextEditor from "./pages/shareMemo/TextEditor";
 import KakaoSignIn from "./components/sign/KakaoSignIn";
-import VoiceTalk from "./components/voiceTalk/sessionFunc";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import VoiceTalk from "./components/voiceTalk/voiceTalk";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import ProjectSide from "./components/sidebar/ProjectSide";
 import PlanSideBar from "./components/sidebar/PlanSideBar";
 import CreateProject from "./components/CreateProject";
