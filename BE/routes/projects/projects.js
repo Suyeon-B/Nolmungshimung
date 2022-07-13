@@ -87,6 +87,28 @@ router.post("/routes/:id", async (req, res) => {
   }
 });
 
+router.patch("/routes/:id", async (req, res) => {
+  // console.log("I'm in routes/:id");
+  // console.log("REQ BODY", req.body);
+  // console.log("REQ PARAMS : ", req.params.id);
+  try {
+    Project.findOneAndUpdate(
+      { _id: req.params.id },
+      { $set: { routes: req.body } },
+      { new: true },
+      (err, doc) => {
+        if (err) {
+          console.log("Something wrong when updating data!");
+        }
+        // console.log("doc:", doc);
+      }
+    );
+  } catch (error) {
+    console.log(`project update error: ${error}`);
+    res.status(404).send({ error: "routes update error!" });
+  }
+});
+
 router.get("/:id", async (req, res, next) => {
   const { id } = req.params;
 
