@@ -29,9 +29,6 @@ import { AuthProvider, RequireAuth } from "./components/auth/Auth";
 // react query devtool
 import { ReactQueryDevtools } from "react-query/devtools";
 
-// [수연][TextEditor] socket io 작업
-import { v4 as uuidV4 } from "uuid";
-
 const queryClient = new QueryClient(); // 인스턴스 생성
 const BodyDiv = styled.div`
   display: flex;
@@ -54,7 +51,7 @@ function App() {
               <Route path="project/*" element={<CreateProject />} />
               <Route path="hyuk/*" element={<SpotList />} />
               <Route path="project/:projectId" element={<ProjectPage />} />
-              <Route path="spotroute/:projectId" element={<SpotRoute />} />
+              <Route path="test/*" element={<TextEditor />} />
               {/* 로그인안했을시 로그인 페이지로 이동 */}
               <Route
                 path="search/*"
