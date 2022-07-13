@@ -90,10 +90,10 @@ const getListStyle = (isDraggingOver) => ({
   overflow: "scroll",
 });
 
-export default function SpotList({ dayItem, setItemRoute }) {
+export default function SpotList({ dayItem, setItemRoute, selectedIndex }) {
   // const [state, setState] = useState([testItem, testItem2]);
 
-  const [state, setState] = useState([dayItem[0]]);
+  const [state, setState] = useState([dayItem[selectedIndex]]);
 
   function onDragEnd(result) {
     const { source, destination } = result;
@@ -107,21 +107,21 @@ export default function SpotList({ dayItem, setItemRoute }) {
 
     if (sInd === dInd) {
       const items = reorder(
-        [dayItem[0]][sInd],
+        [dayItem[selectedIndex]][sInd],
         source.index,
         destination.index
       );
-      const newState = [...[dayItem[0]]];
+      const newState = [...[dayItem[selectedIndex]]];
       newState[sInd] = items;
       setItemRoute(newState);
     } else {
       const result = move(
-        [dayItem[0]][sInd],
-        [dayItem[0]][dInd],
+        [dayItem[selectedIndex]][sInd],
+        [dayItem[selectedIndex]][dInd],
         source,
         destination
       );
-      const newState = [...[dayItem[0]]];
+      const newState = [...[dayItem[selectedIndex]]];
       newState[sInd] = result[sInd];
       newState[dInd] = result[dInd];
 
@@ -132,7 +132,7 @@ export default function SpotList({ dayItem, setItemRoute }) {
   return (
     <SidePlanListDiv>
       <StyledDragDropContext onDragEnd={onDragEnd}>
-        {[dayItem[0]].map((el, ind) => (
+        {[dayItem[selectedIndex]].map((el, ind) => (
           <Droppable key={ind} droppableId={`${ind}`}>
             {(provided, snapshot) => (
               <div
@@ -180,7 +180,7 @@ export default function SpotList({ dayItem, setItemRoute }) {
                           <DeleteOutlined
                             style={{ fontSize: "25px" }}
                             onClick={() => {
-                              const newState = [...[dayItem[0]]];
+                              const newState = [...[dayItem[selectedIndex]]];
                               newState[ind].splice(index, 1);
                               setItemRoute(
                                 newState.filter((group) => group.length)

@@ -4,19 +4,23 @@ import SpotList from "../../components/spot/SpotList";
 import MarkMap from "../../components/MarkMap/MarkMap";
 import TextEditor from "../shareMemo/TextEditor";
 
-function SpotRoute({ item, setItemRoute, itemId }) {
+function SpotRoute({ item, setItemRoute, itemId, selectedIndex }) {
   // const [routes, setRoutes] = useState(item.routes);
   // console.log("=================");
   // console.log(item[0]);
   // console.log("=================");
   // useEffect(() => {
-  MarkMap(item[0]);
+  MarkMap(item[selectedIndex]);
   // }, [...item[0]]);
 
   return (
     <SpotRouteContainer>
       <SpotRouteSection>
-        <SpotList dayItem={item} setItemRoute={setItemRoute} />
+        <SpotList
+          selectedIndex={selectedIndex}
+          dayItem={item}
+          setItemRoute={setItemRoute}
+        />
         <SpotRouteMap id="myMap" />
       </SpotRouteSection>
 
