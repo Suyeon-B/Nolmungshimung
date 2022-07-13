@@ -50,7 +50,7 @@ function KakaoSignIn(props) {
       headers: {
         "content-type": "application/json",
       },
-      // credentials: "include",
+      credentials: "include",
       body: JSON.stringify({ token }),
     })
       .then((res) => res.json())
