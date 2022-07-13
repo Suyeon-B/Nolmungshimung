@@ -17,6 +17,11 @@ router.post("/", async (req, res) => {
 
   project["people"].push(user_date._id.toString());
 
+  // 여행지 경로에 배열 추가하기
+  for (let i = 0; i < project["term"]; i++) {
+    project["routes"].push([]);
+  }
+
   project.save(async (err, data) => {
     // user_date["user_project"]
     user_date["user_projects"].push(data._id.toString());
