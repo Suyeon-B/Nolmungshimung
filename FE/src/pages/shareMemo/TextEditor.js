@@ -71,7 +71,7 @@ const colors = ["#FF8830", "#8DD664", "#FF6169", "#975FFE", "#0072BC"];
 
 const getUserColor = (index) => colors[index % colors.length];
 
-function TextEditor() {
+function TextEditor({ project_Id }) {
   const [user, setUser] = useState(null);
   const [doc, setDoc] = useState(null);
   const [presences, setPresences] = useState({});
@@ -80,6 +80,11 @@ function TextEditor() {
   const editorRef = useRef(null);
   const mousePointerRef = useRef(null);
   const editorCursorRef = useRef(null);
+  const [projectID, setProjectId] = useState(project_Id);
+
+  useEffect(() => {
+    setProjectId(project_Id);
+  }, [project_Id]);
 
   const presenceCallback = (id, data) => {
     // callback to recieve status changes of other collaborators
@@ -145,7 +150,7 @@ function TextEditor() {
         okdb
           .open(
             DATA_TYPE, // collection name
-            DOCUMENT_ID,
+            projectID,
             defaultValue, // default value to save if doesn't exist yet
             {
               type: "rich-text",
@@ -193,7 +198,7 @@ function TextEditor() {
       console.log("text-change ", delta, contents, source);
       delta.type = "rich-text";
       if (connectedRef.current) {
-        okdb.op(DATA_TYPE, DOCUMENT_ID, delta).catch((err) => console.log("Error updating doc", err));
+        okdb.op(DATA_TYPE, project_Id, delta).catch((err) => console.log("Error updating doc", err));
       }
     });
     editor.on("selection-change", function (range, oldRange, source) {
