@@ -21,8 +21,8 @@ function SignIn() {
     retry: 1,
   });
 
-  async function singInUser(data) {
-    await fetch(`http://${process.env.REACT_APP_SERVER_IP}:8443/users/signin`, {
+  function singInUser(data) {
+    fetch(`http://${process.env.REACT_APP_SERVER_IP}:8443/users/signin`, {
       method: "post",
       headers: {
         "content-type": "application/json",
@@ -68,8 +68,20 @@ function SignIn() {
           <SignUpBtn onClick={onClickSignUp}>Sign Up</SignUpBtn>
         </Btns>
         <Form onSubmit={onSubmitSignUp}>
-          <Input placeholder="jeju@island.com" type="text" value={id} onChange={onchangeId} required />
-          <Input placeholder="password" type="pass" value={password} onChange={onchangePassword} required />
+          <Input
+            placeholder="jeju@island.com"
+            type="text"
+            value={id}
+            onChange={onchangeId}
+            required
+          />
+          <Input
+            placeholder="password"
+            type="pass"
+            value={password}
+            onChange={onchangePassword}
+            required
+          />
           <SubmitInput value="로그인" type="submit" />
           <br />
           <a href={kauthUrl}>
@@ -167,7 +179,7 @@ const Input = styled.input`
   background: #ebebeb;
   padding: 20px;
   border: 0;
-  paddingleft: 20px;
+  padding-left: 20px;
   margin-top: 15px;
 `;
 

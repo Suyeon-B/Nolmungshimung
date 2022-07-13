@@ -145,8 +145,10 @@ function PlanList({
                       <DateDetailBtn data-idx={ind} onClick={onClick}>
                         {culTripTermData(startDate, ind)}
                       </DateDetailBtn>
-                      <DateDetailBtn>
+                      <DateDetailBtn data-idx={ind} onClick={onClick}>
                         <img
+                          data-idx={ind}
+                          onClick={onClick}
                           style={{ width: "15px" }}
                           src="\statics\images\date_arrow.png"
                         />
