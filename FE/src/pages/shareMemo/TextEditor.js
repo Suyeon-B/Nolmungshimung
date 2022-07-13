@@ -8,6 +8,41 @@ import Quill from "quill";
 import QuillCursors from "quill-cursors";
 import "quill/dist/quill.snow.css";
 import TextEditorUsers from "./TextEditorUsers";
+import styled from "styled-components";
+
+const EditorBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 20px;
+`;
+const EditorContainer = styled.div`
+  div#container {
+    height: 35vh;
+    width: 61vw;
+    padding: 1%;
+  }
+  .ql-toolbar.ql-snow {
+    border-radius: 5px 5px 0px 0px;
+  }
+  .ql-container.ql-snow {
+    border-radius: 0 0 5px 5px;
+  }
+
+  .ql-editor strong {
+    font-weight: bold;
+  }
+
+  .ql-editor {
+    min-height: 290px;
+    max-height: 290px;
+  }
+`;
+
+const OnlineFriends = styled.div`
+  margin-left: 10px;
+  min-width: 300px;
+`;
 
 Quill.register("modules/cursors", QuillCursors);
 
@@ -18,11 +53,21 @@ window.okdb = okdb;
 const DATA_TYPE = "todo-tasks"; // data type, typically corresponds to the table name
 const DOCUMENT_ID = "design-doc0"; // id of the object to be edited collaboratively
 
+const TOOLBAR_OPTIONS = [
+  [{ align: [] }],
+  [{ header: [1, 2, 3, false] }],
+  [{ font: [] }],
+  ["bold", "underline", { color: [] }, { background: [] }],
+  [{ list: "ordered" }, { list: "bullet" }],
+  [{ indent: "+1" }, { indent: "-1" }],
+  ["link", "blockquote"],
+];
+
 const Alert = (props) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 };
 
-const colors = ["#5551FF", "#0FA958"];
+const colors = ["#FF8830", "#8DD664", "#FF6169", "#975FFE", "#0072BC"];
 
 const getUserColor = (index) => colors[index % colors.length];
 
@@ -128,10 +173,15 @@ function TextEditor() {
     const editor = new Quill("#editor-container", {
       theme: "snow",
       modules: {
+        toolbar: TOOLBAR_OPTIONS,
         cursors: {
           transformOnTextChange: true,
         },
+        history: {
+          userOnly: true, // only user changes will be undone or redone.
+        },
       },
+      placeholder: "친구들과 메모를 적어보세요! :)",
     });
 
     editorRef.current = editor;
@@ -194,28 +244,22 @@ function TextEditor() {
   }, [editorRef, doc]);
 
   return (
-    <Container maxWidth="md" className="container">
-      <Grid container spacing={3}>
-        <Grid item md={9}>
-          {error && <Alert severity="error">{error}</Alert>}
-          <Paper>
-            <div id="editor-container"></div>
-          </Paper>
-        </Grid>
-        <Grid item md={3}>
-          <div className="online-panel">
-            <h4>Online:</h4>
-            <div className="online-item" key="000">
-              <svg width="10" focusable="false" viewBox="0 0 10 10" aria-hidden="true" title="fontSize small">
-                <circle cx="5" cy="5" r="5"></circle>
-              </svg>
-              me ({user ? user.name : "connecting..."})
-            </div>
-            <TextEditorUsers presences={presences} />
-          </div>
-        </Grid>
-      </Grid>
-    </Container>
+    <EditorBox>
+      {error && <Alert severity="error">{error}</Alert>}
+      <EditorContainer>
+        <div id="editor-container"></div>
+      </EditorContainer>
+      <OnlineFriends>
+        <h4>🍊 Online 친구들 </h4>
+        <div className="online-item" key="000">
+          <svg width="10" focusable="false" viewBox="0 0 10 10" aria-hidden="true" title="fontSize small">
+            <circle cx="5" cy="5" r="5"></circle>
+          </svg>
+          me ({user ? user.name : "connecting..."})
+        </div>
+        <TextEditorUsers presences={presences} />
+      </OnlineFriends>
+    </EditorBox>
   );
 }
 

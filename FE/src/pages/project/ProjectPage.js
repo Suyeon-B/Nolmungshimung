@@ -17,6 +17,7 @@ async function fetchProjectById(_id) {
 const ProjectPage = (props) => {
   const { projectId } = useParams();
   const [items, setItems] = useState(null);
+  const [itemsRoute, setItemsRoute] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const [isFirstPage, setIsFirstPage] = useState(true);
@@ -40,6 +41,7 @@ const ProjectPage = (props) => {
       const data = await fetchProjectById(projectId);
 
       setItems(data);
+      setItemsRoute(data.routes);
     }
     fetchInfo();
   }, [projectId]);
@@ -58,10 +60,22 @@ const ProjectPage = (props) => {
   return (
     <>
       {/* {data ? <div>is data</div> : <div>not data</div>} */}
-      <PlanSideBar item={items} isFirstPage={isFirstPage} toggleIsPage={toggleIsPage} />
+      <PlanSideBar
+        item={items}
+        isFirstPage={isFirstPage}
+        toggleIsPage={toggleIsPage}
+        itemRoutes={itemsRoute}
+        setItemRoutes={setItemsRoute}
+      />
       <PlanSection>
-        {isFirstPage && <Search />}
-        {!isFirstPage && <SpotRoute item={items} />}
+        {isFirstPage && <Search projectId={projectId} />}
+        {!isFirstPage && (
+          <SpotRoute
+            item={itemsRoute}
+            setItemRoute={setItemsRoute}
+            itemId={items._id}
+          />
+        )}
       </PlanSection>
     </>
   );

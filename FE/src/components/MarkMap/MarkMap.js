@@ -14,7 +14,7 @@ function MarkMap(props) {
   ];
   const linePath = props.map(function (place) {
     //test를 props으로
-    return new kakao.maps.LatLng(place.map_x, place.map_y);
+    return new kakao.maps.LatLng(place.x, place.y);
   });
   const polyline = new kakao.maps.Polyline({
     path: linePath, // 선을 구성하는 좌표배열 입니다

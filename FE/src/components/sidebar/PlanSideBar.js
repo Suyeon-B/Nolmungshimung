@@ -2,7 +2,13 @@ import React from "react";
 import styled from "styled-components";
 import PlanList from "./PlanList";
 
-const PlanSideBar = ({ item, toggleIsPage, isFirstPage }) => {
+const PlanSideBar = ({
+  item,
+  toggleIsPage,
+  isFirstPage,
+  itemRoutes,
+  setItemRoutes,
+}) => {
   return (
     <SideBar>
       <PlanTitleWrap>
@@ -23,7 +29,9 @@ const PlanSideBar = ({ item, toggleIsPage, isFirstPage }) => {
       <PlanList
         startDate={item.start_date}
         term={item.term}
-        routes={item.routes}
+        routes={itemRoutes}
+        setRoutes={setItemRoutes}
+        // routes={item.routes}
       />
 
       <div>사이드바 footer</div>

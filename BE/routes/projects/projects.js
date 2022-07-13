@@ -71,16 +71,32 @@ router.post("/title", async (req, res) => {
     }
   );
 });
+
+router.post("/routes/:id", async (req, res) => {
+  const body = req.body;
+  try {
+    const projectInfo = await Project.findById(req.params.id);
+    projectInfo.routes[0].push(body);
+    const project = new Project(projectInfo);
+    await project.save();
+
+    res.send(projectInfo);
+  } catch (error) {
+    console.log(`project route find id: ${error}`);
+    res.status(404).send({ error: "project not found" });
+  }
+});
+
 router.get("/:id", async (req, res, next) => {
   const { id } = req.params;
 
-  const projectInfo = await Project.findById({ _id: id });
-  console.log(projectInfo);
-  if (projectInfo) {
+  try {
+    const projectInfo = await Project.findById({ _id: id });
     return res.json(projectInfo);
+  } catch (error) {
+    console.log(`project find id: ${error}`);
+    res.status(404).send({ error: "project not found" });
   }
-
-  res.status(404).send("fail");
 });
 
 // User.findOne({ user_email: "a" }).then((data) => {

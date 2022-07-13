@@ -5,7 +5,7 @@ import styled from "styled-components";
 
 const { kakao } = window;
 
-const MapContainer = () => {
+const MapContainer = ({ projectId }) => {
   const [searchPlace, setSearchPlace] = useState("");
   // 검색결과 배열에 담아줌
   var markers = [];
@@ -29,7 +29,7 @@ const MapContainer = () => {
     var infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
     // 검색 결과 목록이나 마커를 클릭했을 때 장소명을 표출할 인포윈도우를 생성합니다
     function displayInfowindow(marker, title) {
-      var content = '<div style="padding:5px;z-index:1;">' + title + "</div>";
+      var content = '<div style="padding:5px;">' + title + "</div>";
 
       infowindow.setContent(content);
       infowindow.open(map, marker);
@@ -43,11 +43,7 @@ const MapContainer = () => {
     const map = new kakao.maps.Map(container, options);
     const ps = new kakao.maps.services.Places();
 
-    ps.keywordSearch(
-      searchPlace ? "제주도" + searchPlace : "제주도",
-      placesSearchCB,
-      searchOption
-    );
+    ps.keywordSearch(searchPlace ? "제주도" + searchPlace : "제주도", placesSearchCB, searchOption);
 
     // 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
     function placesSearchCB(data, status, pagination) {
@@ -127,10 +123,7 @@ const MapContainer = () => {
         <SearchBar changePlace={setSearchPlace} />
         <ul>
           {Places && searchList(Places)}
-          <div
-            id="pagination"
-            style={{ position: "relative", zIndex: 2 }}
-          ></div>
+          <div id="pagination" style={{ position: "relative", zIndex: 2 }}></div>
         </ul>
       </SearchListDiv>
       <StyledMapDiv id="searchMap"></StyledMapDiv>

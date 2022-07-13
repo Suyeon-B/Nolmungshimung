@@ -1,6 +1,3 @@
-.container {
-  padding-top: 40px;
-}
 .task-row:not(:last-child) {
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 }
@@ -22,9 +19,6 @@
   font-weight: 700;
   font-size: 12px;
   padding: 2px 8px;
-}
-.online-panel {
-  padding-top: 60px;
 }
 .online-panel h4 {
   margin-bottom: 5px !important;
