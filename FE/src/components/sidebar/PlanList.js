@@ -65,14 +65,13 @@ const culTripTermData = (startDate, day) => {
   return `# ${sDate.getMonth() + 1}월 ${sDate.getDate()}일`;
 };
 
-function PlanList({ startDate, term, routes }) {
+function PlanList({ startDate, term, routes, setRoutes }) {
   const [state, setState] = useState([...routes]);
   const tripTermDate = [];
 
-  console.log(state);
-  useEffect(() => {
-    setState([...routes]);
-  }, [routes]);
+  // useEffect(() => {
+  //   setState([...routes]);
+  // }, [routes]);
 
   function onDragEnd(result) {
     const { source, destination } = result;
@@ -85,17 +84,22 @@ function PlanList({ startDate, term, routes }) {
     const dInd = +destination.droppableId;
 
     if (sInd === dInd) {
-      const items = reorder(state[sInd], source.index, destination.index);
-      const newState = [...state];
+      const items = reorder([...routes][sInd], source.index, destination.index);
+      const newState = [...[...routes]];
       newState[sInd] = items;
-      setState(newState);
+      setRoutes(newState);
     } else {
-      const result = move(state[sInd], state[dInd], source, destination);
-      const newState = [...state];
+      const result = move(
+        [...routes][sInd],
+        [...routes][dInd],
+        source,
+        destination
+      );
+      const newState = [...[...routes]];
       newState[sInd] = result[sInd];
       newState[dInd] = result[dInd];
 
-      setState(newState.filter((group) => group.length));
+      setRoutes(newState.filter((group) => group.length));
     }
   }
   // const btnRef = useRef();
@@ -110,7 +114,7 @@ function PlanList({ startDate, term, routes }) {
     <div>
       <SidePlanListDiv>
         <StyledDragDropContext onDragEnd={onDragEnd}>
-          {state.map((el, ind) => (
+          {[...routes].map((el, ind) => (
             <Droppable key={ind} droppableId={`${ind}`}>
               {(provided, snapshot) => (
                 <div
@@ -151,9 +155,9 @@ function PlanList({ startDate, term, routes }) {
                             <div
                               type="button"
                               onClick={() => {
-                                const newState = [...state];
+                                const newState = [...[...routes]];
                                 newState[ind].splice(index, 1);
-                                setState(
+                                setRoutes(
                                   newState.filter((group) => group.length)
                                 );
                               }}
