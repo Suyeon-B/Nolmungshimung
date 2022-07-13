@@ -38,14 +38,12 @@ function MarkMap(props) {
   useEffect(() => {
     const linePath = props.map(function (place) {
       //test를 props으로
-      console.log(place);
       return {
         title: `<div>${place.place_name}</div>`,
         latlng: new kakao.maps.LatLng(place.y, place.x),
         category: place.category_group_code,
       };
     });
-    console.log(linePath);
     const latlngs = linePath.map(function (place) {
       return place.latlng;
     });
@@ -100,8 +98,16 @@ function MarkMap(props) {
       var infowindow = new kakao.maps.InfoWindow({
         content: linePath[i].title, // 인포윈도우에 표시할 내용
       });
-      kakao.maps.event.addListener(marker, "mouseover", makeOverListener(map, marker, infowindow));
-      kakao.maps.event.addListener(marker, "mouseout", makeOutListener(infowindow));
+      kakao.maps.event.addListener(
+        marker,
+        "mouseover",
+        makeOverListener(map, marker, infowindow)
+      );
+      kakao.maps.event.addListener(
+        marker,
+        "mouseout",
+        makeOutListener(infowindow)
+      );
     }
     if (linePath.length > 0) {
       setBounds(map, bounds);

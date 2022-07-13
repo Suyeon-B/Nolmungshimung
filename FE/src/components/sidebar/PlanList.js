@@ -73,9 +73,7 @@ function PlanList({
   isFirstPage,
 }) {
   const [state, setState] = useState([...routes]);
-  const tripTermDate = [];
   const droppableRef = useRef([]);
-  const detailBtnDivRef = useRef([]);
   const [selectedDay, setSelectedDay] = useState(0);
 
   function onDragEnd(result) {
@@ -177,9 +175,7 @@ function PlanList({
                                 onClick={() => {
                                   const newState = [...[...routes]];
                                   newState[ind].splice(index, 1);
-                                  setRoutes(
-                                    newState.filter((group) => group.length)
-                                  );
+                                  setRoutes(newState);
                                 }}
                               >
                                 <img
