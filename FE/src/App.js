@@ -6,7 +6,7 @@ import Home from "./pages/Home";
 import Test from "./pages/test";
 import TextEditor from "./pages/shareMemo/TextEditor";
 import KakaoSignIn from "./components/sign/KakaoSignIn";
-import VoiceTalk from "./components/voiceTalk/sessionFunc";
+import VoiceTalk from "./components/voiceTalk/voiceTalk";
 import {
   BrowserRouter as Router,
   Routes,
