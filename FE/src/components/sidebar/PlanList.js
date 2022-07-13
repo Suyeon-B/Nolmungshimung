@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import styled from "styled-components";
 
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { useEffect } from "react";
 
 const StyledDragDropContext = styled(DragDropContext)``;
 
@@ -58,14 +59,19 @@ const getListStyle = (isDraggingOver) => ({
   width: "100%",
 });
 
-const culTripTermData = (startData, term) => {
-  const sDate = new Date(startData.slice(0, 3));
-  console.log(sDate);
+const culTripTermData = (startDate, day) => {
+  const sDate = new Date(startDate.slice(0, 3));
+  sDate.setDate(sDate.getDate() + day);
+  return `# ${sDate.getMonth() + 1}월 ${sDate.getDate()}일`;
 };
 
-function PlanList({ startData, term, routes }) {
-  const [state, setState] = useState([[], ...routes]);
+function PlanList({ startDate, term, routes }) {
+  const [state, setState] = useState([...routes]);
   const tripTermDate = [];
+
+  useEffect(() => {
+    setState([...routes]);
+  }, [routes]);
 
   function onDragEnd(result) {
     const { source, destination } = result;
@@ -112,7 +118,9 @@ function PlanList({ startData, term, routes }) {
                   {...provided.droppableProps}
                 >
                   <DateDetailBtnDiv>
-                    <DateDetailBtn># 7월 {ind + 1}일</DateDetailBtn>
+                    <DateDetailBtn>
+                      {culTripTermData(startDate, ind)}
+                    </DateDetailBtn>
                     <NoneStyleBtn>
                       <img
                         style={{ width: "15px" }}
