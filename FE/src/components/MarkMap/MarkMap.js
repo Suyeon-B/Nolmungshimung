@@ -64,7 +64,7 @@ function MarkMap(props) {
       setBounds(map, bounds);
     }
     polyline.setMap(map);
-  }, [props]);
+  }, [...props]);
 
   // return (
   // <div
