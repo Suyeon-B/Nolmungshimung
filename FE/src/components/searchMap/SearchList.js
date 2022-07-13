@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import SearchListRoute from "./SearchListRoute";
 import styled from "styled-components";
 
-const SearchList = ({ Places, projectId }) => {
+const SearchList = ({ itemRoute, setItemRoute, Places, projectId }) => {
   function GetGooglePlaceId(props) {
     let url =
       "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?";
@@ -132,7 +132,13 @@ const SearchList = ({ Places, projectId }) => {
   return (
     <>
       {Places.map((item, i) => (
-        <SearchListRoute projectId={projectId} route={item} idx={i} />
+        <SearchListRoute
+          itemRoutes={itemRoute}
+          setItemRoutes={setItemRoute}
+          projectId={projectId}
+          route={item}
+          idx={i}
+        />
       ))}
     </>
   );

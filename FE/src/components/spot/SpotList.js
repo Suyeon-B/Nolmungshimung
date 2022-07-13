@@ -92,7 +92,7 @@ const getListStyle = (isDraggingOver) => ({
 
 export default function SpotList({ dayItem, setItemRoute }) {
   // const [state, setState] = useState([testItem, testItem2]);
-  console.log("dd", dayItem[0]);
+
   const [state, setState] = useState([dayItem[0]]);
 
   function onDragEnd(result) {
@@ -141,7 +141,11 @@ export default function SpotList({ dayItem, setItemRoute }) {
                 {...provided.droppableProps}
               >
                 {el.map((item, index) => (
-                  <Draggable key={item.id} draggableId={item.id} index={index}>
+                  <Draggable
+                    key={item.uid}
+                    draggableId={item.uid}
+                    index={index}
+                  >
                     {(provided, snapshot) => (
                       <div
                         ref={provided.innerRef}

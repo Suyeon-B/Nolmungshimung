@@ -102,13 +102,6 @@ function PlanList({ startDate, term, routes, setRoutes }) {
       setRoutes(newState.filter((group) => group.length));
     }
   }
-  // const btnRef = useRef();
-
-  // const onMouseEnter = (e) => {
-  //   // console.log(e.target);
-  //   console.log(btnRef.current);
-  // };
-  // const onMouseLeave = (e) => {};
 
   return (
     <div>
@@ -135,8 +128,8 @@ function PlanList({ startDate, term, routes, setRoutes }) {
                   </DateDetailBtnDiv>
                   {el.map((item, index) => (
                     <Draggable
-                      key={item.id}
-                      draggableId={item.id}
+                      key={item.uid}
+                      draggableId={item.uid}
                       index={index}
                     >
                       {(provided, snapshot) => (
@@ -151,7 +144,6 @@ function PlanList({ startDate, term, routes, setRoutes }) {
                         >
                           <ItemInnerDiv>
                             {item.place_name}
-
                             <div
                               type="button"
                               onClick={() => {
