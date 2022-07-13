@@ -173,6 +173,7 @@ export default function SpotList({ dayItem, setItemRoute, selectedIndex }) {
                                 console.log("dd");
                               }}
                             >
+                              <SpotItemIndex>{index + 1}</SpotItemIndex>
                               {item.place_name}
                             </SpotTitle>
                             <SpotCategory>{item.category}</SpotCategory>
@@ -201,6 +202,19 @@ export default function SpotList({ dayItem, setItemRoute, selectedIndex }) {
     </SidePlanListDiv>
   );
 }
+
+const SpotItemIndex = styled.div`
+  display: inline-flex;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #00d3d3;
+  text-align: center;
+  font-size: 18px;
+  margin-right: 10px;
+  justify-content: center;
+  align-items: center;
+`;
 
 const SpotItemDiv = styled.div`
   display: flex;
