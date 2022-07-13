@@ -59,7 +59,7 @@ export default function TextEditor({ project_Id }) {
   console.log(projectID);
   useEffect(() => {
     // const s = io(`http://${process.env.REACT_APP_SERVER_IP}:3001`);
-    const s = io(`http://localhost:3001`);
+    const s = io(`http://${process.env.REACT_APP_SERVER_IP}:3001`);
     setSocket(s);
     return () => {
       s.disconnect();
@@ -109,7 +109,7 @@ export default function TextEditor({ project_Id }) {
 
     const handler = (delta, oldDelta, source) => {
       if (source !== "user") return;
-      socket.emit("send-changes", delta);
+      socket.emit("send-changes", delta); // user id 가져오기
     };
     quill.on("text-change", handler);
 

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import dragFunction from "./DragAndDrop";
+import SearchListRoute from "./SearchListRoute";
 import styled from "styled-components";
 
-const SearchList = (Places) => {
+const SearchList = ({ Places, projectId }) => {
   function GetGooglePlaceId(props) {
     let url =
       "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?";
@@ -91,6 +91,7 @@ const SearchList = (Places) => {
         key={idx}
       >
         {/* <span>{i + 1}</span> */}
+        <button>추가하기</button>
         <StyledTile>{item.place_name}</StyledTile>
         {item.road_address_name ? (
           <div>
@@ -128,22 +129,13 @@ const SearchList = (Places) => {
     );
   }
 
-  return <>{Places.map((item, i) => makeLI(item, i))}</>;
+  return (
+    <>
+      {Places.map((item, i) => (
+        <SearchListRoute projectId={projectId} route={item} idx={i} />
+      ))}
+    </>
+  );
 };
-
-const StyledLi = styled.li`
-  border-bottom: 2px solid #ebebeb;
-  padding-top: 20px;
-  padding-bottom: 10px;
-  padding-left: 12px;
-`;
-
-const StyledTile = styled.h2`
-  font-style: normal;
-  font-weight: 700;
-  font-size: 18px;
-  color: #2d56bc;
-  margin-bottom: 14px;
-`;
 
 export default SearchList;
