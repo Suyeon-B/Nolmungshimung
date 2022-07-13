@@ -1,11 +1,8 @@
 import { OpenVidu } from 'openvidu-browser';
 import React, { Component } from 'react';
-import './voiceTalk.css';
 import UserVideoComponent from './UserVideoComponent';
 
-// const OPENVIDU_SERVER_URL = 'https://' + window.location.hostname + ':4443';
-const OPENVIDU_SERVER_URL = 'https://54.180.137.53:4443';
-
+const OPENVIDU_SERVER_URL = 'https://3.36.48.148:4443';
 const OPENVIDU_SERVER_SECRET = 'MY_SECRET';
 
 
@@ -19,12 +16,13 @@ class voiceTalk extends Component {
             session: undefined,
             mainStreamManager: undefined,
             publisher: undefined,
+            token: undefined,
             subscribers: [],
         };
 
         this.joinSession = this.joinSession.bind(this);
         this.leaveSession = this.leaveSession.bind(this);
-        this.switchCamera = this.switchCamera.bind(this);
+        // this.switchCamera = this.switchCamera.bind(this);
         this.handleChangeSessionId = this.handleChangeSessionId.bind(this);
         this.handleChangeUserName = this.handleChangeUserName.bind(this);
         this.handleMainVideoStream = this.handleMainVideoStream.bind(this);
@@ -40,6 +38,7 @@ class voiceTalk extends Component {
     }
 
     onbeforeunload(event) {
+        this.removeUser();
         this.leaveSession();
     }
 
@@ -85,6 +84,7 @@ class voiceTalk extends Component {
             {
                 session: this.OV.initSession(),
             },
+            
             () => {
                 var mySession = this.state.session;
 
@@ -138,9 +138,9 @@ class voiceTalk extends Component {
                             // element: we will manage it on our own) and with the desired properties
                             let publisher = this.OV.initPublisher(undefined, {
                                 audioSource: undefined, // The source of audio. If undefined default microphone
-                                videoSource: videoDevices[0].deviceId, // The source of video. If undefined default webcam
+                                videoSource: false, // The source of video. If undefined default webcam
                                 publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
-                                publishVideo: true, // Whether you want to start publishing with your video enabled or not
+                                publishVideo: false, // Whether you want to start publishing with your video enabled or not
                                 resolution: '640x480', // The resolution of your video
                                 frameRate: 30, // The frame rate of your video
                                 insertMode: 'APPEND', // How the video is inserted in the target element 'video-container'
@@ -156,6 +156,7 @@ class voiceTalk extends Component {
                                 currentVideoDevice: videoDevices[0],
                                 mainStreamManager: publisher,
                                 publisher: publisher,
+                                token: token
                             });
                         })
                         .catch((error) => {
@@ -167,7 +168,7 @@ class voiceTalk extends Component {
     }
 
     leaveSession() {
-
+        this.removeUser(this.state.mySessionId, this.state.token);
         // --- 7) Leave the session by calling 'disconnect' method over the Session object ---
 
         const mySession = this.state.session;
@@ -184,44 +185,46 @@ class voiceTalk extends Component {
             mySessionId: 'SessionA',
             myUserName: 'Participant' + Math.floor(Math.random() * 100),
             mainStreamManager: undefined,
-            publisher: undefined
-        });
+            publisher: undefined,
+            token: undefined
+        });        
+        
     }
 
-    async switchCamera() {
-        try{
-            const devices = await this.OV.getDevices()
-            var videoDevices = devices.filter(device => device.kind === 'videoinput');
+    // async switchCamera() {
+    //     try{
+    //         const devices = await this.OV.getDevices()
+    //         var videoDevices = devices.filter(device => device.kind === 'videoinput');
 
-            if(videoDevices && videoDevices.length > 1) {
+    //         if(videoDevices && videoDevices.length > 1) {
 
-                var newVideoDevice = videoDevices.filter(device => device.deviceId !== this.state.currentVideoDevice.deviceId)
+    //             var newVideoDevice = videoDevices.filter(device => device.deviceId !== this.state.currentVideoDevice.deviceId)
 
-                if (newVideoDevice.length > 0){
-                    // Creating a new publisher with specific videoSource
-                    // In mobile devices the default and first camera is the front one
-                    var newPublisher = this.OV.initPublisher(undefined, {
-                        videoSource: newVideoDevice[0].deviceId,
-                        publishAudio: true,
-                        publishVideo: true,
-                        mirror: true
-                    });
+    //             if (newVideoDevice.length > 0){
+    //                 // Creating a new publisher with specific videoSource
+    //                 // In mobile devices the default and first camera is the front one
+    //                 var newPublisher = this.OV.initPublisher(undefined, {
+    //                     videoSource: newVideoDevice[0].deviceId,
+    //                     publishAudio: true,
+    //                     publishVideo: false,
+    //                     mirror: true
+    //                 });
 
-                    //newPublisher.once("accessAllowed", () => {
-                    await this.state.session.unpublish(this.state.mainStreamManager)
+    //                 //newPublisher.once("accessAllowed", () => {
+    //                 await this.state.session.unpublish(this.state.mainStreamManager)
 
-                    await this.state.session.publish(newPublisher)
-                    this.setState({
-                        currentVideoDevice: newVideoDevice,
-                        mainStreamManager: newPublisher,
-                        publisher: newPublisher,
-                    });
-                }
-            }
-          } catch (e) {
-            console.error(e);
-          }
-    }
+    //                 await this.state.session.publish(newPublisher)
+    //                 this.setState({
+    //                     currentVideoDevice: newVideoDevice,
+    //                     mainStreamManager: newPublisher,
+    //                     publisher: newPublisher,
+    //                 });
+    //             }
+    //         }
+    //       } catch (e) {
+    //         console.error(e);
+    //       }
+    // }
 
     render() {
         const mySessionId = this.state.mySessionId;
@@ -231,11 +234,7 @@ class voiceTalk extends Component {
             <div className="container">
                 {this.state.session === undefined ? (
                     <div id="join">
-                        <div id="img-div">
-                            <img src="resources/images/openvidu_grey_bg_transp_cropped.png" alt="OpenVidu logo" />
-                        </div>
                         <div id="join-dialog" className="jumbotron vertical-center">
-                            <h1> Join a video session </h1>
                             <form className="form-group" onSubmit={this.joinSession}>
                                 <p>
                                     <label>Participant: </label>
@@ -283,18 +282,19 @@ class voiceTalk extends Component {
                         {this.state.mainStreamManager !== undefined ? (
                             <div id="main-video" className="col-md-6">
                                 <UserVideoComponent streamManager={this.state.mainStreamManager} />
-                                <input
+                                {/* <input
                                     className="btn btn-large btn-success"
                                     type="button"
                                     id="buttonSwitchCamera"
                                     onClick={this.switchCamera}
                                     value="Switch Camera"
-                                />
+                                /> */}
                             </div>
                         ) : null}
                         <div id="video-container" className="col-md-6">
                             {this.state.publisher !== undefined ? (
                                 <div className="stream-container col-md-6 col-xs-6" onClick={() => this.handleMainVideoStream(this.state.publisher)}>
+
                                     <UserVideoComponent
                                         streamManager={this.state.publisher} />
                                 </div>
@@ -325,90 +325,104 @@ class voiceTalk extends Component {
 
     getToken() {
         // return this.createSession(this.state.mySessionId).then((sessionId) => this.createToken(sessionId));
-        return this.getNewToken(this.state.mySessionId, this.state.myUserName);
+        return this.getNewToken(this.state.mySessionId, this.state.myUserName)
     }
 
     getNewToken(sessionId, userName) {
         return new Promise((resolve, reject) => {
             var data = {};
-            fetch(`http://${process.env.REACT_APP_SERVER_IP}:7443/api-sessions/get-token`, {
+            fetch(`http://${process.env.REACT_APP_SERVER_IP}:8443/voicetalk/api-sessions/get-token`, {
                 method: "post",
                 headers: {
                 "content-type": "application/json",
                 },
                 body: JSON.stringify({project_id: sessionId,
                     loggedUser: userName}),
-                credentials: "include"
+                // credentials: "include"
             })
             .then((response) => response.json())
             .then((data) => {
-                console.log('TOKEN', data);
+                // console.log('TOKEN', data);
                 resolve(data[0]);
             })
             .catch((error) => reject(error));
         });
     }
 
-    createSession(sessionId) {
-        return new Promise((resolve, reject) => {
-            var data = JSON.stringify({ customSessionId: sessionId });
-            fetch(OPENVIDU_SERVER_URL + '/openvidu/api/sessions', {
-                method: "post",
-                headers: {
-                    Authorization: 'Basic ' + btoa('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
-                    'Content-Type': 'application/json',
-                },
-                // credentials: "include"
-                })
-                .then((response) => {
-                    console.log('CREATE SESION', response);
-                    resolve(response.data.id);
-                })
-                .catch((response) => {
-                    var error = Object.assign({}, response);
-                    if (error?.response?.status === 409) {
-                        resolve(sessionId);
-                    } else {
-                        console.log(error);
-                        console.warn(
-                            'No connection to OpenVidu Server. This may be a certificate error at ' +
-                            OPENVIDU_SERVER_URL,
-                        );
-                        if (
-                            window.confirm(
-                                'No connection to OpenVidu Server. This may be a certificate error at "' +
-                                OPENVIDU_SERVER_URL +
-                                '"\n\nClick OK to navigate and accept it. ' +
-                                'If no certificate warning is shown, then check that your OpenVidu Server is up and running at "' +
-                                OPENVIDU_SERVER_URL +
-                                '"',
-                            )
-                        ) {
-                            window.location.assign(OPENVIDU_SERVER_URL + '/accept-certificate');
-                        }
-                    }
-                });
-        });
-    }
-
-    createToken(sessionId) {
-        return new Promise((resolve, reject) => {
+    removeUser() {
+        // console.log(this.state.token);
+        new Promise((resolve, reject) => {
             var data = {};
-            fetch(OPENVIDU_SERVER_URL + "/openvidu/api/sessions/" + sessionId + "/connection", {
+            fetch(`http://${process.env.REACT_APP_SERVER_IP}:8443/voicetalk/api-sessions/remove-user`, {
                 method: "post",
                 headers: {
-                    Authorization: 'Basic ' + btoa('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
-                    'Content-Type': 'application/json',
+                "content-type": "application/json",
                 },
-                // credentials: "include",
-                })
-                .then((response) => {
-                    console.log('TOKEN', response);
-                    resolve(response.data.token);
-                })
-                .catch((error) => reject(error));
+                body: JSON.stringify({sessionName: this.state.mySessionId,
+                    token: this.state.token}),
+                // credentials: "include"
+            })
+            .catch((error) => reject(error));
         });
     }
+    // createSession(sessionId) {
+    //     return new Promise((resolve, reject) => {
+    //         var data = JSON.stringify({ customSessionId: sessionId });
+    //         axios
+    //             .post(OPENVIDU_SERVER_URL + '/openvidu/api/sessions', data, {
+    //                 headers: {
+    //                     Authorization: 'Basic ' + btoa('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
+    //                     'Content-Type': 'application/json',
+    //                 },
+    //             })
+    //             .then((response) => {
+    //                 console.log('CREATE SESION', response);
+    //                 resolve(response.data.id);
+    //             })
+    //             .catch((response) => {
+    //                 var error = Object.assign({}, response);
+    //                 if (error?.response?.status === 409) {
+    //                     resolve(sessionId);
+    //                 } else {
+    //                     console.log(error);
+    //                     console.warn(
+    //                         'No connection to OpenVidu Server. This may be a certificate error at ' +
+    //                         OPENVIDU_SERVER_URL,
+    //                     );
+    //                     if (
+    //                         window.confirm(
+    //                             'No connection to OpenVidu Server. This may be a certificate error at "' +
+    //                             OPENVIDU_SERVER_URL +
+    //                             '"\n\nClick OK to navigate and accept it. ' +
+    //                             'If no certificate warning is shown, then check that your OpenVidu Server is up and running at "' +
+    //                             OPENVIDU_SERVER_URL +
+    //                             '"',
+    //                         )
+    //                     ) {
+    //                         window.location.assign(OPENVIDU_SERVER_URL + '/accept-certificate');
+    //                     }
+    //                 }
+    //             });
+    //     });
+    // }
+
+    // createToken(sessionId) {
+    //     return new Promise((resolve, reject) => {
+    //         var data = {};
+    //         axios
+    //             .post(OPENVIDU_SERVER_URL + "/openvidu/api/sessions/" + sessionId + "/connection", data, {
+    //                 headers: {
+    //                     Authorization: 'Basic ' + btoa('OPENVIDUAPP:' + OPENVIDU_SERVER_SECRET),
+    //                     'Content-Type': 'application/json',
+    //                 },
+    //             })
+    //             .then((response) => {
+    //                 console.log('TOKEN', response);
+    //                 resolve(response.data.token);
+    //             })
+    //             .catch((error) => reject(error));
+    //     });
+    // }
 }
 
 export default voiceTalk;
