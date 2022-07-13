@@ -33,9 +33,7 @@ const SearchListRoute = ({
   const onClickAddRoute = () => {
     const uRoute = { ...route };
     uRoute["uid"] = uuidV4();
-    console.log(uRoute);
     fetchAddTravelRoute(projectId, uRoute);
-    console.log(itemRoutes);
     itemRoutes[0].push(uRoute);
     setItemRoutes([...itemRoutes]);
   };
