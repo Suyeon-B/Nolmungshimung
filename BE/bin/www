@@ -11,13 +11,12 @@ var https = require("https");
 var fs = require("fs");
 
 // JG - openvidu start
-var voiceTalk = require("../routes/voicetalk/voicetalk")
+var voiceTalk = require("../routes/voicetalk/voicetalk");
 var options = {
   key: fs.readFileSync("openvidukey.pem"),
   cert: fs.readFileSync("openviducert.pem"),
 };
 var voiceTalkServer = http.createServer(options, voiceTalk).listen(7443);
-
 
 /**
  * Get port from environment and store in Express.
