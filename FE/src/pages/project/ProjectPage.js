@@ -48,6 +48,30 @@ const ProjectPage = (props) => {
     fetchInfo();
   }, [projectId]);
 
+  useEffect(() => {
+    async function UpdateInfo() {
+      const tmpProjectId = await fetchProjectById(projectId);
+      // console.log("id", tmpProjectId._id);
+      fetch(
+        `http://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${tmpProjectId._id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "content-type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(itemsRoute),
+        }
+      )
+        .then((res) => res.json())
+        .then((res) => {
+          console.log("res : ", res);
+        })
+        .catch((err) => console.log(`err: ${err}`));
+    }
+    UpdateInfo();
+  }, [itemsRoute]);
+
   if (isLoading) {
     if (items) {
       setIsLoading(false);
