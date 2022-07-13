@@ -127,7 +127,7 @@ function PlanList({
       <SidePlanListDiv>
         <StyledDragDropContext onDragEnd={onDragEnd}>
           {[...routes].map((el, ind) => (
-            <div ref={(el) => (droppableRef.current[+ind] = el)}>
+            <div key={ind} ref={(el) => (droppableRef.current[+ind] = el)}>
               <Droppable key={ind} droppableId={`${ind}`}>
                 {(provided, snapshot) => (
                   <div

@@ -90,6 +90,8 @@ const getListStyle = (isDraggingOver) => ({
   overflow: "scroll",
 });
 
+const transDayItem = (dayItem, selectedIndex) => {};
+
 export default function SpotList({ dayItem, setItemRoute, selectedIndex }) {
   // const [state, setState] = useState([testItem, testItem2]);
   console.log(dayItem);
@@ -107,21 +109,22 @@ export default function SpotList({ dayItem, setItemRoute, selectedIndex }) {
 
     if (sInd === dInd) {
       const items = reorder(
-        [dayItem[selectedIndex]][sInd],
+        [...dayItem][sInd],
         source.index,
         destination.index
       );
-      const newState = [...[dayItem[selectedIndex]]];
+      const newState = [...[...dayItem]];
       newState[sInd] = items;
+
       setItemRoute(newState);
     } else {
       const result = move(
-        [dayItem[selectedIndex]][sInd],
-        [dayItem[selectedIndex]][dInd],
+        [...dayItem][sInd],
+        [...dayItem][dInd],
         source,
         destination
       );
-      const newState = [...[dayItem[selectedIndex]]];
+      const newState = [...[...dayItem]];
       newState[sInd] = result[sInd];
       newState[dInd] = result[dInd];
 
@@ -225,13 +228,13 @@ const SpotItemDiv = styled.div`
   width: 250px;
 `;
 
-const SpotTitle = styled.text`
+const SpotTitle = styled.span`
   font-family: Inter;
   font-style: normal;
   font-weight: 700;
   font-size: 20px;
 `;
-const SpotCategory = styled.text`
+const SpotCategory = styled.span`
   font-family: Rounded Mplus 1c Bold;
   font-style: normal;
   color: #adadad;

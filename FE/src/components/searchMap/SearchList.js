@@ -79,7 +79,7 @@ const SearchList = ({ itemRoute, setItemRoute, Places, projectId }) => {
 
   function makeLI(item, idx) {
     return (
-      <StyledLi
+      <li
         draggable
         onDragOver={(event) => {
           return dragFunction(event, "over");
@@ -125,7 +125,7 @@ const SearchList = ({ itemRoute, setItemRoute, Places, projectId }) => {
               phone: item.phone,
               place_url: item.place_url,
             })} */}
-      </StyledLi>
+      </li>
     );
   }
 
@@ -133,6 +133,7 @@ const SearchList = ({ itemRoute, setItemRoute, Places, projectId }) => {
     <>
       {Places.map((item, i) => (
         <SearchListRoute
+          key={i}
           itemRoutes={itemRoute}
           setItemRoutes={setItemRoute}
           projectId={projectId}

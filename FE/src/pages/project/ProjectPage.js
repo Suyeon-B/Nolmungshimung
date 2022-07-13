@@ -7,7 +7,9 @@ import SpotRoute from "../spotRoute/SpotRoute";
 import styled from "styled-components";
 
 async function fetchProjectById(_id) {
-  const response = await fetch(`http://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`);
+  const response = await fetch(
+    `http://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`
+  );
   // const response = await fetch(
   //   `https://438e69a6-c891-4d7e-bfd2-f30c4eba330f.mock.pstmn.io/projects/mokc`
   // );
@@ -39,6 +41,7 @@ const ProjectPage = (props) => {
   // }
 
   useEffect(() => {
+    console.log("projectId change");
     async function fetchInfo() {
       const data = await fetchProjectById(projectId);
 
@@ -52,14 +55,17 @@ const ProjectPage = (props) => {
     async function UpdateInfo() {
       const tmpProjectId = await fetchProjectById(projectId);
       // console.log("id", tmpProjectId._id);
-      fetch(`http://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${tmpProjectId._id}`, {
-        method: "PATCH",
-        headers: {
-          "content-type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify(itemsRoute),
-      })
+      fetch(
+        `http://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${tmpProjectId._id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "content-type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(itemsRoute),
+        }
+      )
         .then((res) => res.json())
         .then((res) => {
           console.log("res : ", res);
@@ -92,9 +98,20 @@ const ProjectPage = (props) => {
         setSelectedIndex={setSelectedIndex}
       />
       <PlanSection>
-        {isFirstPage && <Search itemRoutes={itemsRoute} setItemRoutes={setItemsRoute} projectId={projectId} />}
+        {isFirstPage && (
+          <Search
+            itemRoutes={itemsRoute}
+            setItemRoutes={setItemsRoute}
+            projectId={projectId}
+          />
+        )}
         {!isFirstPage && (
-          <SpotRoute selectedIndex={selectedIndex} item={itemsRoute} setItemRoute={setItemsRoute} itemId={items._id} />
+          <SpotRoute
+            selectedIndex={selectedIndex}
+            item={itemsRoute}
+            setItemRoute={setItemsRoute}
+            itemId={items._id}
+          />
         )}
       </PlanSection>
     </>
