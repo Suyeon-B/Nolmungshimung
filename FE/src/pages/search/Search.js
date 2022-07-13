@@ -6,7 +6,7 @@ import styled from "styled-components";
 
 const { kakao } = window;
 
-const Search = ({ projectId }) => {
+const Search = ({ itemRoutes, setItemRoutes, projectId }) => {
   const [searchPlace, setSearchPlace] = useState("");
   // 검색결과 배열에 담아줌
   var markers = [];
@@ -127,7 +127,14 @@ const Search = ({ projectId }) => {
       <SearchListDiv>
         <SearchBar changePlace={setSearchPlace} />
         <ul>
-          {Places && <SearchList Places={Places} projectId={projectId} />}
+          {Places && (
+            <SearchList
+              itemRoute={itemRoutes}
+              setItemRoute={setItemRoutes}
+              Places={Places}
+              projectId={projectId}
+            />
+          )}
           <div
             id="pagination"
             style={{ position: "relative", zIndex: 2 }}

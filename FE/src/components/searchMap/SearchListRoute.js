@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import dragFunction from "./DragAndDrop";
 import styled from "styled-components";
+import { v4 as uuidV4 } from "uuid";
 
 const fetchAddTravelRoute = async (id, route) => {
   try {
@@ -15,25 +16,38 @@ const fetchAddTravelRoute = async (id, route) => {
       }
     );
     const data = await response.json();
-    console.log(data);
+
     // return response.json();
   } catch (error) {
     console.log(error);
   }
 };
 
-const SearchListRoute = ({ projectId, route, idx }) => {
+const SearchListRoute = ({
+  itemRoutes,
+  setItemRoutes,
+  projectId,
+  route,
+  idx,
+}) => {
   const onClickAddRoute = () => {
-    fetchAddTravelRoute(projectId, route);
+    const uRoute = { ...route };
+    uRoute["uid"] = uuidV4();
+    console.log(uRoute);
+    fetchAddTravelRoute(projectId, uRoute);
+    console.log(itemRoutes);
+    itemRoutes[0].push(uRoute);
+    setItemRoutes([...itemRoutes]);
   };
 
   return (
     <StyledLi
       draggable
       onDragOver={(event) => {
-        return dragFunction(event, "over");
+        event.preventDefault();
+        // return dragFunction(event, "over");
       }}
-      onDrop={(event) => dragFunction(event, "drop")}
+      onDrop={(event) => dragFunction(event, "Drop")}
       onDragEnter={(event) => dragFunction(event, "enter")}
       onDragLeave={(event) => dragFunction(event, "leave")}
       className="dragAndDrop"

@@ -12,7 +12,6 @@ function MarkMap(props) {
     { map_x: 33.452671, map_y: 126.574792 },
     { map_x: 33.451744, map_y: 126.572441 },
   ];
-
   function setBounds(map, bounds) {
     map.setBounds(bounds);
   }
