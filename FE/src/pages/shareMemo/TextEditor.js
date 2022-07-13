@@ -128,11 +128,11 @@ function TextEditor() {
       .then((user) => {
         setUser(user);
         // 2. step - open document for collaborative editing
-        // const defaultValue = [
-        //   {
-        //     insert: "Hello world\n",
-        //   },
-        // ];
+        const defaultValue = [
+          {
+            insert: "",
+          },
+        ];
         const onOperation = (data, meta) => {
           // callback to receive changes from others
           console.log("onOperation", data, meta);
@@ -146,7 +146,7 @@ function TextEditor() {
           .open(
             DATA_TYPE, // collection name
             DOCUMENT_ID,
-            // defaultValue, // default value to save if doesn't exist yet
+            defaultValue, // default value to save if doesn't exist yet
             {
               type: "rich-text",
               onPresence: presenceCallback, // changes for online status and cursors

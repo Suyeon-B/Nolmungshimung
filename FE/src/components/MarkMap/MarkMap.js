@@ -4,8 +4,7 @@ const { kakao } = window;
 
 function MarkMap(props) {
   //루트 리스트 넘겨받기
-  let imageSrc =
-    "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
+  let imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
 
   let test = [
     { map_x: 33.452278, map_y: 126.567803 },
@@ -63,7 +62,7 @@ function MarkMap(props) {
       setBounds(map, bounds);
     }
     polyline.setMap(map);
-  }, [props]);
+  }, [...props]);
 
   // return (
   // <div
