@@ -53,7 +53,7 @@ const getItemStyle = (isDragging, draggableStyle) => ({
 });
 const getListStyle = (isDraggingOver) => ({
   // 드래그 영역으로 들어왔을 때
-  // background: isDraggingOver ? "lightblue" : "lightgrey",
+  background: isDraggingOver ? "lightblue" : "none",
   padding: grid,
   // width: 250,
   width: "100%",
@@ -65,9 +65,18 @@ const culTripTermData = (startDate, day) => {
   return `# ${sDate.getMonth() + 1}월 ${sDate.getDate()}일`;
 };
 
-function PlanList({ startDate, term, routes, setRoutes }) {
+function PlanList({
+  toggleIsPage,
+  startDate,
+  term,
+  routes,
+  setRoutes,
+  setSelectedIndex,
+  isFirstPage,
+}) {
   const [state, setState] = useState([...routes]);
   const tripTermDate = [];
+  const droppableRef = useRef([]);
 
   // useEffect(() => {
   //   setState([...routes]);
@@ -103,71 +112,80 @@ function PlanList({ startDate, term, routes, setRoutes }) {
     }
   }
 
+  const onClick = (event) => {
+    // console.log(droppableRef.current[event.target.dataset.idx]);
+    const selectIdx = +event.target.dataset.idx;
+    setSelectedIndex(selectIdx);
+    isFirstPage && toggleIsPage();
+  };
+
   return (
     <div>
       <SidePlanListDiv>
         <StyledDragDropContext onDragEnd={onDragEnd}>
           {[...routes].map((el, ind) => (
-            <Droppable key={ind} droppableId={`${ind}`}>
-              {(provided, snapshot) => (
-                <div
-                  ref={provided.innerRef}
-                  style={getListStyle(snapshot.isDragging)}
-                  {...provided.droppableProps}
-                >
-                  <DateDetailBtnDiv>
-                    <DateDetailBtn>
-                      {culTripTermData(startDate, ind)}
-                    </DateDetailBtn>
-                    <NoneStyleBtn>
-                      <img
-                        style={{ width: "15px" }}
-                        src="\statics\images\date_arrow.png"
-                      />
-                    </NoneStyleBtn>
-                  </DateDetailBtnDiv>
-                  {el.map((item, index) => (
-                    <Draggable
-                      key={item.uid}
-                      draggableId={item.uid}
-                      index={index}
-                    >
-                      {(provided, snapshot) => (
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          style={getItemStyle(
-                            snapshot.isDragging,
-                            provided.draggableProps.style
-                          )}
-                        >
-                          <ItemInnerDiv>
-                            {item.place_name}
-                            <div
-                              type="button"
-                              onClick={() => {
-                                const newState = [...[...routes]];
-                                newState[ind].splice(index, 1);
-                                setRoutes(
-                                  newState.filter((group) => group.length)
-                                );
-                              }}
-                            >
-                              <img
-                                style={{ width: "16px" }}
-                                src="\statics\images\trash_can.png"
-                              />
-                            </div>
-                          </ItemInnerDiv>
-                        </div>
-                      )}
-                    </Draggable>
-                  ))}
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
+            <div ref={(el) => (droppableRef.current[+ind] = el)}>
+              <Droppable key={ind} droppableId={`${ind}`}>
+                {(provided, snapshot) => (
+                  <div
+                    ref={provided.innerRef}
+                    style={getListStyle(snapshot.isDragging)}
+                    {...provided.droppableProps}
+                  >
+                    <DateDetailBtnDiv>
+                      <DateDetailBtn data-idx={ind} onClick={onClick}>
+                        {culTripTermData(startDate, ind)}
+                      </DateDetailBtn>
+                      <DateDetailBtn>
+                        <img
+                          style={{ width: "15px" }}
+                          src="\statics\images\date_arrow.png"
+                        />
+                      </DateDetailBtn>
+                    </DateDetailBtnDiv>
+                    {el.map((item, index) => (
+                      <Draggable
+                        key={item.uid}
+                        draggableId={item.uid}
+                        index={index}
+                      >
+                        {(provided, snapshot) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            style={getItemStyle(
+                              snapshot.isDragging,
+                              provided.draggableProps.style
+                            )}
+                          >
+                            <ItemInnerDiv>
+                              {item.place_name}
+                              <div
+                                type="button"
+                                onClick={() => {
+                                  const newState = [...[...routes]];
+                                  newState[ind].splice(index, 1);
+                                  setRoutes(
+                                    newState.filter((group) => group.length)
+                                  );
+                                }}
+                              >
+                                <img
+                                  style={{ width: "16px" }}
+                                  src="\statics\images\trash_can.png"
+                                />
+                              </div>
+                            </ItemInnerDiv>
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            </div>
           ))}
         </StyledDragDropContext>
       </SidePlanListDiv>
@@ -182,18 +200,20 @@ const SidePlanListDiv = styled.div`
     display: none;
   }
 `;
-const NoneStyleBtn = styled.button`
-  outline: 0;
-  border: none;
-  background-color: white;
-`;
+
 const DateDetailBtnDiv = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
+
+  /* &:hover {
+    background-color: red;
+  } */
 `;
 
-const DateDetailBtn = styled(NoneStyleBtn)`
+const DateDetailBtn = styled.button`
+  outline: 0;
+  border: none;
   font-weight: 700;
   font-size: 20px;
   border: none;
@@ -201,6 +221,9 @@ const DateDetailBtn = styled(NoneStyleBtn)`
 
   color: #757575;
   background-color: white;
+  /* &:hover {
+    background-color: red;
+  } */
 `;
 
 const ItemInnerDiv = styled.div`

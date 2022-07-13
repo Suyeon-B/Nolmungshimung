@@ -4,6 +4,7 @@ const { kakao } = window;
 
 function MarkMap(props) {
   //루트 리스트 넘겨받기
+
   let imageSrc =
     "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
 

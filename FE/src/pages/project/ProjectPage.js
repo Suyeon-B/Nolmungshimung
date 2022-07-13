@@ -23,6 +23,8 @@ const ProjectPage = (props) => {
 
   const [isFirstPage, setIsFirstPage] = useState(true);
 
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
   // 리액트 쿼리로 하려 했다가 실패
   // const { data, isError, error, isLoading } = useQuery(
   //   ["projectInfo", projectId],
@@ -67,6 +69,7 @@ const ProjectPage = (props) => {
         toggleIsPage={toggleIsPage}
         itemRoutes={itemsRoute}
         setItemRoutes={setItemsRoute}
+        setSelectedIndex={setSelectedIndex}
       />
       <PlanSection>
         {isFirstPage && (
@@ -78,6 +81,7 @@ const ProjectPage = (props) => {
         )}
         {!isFirstPage && (
           <SpotRoute
+            selectedIndex={selectedIndex}
             item={itemsRoute}
             setItemRoute={setItemsRoute}
             itemId={items._id}
