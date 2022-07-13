@@ -92,7 +92,7 @@ const getListStyle = (isDraggingOver) => ({
 
 export default function SpotList({ dayItem, setItemRoute, selectedIndex }) {
   // const [state, setState] = useState([testItem, testItem2]);
-
+  console.log(dayItem);
   const [state, setState] = useState([dayItem[selectedIndex]]);
 
   function onDragEnd(result) {
@@ -181,11 +181,11 @@ export default function SpotList({ dayItem, setItemRoute, selectedIndex }) {
                           <DeleteOutlined
                             style={{ fontSize: "25px" }}
                             onClick={() => {
+                              const newDayItem = [...dayItem];
                               const newState = [...[dayItem[selectedIndex]]];
                               newState[ind].splice(index, 1);
-                              setItemRoute(
-                                newState.filter((group) => group.length)
-                              );
+                              newDayItem[selectedIndex] = [...newState[0]];
+                              setItemRoute(newDayItem);
                             }}
                           />
                         </div>
