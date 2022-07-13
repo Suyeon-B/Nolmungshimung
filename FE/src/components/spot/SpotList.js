@@ -151,11 +151,7 @@ export default function SpotList({ dayItem }) {
                 {...provided.droppableProps}
               >
                 {el.map((item, index) => (
-                  <Draggable
-                    key={item.travel_id}
-                    draggableId={item.travel_id}
-                    index={index}
-                  >
+                  <Draggable key={item.id} draggableId={item.id} index={index}>
                     {(provided, snapshot) => (
                       <div
                         ref={provided.innerRef}
