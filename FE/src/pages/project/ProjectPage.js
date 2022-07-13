@@ -65,7 +65,7 @@ const ProjectPage = (props) => {
         toggleIsPage={toggleIsPage}
       />
       <PlanSection>
-        {isFirstPage && <Search />}
+        {isFirstPage && <Search projectId={projectId} />}
         {!isFirstPage && <SpotRoute item={items} />}
       </PlanSection>
     </>

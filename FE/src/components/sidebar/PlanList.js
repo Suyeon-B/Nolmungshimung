@@ -69,6 +69,7 @@ function PlanList({ startDate, term, routes }) {
   const [state, setState] = useState([...routes]);
   const tripTermDate = [];
 
+  console.log(state);
   useEffect(() => {
     setState([...routes]);
   }, [routes]);
@@ -130,8 +131,8 @@ function PlanList({ startDate, term, routes }) {
                   </DateDetailBtnDiv>
                   {el.map((item, index) => (
                     <Draggable
-                      key={item.travel_id}
-                      draggableId={item.travel_id}
+                      key={item.id}
+                      draggableId={item.id}
                       index={index}
                     >
                       {(provided, snapshot) => (
