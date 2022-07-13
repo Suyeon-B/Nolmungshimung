@@ -69,7 +69,7 @@ const ProjectPage = (props) => {
         setItemRoutes={setItemsRoute}
       />
       <PlanSection>
-        {isFirstPage && <Search />}
+        {isFirstPage && <Search projectId={projectId} />}
         {!isFirstPage && (
           <SpotRoute
             item={itemsRoute}

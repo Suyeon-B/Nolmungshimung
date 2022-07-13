@@ -5,7 +5,7 @@ import styled from "styled-components";
 
 const { kakao } = window;
 
-const MapContainer = () => {
+const MapContainer = ({ projectId }) => {
   const [searchPlace, setSearchPlace] = useState("");
   // 검색결과 배열에 담아줌
   var markers = [];
