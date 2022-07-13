@@ -90,28 +90,9 @@ const getListStyle = (isDraggingOver) => ({
   overflow: "scroll",
 });
 
-const configuration = {
-  iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
-};
-const peerConnection = new RTCPeerConnection(configuration);
-// console.log(`peerConnection`);
-// console.log(peerConnection.createDataChannel("test"));
-const dataChannel = peerConnection.createDataChannel("MyApp Channel");
-
-// Enable textarea and button when opened
-dataChannel.addEventListener("open", (event) => {
-  console.log(event);
-  console.log(`data channel open`);
-});
-
-// Disable input when closed
-dataChannel.addEventListener("close", (event) => {
-  console.log(`data channel close`);
-});
-
-export default function SpotList({ dayItem }) {
+export default function SpotList({ dayItem, setItemRoute }) {
   // const [state, setState] = useState([testItem, testItem2]);
-  console.log(dayItem[0]);
+  console.log("dd", dayItem[0]);
   const [state, setState] = useState([dayItem[0]]);
 
   function onDragEnd(result) {
@@ -125,24 +106,33 @@ export default function SpotList({ dayItem }) {
     const dInd = +destination.droppableId;
 
     if (sInd === dInd) {
-      const items = reorder(state[sInd], source.index, destination.index);
-      const newState = [...state];
+      const items = reorder(
+        [dayItem[0]][sInd],
+        source.index,
+        destination.index
+      );
+      const newState = [...[dayItem[0]]];
       newState[sInd] = items;
-      setState(newState);
+      setItemRoute(newState);
     } else {
-      const result = move(state[sInd], state[dInd], source, destination);
-      const newState = [...state];
+      const result = move(
+        [dayItem[0]][sInd],
+        [dayItem[0]][dInd],
+        source,
+        destination
+      );
+      const newState = [...[dayItem[0]]];
       newState[sInd] = result[sInd];
       newState[dInd] = result[dInd];
 
-      setState(newState.filter((group) => group.length));
+      setItemRoute(newState.filter((group) => group.length));
     }
   }
 
   return (
     <SidePlanListDiv>
       <StyledDragDropContext onDragEnd={onDragEnd}>
-        {state.map((el, ind) => (
+        {[dayItem[0]].map((el, ind) => (
           <Droppable key={ind} droppableId={`${ind}`}>
             {(provided, snapshot) => (
               <div
@@ -151,11 +141,7 @@ export default function SpotList({ dayItem }) {
                 {...provided.droppableProps}
               >
                 {el.map((item, index) => (
-                  <Draggable
-                    key={item.travel_id}
-                    draggableId={item.travel_id}
-                    index={index}
-                  >
+                  <Draggable key={item.id} draggableId={item.id} index={index}>
                     {(provided, snapshot) => (
                       <div
                         ref={provided.innerRef}
@@ -190,9 +176,9 @@ export default function SpotList({ dayItem }) {
                           <DeleteOutlined
                             style={{ fontSize: "25px" }}
                             onClick={() => {
-                              const newState = [...state];
+                              const newState = [...[dayItem[0]]];
                               newState[ind].splice(index, 1);
-                              setState(
+                              setItemRoute(
                                 newState.filter((group) => group.length)
                               );
                             }}
