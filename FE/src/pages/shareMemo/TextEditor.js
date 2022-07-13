@@ -7,12 +7,18 @@ import { io } from "socket.io-client";
 // [수연][TextEditor] 추후 projectID 기준으로 변경 예정
 import { useParams } from "react-router-dom";
 
+const EditorBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 47%;
+`;
+
 const EditorContainer = styled.div`
   div#container {
-    height: 300px;
-    width: max-content;
+    height: 35vh;
+    width: 61vw;
     padding: 1%;
-    margin-top: 53px;
   }
   .ql-toolbar.ql-snow {
     border-radius: 5px 5px 0px 0px;
@@ -132,8 +138,10 @@ export default function TextEditor() {
   }, []);
 
   return (
-    <EditorContainer>
-      <div id="container" ref={wrapperRef}></div>
-    </EditorContainer>
+    <EditorBox>
+      <EditorContainer>
+        <div id="container" ref={wrapperRef}></div>
+      </EditorContainer>
+    </EditorBox>
   );
 }
