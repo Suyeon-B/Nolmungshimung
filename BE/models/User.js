@@ -92,17 +92,17 @@ userSchema.methods.generateToken = function (cb) {
 
 userSchema.statics.verifyToken = function (token, cb) {
   try {
-    console.log("tokens are good");
+    // console.log("tokens are good");
     return jwt.verify(token, "SECRET");
   } catch (e) {
     if (e.name === "TokenExpiredError") {
-      console.log("토큰 기한 만료!!");
+      // console.log("토큰 기한 만료!!");
       return null;
     } else if (e.name === "JsonWebTokenError") {
-      console.log("토큰이 없습니다!");
+      // console.log("토큰이 없습니다!");
       return null;
     } else {
-      console.log("다른 에러... 뭐가 있지22222222 : " + e.name);
+      // console.log("다른 에러... 뭐가 있지22222222 : " + e.name);
       return -1;
     }
   }

@@ -11,6 +11,7 @@ var usersRouter = require("./routes/users/users");
 var projectsRouter = require("./routes/projects/projects");
 var travelRouter = require("./routes/travel/travel");
 var commonRouter = require("./routes/common/common");
+var voiceRouter = require("./routes/voicetalk/voicetalk");
 var mongodb = require("dotenv").config();
 
 var app = express();
@@ -51,6 +52,7 @@ app.use("/users", usersRouter);
 app.use("/projects", projectsRouter);
 app.use("/travel", travelRouter);
 app.use("/common", commonRouter);
+app.use("/voicetalk", voiceRouter);
 
 // [수연][TextEditor] socket io 작업 | line 51~90
 const io = require("socket.io")(3001, {
