@@ -44,13 +44,19 @@ const TOOLBAR_OPTIONS = [
   ["clean"],
 ];
 
-export default function TextEditor() {
+export default function TextEditor({ project_Id }) {
   // [수연][TextEditor] 추후 projectID 기준으로 변경 예정
-  const { projectId: projectID } = useParams();
+  // const { projectId: projectID } = useParams();
+
+  const [projectID, setProjectId] = useState(project_Id);
 
   const [socket, setSocket] = useState();
   const [quill, setQuill] = useState();
 
+  useEffect(() => {
+    setProjectId(project_Id);
+  }, [project_Id]);
+  console.log(projectID);
   useEffect(() => {
     // const s = io(`http://${process.env.REACT_APP_SERVER_IP}:3001`);
     const s = io(`http://${process.env.REACT_APP_SERVER_IP}:3001`);
@@ -65,6 +71,7 @@ export default function TextEditor() {
     if (socket == null || quill == null) return;
 
     socket.once("load-project", (project) => {
+      console.log(project);
       quill.setContents(project);
       quill.enable();
     });

@@ -114,9 +114,6 @@ function ProjectSide() {
                 textAlign: "center",
                 padding: "0px",
               },
-              onClick: () => {
-                alert(`${idx + 1} project`);
-              },
             };
           });
           setItems(projectItems);
@@ -127,7 +124,12 @@ function ProjectSide() {
 
   return (
     <>
-      <StyledMenu theme="Light" mode="inline" defaultSelectedKeys={["1"]} items={[LogoObj, ...items]} />
+      <StyledMenu
+        theme="Light"
+        mode="inline"
+        defaultSelectedKeys={["1"]}
+        items={[LogoObj, ...items]}
+      />
       <Profile />
     </>
   );

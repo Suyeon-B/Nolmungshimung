@@ -1,21 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import SpotList from "../../components/spot/SpotList";
 import MarkMap from "../../components/MarkMap/MarkMap";
 import TextEditor from "../shareMemo/TextEditor";
 
 function SpotRoute({ item }) {
-  console.log(item);
+  const [routes, setRoutes] = useState(item.routes);
+
   MarkMap(item.routes[0]);
   return (
     <SpotRouteContainer>
       <SpotRouteSection>
-        <SpotList dayItem={item.routes} />
+        <SpotList dayItem={routes} />
         {/* 지도 api 연결안하면 에러떠서 주석처리함 */}
         <SpotRouteMap id="myMap" />
       </SpotRouteSection>
 
-      <TextEditor />
+      <TextEditor project_Id={item._id} />
       {/* hyeok socket io 연결안하면 에러떠서 주석처리함 */}
     </SpotRouteContainer>
   );

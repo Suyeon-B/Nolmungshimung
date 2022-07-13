@@ -21,7 +21,7 @@ const SearchBar = (props) => {
           type="text"
           id="search.keyword.query"
           name="q"
-          class="query tf_keyword bg_on"
+          // class="query tf_keyword bg_on"
           maxlength="100"
           autocomplete="off"
           accesskey="s"

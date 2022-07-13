@@ -21,7 +21,7 @@ const PlanSideBar = ({ item, toggleIsPage, isFirstPage }) => {
       </SideBarBtnDIv>
 
       <PlanList
-        startData={item.statr_data}
+        startDate={item.start_date}
         term={item.term}
         routes={item.routes}
       />
