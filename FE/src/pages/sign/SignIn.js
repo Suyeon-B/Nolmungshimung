@@ -21,8 +21,8 @@ function SignIn() {
     retry: 1,
   });
 
-  function singInUser(data) {
-    fetch(`http://${process.env.REACT_APP_SERVER_IP}:8443/users/signin`, {
+  async function singInUser(data) {
+    await fetch(`http://${process.env.REACT_APP_SERVER_IP}:8443/users/signin`, {
       method: "post",
       headers: {
         "content-type": "application/json",

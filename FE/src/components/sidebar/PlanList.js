@@ -73,9 +73,7 @@ function PlanList({
   isFirstPage,
 }) {
   const [state, setState] = useState([...routes]);
-  const tripTermDate = [];
   const droppableRef = useRef([]);
-  const detailBtnDivRef = useRef([]);
   const [selectedDay, setSelectedDay] = useState(0);
 
   function onDragEnd(result) {
