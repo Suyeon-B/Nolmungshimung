@@ -12,21 +12,22 @@ function MarkMap(props) {
     { map_x: 33.452671, map_y: 126.574792 },
     { map_x: 33.451744, map_y: 126.572441 },
   ];
-  const linePath = props.map(function (place) {
-    //test를 props으로
-    return new kakao.maps.LatLng(place.x, place.y);
-  });
-  const polyline = new kakao.maps.Polyline({
-    path: linePath, // 선을 구성하는 좌표배열 입니다
-    strokeWeight: 5, // 선의 두께 입니다
-    strokeColor: "#FFAE00", // 선의 색깔입니다
-    strokeOpacity: 0.7, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
-    strokeStyle: "solid", // 선의 스타일입니다s
-  });
+
   function setBounds(map, bounds) {
     map.setBounds(bounds);
   }
   useEffect(() => {
+    const linePath = props.map(function (place) {
+      //test를 props으로
+      return new kakao.maps.LatLng(place.y, place.x);
+    });
+    const polyline = new kakao.maps.Polyline({
+      path: linePath, // 선을 구성하는 좌표배열 입니다
+      strokeWeight: 5, // 선의 두께 입니다
+      strokeColor: "#FFAE00", // 선의 색깔입니다
+      strokeOpacity: 0.7, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+      strokeStyle: "solid", // 선의 스타일입니다s
+    });
     const container = document.getElementById("myMap");
     const options = {
       center: new kakao.maps.LatLng(33.450701, 126.570667),
@@ -63,7 +64,7 @@ function MarkMap(props) {
       setBounds(map, bounds);
     }
     polyline.setMap(map);
-  }, []);
+  }, [props]);
 
   // return (
   // <div
