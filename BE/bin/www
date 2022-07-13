@@ -18,7 +18,6 @@ var fs = require("fs");
 // };
 // var voiceTalkServer = http.createServer(options, voiceTalk).listen(7443);
 
-
 /**
  * Get port from environment and store in Express.
  */

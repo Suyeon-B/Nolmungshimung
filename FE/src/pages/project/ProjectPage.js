@@ -2,13 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Link, Outlet, useParams } from "react-router-dom";
 import PlanSideBar from "../../components/sidebar/PlanSideBar";
 import Search from "../search/Search";
-import TextEditor from "../shareMemo/TextEditor";
 import { useQuery } from "react-query";
 import SpotRoute from "../spotRoute/SpotRoute";
 import styled from "styled-components";
 
 async function fetchProjectById(_id) {
-  const response = await fetch(`http://localhost:8443/projects/${_id}`);
+  const response = await fetch(`http://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`);
   // const response = await fetch(
   //   `https://438e69a6-c891-4d7e-bfd2-f30c4eba330f.mock.pstmn.io/projects/mokc`
   // );
@@ -22,6 +21,8 @@ const ProjectPage = (props) => {
   const [isLoading, setIsLoading] = useState(true);
 
   const [isFirstPage, setIsFirstPage] = useState(true);
+
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   // 리액트 쿼리로 하려 했다가 실패
   // const { data, isError, error, isLoading } = useQuery(
@@ -91,6 +92,7 @@ const ProjectPage = (props) => {
         toggleIsPage={toggleIsPage}
         itemRoutes={itemsRoute}
         setItemRoutes={setItemsRoute}
+        setSelectedIndex={setSelectedIndex}
       />
       <PlanSection>
         {isFirstPage && (
@@ -102,6 +104,7 @@ const ProjectPage = (props) => {
         )}
         {!isFirstPage && (
           <SpotRoute
+            selectedIndex={selectedIndex}
             item={itemsRoute}
             setItemRoute={setItemsRoute}
             itemId={items._id}

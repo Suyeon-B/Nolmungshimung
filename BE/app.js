@@ -31,9 +31,7 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-var db;
 mongoose
-  // .connect("mongodb://localhost/shareMemo")
   .connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB Connected..."))
   .catch((err) => console.log(`connect err : ${err}`));
@@ -54,44 +52,52 @@ app.use("/travel", travelRouter);
 app.use("/common", commonRouter);
 app.use("/voicetalk", voiceRouter);
 
-// [수연][TextEditor] socket io 작업 | line 51~90
-const io = require("socket.io")(3001, {
+// [수연] share-memo with collaborative cursors
+// create and start server on 7899 port by default
+var OkdbServer = require("okdb-server");
+var options = {
   cors: {
-    origin: `http://${process.env.REACT_APP_SERVER_IP}:3000`,
-    methods: ["GET", "POST"],
+    enabled: true,
   },
-});
+};
+var okdb = new OkdbServer(options);
 
-const projectSchema = require("./models/Project");
-
-io.on("connection", (socket) => {
-  socket.on("get-project", async (projectId) => {
-    const project = await findProjectById(projectId);
-    if (project) {
-      socket.join(projectId);
-      socket.emit("load-project", project.memo);
-
-      socket.on("send-changes", (delta) => {
-        socket.broadcast.to(projectId).emit("receive-changes", delta);
-      });
-
-      socket.on("save-project", async (memo) => {
-        await projectSchema.findByIdAndUpdate(projectId, { memo });
-      });
-    } else {
-      console.log("없는 프로젝트입니다.");
+// sample authentication, e.g. should validate your own auth token
+const names = ["수연", "강동원영", "준뀨", "혁잉", "짱영지", "내가영진데", "내가누구게", "윤혁", "원영", "규규"];
+let nameIdx = 0;
+try {
+  okdb.handlers().auth((token) => {
+    if (token === "12345") {
+      console.log("auth attempt for ", token, " success");
+      const userName = names[nameIdx];
+      const userId = "1" + nameIdx;
+      nameIdx = (nameIdx + 1) % names.length;
+      return { id: userId, name: userName };
     }
+    console.log("auth attempt for ", token, " failed");
+    return null;
+  });
+} catch (err) {
+  console.log(err);
+}
+
+// Handling Ctrl-C (workaround for Windows)
+if (process.platform === "win32") {
+  var rl = require("readline").createInterface({
+    input: process.stdin,
+    output: process.stdout,
+  });
+
+  rl.on("SIGINT", function () {
+    process.emit("SIGINT");
+  });
+}
+//graceful shutdown on Ctrl-C (all other platforms)
+process.on("SIGINT", function () {
+  okdb.stop(() => {
+    console.log("server stopped");
+    process.exit();
   });
 });
-
-async function findProjectById(id) {
-  try {
-    if (id == null) return;
-    const project = await projectSchema.findById(id);
-    if (project) return project;
-  } catch (err) {
-    console.log(err);
-  }
-}
 
 module.exports = app;
