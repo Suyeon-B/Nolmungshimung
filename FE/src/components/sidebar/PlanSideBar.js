@@ -8,6 +8,7 @@ const PlanSideBar = ({
   isFirstPage,
   itemRoutes,
   setItemRoutes,
+  setSelectedIndex,
 }) => {
   return (
     <SideBar>
@@ -27,10 +28,13 @@ const PlanSideBar = ({
       </SideBarBtnDIv>
 
       <PlanList
+        toggleIsPage={toggleIsPage}
         startDate={item.start_date}
         term={item.term}
         routes={itemRoutes}
         setRoutes={setItemRoutes}
+        setSelectedIndex={setSelectedIndex}
+        isFirstPage={isFirstPage}
         // routes={item.routes}
       />
 

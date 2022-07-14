@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Link, Outlet, useParams } from "react-router-dom";
 import PlanSideBar from "../../components/sidebar/PlanSideBar";
 import Search from "../search/Search";
-import TextEditor from "../shareMemo/TextEditor";
 import { useQuery } from "react-query";
 import SpotRoute from "../spotRoute/SpotRoute";
 import styled from "styled-components";
@@ -23,6 +22,8 @@ const ProjectPage = (props) => {
 
   const [isFirstPage, setIsFirstPage] = useState(true);
 
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
   // 리액트 쿼리로 하려 했다가 실패
   // const { data, isError, error, isLoading } = useQuery(
   //   ["projectInfo", projectId],
@@ -38,6 +39,7 @@ const ProjectPage = (props) => {
   // }
 
   useEffect(() => {
+    console.log("projectId change");
     async function fetchInfo() {
       const data = await fetchProjectById(projectId);
 
@@ -46,6 +48,30 @@ const ProjectPage = (props) => {
     }
     fetchInfo();
   }, [projectId]);
+
+  useEffect(() => {
+    async function UpdateInfo() {
+      const tmpProjectId = await fetchProjectById(projectId);
+      // console.log("id", tmpProjectId._id);
+      fetch(
+        `http://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${tmpProjectId._id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "content-type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(itemsRoute),
+        }
+      )
+        .then((res) => res.json())
+        .then((res) => {
+          console.log("res : ", res);
+        })
+        .catch((err) => console.log(`err: ${err}`));
+    }
+    UpdateInfo();
+  }, [itemsRoute]);
 
   if (isLoading) {
     if (items) {
@@ -67,11 +93,19 @@ const ProjectPage = (props) => {
         toggleIsPage={toggleIsPage}
         itemRoutes={itemsRoute}
         setItemRoutes={setItemsRoute}
+        setSelectedIndex={setSelectedIndex}
       />
       <PlanSection>
-        {isFirstPage && <Search projectId={projectId} />}
+        {isFirstPage && (
+          <Search
+            itemRoutes={itemsRoute}
+            setItemRoutes={setItemsRoute}
+            projectId={projectId}
+          />
+        )}
         {!isFirstPage && (
           <SpotRoute
+            selectedIndex={selectedIndex}
             item={itemsRoute}
             setItemRoute={setItemsRoute}
             itemId={items._id}

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import SearchListRoute from "./SearchListRoute";
 import styled from "styled-components";
 
-const SearchList = ({ Places, projectId }) => {
+const SearchList = ({ itemRoute, setItemRoute, Places, projectId }) => {
   function GetGooglePlaceId(props) {
     let url =
       "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?";
@@ -79,7 +79,7 @@ const SearchList = ({ Places, projectId }) => {
 
   function makeLI(item, idx) {
     return (
-      <StyledLi
+      <li
         draggable
         onDragOver={(event) => {
           return dragFunction(event, "over");
@@ -125,14 +125,21 @@ const SearchList = ({ Places, projectId }) => {
               phone: item.phone,
               place_url: item.place_url,
             })} */}
-      </StyledLi>
+      </li>
     );
   }
 
   return (
     <>
       {Places.map((item, i) => (
-        <SearchListRoute projectId={projectId} route={item} idx={i} />
+        <SearchListRoute
+          key={i}
+          itemRoutes={itemRoute}
+          setItemRoutes={setItemRoute}
+          projectId={projectId}
+          route={item}
+          idx={i}
+        />
       ))}
     </>
   );

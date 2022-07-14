@@ -90,10 +90,12 @@ const getListStyle = (isDraggingOver) => ({
   overflow: "scroll",
 });
 
-export default function SpotList({ dayItem, setItemRoute }) {
+const transDayItem = (dayItem, selectedIndex) => {};
+
+export default function SpotList({ dayItem, setItemRoute, selectedIndex }) {
   // const [state, setState] = useState([testItem, testItem2]);
-  console.log("dd", dayItem[0]);
-  const [state, setState] = useState([dayItem[0]]);
+  console.log(dayItem);
+  const [state, setState] = useState([dayItem[selectedIndex]]);
 
   function onDragEnd(result) {
     const { source, destination } = result;
@@ -107,32 +109,33 @@ export default function SpotList({ dayItem, setItemRoute }) {
 
     if (sInd === dInd) {
       const items = reorder(
-        [dayItem[0]][sInd],
+        [...dayItem][sInd],
         source.index,
         destination.index
       );
-      const newState = [...[dayItem[0]]];
+      const newState = [...[...dayItem]];
       newState[sInd] = items;
+
       setItemRoute(newState);
     } else {
       const result = move(
-        [dayItem[0]][sInd],
-        [dayItem[0]][dInd],
+        [...dayItem][sInd],
+        [...dayItem][dInd],
         source,
         destination
       );
-      const newState = [...[dayItem[0]]];
+      const newState = [...[...dayItem]];
       newState[sInd] = result[sInd];
       newState[dInd] = result[dInd];
 
-      setItemRoute(newState.filter((group) => group.length));
+      setItemRoute(newState);
     }
   }
 
   return (
     <SidePlanListDiv>
       <StyledDragDropContext onDragEnd={onDragEnd}>
-        {[dayItem[0]].map((el, ind) => (
+        {[dayItem[selectedIndex]].map((el, ind) => (
           <Droppable key={ind} droppableId={`${ind}`}>
             {(provided, snapshot) => (
               <div
@@ -141,7 +144,11 @@ export default function SpotList({ dayItem, setItemRoute }) {
                 {...provided.droppableProps}
               >
                 {el.map((item, index) => (
-                  <Draggable key={item.id} draggableId={item.id} index={index}>
+                  <Draggable
+                    key={item.uid}
+                    draggableId={item.uid}
+                    index={index}
+                  >
                     {(provided, snapshot) => (
                       <div
                         ref={provided.innerRef}
@@ -169,6 +176,7 @@ export default function SpotList({ dayItem, setItemRoute }) {
                                 console.log("dd");
                               }}
                             >
+                              <SpotItemIndex>{index + 1}</SpotItemIndex>
                               {item.place_name}
                             </SpotTitle>
                             <SpotCategory>{item.category}</SpotCategory>
@@ -176,11 +184,11 @@ export default function SpotList({ dayItem, setItemRoute }) {
                           <DeleteOutlined
                             style={{ fontSize: "25px" }}
                             onClick={() => {
-                              const newState = [...[dayItem[0]]];
+                              const newDayItem = [...dayItem];
+                              const newState = [...[dayItem[selectedIndex]]];
                               newState[ind].splice(index, 1);
-                              setItemRoute(
-                                newState.filter((group) => group.length)
-                              );
+                              newDayItem[selectedIndex] = [...newState[0]];
+                              setItemRoute(newDayItem);
                             }}
                           />
                         </div>
@@ -198,6 +206,20 @@ export default function SpotList({ dayItem, setItemRoute }) {
   );
 }
 
+const SpotItemIndex = styled.div`
+  display: inline-flex;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #ff8830;
+  text-align: center;
+  font-size: 18px;
+  margin-right: 10px;
+  color: white;
+  justify-content: center;
+  align-items: center;
+`;
+
 const SpotItemDiv = styled.div`
   display: flex;
   flex-direction: column;
@@ -206,13 +228,13 @@ const SpotItemDiv = styled.div`
   width: 250px;
 `;
 
-const SpotTitle = styled.text`
+const SpotTitle = styled.span`
   font-family: Inter;
   font-style: normal;
   font-weight: 700;
   font-size: 20px;
 `;
-const SpotCategory = styled.text`
+const SpotCategory = styled.span`
   font-family: Rounded Mplus 1c Bold;
   font-style: normal;
   color: #adadad;

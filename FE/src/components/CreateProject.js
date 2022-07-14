@@ -46,7 +46,7 @@ const CreateProject = () => {
     let sDate = new Date(startDate[0], startDate[1], startDate[2]).getTime();
     let eDate = new Date(endDate[0], endDate[1], endDate[2]).getTime();
 
-    let term = (eDate - sDate) / (1000 * 60 * 60 * 24);
+    let term = (eDate - sDate + 1) / (1000 * 60 * 60 * 24);
     const project = [
       sessionStorage.getItem("user_email"),
       {

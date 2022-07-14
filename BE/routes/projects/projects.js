@@ -12,7 +12,7 @@ router.get("/", function (req, res, next) {
 });
 
 router.post("/", async (req, res) => {
-  const user_date = await User.findOne({ user_email: "a" });
+  const user_date = await User.findOne({ user_email: req.body[0] });
   const project = new Project(req.body[1]);
 
   project["people"].push(user_date._id.toString());
@@ -84,6 +84,28 @@ router.post("/routes/:id", async (req, res) => {
   } catch (error) {
     console.log(`project route find id: ${error}`);
     res.status(404).send({ error: "project not found" });
+  }
+});
+
+router.patch("/routes/:id", async (req, res) => {
+  // console.log("I'm in routes/:id");
+  // console.log("REQ BODY", req.body);
+  // console.log("REQ PARAMS : ", req.params.id);
+  try {
+    Project.findOneAndUpdate(
+      { _id: req.params.id },
+      { $set: { routes: req.body } },
+      { new: true },
+      (err, doc) => {
+        if (err) {
+          console.log("Something wrong when updating data!");
+        }
+        // console.log("doc:", doc);
+      }
+    );
+  } catch (error) {
+    console.log(`project update error: ${error}`);
+    res.status(404).send({ error: "routes update error!" });
   }
 });
 
