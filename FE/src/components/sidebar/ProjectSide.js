@@ -88,7 +88,7 @@ function ProjectSide() {
   const auth = useAuth();
   let projectsInfo = null;
   useEffect(() => {
-    if (auth.user === undefined) return;
+    if (auth.user === undefined || auth.user === null) return;
     // auth.user 불러오질 못함.
     // 세션은 ..? 안됨
     // -> auth.user가 변경될때마다 재랜더링 ㄲ
