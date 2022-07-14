@@ -47,11 +47,12 @@ const OnlineFriends = styled.div`
 Quill.register("modules/cursors", QuillCursors);
 
 const HOST = `http://${process.env.REACT_APP_SERVER_IP}:7899`; // location of your server, use xxxxx to use sample, or follow this guide to build your own:
-const TOKEN = "12345"; // either get it from your auth provider and validate with system integration, or use default system users:
+// const TOKEN = "12345"; // either get it from your auth provider and validate with system integration, or use default system users:
+const user_email = sessionStorage.getItem("user_email");
+
 const okdb = new OkdbClient(HOST, { timeout: 30000 });
 window.okdb = okdb;
 const DATA_TYPE = "todo-tasks"; // data type, typically corresponds to the table name
-const DOCUMENT_ID = "design-doc0"; // id of the object to be edited collaboratively
 
 const TOOLBAR_OPTIONS = [
   [{ align: [] }],
@@ -101,6 +102,7 @@ function TextEditor({ project_Id }) {
         return newState;
       });
     } else if (data.user && data.user.id) {
+      // 온라인인 친구들의 커서를 띄웁니다.
       setPresences((prev) => {
         const newState = cloneDeep(prev);
         newState[id] = {
@@ -128,9 +130,10 @@ function TextEditor({ project_Id }) {
   useEffect(() => {
     // 1. step - connect
     okdb
-      .connect(TOKEN)
+      .connect(user_email)
       .then((user) => {
-        setUser(user);
+        const myName = sessionStorage.getItem("myName");
+        setUser({ name: myName }); // 세션에 저장된 이름으로 내 이름을 띄웁니다.
         // 2. step - open document for collaborative editing
         const defaultValue = [
           {
