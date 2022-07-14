@@ -4,7 +4,7 @@ import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../components/auth/Auth";
 
-const kauthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=2d1c91f12a4c8020dbcc39ddb0c368b0&redirect_uri=http://${process.env.REACT_APP_SERVER_IP}:3000/kakao/signin&response_type=code`;
+const kauthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=2d1c91f12a4c8020dbcc39ddb0c368b0&redirect_uri=https://${process.env.REACT_APP_SERVER_IP}:3000/kakao/signin&response_type=code`;
 
 function SignIn() {
   let navigate = useNavigate();
