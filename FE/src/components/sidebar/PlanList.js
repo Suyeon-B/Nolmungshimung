@@ -43,11 +43,9 @@ const getItemStyle = (isDragging, draggableStyle) => ({
 
   userSelect: "none",
 
-  // margin: `0 0 ${grid}px 0`,
-
   // change background colour if dragging
   background: isDragging ? "#EBEBEB" : "none",
-  // paddingLeft: "25px",
+
   // styles we need to apply on draggables
   ...draggableStyle,
 });
@@ -75,12 +73,8 @@ function PlanList({
   isFirstPage,
 }) {
   const [state, setState] = useState([...routes]);
-  const tripTermDate = [];
   const droppableRef = useRef([]);
-
-  // useEffect(() => {
-  //   setState([...routes]);
-  // }, [routes]);
+  const [selectedDay, setSelectedDay] = useState(0);
 
   function onDragEnd(result) {
     const { source, destination } = result;
@@ -108,23 +102,32 @@ function PlanList({
       newState[sInd] = result[sInd];
       newState[dInd] = result[dInd];
 
-      setRoutes(newState.filter((group) => group.length));
+      setRoutes(newState);
     }
   }
+  const onSeleted = (e) => {
+    setSelectedDay(e.target.value);
+  };
+
+  useEffect(() => {
+    setSelectedDay(0);
+  }, [routes]);
 
   const onClick = (event) => {
     // console.log(droppableRef.current[event.target.dataset.idx]);
+
     const selectIdx = +event.target.dataset.idx;
     setSelectedIndex(selectIdx);
+    setSelectedDay(selectIdx);
     isFirstPage && toggleIsPage();
   };
-
+  console.log(`selectedDay: ${selectedDay}`);
   return (
     <div>
       <SidePlanListDiv>
         <StyledDragDropContext onDragEnd={onDragEnd}>
           {[...routes].map((el, ind) => (
-            <div ref={(el) => (droppableRef.current[+ind] = el)}>
+            <div key={ind} ref={(el) => (droppableRef.current[+ind] = el)}>
               <Droppable key={ind} droppableId={`${ind}`}>
                 {(provided, snapshot) => (
                   <div
@@ -132,12 +135,18 @@ function PlanList({
                     style={getListStyle(snapshot.isDragging)}
                     {...provided.droppableProps}
                   >
-                    <DateDetailBtnDiv>
+                    <DateDetailBtnDiv
+                      data-idx={ind}
+                      onClick={onClick}
+                      selected={selectedDay}
+                    >
                       <DateDetailBtn data-idx={ind} onClick={onClick}>
                         {culTripTermData(startDate, ind)}
                       </DateDetailBtn>
-                      <DateDetailBtn>
+                      <DateDetailBtn data-idx={ind} onClick={onClick}>
                         <img
+                          data-idx={ind}
+                          onClick={onClick}
                           style={{ width: "15px" }}
                           src="\statics\images\date_arrow.png"
                         />
@@ -166,9 +175,7 @@ function PlanList({
                                 onClick={() => {
                                   const newState = [...[...routes]];
                                   newState[ind].splice(index, 1);
-                                  setRoutes(
-                                    newState.filter((group) => group.length)
-                                  );
+                                  setRoutes(newState);
                                 }}
                               >
                                 <img
@@ -203,12 +210,17 @@ const SidePlanListDiv = styled.div`
 
 const DateDetailBtnDiv = styled.div`
   width: 100%;
+  height: 30px;
   display: flex;
   justify-content: space-between;
+  border-radius: 5px;
 
-  /* &:hover {
-    background-color: red;
-  } */
+  background-color: ${(props) =>
+    props.selected === props["data-idx"] && "#DEDEDE"};
+
+  &:hover {
+    background-color: #dedede;
+  }
 `;
 
 const DateDetailBtn = styled.button`
@@ -220,7 +232,7 @@ const DateDetailBtn = styled.button`
   outline: 0;
 
   color: #757575;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0);
   /* &:hover {
     background-color: red;
   } */

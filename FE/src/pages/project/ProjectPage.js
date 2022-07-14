@@ -7,7 +7,9 @@ import SpotRoute from "../spotRoute/SpotRoute";
 import styled from "styled-components";
 
 async function fetchProjectById(_id) {
-  const response = await fetch(`http://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`);
+  const response = await fetch(
+    `http://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`
+  );
   // const response = await fetch(
   //   `https://438e69a6-c891-4d7e-bfd2-f30c4eba330f.mock.pstmn.io/projects/mokc`
   // );
@@ -39,6 +41,7 @@ const ProjectPage = (props) => {
   // }
 
   useEffect(() => {
+    console.log("projectId change");
     async function fetchInfo() {
       const data = await fetchProjectById(projectId);
 

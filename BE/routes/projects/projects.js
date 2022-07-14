@@ -12,7 +12,7 @@ router.get("/", function (req, res, next) {
 });
 
 router.post("/", async (req, res) => {
-  const user_date = await User.findOne({ user_email: "a" });
+  const user_date = await User.findOne({ user_email: req.body[0] });
   const project = new Project(req.body[1]);
 
   project["people"].push(user_date._id.toString());
