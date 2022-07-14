@@ -6,7 +6,7 @@ import { v4 as uuidV4 } from "uuid";
 const fetchAddTravelRoute = async (id, route) => {
   try {
     const response = await fetch(
-      `${window.location.protocol}//${window.location.hostname}:8443/projects/routes/${id}`,
+      `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${id}`,
       {
         method: "post",
         headers: {

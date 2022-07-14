@@ -94,7 +94,7 @@ function ProjectSide() {
     // -> auth.user가 변경될때마다 재랜더링 ㄲ
     let projects = auth.user?.user_projects;
 
-    fetch(`${window.location.protocol}//${window.location.hostname}:8443/projects/title`, {
+    fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/title`, {
       method: "post",
       headers: {
         "content-type": "application/json",

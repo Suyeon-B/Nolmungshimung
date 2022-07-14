@@ -333,7 +333,7 @@ class voiceTalk extends Component {
             var data = {};
             // fetch(`http://${process.env.REACT_APP_SERVER_IP}:8443/voicetalk/api-sessions/get-token`, {
                 // fetch(`http://${process.env.REACT_APP_SERVER_IP}:8443/voicetalk/api-sessions/get-token`, {
-                fetch(`${window.location.protocol}//${window.location.hostname}:8443/voicetalk/api-sessions/get-token`, {
+                fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/voicetalk/api-sessions/get-token`, {
                 method: "post",
                 headers: {
                 "content-type": "application/json",
@@ -356,7 +356,7 @@ class voiceTalk extends Component {
         new Promise((resolve, reject) => {
             var data = {};
             // fetch(`http://${process.env.REACT_APP_SERVER_IP}:8443/voicetalk/api-sessions/remove-user`, {
-            fetch(`${window.location.protocol}//${window.location.hostname}:8443/voicetalk/api-sessions/remove-user`, {
+            fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/voicetalk/api-sessions/remove-user`, {
     
                 method: "post",
                 headers: {
