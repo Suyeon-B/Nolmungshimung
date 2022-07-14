@@ -10,13 +10,12 @@ var http = require("http");
 var https = require("https");
 var fs = require("fs");
 
-// JG - openvidu start
-// var voiceTalk = require("../routes/voicetalk/voicetalk")
-// var options = {
-//   key: fs.readFileSync("openvidukey.pem"),
-//   cert: fs.readFileSync("openviducert.pem"),
-// };
-// var voiceTalkServer = http.createServer(options, voiceTalk).listen(7443);
+// JG - https start
+process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
+var options = {
+  key: fs.readFileSync("nolshimung-key.pem"),
+  cert: fs.readFileSync("nolshimung.pem"),
+};
 
 /**
  * Get port from environment and store in Express.
@@ -29,7 +28,7 @@ app.set("port", port);
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+var server = https.createServer(options, app);
 
 /**
  * Listen on provided port, on all network interfaces.

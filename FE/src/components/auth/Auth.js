@@ -10,7 +10,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     // console.log("auth auth");
     //To know my current status, send Auth request
-    fetch(`http://${process.env.REACT_APP_SERVER_IP}:8443/users/auth`, {
+    fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/users/auth`, {
       method: "get",
       headers: {
         "content-type": "application/json",

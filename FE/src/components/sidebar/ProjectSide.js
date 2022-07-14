@@ -88,12 +88,13 @@ function ProjectSide() {
   const auth = useAuth();
   let projectsInfo = null;
   useEffect(() => {
+    if (auth.user === undefined || auth.user === null) return;
     // auth.user 불러오질 못함.
     // 세션은 ..? 안됨
     // -> auth.user가 변경될때마다 재랜더링 ㄲ
     let projects = auth.user?.user_projects;
 
-    fetch(`http://${process.env.REACT_APP_SERVER_IP}:8443/projects/title`, {
+    fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/title`, {
       method: "post",
       headers: {
         "content-type": "application/json",
