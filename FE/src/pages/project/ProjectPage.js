@@ -8,7 +8,7 @@ import SpotRoute from "../spotRoute/SpotRoute";
 import styled from "styled-components";
 
 async function fetchProjectById(_id) {
-  const response = await fetch(`http://localhost:8443/projects/${_id}`);
+  const response = await fetch(`${window.location.protocol}//${window.location.hostname}:8443/projects/${_id}`);
   // const response = await fetch(
   //   `https://438e69a6-c891-4d7e-bfd2-f30c4eba330f.mock.pstmn.io/projects/mokc`
   // );

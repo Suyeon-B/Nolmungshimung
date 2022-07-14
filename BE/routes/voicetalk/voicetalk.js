@@ -29,7 +29,7 @@ router.post("/api-sessions/get-token", function (req, res) {
     // console.log("Getting a token | {projectId}={" + sessionName + "}, {loggedUser}={" + loggedUser);
 
     var connectionProperties = {
-    //   data: serverData,
+      data: serverData,
         role: role,
     };
     if (mapSessions[sessionName]) {
@@ -63,7 +63,7 @@ router.post("/api-sessions/get-token", function (req, res) {
             .createConnection(connectionProperties)
             .then((connection) => {
               mapSessionNamesTokens[sessionName].push(connection.token);
-              
+
               res.status(200).send({
                 0: connection.token,
               });

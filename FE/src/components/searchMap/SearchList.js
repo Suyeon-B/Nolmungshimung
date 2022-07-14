@@ -9,7 +9,7 @@ const SearchList = ({ Places, projectId }) => {
     const api_key = "AIzaSyAFeyVrH7cjDHGVVLqhifBI-DFlTUwEn8E";
     url =
       url + "input=" + props.input + "&inputtype=textquery" + "&key=" + api_key;
-    fetch(`http://${process.env.REACT_APP_SERVER_IP}:8443/travel/` + props.id)
+    fetch(`${window.location.protocol}//${window.location.hostname}:8443/travel/` + props.id)
       .then((response) => response.json())
       .then((data) => {
         if (data.message != "success") {
@@ -30,7 +30,7 @@ const SearchList = ({ Places, projectId }) => {
                     data.place_url = props.place_url;
 
                     fetch(
-                      `http://${process.env.REACT_APP_SERVER_IP}:8443/travel/${props.id}`,
+                      `${window.location.protocol}//${window.location.hostname}:8443/travel/${props.id}`,
                       {
                         method: "post",
                         headers: {
@@ -56,7 +56,7 @@ const SearchList = ({ Places, projectId }) => {
                   result: null,
                 };
                 fetch(
-                  `http://${process.env.REACT_APP_SERVER_IP}:8443/travel/${props.id}`,
+                  `${window.location.protocol}//${window.location.hostname}:8443/travel/${props.id}`,
                   {
                     method: "post",
                     headers: {

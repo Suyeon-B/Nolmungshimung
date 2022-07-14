@@ -57,7 +57,7 @@ app.use("/voicetalk", voiceRouter);
 // [수연][TextEditor] socket io 작업 | line 51~90
 const io = require("socket.io")(3001, {
   cors: {
-    origin: `http://${process.env.REACT_APP_SERVER_IP}:3000`,
+    origin: `https://localhost:3000`,
     methods: ["GET", "POST"],
   },
 });

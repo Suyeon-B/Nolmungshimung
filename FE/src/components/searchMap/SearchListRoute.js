@@ -5,7 +5,7 @@ import styled from "styled-components";
 const fetchAddTravelRoute = async (id, route) => {
   try {
     const response = await fetch(
-      `http://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${id}`,
+      `${window.location.protocol}//${window.location.hostname}:8443/projects/routes/${id}`,
       {
         method: "post",
         headers: {
