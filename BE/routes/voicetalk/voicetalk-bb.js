@@ -4,12 +4,13 @@ var cors = require("cors");
 var OpenVidu = require("openvidu-node-client").OpenVidu;
 var OpenViduRole = require("openvidu-node-client").OpenViduRole;
 
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+// For demo purposes we ignore self-signed certificate
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 
 // Node imports
 var express = require("express");
 // var fs = require("fs");
-// var session = require("express-session");
+var session = require("express-session");
 // var https = require("https");
 var bodyParser = require("body-parser"); // Pull information from HTML POST (express4)
 var path = require("path");
@@ -18,6 +19,15 @@ var path = require("path");
 
 var app = express(); // Create our app with express
 
+// Server configuration
+app.use(
+  session({
+    saveUninitialized: true,
+    resave: false,
+    secret: "MY_SECRET",
+  })
+);
+app.use(express.static(global.__dirname + "/public")); // Set the static files location
 app.use(
   bodyParser.urlencoded({
     extended: "true",
@@ -38,7 +48,29 @@ app.use(cors({ credentials: true, origin: true }));
 
 // https.createServer(options, app).listen(7443);
 
-// Mock datab
+// Mock database
+var users = [
+  {
+    user: "publisher1",
+    pass: "pass",
+    role: OpenViduRole.PUBLISHER,
+  },
+  {
+    user: "publisher2",
+    pass: "pass",
+    role: OpenViduRole.PUBLISHER,
+  },
+  {
+    user: "subscriber",
+    pass: "pass",
+    role: OpenViduRole.SUBSCRIBER,
+  },
+  {
+    user: "qwer",
+    pass: "qwer",
+    role: OpenViduRole.PUBLISHER,
+  },
+];
 
 // Environment variable: URL where our OpenVidu server is listening
 var OPENVIDU_URL = 'https://3.36.48.148:4443';
@@ -95,17 +127,26 @@ app.get("/api", function (req, res){
 //   res.status(200).send();
 // });
 
-/* REST API */
-
 // Get token (add new user to session)
 app.post("/api-sessions/get-token", function (req, res) {
+//   if (!isLogged(req.session)) {
+//     req.session.destroy();
+//     res.status(401).send("User not logged");
+//   } else {
+    // The video-call to connect
     var sessionName = req.body.project_id;
     var loggedUser = req.body.loggedUser;
+    // Role associated to this user
+    // var role = users.find(u => (u.user === req.session.loggedUser)).role;
     var role = OpenViduRole.PUBLISHER;
+
+    // Optional data to be passed to other users when this user connects to the video-call
+    // In this case, a JSON with the value we stored in the req.session object on login
     var serverData = JSON.stringify({ serverData: loggedUser });
 
-    // console.log("Getting a token | {projectId}={" + sessionName + "}, {loggedUser}={" + loggedUser);
+    console.log("Getting a token | {projectId}={" + sessionName + "}, {loggedUser}={" + loggedUser);
 
+    // Build connectionProperties object with the serverData and the role
     var connectionProperties = {
       data: serverData,
         role: role,
@@ -113,15 +154,18 @@ app.post("/api-sessions/get-token", function (req, res) {
 
     if (mapSessions[sessionName]) {
       // Session already exists
-      // console.log("Existing session " + sessionName);
+      console.log("Existing session " + sessionName);
 
+      // Get the existing Session from the collection
       var mySession = mapSessions[sessionName];
 
-      // 신규토큰 생성
+      // Generate a new token asynchronously with the recently created connectionProperties
       mySession
         .createConnection(connectionProperties)
         .then((connection) => {
+          // Store the new token in the collection of tokens
           mapSessionNamesTokens[sessionName].push(connection.token);
+          // Return the token to the client
           res.status(200).send({
             0: connection.token,
           });
@@ -132,17 +176,24 @@ app.post("/api-sessions/get-token", function (req, res) {
         
     } else {
       // New session
-      // console.log("New session " + sessionName);
+      console.log("New session " + sessionName);
       
+      // Create a new OpenVidu Session asynchronously
       OV.createSession()
         .then((session) => {
+          // Store the new Session in the collection of Sessions
           mapSessions[sessionName] = session;
+          // Store a new empty array in the collection of tokens
           mapSessionNamesTokens[sessionName] = [];
+
+          // Generate a new connection asynchronously with the recently created connectionProperties
           session
             .createConnection(connectionProperties)
             .then((connection) => {
+              // Store the new token in the collection of tokens
               mapSessionNamesTokens[sessionName].push(connection.token);
-              // console.log(connectionProperties.role);
+              console.log(connectionProperties.role);
+              // Return the Token to the client
               res.status(200).send({
                 0: connection.token,
               });
@@ -155,45 +206,73 @@ app.post("/api-sessions/get-token", function (req, res) {
           console.error(error);
         });
     }
+//   }
 });
 
 // Remove user from session
 app.post("/api-sessions/remove-user", function (req, res) {
+//   if (!isLogged(req.session)) {
+//     req.session.destroy();
+//     res.status(401).send("User not logged");
+//   } else {
+    // Retrieve params from POST body
     var sessionName = req.body.sessionName;
     var token = req.body.token;
-    // console.log(
-    //   "Removing user | {sessionName, token}={" +
-    //     sessionName +
-    //     ", " +
-    //     token +
-    //     "}"
-    // );
+    console.log(
+      "Removing user | {sessionName, token}={" +
+        sessionName +
+        ", " +
+        token +
+        "}"
+    );
 
     // If the session exists
     if (mapSessions[sessionName] && mapSessionNamesTokens[sessionName]) {
       var tokens = mapSessionNamesTokens[sessionName];
       var index = tokens.indexOf(token);
 
+      // If the token exists
       if (index !== -1) {
+        // Token removed
         tokens.splice(index, 1);
-        // console.log(sessionName + ": " + tokens.toString());
+        console.log(sessionName + ": " + tokens.toString());
       } else {
         var msg = "Problems in the app server: the TOKEN wasn't valid";
-        // console.log(msg);
+        console.log(msg);
         res.status(500).send(msg);
       }
       if (tokens.length == 0) {
         // Last user left: session must be removed
-        // console.log(sessionName + " empty!");
+        console.log(sessionName + " empty!");
         delete mapSessions[sessionName];
       }
       res.status(200).send();
     } else {
-      // var msg = "Problems in the app server: the SESSION does not exist";
-      // console.log(msg);
+      var msg = "Problems in the app server: the SESSION does not exist";
+      console.log(msg);
       res.status(500).send(msg);
     }
+//   }
 });
 
-module.exports = app;
+/* REST API */
 
+/* AUXILIARY METHODS */
+
+function login(user, pass) {
+  // return (users.find(u => (u.user === user) && (u.pass === pass)));
+  return true;
+}
+
+function isLogged(session) {
+  return session.loggedUser != null;
+}
+
+function getBasicAuth() {
+  return (
+    "Basic " + new Buffer("OPENVIDUAPP:" + OPENVIDU_SECRET).toString("base64")
+  );
+}
+
+module.exports = app;
+/* AUXILIARY METHODS */
