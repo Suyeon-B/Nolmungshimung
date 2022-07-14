@@ -48,12 +48,12 @@ export const AuthProvider = ({ children }) => {
     await setUser(user);
   };
 
-  const logout = () => {
+  const logout = async () => {
     // cookie 삭제
     // console.log("auth logout");
     deleteCookie("w_access");
     deleteCookie("w_refresh");
-    setUser(null);
+    await setUser(null);
     sessionStorage.clear();
     window.location.href = "/";
   };
