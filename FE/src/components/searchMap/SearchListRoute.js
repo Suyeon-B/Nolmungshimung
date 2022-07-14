@@ -23,21 +23,27 @@ const fetchAddTravelRoute = async (id, route) => {
   }
 };
 
+const culTripTermData = (startDate, day) => {
+  const sDate = new Date(startDate.slice(0, 3));
+  sDate.setDate(sDate.getDate() + day);
+  return `${sDate.getMonth() + 1}월 ${sDate.getDate()}일`;
+};
+
 const SearchListRoute = ({
   itemRoutes,
   setItemRoutes,
   projectId,
   route,
   idx,
+  startDate,
 }) => {
-  const onClickAddRoute = () => {
+  const onClickAddRoute = (event) => {
     const uRoute = { ...route };
     uRoute["uid"] = uuidV4();
     fetchAddTravelRoute(projectId, uRoute);
-    itemRoutes[0].push(uRoute);
+    itemRoutes[event.target.dataset.idx].push(uRoute);
     setItemRoutes([...itemRoutes]);
   };
-
   return (
     <StyledLi
       draggable
@@ -52,8 +58,21 @@ const SearchListRoute = ({
       key={idx}
     >
       {/* <span>{i + 1}</span> */}
-      <button onClick={onClickAddRoute}>추가하기</button>
-      <StyledTile>{route.place_name}</StyledTile>
+      <StyledRouteDiv>
+        <StyledTile>{route.place_name}</StyledTile>
+        <StyledDropDown>
+          <img src="\statics\images\hanlabbong.png" />
+          <div className={"dropDownMenu"}>
+            {itemRoutes.map((el, idx) => {
+              return (
+                <StyledBtn data-idx={idx} onClick={onClickAddRoute}>
+                  {culTripTermData(startDate, idx)}
+                </StyledBtn>
+              );
+            })}
+          </div>
+        </StyledDropDown>
+      </StyledRouteDiv>
       {route.road_address_name ? (
         <div>
           <p title={route.road_address_name}>{route.road_address_name}</p>
@@ -104,4 +123,47 @@ const StyledTile = styled.h2`
   margin-bottom: 14px;
 `;
 
+const StyledDropDown = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+
+  position: relative;
+  top: -7px;
+  left: -30px;
+  width: 5%;
+
+  .dropDownMenu {
+    display: none;
+  }
+  &:hover {
+    .dropDownMenu {
+      display: block;
+      position: absolute;
+      width: 100px;
+      left: -45px;
+      top: 6px;
+      background-color: rgb(147, 147, 147);
+      border-radius: 3px;
+      padding: 4px;
+    }
+  }
+`;
+const StyledRouteDiv = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+`;
+const StyledBtn = styled.button`
+  outline: 0;
+  padding-bottom: 5px;
+  border: none;
+  color: white;
+  font-size: 18px;
+  font-weight: 700;
+  background-color: rgb(204, 204, 204, 0);
+  &:hover {
+    background-color: rgb(96, 96, 96);
+  }
+`;
 export default SearchListRoute;

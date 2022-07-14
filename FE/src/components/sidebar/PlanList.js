@@ -72,9 +72,12 @@ function PlanList({
   setSelectedIndex,
   isFirstPage,
 }) {
-  const [state, setState] = useState([...routes]);
   const droppableRef = useRef([]);
   const [selectedDay, setSelectedDay] = useState(0);
+  // console.log(routes);
+  if (!routes) {
+    return <div>Loading...</div>;
+  }
 
   function onDragEnd(result) {
     const { source, destination } = result;
@@ -105,23 +108,18 @@ function PlanList({
       setRoutes(newState);
     }
   }
-  const onSeleted = (e) => {
-    setSelectedDay(e.target.value);
-  };
 
   useEffect(() => {
     setSelectedDay(0);
   }, [routes]);
 
   const onClick = (event) => {
-    // console.log(droppableRef.current[event.target.dataset.idx]);
-
     const selectIdx = +event.target.dataset.idx;
     setSelectedIndex(selectIdx);
     setSelectedDay(selectIdx);
     isFirstPage && toggleIsPage();
   };
-  console.log(`selectedDay: ${selectedDay}`);
+
   return (
     <div>
       <SidePlanListDiv>

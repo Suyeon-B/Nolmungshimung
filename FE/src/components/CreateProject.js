@@ -15,6 +15,19 @@ const setDay = (value) => {
   ];
 };
 
+const culTripData = (startDate, term) => {
+  const sDate = new Date(startDate.slice(0, 3));
+  const arr = [];
+  arr.push(`${sDate.getFullYear()}${sDate.getMonth() + 1}${sDate.getDate()}`);
+  for (let i = 0; i < term; i++) {
+    sDate.setDate(sDate.getDate() + 1);
+
+    arr.push(`${sDate.getFullYear()}${sDate.getMonth() + 1}${sDate.getDate()}`);
+  }
+  console.log(arr);
+  return arr;
+};
+
 const CreateProject = () => {
   const navigate = useNavigate();
   const [projectTitle, setProjectTitle] = useState("");
@@ -43,10 +56,11 @@ const CreateProject = () => {
       alert("여행 일정을 선택해주세요");
       return;
     }
-    let sDate = new Date(startDate[0], startDate[1], startDate[2]).getTime();
-    let eDate = new Date(endDate[0], endDate[1], endDate[2]).getTime();
+    const sDate = new Date(startDate[0], startDate[1], startDate[2]).getTime();
+    const eDate = new Date(endDate[0], endDate[1], endDate[2]).getTime();
 
-    let term = (eDate - sDate + 1) / (1000 * 60 * 60 * 24);
+    const term = parseInt((eDate - sDate + 1) / (1000 * 60 * 60 * 24));
+    const trip_data = culTripData(startDate, term);
     const project = [
       sessionStorage.getItem("user_email"),
       {
@@ -54,6 +68,7 @@ const CreateProject = () => {
         start_date: startDate,
         end_date: endDate,
         term,
+        trip_data: trip_data,
       },
     ];
 

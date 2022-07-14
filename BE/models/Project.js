@@ -11,6 +11,7 @@ const projectSchema = mongoose.Schema({
   memo: { type: Object },
   log: { type: Array },
   upload_flag: { type: Array },
+  trip_date: {type: Array}
 });
 
 module.exports = mongoose.model("Project", projectSchema);
