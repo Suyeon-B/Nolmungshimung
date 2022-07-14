@@ -54,7 +54,7 @@ const ProjectPage = (props) => {
       const tmpProjectId = await fetchProjectById(projectId);
       // console.log("id", tmpProjectId._id);
       fetch(
-        `http://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${tmpProjectId._id}`,
+        `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${tmpProjectId._id}`,
         {
           method: "PATCH",
           headers: {
