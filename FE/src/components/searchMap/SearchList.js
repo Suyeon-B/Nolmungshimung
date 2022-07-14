@@ -2,7 +2,13 @@ import React, { useEffect, useState } from "react";
 import SearchListRoute from "./SearchListRoute";
 import styled from "styled-components";
 
-const SearchList = ({ itemRoute, setItemRoute, Places, projectId }) => {
+const SearchList = ({
+  itemRoute,
+  setItemRoute,
+  Places,
+  projectId,
+  startDate,
+}) => {
   function GetGooglePlaceId(props) {
     let url =
       "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?";
@@ -77,58 +83,6 @@ const SearchList = ({ itemRoute, setItemRoute, Places, projectId }) => {
       .catch((error) => console.log(error));
   }
 
-  function makeLI(item, idx) {
-    return (
-      <li
-        draggable
-        onDragOver={(event) => {
-          return dragFunction(event, "over");
-        }}
-        onDrop={(event) => dragFunction(event, "drop")}
-        onDragEnter={(event) => dragFunction(event, "enter")}
-        onDragLeave={(event) => dragFunction(event, "leave")}
-        className="dragAndDrop"
-        key={idx}
-      >
-        {/* <span>{i + 1}</span> */}
-        <button>추가하기</button>
-        <StyledTile>{item.place_name}</StyledTile>
-        {item.road_address_name ? (
-          <div>
-            <p title={item.road_address_name}>{item.road_address_name}</p>
-            {/* <p title = {item.address_name}>{item.address_name}</p> */}
-          </div>
-        ) : (
-          <p>{item.address_name}</p>
-        )}
-        <p>{item.category_group_name}</p>
-        <p>{item.phone}</p>
-        <a target="_blank" href={item.place_url}>
-          카카오맵에서 상세보기
-        </a>
-        {/* {item.road_address_name
-          ? GetGooglePlaceId({
-              input: item.road_address_name + "" + item.place_name,
-              id: item.id,
-              place_name: item.place_name,
-              road_address_name: item.road_address_name,
-              category_group_name: item.category_group_name,
-              phone: item.phone,
-              place_url: item.place_url,
-            })
-          : GetGooglePlaceId({
-              input: item.address_name + "" + item.place_name,
-              id: item.id,
-              place_name: item.place_name,
-              road_address_name: item.address_name,
-              category_group_name: item.category_group_name,
-              phone: item.phone,
-              place_url: item.place_url,
-            })} */}
-      </li>
-    );
-  }
-
   return (
     <>
       {Places.map((item, i) => (
@@ -139,6 +93,7 @@ const SearchList = ({ itemRoute, setItemRoute, Places, projectId }) => {
           projectId={projectId}
           route={item}
           idx={i}
+          startDate={startDate}
         />
       ))}
     </>

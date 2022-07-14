@@ -6,7 +6,7 @@ import styled from "styled-components";
 
 const { kakao } = window;
 
-const Search = ({ itemRoutes, setItemRoutes, projectId }) => {
+const Search = ({ itemRoutes, setItemRoutes, projectId, startDate }) => {
   const [searchPlace, setSearchPlace] = useState("");
   // 검색결과 배열에 담아줌
   var markers = [];
@@ -133,6 +133,7 @@ const Search = ({ itemRoutes, setItemRoutes, projectId }) => {
               setItemRoute={setItemRoutes}
               Places={Places}
               projectId={projectId}
+              startDate={startDate}
             />
           )}
           <div

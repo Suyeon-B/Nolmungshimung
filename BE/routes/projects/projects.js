@@ -89,7 +89,6 @@ router.post("/routes/:id", async (req, res) => {
 
 router.patch("/routes/:id", async (req, res) => {
   // console.log("I'm in routes/:id");
-  // console.log("REQ BODY", req.body);
   // console.log("REQ PARAMS : ", req.params.id);
   try {
     Project.findOneAndUpdate(

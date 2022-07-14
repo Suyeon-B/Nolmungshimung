@@ -35,6 +35,9 @@ function MarkMap(props) {
     AD5: "#8DD664", // 숙박
     "": "#CFCFCF",
   };
+  if (!props) {
+    return <div>Loding...</div>;
+  }
   useEffect(() => {
     const linePath = props.map(function (place) {
       //test를 props으로

@@ -63,7 +63,18 @@ var options = {
 var okdb = new OkdbServer(options);
 
 // sample authentication, e.g. should validate your own auth token
-const names = ["수연", "강동원영", "준뀨", "혁잉", "짱영지", "내가영진데", "내가누구게", "윤혁", "원영", "규규"];
+const names = [
+  "수연",
+  "강동원영",
+  "준뀨",
+  "혁잉",
+  "짱영지",
+  "내가영진데",
+  "내가누구게",
+  "윤혁",
+  "원영",
+  "규규",
+];
 let nameIdx = 0;
 try {
   okdb.handlers().auth((token) => {
@@ -72,6 +83,7 @@ try {
       const userName = names[nameIdx];
       const userId = "1" + nameIdx;
       nameIdx = (nameIdx + 1) % names.length;
+      console.log(userId);
       return { id: userId, name: userName };
     }
     console.log("auth attempt for ", token, " failed");

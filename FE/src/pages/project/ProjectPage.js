@@ -41,12 +41,14 @@ const ProjectPage = (props) => {
   // }
 
   useEffect(() => {
-    console.log("projectId change");
     async function fetchInfo() {
       const data = await fetchProjectById(projectId);
 
       setItems(data);
       setItemsRoute(data.routes);
+      if (!isFirstPage) {
+        setIsFirstPage(true);
+      }
     }
     fetchInfo();
   }, [projectId]);
@@ -85,7 +87,7 @@ const ProjectPage = (props) => {
   const toggleIsPage = () => {
     setIsFirstPage(!isFirstPage);
   };
-
+  console.log(items);
   return (
     <>
       {/* {data ? <div>is data</div> : <div>not data</div>} */}
@@ -100,6 +102,7 @@ const ProjectPage = (props) => {
       <PlanSection>
         {isFirstPage && (
           <Search
+            startDate={items.start_date}
             itemRoutes={itemsRoute}
             setItemRoutes={setItemsRoute}
             projectId={projectId}
