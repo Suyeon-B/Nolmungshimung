@@ -44,8 +44,8 @@ export const AuthProvider = ({ children }) => {
   // console.log("ss", userProjects);
 
   // sessionStorage.setItem("information", userProjects);
-  const login = (user) => {
-    setUser(user);
+  const login = async (user) => {
+    await setUser(user);
   };
 
   const logout = () => {
@@ -58,7 +58,11 @@ export const AuthProvider = ({ children }) => {
     window.location.href = "/";
   };
 
-  return <AuthContext.Provider value={{ user, login, logout }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export const useAuth = () => {
