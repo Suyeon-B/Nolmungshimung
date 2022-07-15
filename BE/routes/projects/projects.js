@@ -15,7 +15,8 @@ router.post("/", async (req, res) => {
   const user_date = await User.findOne({ user_email: req.body[0] });
   const project = new Project(req.body[1]);
 
-  project["people"].push(user_date._id.toString());
+  // project["people"].push(user_date._id.toString());
+  project["people"].push([user_date._id.toString(), user_date.user_name]);
 
   // 여행지 경로에 배열 추가하기
   for (let i = 0; i < project["term"]; i++) {
@@ -117,6 +118,59 @@ router.get("/:id", async (req, res, next) => {
     res.status(404).send({ error: "project not found" });
   }
 });
+
+router.post("/friends/:id", async (req, res, next) => {
+  const { id } = req.params;
+  // console.log(req.body.email);
+  // console.log(id);
+  // const test = await Project.findById(id);
+  // console.log(test);
+  try {
+    const userInfo = await User.findOne({ user_email: req.body.email });
+    // console.log([userInfo._id, userInfo.user_name]);
+    // 중복체크 ,....
+    if (await Project.findOne({ people: [userInfo._id, userInfo.user_name] })) {
+      res
+        .status(404)
+        .send({ success: false, message: "이미 초대돼있는 친구입니다." });
+      return;
+    }
+
+    try {
+      await Project.findOneAndUpdate(
+        { _id: id },
+        { $push: { people: [userInfo._id, userInfo.user_name] } },
+        { new: true }
+      );
+      res.status(200).send({ success: true });
+    } catch (error) {
+      // 이메일 존재하지만 추가 못함
+      res.status(404).send({
+        success: false,
+        message: "알 수 없는 이유로 친구추가를 실패했습니다.",
+      });
+    }
+  } catch (error) {
+    // 회원가입하지 않은 유저 -> 유저에게 이메일 전송
+    // console.log(`plz send email`);
+    res.status(404).send({
+      success: false,
+      message: "회원가입하지 않은 유저입니다. 이메일 전송을 구현해주세요.",
+    });
+  }
+});
+
+router.get("/friends/:id", async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const projectInfo = await Project.findById({ _id: id });
+    return res.json(projectInfo.people);
+  } catch (error) {
+    console.log(`project find id: ${error}`);
+    res.status(404).send({ error: "project not found" });
+  }
+})
+
 
 // User.findOne({ user_email: "a" }).then((data) => {
 //   console.log(data);
