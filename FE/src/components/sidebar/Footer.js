@@ -15,8 +15,10 @@ function Footer() {
     "지영장존",
     "구준규",
     "금잔디연",
-  ]); // ! 빈배열이어야함 나중에 지울건데 예씨임
+  ]);
+  // ! 빈배열이어야함 나중에 지울건데 예씨임
   useEffect(() => {
+    // * 이거아님 보이스톡 들온 사람이 출력돼야함
     if (projectId === null) return;
     fetch(
       `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${projectId}`,
@@ -47,6 +49,7 @@ function Footer() {
   }, [friends]);
 
   const onClickMic = () => {
+    // 누르면 마이크 음소거 OR 소거
     setMic(!mic);
   };
   return (

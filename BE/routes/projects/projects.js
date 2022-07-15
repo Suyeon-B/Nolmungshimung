@@ -16,7 +16,11 @@ router.post("/", async (req, res) => {
   const project = new Project(req.body[1]);
 
   // project["people"].push(user_date._id.toString());
-  project["people"].push([user_date._id.toString(), user_date.user_name]);
+  project["people"].push([
+    user_date._id.toString(),
+    user_date.user_name,
+    user_date.user_email,
+  ]);
 
   // 여행지 경로에 배열 추가하기
   for (let i = 0; i < project["term"]; i++) {
@@ -129,7 +133,11 @@ router.post("/friends/:id", async (req, res, next) => {
     const userInfo = await User.findOne({ user_email: req.body.email });
     // console.log([userInfo._id, userInfo.user_name]);
     // 중복체크 ,....
-    if (await Project.findOne({ people: [userInfo._id, userInfo.user_name] })) {
+    if (
+      await Project.findOne({
+        people: [userInfo._id, userInfo.user_name, userInfo.user_email],
+      })
+    ) {
       res
         .status(404)
         .send({ success: false, message: "이미 초대돼있는 친구입니다." });
@@ -139,7 +147,11 @@ router.post("/friends/:id", async (req, res, next) => {
     try {
       await Project.findOneAndUpdate(
         { _id: id },
-        { $push: { people: [userInfo._id, userInfo.user_name] } },
+        {
+          $push: {
+            people: [userInfo._id, userInfo.user_name, userInfo.user_email],
+          },
+        },
         { new: true }
       );
       res.status(200).send({ success: true });
@@ -169,8 +181,7 @@ router.get("/friends/:id", async (req, res, next) => {
     console.log(`project find id: ${error}`);
     res.status(404).send({ error: "project not found" });
   }
-})
-
+});
 
 // User.findOne({ user_email: "a" }).then((data) => {
 //   console.log(data);
