@@ -59,7 +59,13 @@ function createMarkerImage(markerSize, markerUrl) {
   return markerImage;
 }
 
-const Search = ({ itemRoutes, setItemRoutes, projectId, startDate }) => {
+const Search = ({
+  itemRoutes,
+  setItemRoutes,
+  projectId,
+  startDate,
+  setIsAddDel,
+}) => {
   const [searchPlace, setSearchPlace] = useState("");
   // 검색결과 배열에 담아줌
   const [Places, setPlaces] = useState([]);
@@ -186,6 +192,7 @@ const Search = ({ itemRoutes, setItemRoutes, projectId, startDate }) => {
                 route={item}
                 idx={i}
                 startDate={startDate}
+                setIsAddDel={setIsAddDel}
               />
             ))}
           <div

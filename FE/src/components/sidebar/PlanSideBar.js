@@ -9,6 +9,8 @@ const PlanSideBar = ({
   itemRoutes,
   setItemRoutes,
   setSelectedIndex,
+  setIsDrage,
+  setIsAddDel,
 }) => {
   return (
     <SideBar>
@@ -35,6 +37,8 @@ const PlanSideBar = ({
         setRoutes={setItemRoutes}
         setSelectedIndex={setSelectedIndex}
         isFirstPage={isFirstPage}
+        setIsDrage={setIsDrage}
+        setIsAddDel={setIsAddDel}
         // routes={item.routes}
       />
 

@@ -2,10 +2,14 @@ import React, { useEffect, useState } from "react";
 import { Link, Outlet, useParams } from "react-router-dom";
 import PlanSideBar from "../../components/sidebar/PlanSideBar";
 import Search from "../search/Search";
-import { useQuery } from "react-query";
+
 import SpotRoute from "../spotRoute/SpotRoute";
 import styled from "styled-components";
 import { BrowserRouter as Routes, Route, Navigate } from "react-router-dom";
+
+import io from "socket.io-client";
+
+const socket = io(`https://${process.env.REACT_APP_SERVER_IP}:3001`);
 
 async function fetchProjectById(_id) {
   const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`);
@@ -21,26 +25,13 @@ const ProjectPage = (props) => {
   const [items, setItems] = useState(null);
   const [itemsRoute, setItemsRoute] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-
   const [isFirstPage, setIsFirstPage] = useState(true);
-
   const [selectedIndex, setSelectedIndex] = useState(0);
-
-  // 리액트 쿼리로 하려 했다가 실패
-  // const { data, isError, error, isLoading } = useQuery(
-  //   ["projectInfo", projectId],
-  //   () => {
-  //     fetchProjectById(projectId);
-  //   }
-  // );
-  // if (isLoading) {
-  //   return <div>Loading...</div>;
-  // }
-  // if (isError) {
-  //   return <div>isError - {error}...</div>;
-  // }
+  const [isDrage, setIsDrage] = useState(false);
+  const [isAddDel, setIsAddDel] = useState(false);
 
   useEffect(() => {
+    if (projectId === null) return;
     async function fetchInfo() {
       const data = await fetchProjectById(projectId);
 
@@ -54,25 +45,53 @@ const ProjectPage = (props) => {
   }, [projectId]);
 
   useEffect(() => {
+    socket.emit("projectEmit", projectId);
+
+    socket.on(`${projectId}`, (el) => {
+      // console.log(el);
+    });
+    return () => {
+      socket.off("connect");
+      socket.off("disconnect");
+      setIsDrage(false);
+      console.log("project page unmount");
+    };
+  }, [projectId]);
+
+  useEffect(() => {
+    if (itemsRoute === null) return;
+    console.log("socket: change Route");
+
     async function UpdateInfo() {
-      const tmpProjectId = await fetchProjectById(projectId);
-      // console.log("id", tmpProjectId._id);
-      fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${tmpProjectId._id}`, {
-        method: "PATCH",
-        headers: {
-          "content-type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify(itemsRoute),
-      })
-        .then((res) => res.json())
-        .then((res) => {
-          console.log("res : ", res);
-        })
-        .catch((err) => console.log(`err: ${err}`));
+      // const tmpProjectId = await fetchProjectById(projectId);
+      try {
+        const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${projectId}`, {
+          method: "PATCH",
+          headers: {
+            "content-type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(itemsRoute),
+        }).then((res) => res.json());
+        console.log(response);
+      } catch (err) {
+        console.log(err);
+      }
+      console.log("UpdateInfo");
     }
     UpdateInfo();
-  }, [itemsRoute]);
+
+    socket.emit("changeRoute", [itemsRoute, projectId]);
+    setIsDrage(false);
+    setIsAddDel(false);
+  }, [isDrage, isAddDel]);
+
+  useEffect(() => {
+    socket.on("updateRoute", (itemsRoute) => {
+      console.log("updateRoute");
+      setItemsRoute(itemsRoute);
+    });
+  }, []);
 
   if (isLoading) {
     if (items) {
@@ -95,6 +114,8 @@ const ProjectPage = (props) => {
         itemRoutes={itemsRoute}
         setItemRoutes={setItemsRoute}
         setSelectedIndex={setSelectedIndex}
+        setIsDrage={setIsDrage}
+        setIsAddDel={setIsAddDel}
       />
       <PlanSection>
         {isFirstPage && (
@@ -103,24 +124,27 @@ const ProjectPage = (props) => {
             itemRoutes={itemsRoute}
             setItemRoutes={setItemsRoute}
             projectId={projectId}
+            setIsAddDel={setIsAddDel}
           />
         )}
-        {/* {!isFirstPage && (
-          <SpotRoute
-            selectedIndex={selectedIndex}
-            item={itemsRoute}
-            setItemRoute={setItemsRoute}
-            itemId={items._id}
-            tripDate={tripDate}
-          />
-        )} */}
+        {/* {!isFirstPage && ( */}
         <SpotRoute
           selectedIndex={selectedIndex}
           item={itemsRoute}
           setItemRoute={setItemsRoute}
           itemId={items._id}
           tripDate={tripDate}
+          setIsDrage={setIsDrage}
+          setIsAddDel={setIsAddDel}
         />
+        {/* )} */}
+        {/* <SpotRoute
+          selectedIndex={selectedIndex}
+          item={itemsRoute}
+          setItemRoute={setItemsRoute}
+          itemId={items._id}
+          tripDate={tripDate}
+        /> */}
       </PlanSection>
     </>
   );

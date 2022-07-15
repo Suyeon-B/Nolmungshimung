@@ -111,6 +111,7 @@ const SearchListRoute = ({
   route,
   idx,
   startDate,
+  setIsAddDel,
 }) => {
   const onClickAddRoute = (event) => {
     const uRoute = { ...route };
@@ -118,6 +119,7 @@ const SearchListRoute = ({
     fetchAddTravelRoute(projectId, uRoute);
     itemRoutes[event.target.dataset.idx].push(uRoute);
     setItemRoutes([...itemRoutes]);
+    setIsAddDel(true);
   };
   return (
     <StyledLi

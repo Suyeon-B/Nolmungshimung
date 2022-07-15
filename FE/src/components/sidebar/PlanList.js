@@ -63,7 +63,17 @@ const culTripTermData = (startDate, day) => {
   return `# ${sDate.getMonth() + 1}월 ${sDate.getDate()}일`;
 };
 
-function PlanList({ toggleIsPage, startDate, term, routes, setRoutes, setSelectedIndex, isFirstPage }) {
+function PlanList({
+  toggleIsPage,
+  startDate,
+  term,
+  routes,
+  setRoutes,
+  setSelectedIndex,
+  isFirstPage,
+  setIsDrage,
+  setIsAddDel,
+}) {
   const droppableRef = useRef([]);
   const [selectedDay, setSelectedDay] = useState(0);
   // console.log(routes);
@@ -87,13 +97,19 @@ function PlanList({ toggleIsPage, startDate, term, routes, setRoutes, setSelecte
       newState[sInd] = items;
       setRoutes(newState);
     } else {
-      const result = move([...routes][sInd], [...routes][dInd], source, destination);
+      const result = move(
+        [...routes][sInd],
+        [...routes][dInd],
+        source,
+        destination
+      );
       const newState = [...[...routes]];
       newState[sInd] = result[sInd];
       newState[dInd] = result[dInd];
 
       setRoutes(newState);
     }
+    setIsDrage(true);
   }
 
   useEffect(() => {
@@ -115,8 +131,16 @@ function PlanList({ toggleIsPage, startDate, term, routes, setRoutes, setSelecte
             <div key={ind} ref={(el) => (droppableRef.current[+ind] = el)}>
               <Droppable key={ind} droppableId={`${ind}`}>
                 {(provided, snapshot) => (
-                  <div ref={provided.innerRef} style={getListStyle(snapshot.isDragging)} {...provided.droppableProps}>
-                    <DateDetailBtnDiv data-idx={ind} onClick={onClick} selected={selectedDay}>
+                  <div
+                    ref={provided.innerRef}
+                    style={getListStyle(snapshot.isDragging)}
+                    {...provided.droppableProps}
+                  >
+                    <DateDetailBtnDiv
+                      data-idx={ind}
+                      onClick={onClick}
+                      selected={selectedDay}
+                    >
                       <DateDetailBtn data-idx={ind} onClick={onClick}>
                         {culTripTermData(startDate, ind)}
                       </DateDetailBtn>
@@ -130,13 +154,20 @@ function PlanList({ toggleIsPage, startDate, term, routes, setRoutes, setSelecte
                       </DateDetailBtn>
                     </DateDetailBtnDiv>
                     {el.map((item, index) => (
-                      <Draggable key={item.uid} draggableId={item.uid} index={index}>
+                      <Draggable
+                        key={item.uid}
+                        draggableId={item.uid}
+                        index={index}
+                      >
                         {(provided, snapshot) => (
                           <div
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
-                            style={getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
+                            style={getItemStyle(
+                              snapshot.isDragging,
+                              provided.draggableProps.style
+                            )}
                           >
                             <ItemInnerDiv>
                               {item.place_name}
@@ -146,9 +177,13 @@ function PlanList({ toggleIsPage, startDate, term, routes, setRoutes, setSelecte
                                   const newState = [...[...routes]];
                                   newState[ind].splice(index, 1);
                                   setRoutes(newState);
+                                  setIsAddDel(true);
                                 }}
                               >
-                                <img style={{ width: "16px" }} src="\statics\images\trash_can.png" />
+                                <img
+                                  style={{ width: "16px" }}
+                                  src="\statics\images\trash_can.png"
+                                />
                               </div>
                             </ItemInnerDiv>
                           </div>
@@ -182,7 +217,8 @@ const DateDetailBtnDiv = styled.div`
   justify-content: space-between;
   border-radius: 5px;
 
-  background-color: ${(props) => props.selected === props["data-idx"] && "#DEDEDE"};
+  background-color: ${(props) =>
+    props.selected === props["data-idx"] && "#DEDEDE"};
 
   &:hover {
     background-color: #dedede;

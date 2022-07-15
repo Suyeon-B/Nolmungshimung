@@ -92,7 +92,13 @@ const getListStyle = (isDraggingOver) => ({
 
 const transDayItem = (dayItem, selectedIndex) => {};
 
-export default function SpotList({ dayItem, setItemRoute, selectedIndex }) {
+export default function SpotList({
+  dayItem,
+  setItemRoute,
+  selectedIndex,
+  setIsDrage,
+  setIsAddDel,
+}) {
   // const [state, setState] = useState([testItem, testItem2]);
   console.log(dayItem);
   const [state, setState] = useState([dayItem[selectedIndex]]);
@@ -130,6 +136,7 @@ export default function SpotList({ dayItem, setItemRoute, selectedIndex }) {
 
       setItemRoute(newState);
     }
+    setIsDrage(true);
   }
 
   return (
@@ -189,6 +196,7 @@ export default function SpotList({ dayItem, setItemRoute, selectedIndex }) {
                               newState[ind].splice(index, 1);
                               newDayItem[selectedIndex] = [...newState[0]];
                               setItemRoute(newDayItem);
+                              setIsAddDel(true);
                             }}
                           />
                         </div>
