@@ -94,16 +94,12 @@ router.patch("/routes/:id", async (req, res) => {
   console.log("patch routes");
 
   try {
-    Project.findOneAndUpdate(
+    const updateProject = await Project.findOneAndUpdate(
       { _id: req.params.id },
       { $set: { routes: req.body } },
-      { new: true },
-      (err, doc) => {
-        if (err) {
-          console.log("Something wrong when updating data!");
-        }
-      }
+      { new: true }
     );
+    res.status(200).send({ success: true });
   } catch (error) {
     console.log(`project update error: ${error}`);
     res.status(404).send({ error: "routes update error!" });
