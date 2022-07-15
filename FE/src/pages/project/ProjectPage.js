@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, Outlet, useParams } from "react-router-dom";
 import PlanSideBar from "../../components/sidebar/PlanSideBar";
 import Search from "../search/Search";
-
+import Sfu from "./Sfu";
 import SpotRoute from "../spotRoute/SpotRoute";
 import styled from "styled-components";
 import { BrowserRouter as Routes, Route, Navigate } from "react-router-dom";
@@ -12,7 +12,9 @@ import io from "socket.io-client";
 const socket = io(`https://${process.env.REACT_APP_SERVER_IP}:3001`);
 
 async function fetchProjectById(_id) {
-  const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`);
+  const response = await fetch(
+    `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`
+  );
   // const response = await fetch(
   //   `https://438e69a6-c891-4d7e-bfd2-f30c4eba330f.mock.pstmn.io/projects/mokc`
   // );
@@ -37,11 +39,23 @@ const ProjectPage = (props) => {
 
       setItems(data);
       setItemsRoute(data.routes);
+
+      const joinVoice = new Sfu();
+
+      joinVoice.on("onConnected", () => {
+        // joinVoice.join(projectId)
+        joinVoice.connect();
+      });
+
       if (!isFirstPage) {
         setIsFirstPage(true);
       }
     }
     fetchInfo();
+    return () => {
+      // joinVoice.onLeave();
+      // joinVoice.exitRoom();
+    };
   }, [projectId]);
 
   useEffect(() => {
@@ -65,14 +79,17 @@ const ProjectPage = (props) => {
     async function UpdateInfo() {
       // const tmpProjectId = await fetchProjectById(projectId);
       try {
-        const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${projectId}`, {
-          method: "PATCH",
-          headers: {
-            "content-type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify(itemsRoute),
-        }).then((res) => res.json());
+        const response = await fetch(
+          `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${projectId}`,
+          {
+            method: "PATCH",
+            headers: {
+              "content-type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify(itemsRoute),
+          }
+        ).then((res) => res.json());
         console.log(response);
       } catch (err) {
         console.log(err);
