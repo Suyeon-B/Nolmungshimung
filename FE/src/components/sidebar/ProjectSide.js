@@ -38,7 +38,7 @@ function Profile() {
     <section>
       {auth.user ? (
         <ProfileCircle onMouseEnter={onMouseOverCircle}>
-          <span>{sessionStorage.getItem("myName")}</span>
+          <span>{sessionStorage.getItem("myNickname")}</span>
         </ProfileCircle>
       ) : (
         <ProfileImg
@@ -125,12 +125,7 @@ function ProjectSide() {
 
   return (
     <>
-      <StyledMenu
-        theme="Light"
-        mode="inline"
-        defaultSelectedKeys={["1"]}
-        items={[LogoObj, ...items]}
-      />
+      <StyledMenu theme="Light" mode="inline" defaultSelectedKeys={["1"]} items={[LogoObj, ...items]} />
       <Profile />
     </>
   );
