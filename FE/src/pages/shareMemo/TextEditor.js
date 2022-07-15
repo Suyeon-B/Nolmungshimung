@@ -130,7 +130,8 @@ function TextEditor({ project_Id }) {
     okdb
       .connect(TOKEN)
       .then((user) => {
-        setUser(user);
+        const myName = sessionStorage.getItem("myName");
+        setUser({ name: myName });
         // 2. step - open document for collaborative editing
         const defaultValue = [
           {

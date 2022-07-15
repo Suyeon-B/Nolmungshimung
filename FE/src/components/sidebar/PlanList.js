@@ -71,6 +71,7 @@ function PlanList({
   setRoutes,
   setSelectedIndex,
   isFirstPage,
+  setIsDrage,
 }) {
   const droppableRef = useRef([]);
   const [selectedDay, setSelectedDay] = useState(0);
@@ -107,6 +108,7 @@ function PlanList({
 
       setRoutes(newState);
     }
+    setIsDrage(true);
   }
 
   useEffect(() => {

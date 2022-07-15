@@ -87,7 +87,7 @@ const SearchList = ({
     <>
       {Places.map((item, i) => (
         <SearchListRoute
-          key={i}
+          key={i + startDate}
           itemRoutes={itemRoute}
           setItemRoutes={setItemRoute}
           projectId={projectId}

@@ -4,7 +4,7 @@ import SpotList from "../../components/spot/SpotList";
 import MarkMap from "../../components/MarkMap/MarkMap";
 import TextEditor from "../shareMemo/TextEditor";
 
-function SpotRoute({ item, setItemRoute, itemId, selectedIndex }) {
+function SpotRoute({ item, setItemRoute, itemId, selectedIndex, setIsDrage }) {
   // const [routes, setRoutes] = useState(item.routes);
   // console.log("=================");
   // console.log(item[0]);
@@ -20,6 +20,7 @@ function SpotRoute({ item, setItemRoute, itemId, selectedIndex }) {
           selectedIndex={selectedIndex}
           dayItem={item}
           setItemRoute={setItemRoute}
+          setIsDrage={setIsDrage}
         />
         <SpotRouteMap id="myMap" />
       </SpotRouteSection>
