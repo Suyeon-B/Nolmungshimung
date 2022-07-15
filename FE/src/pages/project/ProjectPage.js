@@ -25,8 +25,10 @@ const ProjectPage = (props) => {
   const [isFirstPage, setIsFirstPage] = useState(true);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isDrage, setIsDrage] = useState(false);
+  const [isAddDel, setIsAddDel] = useState(false);
 
   useEffect(() => {
+    if (projectId === null) return;
     async function fetchInfo() {
       const data = await fetchProjectById(projectId);
 
@@ -55,32 +57,34 @@ const ProjectPage = (props) => {
 
   useEffect(() => {
     if (itemsRoute === null) return;
-    console.log("change Route");
+    console.log("socket: change Route");
 
     async function UpdateInfo() {
       // const tmpProjectId = await fetchProjectById(projectId);
-      // console.log("id", tmpProjectId);
-      fetch(
-        `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${projectId}`,
-        {
-          method: "PATCH",
-          headers: {
-            "content-type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify(itemsRoute),
-        }
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          console.log("res : ", data);
-        })
-        .catch((err) => console.log(`err: ${err}`));
+      try {
+        const response = await fetch(
+          `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${projectId}`,
+          {
+            method: "PATCH",
+            headers: {
+              "content-type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify(itemsRoute),
+          }
+        ).then((res) => res.json());
+        console.log(response);
+      } catch (err) {
+        console.log(err);
+      }
+      console.log("UpdateInfo");
     }
     UpdateInfo();
+
     socket.emit("changeRoute", [itemsRoute, projectId]);
     setIsDrage(false);
-  }, [isDrage]);
+    setIsAddDel(false);
+  }, [isDrage, isAddDel]);
 
   useEffect(() => {
     socket.on("updateRoute", (itemsRoute) => {
@@ -111,6 +115,7 @@ const ProjectPage = (props) => {
         setItemRoutes={setItemsRoute}
         setSelectedIndex={setSelectedIndex}
         setIsDrage={setIsDrage}
+        setIsAddDel={setIsAddDel}
       />
       <PlanSection>
         {isFirstPage && (
@@ -119,6 +124,7 @@ const ProjectPage = (props) => {
             itemRoutes={itemsRoute}
             setItemRoutes={setItemsRoute}
             projectId={projectId}
+            setIsAddDel={setIsAddDel}
           />
         )}
         {!isFirstPage && (
@@ -128,6 +134,7 @@ const ProjectPage = (props) => {
             setItemRoute={setItemsRoute}
             itemId={items._id}
             setIsDrage={setIsDrage}
+            setIsAddDel={setIsAddDel}
           />
         )}
       </PlanSection>
