@@ -15,6 +15,8 @@ var voiceRouter = require("./routes/voicetalk/voicetalk");
 var mongodb = require("dotenv").config();
 var fs = require("fs");
 
+voiceRouter;
+
 var app = express();
 // [원영] 소켓 서버 추가
 
@@ -98,7 +100,7 @@ app.use("/users", usersRouter);
 app.use("/projects", projectsRouter);
 app.use("/travel", travelRouter);
 app.use("/common", commonRouter);
-app.use("/voicetalk", voiceRouter);
+// app.use("/voicetalk", voiceRouter);
 
 // [수연] share-memo with collaborative cursors
 // create and start server on 7899 port by default
