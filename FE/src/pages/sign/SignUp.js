@@ -75,27 +75,9 @@ function SignUp() {
           <SignUpBtn>Sign Up</SignUpBtn>
         </Btns>
         <Form onSubmit={onSubmitSignUp}>
-          <Input
-            placeholder="jeju@island.com"
-            type="text"
-            value={id}
-            onChange={onchangeId}
-            required
-          />
-          <Input
-            placeholder="이름"
-            type="text"
-            value={name}
-            onChange={onchangeName}
-            required
-          />
-          <Input
-            placeholder="password"
-            type="pass"
-            value={password}
-            onChange={onchangePassword}
-            required
-          />
+          <Input placeholder="jeju@island.com" type="text" value={id} onChange={onchangeId} required />
+          <Input placeholder="닉네임" type="text" value={name} onChange={onchangeName} required />
+          <Input placeholder="password" type="pass" value={password} onChange={onchangePassword} required />
           <Input
             placeholder="password 확인"
             type="pass"

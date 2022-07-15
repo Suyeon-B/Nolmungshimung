@@ -35,7 +35,7 @@ function SignIn() {
         // console.log("res : ", res);
         if (res.loginSuccess === true) {
           console.log("Sign In Success");
-          sessionStorage.setItem("myName", res.user_name);
+          sessionStorage.setItem("myNickname", res.user_name);
           sessionStorage.setItem("user_email", res.user_email);
           // navigate("/", { replace: true });
           window.location.href = "/";
@@ -68,20 +68,8 @@ function SignIn() {
           <SignUpBtn onClick={onClickSignUp}>Sign Up</SignUpBtn>
         </Btns>
         <Form onSubmit={onSubmitSignUp}>
-          <Input
-            placeholder="jeju@island.com"
-            type="text"
-            value={id}
-            onChange={onchangeId}
-            required
-          />
-          <Input
-            placeholder="password"
-            type="pass"
-            value={password}
-            onChange={onchangePassword}
-            required
-          />
+          <Input placeholder="jeju@island.com" type="text" value={id} onChange={onchangeId} required />
+          <Input placeholder="password" type="pass" value={password} onChange={onchangePassword} required />
           <SubmitInput value="로그인" type="submit" />
           <br />
           <a href={kauthUrl}>

@@ -58,7 +58,7 @@ function KakaoSignIn(props) {
         if (data.loginSuccess === true) {
           console.log("Sign In Success");
           navigate("/", { replace: true });
-          sessionStorage.setItem("myName", data.user_name);
+          sessionStorage.setItem("myNickname", data.user_name);
           sessionStorage.setItem("user_email", data.user_email);
           console.log(data.token);
           login({ user: data.user_email });
