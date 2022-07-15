@@ -5,6 +5,7 @@ import Search from "../search/Search";
 import { useQuery } from "react-query";
 import SpotRoute from "../spotRoute/SpotRoute";
 import styled from "styled-components";
+import { BrowserRouter as Routes, Route, Navigate } from "react-router-dom";
 
 async function fetchProjectById(_id) {
   const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`);
@@ -15,8 +16,7 @@ async function fetchProjectById(_id) {
 }
 
 const ProjectPage = (props) => {
-  const { projectId } = useParams();
-  const { tripDate } = useParams();
+  const { projectId, tripDate } = useParams();
 
   const [items, setItems] = useState(null);
   const [itemsRoute, setItemsRoute] = useState(null);
@@ -105,7 +105,7 @@ const ProjectPage = (props) => {
             projectId={projectId}
           />
         )}
-        {!isFirstPage && (
+        {/* {!isFirstPage && (
           <SpotRoute
             selectedIndex={selectedIndex}
             item={itemsRoute}
@@ -113,7 +113,14 @@ const ProjectPage = (props) => {
             itemId={items._id}
             tripDate={tripDate}
           />
-        )}
+        )} */}
+        <SpotRoute
+          selectedIndex={selectedIndex}
+          item={itemsRoute}
+          setItemRoute={setItemsRoute}
+          itemId={items._id}
+          tripDate={tripDate}
+        />
       </PlanSection>
     </>
   );

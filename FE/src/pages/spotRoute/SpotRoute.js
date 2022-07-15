@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import SpotList from "../../components/spot/SpotList";
 import MarkMap from "../../components/MarkMap/MarkMap";
@@ -13,6 +13,13 @@ function SpotRoute({ item, setItemRoute, itemId, selectedIndex, tripDate }) {
   MarkMap(item[selectedIndex]);
   // }, [...item[0]]);
 
+  const [trip_Date, setTripDate] = useState(tripDate);
+  useEffect(() => {
+    setTripDate(tripDate);
+  }, [tripDate]);
+
+  console.log(`SpotRoute trip_Date: ${trip_Date}`);
+
   return (
     <SpotRouteContainer>
       <SpotRouteSection>
@@ -20,7 +27,7 @@ function SpotRoute({ item, setItemRoute, itemId, selectedIndex, tripDate }) {
         <SpotRouteMap id="myMap" />
       </SpotRouteSection>
 
-      <TextEditor project_Id={itemId} />
+      <TextEditor project_Id={itemId} trip_Date={trip_Date} />
     </SpotRouteContainer>
   );
 }

@@ -72,7 +72,7 @@ const colors = ["#FF8830", "#8DD664", "#FF6169", "#975FFE", "#0072BC"];
 
 const getUserColor = (index) => colors[index % colors.length];
 
-function TextEditor({ props }) {
+function TextEditor({ trip_Date }) {
   const [user, setUser] = useState(null);
   const [doc, setDoc] = useState(null);
   const [presences, setPresences] = useState({});
@@ -84,7 +84,7 @@ function TextEditor({ props }) {
   // const [projectID, setProjectId] = useState(project_Id);
   // const [tripDate, setTripDate] = useState(trip_Date);
 
-  const { tripDate } = useParams();
+  // const { tripDate } = useParams();
 
   // useEffect(() => {
   //   setProjectId(project_Id);
@@ -94,7 +94,12 @@ function TextEditor({ props }) {
   // useEffect(() => {
   //   setTripDate(trip_Date);
   // }, [trip_Date]);
-  console.log(`tripDate: ${tripDate}`);
+  // console.log(`tripDate: ${tripDate}`);
+  // console.log(`projectID: ${projectID}`);
+  const [tripDate, setTripDate] = useState(trip_Date);
+  useEffect(() => {
+    setTripDate(trip_Date);
+  }, [trip_Date]);
 
   const presenceCallback = (id, data) => {
     // callback to recieve status changes of other collaborators
@@ -163,6 +168,7 @@ function TextEditor({ props }) {
             // project_Id,
             // trip_Date,
             tripDate,
+            // projectID,
             defaultValue, // default value to save if doesn't exist yet
             {
               type: "rich-text",
