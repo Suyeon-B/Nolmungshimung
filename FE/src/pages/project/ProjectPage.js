@@ -19,6 +19,7 @@ async function fetchProjectById(_id) {
 
 const ProjectPage = (props) => {
   const { projectId } = useParams();
+
   const [items, setItems] = useState(null);
   const [itemsRoute, setItemsRoute] = useState(null);
   const [isLoading, setIsLoading] = useState(true);

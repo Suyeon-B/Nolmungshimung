@@ -18,7 +18,7 @@ router.post("/", async (req, res) => {
   project["people"].push(user_date._id.toString());
 
   // 여행지 경로에 배열 추가하기
-  for (let i = 0; i < project["term"]; i++) {
+  for (let i = 0; i <= project["term"]; i++) {
     project["routes"].push([]);
   }
 
@@ -91,10 +91,9 @@ router.patch("/routes/:id", async (req, res) => {
   // console.log("I'm in routes/:id");
   // console.log("REQ PARAMS : ", req.params.id);
   // console.log("========body=====");
-  console.log("patch routes");
 
   try {
-    const updateProject = await Project.findOneAndUpdate(
+    await Project.findOneAndUpdate(
       { _id: req.params.id },
       { $set: { routes: req.body } },
       { new: true }
