@@ -11,7 +11,10 @@ const PlanSideBar = ({
   setSelectedIndex,
   setIsDrage,
   setIsAddDel,
+  moveDetailPage,
+  moveSerchPage,
 }) => {
+  console.log(item);
   return (
     <SideBar>
       <PlanTitleWrap>
@@ -22,10 +25,10 @@ const PlanSideBar = ({
       </PlanTitleWrap>
       <SideBarBtnDIv>
         {isFirstPage && (
-          <SideBarBtn onClick={toggleIsPage}>상세 일정 보러가기</SideBarBtn>
+          <SideBarBtn onClick={moveDetailPage}>상세 일정 보러가기</SideBarBtn>
         )}
         {!isFirstPage && (
-          <SideBarBtn onClick={toggleIsPage}>장소 찾으러 가기</SideBarBtn>
+          <SideBarBtn onClick={moveSerchPage}>장소 찾으러 가기</SideBarBtn>
         )}
       </SideBarBtnDIv>
 
@@ -39,7 +42,9 @@ const PlanSideBar = ({
         isFirstPage={isFirstPage}
         setIsDrage={setIsDrage}
         setIsAddDel={setIsAddDel}
+        trip_date={item.trip_date}
         // routes={item.routes}
+        projectId={item._id}
       />
 
       <div>사이드바 footer</div>

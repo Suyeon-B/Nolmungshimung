@@ -21,7 +21,7 @@ router.post("/", async (req, res) => {
   for (let i = 0; i <= project["term"]; i++) {
     project["routes"].push([]);
   }
-
+  console.log(project);
   project.save(async (err, data) => {
     // user_date["user_project"]
     user_date["user_projects"].push(data._id.toString());

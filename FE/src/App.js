@@ -48,7 +48,7 @@ function App() {
               <Route path="voicetalk/*" element={<VoiceTalk />} />
               <Route path="/" element={<Home />} />
               <Route path="/kakao/signin" element={<KakaoSignIn />} />
-              {/* <Route path="project/*" element={<CreateProject />} /> */}
+              <Route path="project/*" element={<CreateProject />} />
               <Route path="hyuk/*" element={<SpotList />} />
               {/* <Route path="project/:projectId" element={<ProjectPage />} /> */}
               <Route path="project/:projectId" element={<ProjectPage />} />

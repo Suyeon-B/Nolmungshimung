@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Link, Outlet, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import PlanSideBar from "../../components/sidebar/PlanSideBar";
 import Search from "../search/Search";
 
 import SpotRoute from "../spotRoute/SpotRoute";
 import styled from "styled-components";
-import { BrowserRouter as Routes, Route, Navigate } from "react-router-dom";
 
 import io from "socket.io-client";
 
@@ -23,6 +22,7 @@ async function fetchProjectById(_id) {
 
 const ProjectPage = (props) => {
   const { projectId, tripDate } = useParams();
+  const navigate = useNavigate();
 
   const [items, setItems] = useState(null);
   const [itemsRoute, setItemsRoute] = useState(null);
@@ -109,6 +109,15 @@ const ProjectPage = (props) => {
     setIsFirstPage(!isFirstPage);
   };
 
+  const moveSerchPage = () => {
+    setIsFirstPage(true);
+    navigate(`/project/${projectId}`);
+  };
+  const moveDetailPage = () => {
+    setIsFirstPage(false);
+    navigate(`/project/${projectId}/${items.trip_date[0]}`);
+  };
+
   return (
     <>
       {/* {data ? <div>is data</div> : <div>not data</div>} */}
@@ -121,6 +130,8 @@ const ProjectPage = (props) => {
         setSelectedIndex={setSelectedIndex}
         setIsDrage={setIsDrage}
         setIsAddDel={setIsAddDel}
+        moveDetailPage={moveDetailPage}
+        moveSerchPage={moveSerchPage}
       />
       <PlanSection>
         {isFirstPage && (
