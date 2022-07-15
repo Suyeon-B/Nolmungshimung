@@ -7,9 +7,7 @@ import SpotRoute from "../spotRoute/SpotRoute";
 import styled from "styled-components";
 
 async function fetchProjectById(_id) {
-  const response = await fetch(
-    `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`
-  );
+  const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`);
   // const response = await fetch(
   //   `https://438e69a6-c891-4d7e-bfd2-f30c4eba330f.mock.pstmn.io/projects/mokc`
   // );
@@ -18,6 +16,8 @@ async function fetchProjectById(_id) {
 
 const ProjectPage = (props) => {
   const { projectId } = useParams();
+  const { tripDate } = useParams();
+
   const [items, setItems] = useState(null);
   const [itemsRoute, setItemsRoute] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -57,17 +57,14 @@ const ProjectPage = (props) => {
     async function UpdateInfo() {
       const tmpProjectId = await fetchProjectById(projectId);
       // console.log("id", tmpProjectId._id);
-      fetch(
-        `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${tmpProjectId._id}`,
-        {
-          method: "PATCH",
-          headers: {
-            "content-type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify(itemsRoute),
-        }
-      )
+      fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${tmpProjectId._id}`, {
+        method: "PATCH",
+        headers: {
+          "content-type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(itemsRoute),
+      })
         .then((res) => res.json())
         .then((res) => {
           console.log("res : ", res);
@@ -114,6 +111,7 @@ const ProjectPage = (props) => {
             item={itemsRoute}
             setItemRoute={setItemsRoute}
             itemId={items._id}
+            tripDate={tripDate}
           />
         )}
       </PlanSection>
