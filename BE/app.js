@@ -13,8 +13,56 @@ var travelRouter = require("./routes/travel/travel");
 var commonRouter = require("./routes/common/common");
 var voiceRouter = require("./routes/voicetalk/voicetalk");
 var mongodb = require("dotenv").config();
+var fs = require("fs");
 
 var app = express();
+// [원영] 소켓 서버 추가
+
+const privateKey = fs.readFileSync("nolshimung-key.pem", "utf8");
+const certificate = fs.readFileSync("nolshimung.pem", "utf8");
+const credentials = {
+  key: privateKey,
+  cert: certificate,
+  passphrase: process.env.PASSPHRASE,
+};
+var server = require("https").createServer(credentials, app);
+var io = require("socket.io")(server, {
+  cors: {
+    origin: "*",
+    credentials: true,
+  },
+});
+
+server.listen(3001, function () {
+  console.log("Socket IO server listening on port 3001");
+});
+
+io.on("connection", (socket) => {
+  //connection
+  console.log("UserConnected", socket.id);
+
+  socket.on("ping", () => {
+    console.log("ping");
+  });
+
+  socket.on("connected", (cookie) => {
+    socket.emit("entrance-message", `Say hello! to ${user_id.id}`);
+  });
+  socket.on("disconnect", () => {
+    console.log("UserDisconnected");
+  });
+  socket.on("chat-message", (msg) => {
+    console.log("message:", msg);
+  });
+
+  socket.on("projectEmit", (projectId) => {
+    socket.join(projectId);
+    console.log("join succes");
+  });
+  socket.on("changeRoute", ([itemsRoute, projectId]) => {
+    socket.broadcast.to(projectId).emit("updateRoute", itemsRoute);
+  });
+});
 
 // mongoose
 var mongoose = require("mongoose");

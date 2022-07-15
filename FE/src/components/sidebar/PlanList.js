@@ -63,7 +63,16 @@ const culTripTermData = (startDate, day) => {
   return `# ${sDate.getMonth() + 1}월 ${sDate.getDate()}일`;
 };
 
-function PlanList({ toggleIsPage, startDate, term, routes, setRoutes, setSelectedIndex, isFirstPage }) {
+function PlanList({
+  toggleIsPage,
+  startDate,
+  term,
+  routes,
+  setRoutes,
+  setSelectedIndex,
+  isFirstPage,
+  setIsDrage,
+}) {
   const droppableRef = useRef([]);
   const [selectedDay, setSelectedDay] = useState(0);
   // console.log(routes);
@@ -94,6 +103,7 @@ function PlanList({ toggleIsPage, startDate, term, routes, setRoutes, setSelecte
 
       setRoutes(newState);
     }
+    setIsDrage(true);
   }
 
   useEffect(() => {

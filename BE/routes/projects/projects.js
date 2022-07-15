@@ -90,6 +90,9 @@ router.post("/routes/:id", async (req, res) => {
 router.patch("/routes/:id", async (req, res) => {
   // console.log("I'm in routes/:id");
   // console.log("REQ PARAMS : ", req.params.id);
+  // console.log("========body=====");
+  console.log("patch routes");
+
   try {
     Project.findOneAndUpdate(
       { _id: req.params.id },
@@ -99,7 +102,6 @@ router.patch("/routes/:id", async (req, res) => {
         if (err) {
           console.log("Something wrong when updating data!");
         }
-        // console.log("doc:", doc);
       }
     );
   } catch (error) {
