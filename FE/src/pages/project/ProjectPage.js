@@ -25,6 +25,7 @@ const ProjectPage = (props) => {
   const [isFirstPage, setIsFirstPage] = useState(true);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isDrage, setIsDrage] = useState(false);
+  const [isAddDel, setIsAddDel] = useState(false);
 
   useEffect(() => {
     async function fetchInfo() {
@@ -80,7 +81,8 @@ const ProjectPage = (props) => {
     UpdateInfo();
     socket.emit("changeRoute", [itemsRoute, projectId]);
     setIsDrage(false);
-  }, [isDrage]);
+    setIsAddDel(false);
+  }, [isDrage, isAddDel]);
 
   useEffect(() => {
     socket.on("updateRoute", (itemsRoute) => {
@@ -111,6 +113,7 @@ const ProjectPage = (props) => {
         setItemRoutes={setItemsRoute}
         setSelectedIndex={setSelectedIndex}
         setIsDrage={setIsDrage}
+        setIsAddDel={setIsAddDel}
       />
       <PlanSection>
         {isFirstPage && (
@@ -119,6 +122,7 @@ const ProjectPage = (props) => {
             itemRoutes={itemsRoute}
             setItemRoutes={setItemsRoute}
             projectId={projectId}
+            setIsAddDel={setIsAddDel}
           />
         )}
         {!isFirstPage && (
@@ -128,6 +132,7 @@ const ProjectPage = (props) => {
             setItemRoute={setItemsRoute}
             itemId={items._id}
             setIsDrage={setIsDrage}
+            setIsAddDel={setIsAddDel}
           />
         )}
       </PlanSection>

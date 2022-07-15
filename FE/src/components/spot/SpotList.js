@@ -97,6 +97,7 @@ export default function SpotList({
   setItemRoute,
   selectedIndex,
   setIsDrage,
+  setIsAddDel,
 }) {
   // const [state, setState] = useState([testItem, testItem2]);
   console.log(dayItem);
@@ -195,6 +196,7 @@ export default function SpotList({
                               newState[ind].splice(index, 1);
                               newDayItem[selectedIndex] = [...newState[0]];
                               setItemRoute(newDayItem);
+                              setIsAddDel(true);
                             }}
                           />
                         </div>
