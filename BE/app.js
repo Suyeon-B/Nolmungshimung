@@ -67,17 +67,17 @@ const userSchema = require("./models/User");
 // sample authentication, e.g. should validate your own auth token
 let nameIdx = 0;
 try {
-  okdb.handlers().auth((user_email) => {
-    const users = getUserByUser_email(user_email);
+  okdb.handlers().auth((myNickname) => {
+    // const users = getUserByUser_email(user_email);
     // console.log(`\n\nusers : ${users.user_email}\n\n`);
-    if (users) {
-      console.log("auth attempt for ", user_email, " success");
-      const userName = user_email; // 나중에 users.user_name으로 바꾸기
+    if (myNickname) {
+      console.log("auth attempt for ", myNickname, " success");
+      const userName = myNickname; // 나중에 users.user_name으로 바꾸기
       const userId = "1" + nameIdx;
       nameIdx = (nameIdx + 1) % 10;
       return { id: userId, name: userName };
     }
-    console.log("auth attempt for ", user_email, " failed");
+    console.log("auth attempt for ", myNickname, " failed");
     return null;
   });
 } catch (err) {

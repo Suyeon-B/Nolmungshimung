@@ -48,7 +48,7 @@ Quill.register("modules/cursors", QuillCursors);
 
 const HOST = `http://${process.env.REACT_APP_SERVER_IP}:7899`; // location of your server, use xxxxx to use sample, or follow this guide to build your own:
 // const TOKEN = "12345"; // either get it from your auth provider and validate with system integration, or use default system users:
-const user_email = sessionStorage.getItem("user_email");
+const myNickname = sessionStorage.getItem("myNickname");
 
 const okdb = new OkdbClient(HOST, { timeout: 30000 });
 window.okdb = okdb;
@@ -130,10 +130,9 @@ function TextEditor({ project_Id }) {
   useEffect(() => {
     // 1. step - connect
     okdb
-      .connect(user_email)
+      .connect(myNickname)
       .then((user) => {
-        const myName = sessionStorage.getItem("myName");
-        setUser({ name: myName }); // 세션에 저장된 이름으로 내 이름을 띄웁니다.
+        setUser({ name: myNickname }); // 세션에 저장된 이름으로 내 이름을 띄웁니다.
         // 2. step - open document for collaborative editing
         const defaultValue = [
           {
@@ -200,9 +199,7 @@ function TextEditor({ project_Id }) {
       console.log("text-change ", delta, contents, source);
       delta.type = "rich-text";
       if (connectedRef.current) {
-        okdb
-          .op(DATA_TYPE, project_Id, delta)
-          .catch((err) => console.log("Error updating doc", err));
+        okdb.op(DATA_TYPE, project_Id, delta).catch((err) => console.log("Error updating doc", err));
       }
     });
     editor.on("selection-change", function (range, oldRange, source) {
@@ -261,13 +258,7 @@ function TextEditor({ project_Id }) {
       <OnlineFriends>
         <h4>🍊 Online 친구들 </h4>
         <div className="online-item" key="000">
-          <svg
-            width="10"
-            focusable="false"
-            viewBox="0 0 10 10"
-            aria-hidden="true"
-            title="fontSize small"
-          >
+          <svg width="10" focusable="false" viewBox="0 0 10 10" aria-hidden="true" title="fontSize small">
             <circle cx="5" cy="5" r="5"></circle>
           </svg>
           me ({user ? user.name : "connecting..."})
