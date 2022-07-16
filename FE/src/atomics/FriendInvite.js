@@ -41,8 +41,6 @@ function FriendInvite() {
     )
       .then((res) => res.json())
       .then((res) => {
-        console.log("########################");
-        console.log(res.map((el) => el[2]));
         setFriends(res.map((el) => el[2]));
       })
       .catch((err) => console.log(`err: ${err}`));
