@@ -1,12 +1,22 @@
 import React from "react";
 import MousePointer from "./MousePointer";
 
-const TextEditorUsers = ({ presences }) => {
+const TextEditorUsers = ({ presences, selectedIndex }) => {
+  // console.log(presences);
   return (
     <>
       {Object.keys(presences).map((presenceId) => {
         const presence = presences[presenceId];
         const userColor = presence.color;
+        const userSelectedIndex = presence.user.selectedIndex;
+        if (selectedIndex !== userSelectedIndex) {
+          // console.log(selectedIndex);
+          // console.log(userSelectedIndex);
+          // console.log(presences);
+
+          // console.log("여기 걸리냐?");
+          return;
+        }
         let left = 0;
         let top = 0;
         if (presence.mousePointer && presence.mousePointer.left != null) {
@@ -35,7 +45,10 @@ const TextEditorUsers = ({ presences }) => {
               <div id="cursor" className="cursor-block" style={{ left, top }}>
                 <MousePointer color={userColor} />
                 <div className="cursor-name-container">
-                  <div className="cursor-name" style={{ backgroundColor: userColor }}>
+                  <div
+                    className="cursor-name"
+                    style={{ backgroundColor: userColor }}
+                  >
                     {presence.user.name}
                   </div>
                 </div>

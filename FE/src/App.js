@@ -54,22 +54,23 @@ function App() {
               <Route path="hyuk/*" element={<SpotList />} />
               {/* <Route path="project/:projectId" element={<ProjectPage />} /> */}
               <Route path="project/:projectId" element={<ProjectPage />} />
-              <Route
+
+              {/* <Route
                 path="project/:projectId/:tripDate"
                 element={<ProjectPage />}
               />
-              <Route path="test/:tripDate" element={<TextEditor />} />
+              <Route path="test/:tripDate" element={<TextEditor />} /> */}
 
               {/* 로그인안했을시 로그인 페이지로 이동 */}
 
-              <Route
+              {/* <Route
                 path="search/*"
                 element={
                   // <RequireAuth>
                   <SearchMap />
                   // </RequireAuth>
                 }
-              />
+              /> */}
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </BodyDiv>

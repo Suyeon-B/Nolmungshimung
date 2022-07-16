@@ -7,9 +7,7 @@ import SpotRoute from "../spotRoute/SpotRoute";
 import styled from "styled-components";
 import { BrowserRouter as Routes, Route, Navigate } from "react-router-dom";
 
-import io from "socket.io-client";
-
-const socket = io(`https://${process.env.REACT_APP_SERVER_IP}:3001`);
+import socket from "../../socket";
 
 async function fetchProjectById(_id) {
   const response = await fetch(
@@ -40,7 +38,7 @@ const ProjectPage = (props) => {
       setItems(data);
       setItemsRoute(data.routes);
 
-      const joinVoice = new Sfu({projectId: projectId, });
+      const joinVoice = new Sfu({ projectId: projectId });
       // import Sfu from './Sfu'
       // Sfu.connect()
       joinVoice.on("onConnected", () => {
@@ -61,11 +59,8 @@ const ProjectPage = (props) => {
   }, [projectId]);
 
   useEffect(() => {
-    socket.emit("projectEmit", projectId);
+    socket.emit("projectJoin", projectId);
 
-    socket.on(`${projectId}`, (el) => {
-      // console.log(el);
-    });
     return () => {
       socket.off("connect");
       socket.off("disconnect");
@@ -146,17 +141,17 @@ const ProjectPage = (props) => {
             setIsAddDel={setIsAddDel}
           />
         )}
-        {/* {!isFirstPage && ( */}
-        <SpotRoute
-          selectedIndex={selectedIndex}
-          item={itemsRoute}
-          setItemRoute={setItemsRoute}
-          itemId={items._id}
-          tripDate={tripDate}
-          setIsDrage={setIsDrage}
-          setIsAddDel={setIsAddDel}
-        />
-        {/* )} */}
+        {!isFirstPage && (
+          <SpotRoute
+            selectedIndex={selectedIndex}
+            item={itemsRoute}
+            setItemRoute={setItemsRoute}
+            itemId={items._id}
+            tripDate={tripDate}
+            setIsDrage={setIsDrage}
+            setIsAddDel={setIsAddDel}
+          />
+        )}
         {/* <SpotRoute
           selectedIndex={selectedIndex}
           item={itemsRoute}
