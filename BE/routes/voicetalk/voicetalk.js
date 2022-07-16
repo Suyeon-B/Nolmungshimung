@@ -93,40 +93,44 @@ function createPeer() {
 // Create a server for handling websocket calls
 const wss = new WebSocketServer({ server: webServer });
 let rooms = {};
-let users = [];
+let users = [{name: 'JG', use:false}, {name:'JG1', use:false}, {name:'JG2',use:false}, {name:'JG3',use:false}, {name:'JG4',use:false}, {name:'JG5',use:false}];
 
 wss.on('connection', function (ws, req) {
-    let peerId = uuidv4();
+    // let peerId = uuidv4();
+    let peerId = req.url.split('?')[1];
     // const projectId = req.url.split('?')[1].split('/')[0];
     // const id = req.url.split('?')[1].split('/')[1]
     ws.id = peerId;
     ws.on('close', (event) => {
         peers.delete(ws.id);
         consumers.delete(ws.id);
-
+        // console.log(JSON.stringify(users))
         wss.broadcast(JSON.stringify({
             type: 'user_left',
             id: ws.id
         }));
     });
 
-
-    ws.send(JSON.stringify({ 'type': 'welcome', id: ws.id }));
+    // console.log(`peerId : ${peerId}`)
+    ws.send(JSON.stringify({ 'type': 'welcome', 'id': peerId }));
 
     ws.on('message', async function (message) {
         const body = JSON.parse(message);
         switch (body.type) {
             case 'connect':
+                // console.log('connect!!!!!!!!!!! ');
+                // console.log('uqid = ', body.uqid)
                 peers.set(body.uqid, { socket: ws });
                 const peer = createPeer();
                 peers.get(body.uqid).username = body.username;
                 peers.get(body.uqid).peer = peer;
+                // console.log(`peer : ${peers.get(body.uqid).peer}`);
                 peer.ontrack = (e) => { handleTrackEvent(e, body.uqid, ws) };
                 const desc = new webrtc.RTCSessionDescription(body.sdp);
                 await peer.setRemoteDescription(desc);
                 const answer = await peer.createAnswer();
                 await peer.setLocalDescription(answer);
-                console.log(`connected, id : ${body.username}`)
+                // console.log(`connected, id : ${body.username}`)
 
 
                 const payload = {
@@ -140,6 +144,7 @@ wss.on('connection', function (ws, req) {
                 let uuid = body.uqid;
                 const list = [];
                 peers.forEach((peer, key) => {
+                    // console.log(`key == uuid ? ${key}, ${uuid}`)
                     if (key != uuid) {
                         const peerInfo = {
                             id: key,
@@ -148,16 +153,19 @@ wss.on('connection', function (ws, req) {
                         list.push(peerInfo);
                     }
                 });
-                console.log(`getPeers : ${list}`)
+                // console.log(`getPeers : ${list}`)
                 const peersPayload = {
                     type: 'peers',
                     peers: list
                 }
-                console.log(list);
                 ws.send(JSON.stringify(peersPayload));
                 break;
             case 'ice':
                 const user = peers.get(body.uqid);
+                // for (let k of peers.keys()){
+                //     console.log(`ice, user : ${k}`);
+                // }
+                // console.log('length: ', peers.size);
                 if (user.peer)
                     user.peer.addIceCandidate(new webrtc.RTCIceCandidate(body.ice)).catch(e => console.log(e));
                 break;
