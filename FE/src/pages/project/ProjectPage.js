@@ -40,10 +40,12 @@ const ProjectPage = (props) => {
       setItems(data);
       setItemsRoute(data.routes);
 
-      const joinVoice = new Sfu();
-
+      const joinVoice = new Sfu({projectId: projectId, });
+      // import Sfu from './Sfu'
+      // Sfu.connect()
       joinVoice.on("onConnected", () => {
         // joinVoice.join(projectId)
+        // console.log('joinVoice Start')
         joinVoice.connect();
       });
 
