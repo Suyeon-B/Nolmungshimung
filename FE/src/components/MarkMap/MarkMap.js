@@ -39,10 +39,10 @@ function MarkMap(props) {
     return <div>Loding...</div>;
   }
   useEffect(() => {
-    const linePath = props.map(function (place) {
+    const linePath = props.map(function (place, idx) {
       //test를 props으로
       return {
-        title: `<div>${place.place_name}</div>`,
+        title: `<div key =${idx}>${place.place_name}</div>`,
         latlng: new kakao.maps.LatLng(place.y, place.x),
         category: place.category_group_code,
       };

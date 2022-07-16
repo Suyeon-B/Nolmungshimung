@@ -10,11 +10,6 @@ const TextEditorUsers = ({ presences, selectedIndex }) => {
         const userColor = presence.color;
         const userSelectedIndex = presence.user.selectedIndex;
         if (selectedIndex !== userSelectedIndex) {
-          // console.log(selectedIndex);
-          // console.log(userSelectedIndex);
-          // console.log(presences);
-
-          // console.log("여기 걸리냐?");
           return;
         }
         let left = 0;

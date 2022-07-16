@@ -151,7 +151,7 @@ const SearchListRoute = ({
           <div className={"dropDownMenu"}>
             {itemRoutes.map((el, idx) => {
               return (
-                <StyledBtn data-idx={idx} onClick={onClickAddRoute}>
+                <StyledBtn key={idx} data-idx={idx} onClick={onClickAddRoute}>
                   {culTripTermData(startDate, idx)}
                 </StyledBtn>
               );
