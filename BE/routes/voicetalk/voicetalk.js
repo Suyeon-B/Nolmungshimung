@@ -97,26 +97,13 @@ let users = [{name: 'JG', use:false}, {name:'JG1', use:false}, {name:'JG2',use:f
 
 wss.on('connection', function (ws, req) {
     // let peerId = uuidv4();
-    let peerId = '';
-    for(let i=0; i < users.length; i++){
-        if (!users[i].use) {
-            peerId = users[i].name
-            users[i].use = 1
-            break;
-        }
-    } 
+    let peerId = req.url.split('?')[1];
     // const projectId = req.url.split('?')[1].split('/')[0];
     // const id = req.url.split('?')[1].split('/')[1]
     ws.id = peerId;
     ws.on('close', (event) => {
         peers.delete(ws.id);
         consumers.delete(ws.id);
-        for(let i=0; i<users.length; i++){
-            if (users[i].name == peerId) {
-                users[i].use = 0
-                break
-            }
-        }
         // console.log(JSON.stringify(users))
         wss.broadcast(JSON.stringify({
             type: 'user_left',
