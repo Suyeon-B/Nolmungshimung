@@ -6,6 +6,10 @@ import Sfu from "./Sfu";
 import SpotRoute from "../spotRoute/SpotRoute";
 import styled from "styled-components";
 import { BrowserRouter as Routes, Route, Navigate } from "react-router-dom";
+import Voicetalk from "../../components/voiceTalk/voiceTalk"
+import io from "socket.io-client";
+
+const socket = io(`https://${process.env.REACT_APP_SERVER_IP}:3001`);
 
 import socket from "../../socket";
 
@@ -38,14 +42,14 @@ const ProjectPage = (props) => {
       setItems(data);
       setItemsRoute(data.routes);
 
-      const joinVoice = new Sfu({ projectId: projectId });
-      // import Sfu from './Sfu'
-      // Sfu.connect()
-      joinVoice.on("onConnected", () => {
-        // joinVoice.join(projectId)
-        // console.log('joinVoice Start')
-        joinVoice.connect();
-      });
+      // const joinVoice = new Sfu({projectId: projectId, });
+      // // import Sfu from './Sfu'
+      // // Sfu.connect()
+      // joinVoice.on("onConnected", () => {
+      //   // joinVoice.join(projectId)
+      //   // console.log('joinVoice Start')
+      //   joinVoice.connect();
+      // });
 
       if (!isFirstPage) {
         setIsFirstPage(true);
@@ -160,6 +164,7 @@ const ProjectPage = (props) => {
           tripDate={tripDate}
         /> */}
       </PlanSection>
+      <Voicetalk projectId={projectId}/>
     </>
   );
 };
