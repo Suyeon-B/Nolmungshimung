@@ -40,7 +40,6 @@ const PlanSideBar = ({
         isFirstPage={isFirstPage}
         setIsDrage={setIsDrage}
         setIsAddDel={setIsAddDel}
-        // routes={item.routes}
       />
 
       <Footer></Footer>

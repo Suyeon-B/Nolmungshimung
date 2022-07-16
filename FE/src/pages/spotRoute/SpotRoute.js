@@ -26,8 +26,6 @@ function SpotRoute({
     setTripDate(tripDate);
   }, [tripDate]);
 
-  console.log(`SpotRoute trip_Date: ${trip_Date}`);
-
   return (
     <SpotRouteContainer>
       <SpotRouteSection>

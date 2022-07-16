@@ -68,7 +68,6 @@ const CreateProject = () => {
         start_date: startDate,
         end_date: endDate,
         term,
-        trip_date: trip_date,
       },
     ];
 
