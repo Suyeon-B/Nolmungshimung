@@ -9,6 +9,7 @@ import QuillCursors from "quill-cursors";
 import "quill/dist/quill.snow.css";
 import TextEditorUsers from "./TextEditorUsers";
 import styled from "styled-components";
+import socket from "../../socket";
 
 const EditorBox = styled.div`
   display: flex;
@@ -72,7 +73,7 @@ const colors = ["#FF8830", "#8DD664", "#FF6169", "#975FFE", "#0072BC"];
 
 const getUserColor = (index) => colors[index % colors.length];
 
-function TextEditor({ project_Id }) {
+function TextEditor({ project_Id, selectedIndex }) {
   const [user, setUser] = useState(null);
   const [doc, setDoc] = useState(null);
   const [presences, setPresences] = useState({});
@@ -83,12 +84,66 @@ function TextEditor({ project_Id }) {
   const editorCursorRef = useRef(null);
   const [projectID, setProjectId] = useState(project_Id);
 
+  const userName = sessionStorage.getItem("myNickname");
+
   useEffect(() => {
     setProjectId(project_Id);
   }, [project_Id]);
 
-  const presenceCallback = (id, data) => {
+  useEffect(() => {
+    // socket.emit("sharedEditing", [projectID, selectedIndex]);
+    // socket.to(`${project_Id}`).emit("sharedEditing", selectedIndex);
+    socket.on("changeCurser", ([selectedIndex, friendName]) => {
+      // if (Object.keys(presences).length == 0) return;
+      setPresences((prev) => {
+        const newState = cloneDeep(prev);
+
+        newState[friendName].user.selectedIndex = selectedIndex;
+
+        // if (editorRef.current) {
+        //   const cursors = editorRef.current.getModule("cursors");
+        //   cursors.removeCursor(name);
+        // }
+        console.log("==========changeCurser============");
+        console.log(newState);
+        return newState;
+      });
+    });
+    return () => {
+      console.log(selectedIndex, "  공유 편집 나가기");
+      // selectedIndex로 공유 편집 나가기 구현하기
+      socket.emit("exitSharedEditing", [projectID, selectedIndex, userName]);
+      setPresences({});
+    };
+  }, []);
+
+  useEffect(() => {
+    socket.on("delectCurser", (name) => {
+      console.log("delectCurser", name);
+      setPresences((prev) => {
+        const newState = cloneDeep(prev);
+        delete newState[name];
+
+        if (editorRef.current) {
+          const cursors = editorRef.current.getModule("cursors");
+          cursors.removeCursor(name);
+        }
+        console.log(newState);
+        return newState;
+      });
+    });
+  }, []);
+
+  useEffect(() => {
+    if (selectedIndex === 0) return;
+    socket.emit("changeDate", [projectID, selectedIndex, userName]);
+  }, [selectedIndex]);
+
+  const presenceCallback = (tid, data) => {
     // callback to recieve status changes of other collaborators
+    const id = data.user.name;
+
+    if (id === userName) return;
     if (!data) {
       // if data is empty, then delete this presence, because the user is offline
       setPresences((prev) => {
@@ -103,8 +158,10 @@ function TextEditor({ project_Id }) {
       });
     } else if (data.user && data.user.id) {
       // 온라인인 친구들의 커서를 띄웁니다.
+
       setPresences((prev) => {
         const newState = cloneDeep(prev);
+        // console.log(newState);
         newState[id] = {
           id,
           ...data,
@@ -130,7 +187,7 @@ function TextEditor({ project_Id }) {
   useEffect(() => {
     // 1. step - connect
     okdb
-      .connect(myNickname)
+      .connect({ myNickname, selectedIndex })
       .then((user) => {
         setUser({ name: myNickname }); // 세션에 저장된 이름으로 내 이름을 띄웁니다.
         // 2. step - open document for collaborative editing
@@ -250,7 +307,7 @@ function TextEditor({ project_Id }) {
       editorRef.current.setContents(doc);
     }
   }, [editorRef, doc]);
-
+  // console.log(presences);
   return (
     <EditorBox>
       {error && <Alert severity="error">{error}</Alert>}
@@ -271,7 +328,7 @@ function TextEditor({ project_Id }) {
           </svg>
           me ({user ? user.name : "connecting..."})
         </div>
-        <TextEditorUsers presences={presences} />
+        <TextEditorUsers selectedIndex={selectedIndex} presences={presences} />
       </OnlineFriends>
     </EditorBox>
   );

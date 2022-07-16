@@ -33,7 +33,7 @@ function SpotRoute({
         <SpotRouteMap id="myMap" />
       </SpotRouteSection>
 
-      <TextEditor project_Id={itemId} />
+      <TextEditor project_Id={itemId} selectedIndex={selectedIndex} />
     </SpotRouteContainer>
   );
 }

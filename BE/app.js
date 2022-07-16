@@ -41,10 +41,6 @@ io.on("connection", (socket) => {
   //connection
   console.log("UserConnected", socket.id);
 
-  socket.on("ping", () => {
-    console.log("ping");
-  });
-
   socket.on("connected", (cookie) => {
     socket.emit("entrance-message", `Say hello! to ${user_id.id}`);
   });
@@ -54,13 +50,28 @@ io.on("connection", (socket) => {
   socket.on("chat-message", (msg) => {
     console.log("message:", msg);
   });
-
-  socket.on("projectEmit", (projectId) => {
+  ////프로젝트 관련 소켓
+  socket.on("projectJoin", (projectId) => {
     socket.join(projectId);
-    console.log("join succes");
   });
   socket.on("changeRoute", ([itemsRoute, projectId]) => {
     socket.broadcast.to(projectId).emit("updateRoute", itemsRoute);
+  });
+
+  // socket.on("sharedEditing", ([projectID, selectedIndex]) => {
+  //   socket.join(projectID + selectedIndex);
+  //   console.log(`join: ${projectID + selectedIndex}`);
+  // });
+  socket.on("exitSharedEditing", ([projectID, selectedIndex, name]) => {
+    console.log(projectID, selectedIndex, name);
+    socket.broadcast.to(projectID).emit("delectCurser", name);
+  });
+
+  socket.on("changeDate", ([projectID, selectedIndex, userName]) => {
+    console.log("changeDate", selectedIndex, " : ", userName);
+    socket.broadcast
+      .to(projectID)
+      .emit("changeCurser", [selectedIndex, userName]);
   });
 });
 
@@ -115,7 +126,7 @@ const userSchema = require("./models/User");
 // sample authentication, e.g. should validate your own auth token
 let nameIdx = 0;
 try {
-  okdb.handlers().auth((myNickname) => {
+  okdb.handlers().auth(({ myNickname, selectedIndex }) => {
     // const users = getUserByUser_email(user_email);
     // console.log(`\n\nusers : ${users.user_email}\n\n`);
     if (myNickname) {
@@ -123,7 +134,7 @@ try {
       const userName = myNickname; // 나중에 users.user_name으로 바꾸기
       const userId = "1" + nameIdx;
       nameIdx = (nameIdx + 1) % 10;
-      return { id: userId, name: userName };
+      return { id: userId, name: userName, selectedIndex: selectedIndex };
     }
     console.log("auth attempt for ", myNickname, " failed");
     return null;
