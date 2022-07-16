@@ -157,6 +157,7 @@ wss.on('connection', function (ws, req) {
                 let uuid = body.uqid;
                 const list = [];
                 peers.forEach((peer, key) => {
+                    // console.log(`key == uuid ? ${key}, ${uuid}`)
                     if (key != uuid) {
                         const peerInfo = {
                             id: key,
