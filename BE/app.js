@@ -112,36 +112,22 @@ var options = {
 };
 var okdb = new OkdbServer(options);
 
-const userSchema = require("./models/User");
-
 // sample authentication, e.g. should validate your own auth token
 let nameIdx = 0;
 try {
-  okdb.handlers().auth(({ myNickname, selectedIndex }) => {
-    // const users = getUserByUser_email(user_email);
-    // console.log(`\n\nusers : ${users.user_email}\n\n`);
+  okdb.handlers().auth(({ myNickname, tripDate }) => {
     if (myNickname) {
       console.log("auth attempt for ", myNickname, " success");
-      const userName = myNickname; // 나중에 users.user_name으로 바꾸기
+      const userName = myNickname;
       const userId = "1" + nameIdx;
       nameIdx = (nameIdx + 1) % 10;
-      return { id: userId, name: userName, selectedIndex: selectedIndex };
+      return { id: userId, name: userName, tripDate: tripDate };
     }
     console.log("auth attempt for ", myNickname, " failed");
     return null;
   });
 } catch (err) {
   console.log(err);
-}
-
-async function getUserByUser_email(user_email) {
-  try {
-    if (user_email == null) return;
-    const users = await userSchema.findOne({ user_email: `${user_email}` });
-    if (users) return users;
-  } catch (err) {
-    console.log(err);
-  }
 }
 
 // Handling Ctrl-C (workaround for Windows)
