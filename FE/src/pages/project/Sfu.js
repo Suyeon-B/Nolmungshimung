@@ -18,44 +18,25 @@ class Sfu {
       configuration: {
         iceServers: [
           {
-            urls: "turn:3.34.53.247",
+            urls: "turn:3.36.66.43:3478?transport=udp",
             username: "admin",
-            credential: "jgjg1234",
+            credential: "admin",
           },
-          //         { urls: 'stun:stun01.sipphone.com' },
-          // { urls: 'stun:stun.ekiga.net' },
-          // { urls: 'stun:stun.fwdnet.net' },
-          // { urls: 'stun:stun.ideasip.com' },
-          // { urls: 'stun:stun.iptel.org' },
-          // { urls: 'stun:stun.rixtelecom.se' },
-          // { urls: 'stun:stun.schlund.de' },
+          {
+            urls: "turn:3.36.66.43:3478?transport=tcp",
+            username: "admin",
+            credential: "admin",
+          },
           { urls: "stun:stun.l.google.com:19302" },
           { urls: "stun:stun1.l.google.com:19302" },
           { urls: "stun:stun2.l.google.com:19302" },
           { urls: "stun:stun3.l.google.com:19302" },
           { urls: "stun:stun4.l.google.com:19302" },
-          // { urls: 'stun:stunserver.org' },
-          // { urls: 'stun:stun.softjoys.com' },
-          // { urls: 'stun:stun.voiparound.com' },
-          // { urls: 'stun:stun.voipbuster.com' },
-          // { urls: 'stun:stun.voipstunt.com' },
-          // { urls: 'stun:stun.voxgratia.org' },
-          // { urls: 'stun:stun.xten.com' },
-          // {
-          //     urls: 'turn:numb.viagenie.ca',
-          //     credential: 'muazkh',
-          //     username: 'webrtc@live.com'
-          // },
-          // {
-          //     urls: 'turn:192.158.29.39:3478?transport=udp',
-          //     credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
-          //     username: '28224511:1379330808'
-          // },
-          // {
-          //     urls: 'turn:192.158.29.39:3478?transport=tcp',
-          //     credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
-          //     username: '28224511:1379330808'
-          // }
+          {
+              urls: 'turn:numb.viagenie.ca',
+              credential: 'muazkh',
+              username: 'webrtc@live.com'
+          },
         ],
       },
     };
@@ -81,6 +62,10 @@ class Sfu {
     // console.log('SFu 진입 !!!!!!!!!!');
     // console.log('!@@@@@', this.settings);
     const protocol = window.location.protocol === "https:" ? "wss" : "ws";
+    if (!sessionStorage.getItem("user_email")){
+      alert('로그인 해주세요')
+      window.location.href = "/";
+    }
     const url = `${protocol}://${window.location.hostname}:${this.settings.port}?${sessionStorage.getItem("user_email")}`;
     this.connection = new WebSocket(url);
     this.connection.onmessage = (data) => this.handleMessage(data); 
