@@ -41,7 +41,6 @@ function FriendInvite() {
     )
       .then((res) => res.json())
       .then((res) => {
-        console.log(res.map((el) => el[2]));
         setFriends(res.map((el) => el[2]));
       })
       .catch((err) => console.log(`err: ${err}`));
@@ -49,6 +48,7 @@ function FriendInvite() {
 
   const onClickPlus = () => {
     let data = { email };
+    console.log("friends:", friends);
     fetch(
       `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/friends/${projectId}`,
       {
@@ -64,6 +64,8 @@ function FriendInvite() {
       .then((res) => {
         // console.log("res : ", res);
         if (res.success === true) {
+          console.log("-====--0=--=-=");
+          console.log(res);
           setFriends([...friends, email]);
           success();
           // console.log("추가 완료");
@@ -105,7 +107,7 @@ function FriendInvite() {
           onClick={onClickPlus}
         />
       </InviteForm>
-      {friends.slice(1).map((el) => (
+      {friends.map((el) => (
         <p>{el}</p>
       ))}
     </div>
