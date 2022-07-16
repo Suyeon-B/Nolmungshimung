@@ -211,7 +211,8 @@ const Wapper = styled.div`
 `;
 
 const SearchListDiv = styled.div`
-  width: 30%;
+  padding-top: 27.5px;
+  width: 330px;
   height: 100vh;
   overflow: scroll;
   ::-webkit-scrollbar {
@@ -221,9 +222,10 @@ const SearchListDiv = styled.div`
 `;
 
 const StyledMapDiv = styled.div`
-  width: 70%;
   height: 100vh;
+  min-width: calc(100% - 330px);
   position: relative;
+  background-color: red;
 `;
 
 const StyledUl = styled.ul``;
