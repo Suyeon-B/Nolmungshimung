@@ -60,20 +60,9 @@ io.on("connection", (socket) => {
     socket.broadcast.to(projectId).emit("updateRoute", itemsRoute);
   });
 
-  // socket.on("sharedEditing", ([projectID, selectedIndex]) => {
-  //   socket.join(projectID + selectedIndex);
-  //   console.log(`join: ${projectID + selectedIndex}`);
-  // });
   socket.on("exitSharedEditing", ([projectID, selectedIndex, name]) => {
     console.log(projectID, selectedIndex, name);
     socket.broadcast.to(projectID).emit("delectCurser", name);
-  });
-
-  socket.on("changeDate", ([projectID, selectedIndex, userName]) => {
-    console.log("changeDate", selectedIndex, " : ", userName);
-    socket.broadcast
-      .to(projectID)
-      .emit("changeCurser", [selectedIndex, userName]);
   });
 });
 

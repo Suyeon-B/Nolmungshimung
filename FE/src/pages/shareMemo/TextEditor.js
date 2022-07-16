@@ -3,6 +3,7 @@ import "./TextEditor.css";
 import { Alert as MuiAlert } from "@material-ui/lab";
 import OkdbClient from "okdb-client";
 import cloneDeep from "lodash/cloneDeep";
+import { isEmpty } from "lodash";
 import Quill from "quill";
 import QuillCursors from "quill-cursors";
 import "quill/dist/quill.snow.css";
@@ -103,24 +104,7 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
   }, []);
 
   useEffect(() => {
-    socket.on("changeCurser", ([selectedIndex, friendName]) => {
-      setPresences((prev) => {
-        const newState = cloneDeep(prev);
-        newState[friendName].user.selectedIndex = selectedIndex;
-        return newState;
-      });
-    });
-  }, []);
-
-  useEffect(() => {
-    console.log("changeDate", selectedIndex);
-    socket.emit("changeDate", [projectID, selectedIndex, userName]);
-    // okdb.sendPresence(presences);
-  }, [selectedIndex]);
-
-  useEffect(() => {
     socket.on("delectCurser", (name) => {
-      console.log("delectCurser", name);
       setPresences((prev) => {
         const newState = cloneDeep(prev);
         delete newState[name];
@@ -129,16 +113,11 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
           const cursors = editorRef.current.getModule("cursors");
           cursors.removeCursor(name);
         }
-        console.log(newState);
+
         return newState;
       });
     });
   }, []);
-
-  useEffect(() => {
-    if (selectedIndex === 0) return;
-    socket.emit("changeDate", [projectID, selectedIndex, userName]);
-  }, [selectedIndex]);
 
   const presenceCallback = (tid, data) => {
     // callback to recieve status changes of other collaborators
@@ -159,7 +138,6 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
       });
     } else if (data.user && data.user.id) {
       // 온라인인 친구들의 커서를 띄웁니다.
-      console.log(data);
       setPresences((prev) => {
         const newState = cloneDeep(prev);
         // console.log(newState);
@@ -172,8 +150,7 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
         newState[id].color = userColor;
         if (editorRef.current) {
           const cursors = editorRef.current.getModule("cursors");
-          console.log("cursor==========================");
-          console.log(cursors);
+
           if (data.editorCursor) {
             cursors.createCursor(id, data.user.name, userColor);
             cursors.moveCursor(id, data.editorCursor);
@@ -224,7 +201,6 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
           )
           .then((data) => {
             // get data of opened doc
-            console.log(data);
             connectedRef.current = true;
             setDoc(data);
           })
@@ -315,11 +291,6 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
       editorRef.current.setContents(doc);
     }
   }, [editorRef, doc]);
-  // console.log(okdb);
-  const onTest = () => {
-    setTest(test + 1);
-    console.log(test);
-  };
 
   return (
     <EditorBox>
@@ -328,7 +299,6 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
         <div id="editor-container"></div>
       </EditorContainer>
       <OnlineFriends>
-        <button onClick={() => onTest()}>테스트</button>
         <h4>🍊 Online 친구들 </h4>
         <div className="online-item" key="000">
           <svg

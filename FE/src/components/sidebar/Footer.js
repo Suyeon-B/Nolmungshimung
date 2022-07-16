@@ -41,8 +41,8 @@ function Footer() {
   useEffect(() => {
     setProfiles(
       <>
-        {friends.map((el) => (
-          <FriendProfile nickName={el} />
+        {friends.map((el, idx) => (
+          <FriendProfile key={idx} nickName={el} />
         ))}
       </>
     );
