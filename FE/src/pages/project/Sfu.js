@@ -14,7 +14,7 @@ const _EVENTS = {
 class Sfu {
   constructor(options) {
     const defaultSettings = {
-      port: 3000,
+      port: 3003,
       configuration: {
         iceServers: [
           {
@@ -78,10 +78,12 @@ class Sfu {
   }
 
   initWebSocket() {
+    // console.log('SFu 진입 !!!!!!!!!!');
+    // console.log('!@@@@@', this.settings);
     const protocol = window.location.protocol === "https:" ? "wss" : "ws";
     const url = `${protocol}://${window.location.hostname}:${this.settings.port}`;
     this.connection = new WebSocket(url);
-    this.connection.onmessage = (data) => this.handleMessage(data);
+    this.connection.onmessage = (data) => this.handleMessage(data); 
     this.connection.onclose = () => this.handleClose();
     this.connection.onopen = (event) => {
       this.trigger(_EVENTS.onConnected, event);
@@ -124,7 +126,7 @@ class Sfu {
       video.id = `remote_${username}`;
       video.srcObject = stream;
       video.autoplay = true;
-      video.muted = username == username.value;
+      video.muted = username == this.settings.id;
 
       const div = document.createElement("div");
       div.id = `user_${username}`;
@@ -136,16 +138,17 @@ class Sfu {
       nameContainer.appendChild(textNode);
       div.appendChild(nameContainer);
       div.appendChild(video);
-      document.querySelector(".videos-inner").appendChild(div);
+      // document.querySelector(".videos-inner").appendChild(div);
 
       this.trigger(_EVENTS.onRemoteTrack, stream);
     }
 
-    this.recalculateLayout();
+    // this.recalculateLayout();
   }
 
   async handleIceCandidate({ candidate }) {
     if (candidate && candidate.candidate && candidate.candidate.length > 0) {
+      // console.log(`candidata : ${candidate}, uqid : ${this.localUUID}`);
       const payload = {
         type: "ice",
         ice: candidate,
@@ -243,6 +246,7 @@ class Sfu {
 
     switch (message.type) {
       case "welcome":
+        // console.log(`message.id : ${JSON.stringify(message)}`);
         this.localUUID = message.id;
         break;
       case "answer":
@@ -267,13 +271,12 @@ class Sfu {
     const { username, consumerId } = this.clients.get(id);
     this.consumers.delete(consumerId);
     this.clients.delete(id);
-    document
-      .querySelector(`#remote_${username}`)
-      .srcObject.getTracks()
+    this.localStream
+      .getTracks()
       .forEach((track) => track.stop());
-    document.querySelector(`#user_${username}`).remove();
+    // document.querySelector(`#user_${username}`).remove();
 
-    this.recalculateLayout();
+    // this.recalculateLayout();
   }
 
   async connect() {
@@ -282,13 +285,17 @@ class Sfu {
       video: true,
       audio: true,
     });
-    this.handleRemoteTrack(stream, username.value);
+    // this.handleRemoteTrack(stream, username.value);
+    this.handleRemoteTrack(stream, this.settings.id);
+
     this.localStream = stream;
 
     this.localPeer = this.createPeer();
+
     this.localStream
       .getTracks()
       .forEach((track) => this.localPeer.addTrack(track, this.localStream));
+
     await this.subscribe();
   }
 
@@ -318,13 +325,13 @@ class Sfu {
     console.log("*** negoitating ***");
     const offer = await this.localPeer.createOffer();
     await this.localPeer.setLocalDescription(offer);
-
+    
     this.connection.send(
       JSON.stringify({
         type: "connect",
         sdp: this.localPeer.localDescription,
         uqid: this.localUUID,
-        username: username.value,
+        username: this.settings.id,
       })
     );
   }
@@ -361,3 +368,5 @@ class Sfu {
     }
   }
 }
+
+export default Sfu;
