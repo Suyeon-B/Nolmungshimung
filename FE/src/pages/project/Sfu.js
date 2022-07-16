@@ -62,6 +62,10 @@ class Sfu {
     // console.log('SFu 진입 !!!!!!!!!!');
     // console.log('!@@@@@', this.settings);
     const protocol = window.location.protocol === "https:" ? "wss" : "ws";
+    if (!sessionStorage.getItem("user_email")){
+      alert('로그인 해주세요')
+      window.location.href = "/";
+    }
     const url = `${protocol}://${window.location.hostname}:${this.settings.port}?${sessionStorage.getItem("user_email")}`;
     this.connection = new WebSocket(url);
     this.connection.onmessage = (data) => this.handleMessage(data); 
