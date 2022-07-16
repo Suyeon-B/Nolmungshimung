@@ -65,7 +65,7 @@ const ProjectPage = (props) => {
       socket.off("connect");
       socket.off("disconnect");
       setIsDrage(false);
-      console.log("project page unmount");
+      // console.log("project page unmount");
     };
   }, [projectId]);
 
@@ -87,11 +87,11 @@ const ProjectPage = (props) => {
             body: JSON.stringify(itemsRoute),
           }
         ).then((res) => res.json());
-        console.log(response);
+        // console.log(response);
       } catch (err) {
         console.log(err);
       }
-      console.log("UpdateInfo");
+      // console.log("UpdateInfo");
     }
     UpdateInfo();
 
@@ -102,7 +102,7 @@ const ProjectPage = (props) => {
 
   useEffect(() => {
     socket.on("updateRoute", (itemsRoute) => {
-      console.log("updateRoute");
+      // console.log("updateRoute");
       setItemsRoute(itemsRoute);
     });
   }, []);
