@@ -118,30 +118,30 @@ class Sfu {
   }
 
   async handleRemoteTrack(stream, username) {
-    const userVideo = this.findUserVideo(username);
-    if (userVideo) {
-      userVideo.srcObject.addTrack(stream.getTracks()[0]);
-    } else {
+    // const userVideo = this.findUserVideo(username);
+    // if (userVideo) {
+    //   userVideo.srcObject.addTrack(stream.getTracks()[0]);
+    // } else {
       const video = document.createElement("video");
       video.id = `remote_${username}`;
       video.srcObject = stream;
       video.autoplay = true;
-      video.muted = username == this.settings.id;
+      video.muted = username == sessionStorage.getItem("user_email");
 
-      const div = document.createElement("div");
-      div.id = `user_${username}`;
-      div.classList.add("videoWrap");
+      // const div = document.createElement("div");
+      // div.id = `user_${username}`;
+      // div.classList.add("videoWrap");
 
-      const nameContainer = document.createElement("div");
-      nameContainer.classList.add("display_name");
-      const textNode = document.createTextNode(username);
-      nameContainer.appendChild(textNode);
-      div.appendChild(nameContainer);
-      div.appendChild(video);
-      // document.querySelector(".videos-inner").appendChild(div);
+      // const nameContainer = document.createElement("div");
+      // nameContainer.classList.add("display_name");
+      // const textNode = document.createTextNode(username);
+      // nameContainer.appendChild(textNode);
+      // div.appendChild(nameContainer);
+      // div.appendChild(video);
+      // // document.querySelector(".videos-inner").appendChild(div);
 
-      this.trigger(_EVENTS.onRemoteTrack, stream);
-    }
+      // this.trigger(_EVENTS.onRemoteTrack, stream);
+    // }
 
     // this.recalculateLayout();
   }
@@ -188,9 +188,9 @@ class Sfu {
     consumerTransport.id = consumerId;
     consumerTransport.peer = peer;
     this.consumers.set(consumerId, consumerTransport);
-    this.consumers
-      .get(consumerId)
-      .addTransceiver("video", { direction: "recvonly" });
+    // this.consumers
+    //   .get(consumerId)
+    //   .addTransceiver("video", { direction: "recvonly" });
     this.consumers
       .get(consumerId)
       .addTransceiver("audio", { direction: "recvonly" });
@@ -282,11 +282,12 @@ class Sfu {
   async connect() {
     //Produce media
     const stream = await navigator.mediaDevices.getUserMedia({
-      video: true,
+      video: false,
       audio: true,
     });
     // this.handleRemoteTrack(stream, username.value);
-    this.handleRemoteTrack(stream, this.settings.id);
+    // console.log('------', sessionStorage.getItem("user_email"));
+    this.handleRemoteTrack(stream, sessionStorage.getItem("user_email"));
 
     this.localStream = stream;
 
@@ -331,7 +332,7 @@ class Sfu {
         type: "connect",
         sdp: this.localPeer.localDescription,
         uqid: this.localUUID,
-        username: this.settings.id,
+        username: sessionStorage.getItem("user_email"),
       })
     );
   }
