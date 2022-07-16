@@ -2,8 +2,21 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
+import { Modal } from "antd";
 
 function SignUp() {
+  const success = () => {
+    Modal.success({
+      content: "회원가입 완료",
+    });
+  };
+
+  const fail = (msg) => {
+    Modal.error({
+      title: "회원가입 실패",
+      content: msg,
+    });
+  };
   let navigate = useNavigate();
   const [id, setId] = useState("");
   const [name, setName] = useState("");
@@ -28,39 +41,53 @@ function SignUp() {
   });
 
   async function singUpUser(data) {
-    await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/users/signup`, {
-      method: "post",
-      headers: {
-        "content-type": "application/json",
-      },
-      // credentials: "include",
-      body: JSON.stringify(data),
-    })
+    await fetch(
+      `https://${process.env.REACT_APP_SERVER_IP}:8443/users/signup`,
+      {
+        method: "post",
+        headers: {
+          "content-type": "application/json",
+        },
+        // credentials: "include",
+        body: JSON.stringify(data),
+      }
+    )
       .then((res) => res.json())
       .then((res) => {
         // console.log("res : ", res);
         if (res.success === true) {
-          console.log("Sign Up Success");
+          success();
+          // console.log("Sign Up Success");
           navigate("/signin", { replace: true });
+        } else {
+          fail(res.message);
         }
       })
-      .catch((err) => console.log(`err: ${err}`));
+      .catch((err) => {
+        // ! 배포시 지워야함
+        fail(err);
+        console.log(`err: ${err}`);
+      });
   }
 
   const onSubmitSignUp = (event) => {
-    if (password !== confirmPassword) {
-      alert("비밀번호 똑바로 ㅇㅂ력해라");
-    }
     event.preventDefault();
+    if (password !== confirmPassword) {
+      fail("비밀번호가 일치하지 않아요.");
+      return;
+    }
+    if (password.length < 6) {
+      fail("비밀번호를 6자 이상 입력해주세요.");
+    }
 
     let userForm = {
       user_email: id,
       user_name: name,
       password: password,
     };
-    console.log(`id : ${id}`);
-    console.log(`name : ${name}`);
-    console.log(`password : ${password}`);
+    // console.log(`id : ${id}`);
+    // console.log(`name : ${name}`);
+    // console.log(`password : ${password}`);
     mutate(userForm);
   };
   const onClickSignIn = () => {
@@ -75,12 +102,30 @@ function SignUp() {
           <SignUpBtn>Sign Up</SignUpBtn>
         </Btns>
         <Form onSubmit={onSubmitSignUp}>
-          <Input placeholder="jeju@island.com" type="text" value={id} onChange={onchangeId} required />
-          <Input placeholder="닉네임" type="text" value={name} onChange={onchangeName} required />
-          <Input placeholder="password" type="pass" value={password} onChange={onchangePassword} required />
+          <Input
+            placeholder="jeju@island.com"
+            type="email"
+            value={id}
+            onChange={onchangeId}
+            required
+          />
+          <Input
+            placeholder="닉네임"
+            type="text"
+            value={name}
+            onChange={onchangeName}
+            required
+          />
+          <Input
+            placeholder="password (6자 이상)"
+            type="password"
+            value={password}
+            onChange={onchangePassword}
+            required
+          />
           <Input
             placeholder="password 확인"
-            type="pass"
+            type="password"
             value={confirmPassword}
             onChange={onchangeConfirmPassword}
             required

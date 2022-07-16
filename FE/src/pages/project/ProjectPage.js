@@ -11,6 +11,8 @@ import io from "socket.io-client";
 
 const socket = io(`https://${process.env.REACT_APP_SERVER_IP}:3001`);
 
+import socket from "../../socket";
+
 async function fetchProjectById(_id) {
   const response = await fetch(
     `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`
@@ -61,16 +63,13 @@ const ProjectPage = (props) => {
   }, [projectId]);
 
   useEffect(() => {
-    socket.emit("projectEmit", projectId);
+    socket.emit("projectJoin", projectId);
 
-    socket.on(`${projectId}`, (el) => {
-      // console.log(el);
-    });
     return () => {
       socket.off("connect");
       socket.off("disconnect");
       setIsDrage(false);
-      console.log("project page unmount");
+      // console.log("project page unmount");
     };
   }, [projectId]);
 
@@ -92,11 +91,11 @@ const ProjectPage = (props) => {
             body: JSON.stringify(itemsRoute),
           }
         ).then((res) => res.json());
-        console.log(response);
+        // console.log(response);
       } catch (err) {
         console.log(err);
       }
-      console.log("UpdateInfo");
+      // console.log("UpdateInfo");
     }
     UpdateInfo();
 
@@ -107,7 +106,7 @@ const ProjectPage = (props) => {
 
   useEffect(() => {
     socket.on("updateRoute", (itemsRoute) => {
-      console.log("updateRoute");
+      // console.log("updateRoute");
       setItemsRoute(itemsRoute);
     });
   }, []);
@@ -146,17 +145,17 @@ const ProjectPage = (props) => {
             setIsAddDel={setIsAddDel}
           />
         )}
-        {/* {!isFirstPage && ( */}
-        <SpotRoute
-          selectedIndex={selectedIndex}
-          item={itemsRoute}
-          setItemRoute={setItemsRoute}
-          itemId={items._id}
-          tripDate={tripDate}
-          setIsDrage={setIsDrage}
-          setIsAddDel={setIsAddDel}
-        />
-        {/* )} */}
+        {!isFirstPage && (
+          <SpotRoute
+            selectedIndex={selectedIndex}
+            item={itemsRoute}
+            setItemRoute={setItemsRoute}
+            itemId={items._id}
+            tripDate={tripDate}
+            setIsDrage={setIsDrage}
+            setIsAddDel={setIsAddDel}
+          />
+        )}
         {/* <SpotRoute
           selectedIndex={selectedIndex}
           item={itemsRoute}

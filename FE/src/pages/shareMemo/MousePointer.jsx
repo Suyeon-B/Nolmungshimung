@@ -9,8 +9,8 @@ const MousePointer = ({ color }) => {
       viewBox="0 0 24 24"
       fill={color}
       stroke="#fff"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     >
       <g filter="url(#shadow)">
         <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"></path>
@@ -23,10 +23,13 @@ const MousePointer = ({ color }) => {
           width="21.0"
           height="23.50"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="x"></feFlood>
-          <feColorMatrix in="SourceAlpha" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 126 0"></feColorMatrix>
+          <feFlood floodOpacity="0" result="x"></feFlood>
+          <feColorMatrix
+            in="SourceAlpha"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 126 0"
+          ></feColorMatrix>
           <feOffset dy="1"></feOffset>
           <feGaussianBlur stdDeviation="1.5"></feGaussianBlur>
           <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.38 0"></feColorMatrix>

@@ -41,8 +41,8 @@ function Footer() {
   useEffect(() => {
     setProfiles(
       <>
-        {friends.map((el) => (
-          <FriendProfile nickName={el} />
+        {friends.map((el, idx) => (
+          <FriendProfile key={idx} nickName={el} />
         ))}
       </>
     );
@@ -76,6 +76,7 @@ const FooterContainer = styled.div`
   background: #e7e7e7;
   border-radius: 50px;
   display: flex;
+  margin-left: 25px;
   align-items: center;
   padding-left: 8px;
   padding-right: 8px;

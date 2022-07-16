@@ -163,7 +163,7 @@ router.post("/signin", (req, res) => {
     user.comparePassword(req.body.password, (err, isMatch) => {
       console.log("isMatch : " + isMatch);
       if (!isMatch) {
-        return res.json({
+        return res.status(403).json({
           loginSuccess: false,
           message: "비밀번호를 틀렸습니다.",
         });

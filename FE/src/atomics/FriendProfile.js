@@ -20,7 +20,7 @@ const FriendProfileContainer = styled.div`
   align-items: center;
   background: #ff8830;
   border-radius: 50%;
-  min-mar
+  border: 1.5px solid #e7e7e7;
 `;
 const FriendNameText = styled.span`
   font-family: "Rounded Mplus 1c Bold";

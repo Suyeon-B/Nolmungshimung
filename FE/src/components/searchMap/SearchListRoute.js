@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import dragFunction from "./DragAndDrop";
 import styled from "styled-components";
 import { v4 as uuidV4 } from "uuid";
 import { overEvent, clickEvent, outEvent } from "../../pages/search/Search";
+import SearchDetail from "./SearchDetail";
 
 function GetGooglePlaceId(props) {
   let url =
@@ -121,6 +122,16 @@ const SearchListRoute = ({
     setItemRoutes([...itemRoutes]);
     setIsAddDel(true);
   };
+
+  const [visible, setVisible] = useState(false);
+
+  const showDrawer = () => {
+    setVisible(true);
+  };
+
+  const onClose = () => {
+    setVisible(false);
+  };
   return (
     <StyledLi
       // draggable
@@ -151,7 +162,7 @@ const SearchListRoute = ({
           <div className={"dropDownMenu"}>
             {itemRoutes.map((el, idx) => {
               return (
-                <StyledBtn data-idx={idx} onClick={onClickAddRoute}>
+                <StyledBtn key={idx} data-idx={idx} onClick={onClickAddRoute}>
                   {culTripTermData(startDate, idx)}
                 </StyledBtn>
               );
@@ -169,9 +180,11 @@ const SearchListRoute = ({
       )}
       <p>{route.category_group_name}</p>
       <p>{route.phone}</p>
-      <a target="_blank" href={route.place_url}>
+      {/* <a target="_blank" href={route.place_url} onClick={showDrawer}> */}
+      <a target="_blank" onClick={showDrawer}>
         카카오맵에서 상세보기
       </a>
+      <SearchDetail onClose={onClose} visible={visible} />
       {/* {route.road_address_name
           ? GetGooglePlaceId({
               input: route.road_address_name + "" + route.place_name,
@@ -217,18 +230,21 @@ const StyledDropDown = styled.div`
   position: relative;
   top: -7px;
   left: -30px;
-  width: 5%;
+  width: 20px;
 
   .dropDownMenu {
     display: none;
   }
   &:hover {
     .dropDownMenu {
+      text-align: center;
+      line-height: 13px;
       display: block;
       position: absolute;
-      width: 100px;
+      width: 90px;
+      margin-right: 4px;
       left: -45px;
-      top: 6px;
+      top: 25px;
       background-color: rgb(147, 147, 147);
       border-radius: 3px;
       padding: 4px;
@@ -246,6 +262,7 @@ const StyledBtn = styled.button`
   border: none;
   color: white;
   font-size: 18px;
+  width: 100%;
   font-weight: 700;
   background-color: rgb(204, 204, 204, 0);
   &:hover {

@@ -40,7 +40,6 @@ const PlanSideBar = ({
         isFirstPage={isFirstPage}
         setIsDrage={setIsDrage}
         setIsAddDel={setIsAddDel}
-        // routes={item.routes}
       />
 
       <Footer></Footer>
@@ -50,9 +49,11 @@ const PlanSideBar = ({
 
 const SideBar = styled.div`
   width: 19%;
-  min-width: 280px;
+  min-width: 300px;
   height: 100vh;
   /* background-color: #e7e7e7; */
+  box-shadow: 2px 2px 0px 0px #dedede;
+  margin-right: 2px;
 `;
 const PlanTitleWrap = styled.div`
   display: flex;

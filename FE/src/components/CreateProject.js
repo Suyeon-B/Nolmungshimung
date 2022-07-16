@@ -60,7 +60,7 @@ const CreateProject = () => {
     const eDate = new Date(endDate[0], endDate[1], endDate[2]).getTime();
 
     const term = parseInt((eDate - sDate) / (1000 * 60 * 60 * 24));
-    const trip_data = culTripData(startDate, term);
+    const trip_date = culTripData(startDate, term);
     const project = [
       sessionStorage.getItem("user_email"),
       {
@@ -68,7 +68,6 @@ const CreateProject = () => {
         start_date: startDate,
         end_date: endDate,
         term,
-        trip_data: trip_data,
       },
     ];
 

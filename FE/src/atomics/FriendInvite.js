@@ -107,8 +107,8 @@ function FriendInvite() {
           onClick={onClickPlus}
         />
       </InviteForm>
-      {friends.map((el) => (
-        <p>{el}</p>
+      {friends.map((el, i) => (
+        <p key={i}>{el}</p>
       ))}
     </div>
   );

@@ -1,45 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { Layout, Menu } from "antd";
+import { Menu } from "antd";
 import styled from "styled-components";
 import { useNavigate, Link } from "react-router-dom";
+import ProfileDetailComponent from "../../atomics/ProfileDetail";
 import { useAuth } from "../auth/Auth";
-
-function ProfileDetail(props) {
-  const auth = useAuth();
-
-  const goMypage = () => {
-    console.log("마이페이지로 이동 넣어야함");
-  };
-  const onClickLogOut = () => {
-    auth.logout();
-    props.delBtns(false);
-  };
-  const onClickX = () => {
-    props.delBtns(false);
-  };
-  return (
-    <ProfileDetailContainer>
-      <ProfileDetailXBtn onClick={onClickX}>X &nbsp;</ProfileDetailXBtn>
-      <ProfileDetailBtn onClick={goMypage}>상세보기</ProfileDetailBtn>
-      <ProfileDetailBtn onClick={onClickLogOut}>로그아웃</ProfileDetailBtn>
-    </ProfileDetailContainer>
-  );
-}
 
 function Profile() {
   const auth = useAuth();
-  const [profileView, setProfileView] = useState(false);
 
-  const onMouseOverCircle = () => {
-    setProfileView(true);
-  };
   // console.log(`auth.user:${JSON.stringify(auth.user.user_name)}`);
   return (
     <section>
       {auth.user ? (
-        <ProfileCircle onMouseEnter={onMouseOverCircle}>
-          <span>{sessionStorage.getItem("myNickname")}</span>
-        </ProfileCircle>
+        <ProfileDetailComponent />
       ) : (
         <ProfileImg
           src="/statics/images/hareubang.png"
@@ -48,7 +21,6 @@ function Profile() {
           }}
         />
       )}
-      {profileView ? <ProfileDetail delBtns={setProfileView} /> : null}
     </section>
   );
 }
@@ -125,7 +97,12 @@ function ProjectSide() {
 
   return (
     <>
-      <StyledMenu theme="Light" mode="inline" defaultSelectedKeys={["1"]} items={[LogoObj, ...items]} />
+      <StyledMenu
+        theme="Light"
+        mode="inline"
+        defaultSelectedKeys={["1"]}
+        items={[LogoObj, ...items]}
+      />
       <Profile />
     </>
   );
@@ -149,7 +126,7 @@ const ProfileImg = styled.img`
   cursor: pointer;
 `;
 
-const ProfileCircle = styled.div`
+const ProfileCircle = styled(ProfileDetailComponent)`
   background-color: green;
   width: 60px;
   height: 60px;

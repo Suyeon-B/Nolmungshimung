@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import SearchListRoute from "../../components/searchMap/SearchListRoute";
 import SearchBar from "../../components/searchMap/SearchBar";
 import styled from "styled-components";
+import SpotDetail from "../../components/spot/SpotDetail";
 
 const { kakao } = window;
 
@@ -49,6 +50,8 @@ export function clickEvent(index) {
     markers[index][0].setImage(clickImage);
   }
   selectedMarker = markers[index][0];
+  // console.log(markers[index][2]);
+  SpotDetail(markers[index][2]);
 }
 function createMarkerImage(markerSize, markerUrl) {
   var markerImage = new kakao.maps.MarkerImage(
@@ -163,9 +166,10 @@ const Search = ({
         image: normalImage,
       });
       // itemEl = getListItem(i, place); // 검색 결과 항목 Element를 생성합니다
-      markers.push([marker, place.place_name]);
+      markers.push([marker, place.place_name, place.id]);
       kakao.maps.event.addListener(marker, "mouseover", function () {
         overEvent(i);
+        // console.log(place);
       });
 
       kakao.maps.event.addListener(marker, "mouseout", function () {
@@ -173,6 +177,7 @@ const Search = ({
       });
       kakao.maps.event.addListener(marker, "click", function () {
         clickEvent(i);
+        // place.id 보내서 크롤링하기
       });
     }
   }, [searchPlace]);
@@ -211,7 +216,8 @@ const Wapper = styled.div`
 `;
 
 const SearchListDiv = styled.div`
-  width: 30%;
+  padding-top: 27.5px;
+  width: 330px;
   height: 100vh;
   overflow: scroll;
   ::-webkit-scrollbar {
@@ -221,9 +227,10 @@ const SearchListDiv = styled.div`
 `;
 
 const StyledMapDiv = styled.div`
-  width: 70%;
   height: 100vh;
+  min-width: calc(100% - 330px);
   position: relative;
+  background-color: red;
 `;
 
 const StyledUl = styled.ul``;
