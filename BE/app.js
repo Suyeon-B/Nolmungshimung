@@ -115,13 +115,13 @@ var okdb = new OkdbServer(options);
 // sample authentication, e.g. should validate your own auth token
 let nameIdx = 0;
 try {
-  okdb.handlers().auth(({ myNickname, selectedIndex }) => {
+  okdb.handlers().auth(({ myNickname, tripDate }) => {
     if (myNickname) {
       console.log("auth attempt for ", myNickname, " success");
       const userName = myNickname;
       const userId = "1" + nameIdx;
       nameIdx = (nameIdx + 1) % 10;
-      return { id: userId, name: userName, selectedIndex: selectedIndex };
+      return { id: userId, name: userName, tripDate: tripDate };
     }
     console.log("auth attempt for ", myNickname, " failed");
     return null;
