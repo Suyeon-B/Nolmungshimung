@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import PlanList from "./PlanList";
+import Footer from "./Footer";
 
 const PlanSideBar = ({
   item,
@@ -42,7 +43,7 @@ const PlanSideBar = ({
         // routes={item.routes}
       />
 
-      <div>사이드바 footer</div>
+      <Footer></Footer>
     </SideBar>
   );
 };

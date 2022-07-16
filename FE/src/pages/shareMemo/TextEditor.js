@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 import "./TextEditor.css";
-import { Container, Paper, Grid } from "@material-ui/core";
 import { Alert as MuiAlert } from "@material-ui/lab";
 import OkdbClient from "okdb-client";
 import cloneDeep from "lodash/cloneDeep";
@@ -9,6 +8,7 @@ import QuillCursors from "quill-cursors";
 import "quill/dist/quill.snow.css";
 import TextEditorUsers from "./TextEditorUsers";
 import styled from "styled-components";
+import { useParams } from "react-router-dom";
 import socket from "../../socket";
 
 const EditorBox = styled.div`
@@ -73,7 +73,7 @@ const colors = ["#FF8830", "#8DD664", "#FF6169", "#975FFE", "#0072BC"];
 
 const getUserColor = (index) => colors[index % colors.length];
 
-function TextEditor({ project_Id, selectedIndex }) {
+function TextEditor({ project_Id, selectedIndex, trip_Date }) {
   const [user, setUser] = useState(null);
   const [doc, setDoc] = useState(null);
   const [presences, setPresences] = useState({});
@@ -82,13 +82,15 @@ function TextEditor({ project_Id, selectedIndex }) {
   const editorRef = useRef(null);
   const mousePointerRef = useRef(null);
   const editorCursorRef = useRef(null);
-  const [projectID, setProjectId] = useState(project_Id);
+  // const [projectID, setProjectId] = useState(project_Id);
+  // const [tripDate, setTripDate] = useState(trip_Date);
 
   const userName = sessionStorage.getItem("myNickname");
+  const [tripDate, setTripDate] = useState(trip_Date);
 
   useEffect(() => {
-    setProjectId(project_Id);
-  }, [project_Id]);
+    setTripDate(trip_Date);
+  }, [trip_Date]);
 
   useEffect(() => {
     // socket.emit("sharedEditing", [projectID, selectedIndex]);
@@ -208,7 +210,10 @@ function TextEditor({ project_Id, selectedIndex }) {
         okdb
           .open(
             DATA_TYPE, // collection name
-            projectID,
+            // project_Id,
+            // trip_Date,
+            tripDate,
+            // projectID,
             defaultValue, // default value to save if doesn't exist yet
             {
               type: "rich-text",
@@ -256,8 +261,9 @@ function TextEditor({ project_Id, selectedIndex }) {
       console.log("text-change ", delta, contents, source);
       delta.type = "rich-text";
       if (connectedRef.current) {
+        // okdb.op(DATA_TYPE, project_Id, trip_Date, delta).catch((err) => console.log("Error updating doc", err));
         okdb
-          .op(DATA_TYPE, project_Id, delta)
+          .op(DATA_TYPE, tripDate, delta)
           .catch((err) => console.log("Error updating doc", err));
       }
     });

@@ -1,250 +1,236 @@
-var express = require("express");
-var router = express.Router();
-var OpenVidu = require("openvidu-node-client").OpenVidu;
-var OpenViduRole = require("openvidu-node-client").OpenViduRole;
+const webrtc = require("wrtc");
+const { v4: uuidv4 } = require('uuid');
+const fs = require('fs');
+const http = require('http');
+const https = require('https');
+const WebSocket = require('ws');
+const express = require('express');
+const app = express();
 
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+app.use(express.static('public'));
+// based on examples at https://www.npmjs.com/package/ws 
+const WebSocketServer = WebSocket.Server;
 
-/* CONFIGURATION */
-var OV = new OpenVidu('https://13.125.6.251:4443', 'MY_SECRET');
+let serverOptions = {
+    listenPort: 3003,
+    useHttps: true,
+    // httpsCertFile: '/home/ubuntu/simple_sfu/ssl/cert/ssl.crt',
+    // httpsKeyFile: '/home/ubuntu/simple_sfu/ssl/key/ssl.key',
+    // httpsCertFile: fs.readFileSync("nolshimung.pem"),
+    // httpsKeyFile: fs.readFileSync("nolshimung-key.pem")
+    cert: fs.readFileSync("nolshimung.pem"),
+    key: fs.readFileSync("nolshimung-key.pem")
+};
 
-// session 방에 대한 정보 .
-var mapSessions = {};
-// session 토큰과 관련됨.
-var mapSessionNamesTokens = {};
+let webServer = null;
+webServer = https.createServer(serverOptions, app);
+webServer.listen(serverOptions.listenPort);
 
-/* REST API */
-// Get token - 토큰 얻기
+let peers = new Map();
+let consumers = new Map();
 
-router.post("/api-sessions/get-token", function (req, res) {
-    // 프로젝트 아이디로 방 생성, 아이디로 유저 구분
-    var sessionName = req.body.project_id;
-    var loggedUser = req.body.loggedUser;
-    // 무조건 퍼블리셔
-    var role = OpenViduRole.PUBLISHER;
-    var serverData = JSON.stringify({ serverData: loggedUser });
+function handleTrackEvent(e, peer, ws) {
+    if (e.streams && e.streams[0]) {
+        peers.get(peer).stream = e.streams[0];
 
-    // console.log("Getting a token | {projectId}={" + sessionName + "}, {loggedUser}={" + loggedUser);
-
-    var tokenOptions = {
-      data: serverData,
-        role: role,
-          // stun, turn 서버 
-          iceServers: [{
-              urls: ['stun:stun.l.google.com:19302'] 
-          },
-          {
-              urls: ['turn:numb.viagenie.ca'],
-              credential: 'muazkh',
-              username: 'webrtc@live.com'
-          }
-      ]
+        const payload = {
+            type: 'newProducer',
+            id: peer,
+            username: peers.get(peer).username
+        }
+        wss.broadcast(JSON.stringify(payload));
     }
+}
 
-    if (mapSessions[sessionName]) {
-      // Session 이미 존재
-      console.log("Existing session " + sessionName);
-      var mySession = mapSessions[sessionName];
+function createPeer() {
+    let peer = new webrtc.RTCPeerConnection({
+        iceServers: [
+            {
+                urls: 'turn:3.34.53.247',
+                username: 'admin',
+                credential: 'jgjg1234'
+            },
+            // { urls: 'stun:stun01.sipphone.com' },
+            // { urls: 'stun:stun.ekiga.net' },
+            // { urls: 'stun:stun.fwdnet.net' },
+            // { urls: 'stun:stun.ideasip.com' },
+            // { urls: 'stun:stun.iptel.org' },
+            // { urls: 'stun:stun.rixtelecom.se' },
+            // { urls: 'stun:stun.schlund.de' },
+            { urls: 'stun:stun.l.google.com:19302' },
+            { urls: 'stun:stun1.l.google.com:19302' },
+            { urls: 'stun:stun2.l.google.com:19302' },
+            { urls: 'stun:stun3.l.google.com:19302' },
+            { urls: 'stun:stun4.l.google.com:19302' },
+            // { urls: 'stun:stunserver.org' },
+            // { urls: 'stun:stun.softjoys.com' },
+            // { urls: 'stun:stun.voiparound.com' },
+            // { urls: 'stun:stun.voipbuster.com' },
+            // { urls: 'stun:stun.voipstunt.com' },
+            // { urls: 'stun:stun.voxgratia.org' },
+            // { urls: 'stun:stun.xten.com' },
+            // {
+            //     urls: 'turn:numb.viagenie.ca',
+            //     credential: 'muazkh',
+            //     username: 'webrtc@live.com'
+            // },
+            // {
+            //     urls: 'turn:192.158.29.39:3478?transport=udp',
+            //     credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
+            //     username: '28224511:1379330808'
+            // },
+            // {
+            //     urls: 'turn:192.158.29.39:3478?transport=tcp',
+            //     credential: 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
+            //     username: '28224511:1379330808'
+            // }
+        ]
+    });
 
-      // 신규토큰 생성
-      mySession
-      .generateToken(tokenOptions)
-        .then(token => {
-          mapSessionNamesTokens[sessionName].push(token);
-          // response 하기
-          console.log(`이미 있다 ! ${token}`);
-          res.json({
-            // sessionName: sessionName,
-            0: token,
-            // loggedUser: loggedUser
-          })
-        })
-      .catch((error) => {
-        console.log(`이미있는 에러`);
-        console.error(error);
-      });
-      // mySession
-      //   .createConnection(connectionProperties)
-      //   .then((connection) => {
-      //     mapSessionNamesTokens[sessionName].push(connection.token);
-      //     res.status(200).send({
-      //       0: connection.token,
-      //     });
-      //   })
+    return peer;
+}
 
-    } else {
-      //신규 세션
-      // console.log("New session " + sessionName);
-      OV.createSession()
-        .then(session => {
-          //세션 저장해두기 - 이름으로
-          mapSessions[sessionName] = session;
-          //토큰 저장배열 생성
-          mapSessionNamesTokens[sessionName] = [];
-          session
-            .generateToken(tokenOptions)
-            .then(token => {
-              mapSessionNamesTokens[sessionName].push(token);
-              res.json({
-                // sessionName: sessionName,
-                0: token,
-                // loggedUser: loggedUser
-              });
-            })
-            .catch((error) => {
-              console.error(error);
-            });
-            // .createConnection(connectionProperties)
-            // .then(connection => {
-            //   mapSessionNamesTokens[sessionName].push(connection.token);
+// Create a server for handling websocket calls
+const wss = new WebSocketServer({ server: webServer });
+let rooms = {};
+let users = [{name: 'JG', use:false}, {name:'JG1', use:false}, {name:'JG2',use:false}, {name:'JG3',use:false}, {name:'JG4',use:false}, {name:'JG5',use:false}];
 
-            //   res.status(200).send({
-            //     0: connection.token,
-            //   });
-            // })
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    }
+wss.on('connection', function (ws, req) {
+    // let peerId = uuidv4();
+    let peerId = '';
+    for(let i=0; i < users.length; i++){
+        if (!users[i].use) {
+            peerId = users[i].name
+            users[i].use = 1
+            break;
+        }
+    } 
+    // const projectId = req.url.split('?')[1].split('/')[0];
+    // const id = req.url.split('?')[1].split('/')[1]
+    ws.id = peerId;
+    ws.on('close', (event) => {
+        peers.delete(ws.id);
+        consumers.delete(ws.id);
+        for(let i=0; i<users.length; i++){
+            if (users[i].name == peerId) {
+                users[i].use = 0
+                break
+            }
+        }
+        // console.log(JSON.stringify(users))
+        wss.broadcast(JSON.stringify({
+            type: 'user_left',
+            id: ws.id
+        }));
+    });
+
+    // console.log(`peerId : ${peerId}`)
+    ws.send(JSON.stringify({ 'type': 'welcome', 'id': peerId }));
+
+    ws.on('message', async function (message) {
+        const body = JSON.parse(message);
+        switch (body.type) {
+            case 'connect':
+                // console.log('connect!!!!!!!!!!! ');
+                // console.log('uqid = ', body.uqid)
+                peers.set(body.uqid, { socket: ws });
+                const peer = createPeer();
+                peers.get(body.uqid).username = body.username;
+                peers.get(body.uqid).peer = peer;
+                // console.log(`peer : ${peers.get(body.uqid).peer}`);
+                peer.ontrack = (e) => { handleTrackEvent(e, body.uqid, ws) };
+                const desc = new webrtc.RTCSessionDescription(body.sdp);
+                await peer.setRemoteDescription(desc);
+                const answer = await peer.createAnswer();
+                await peer.setLocalDescription(answer);
+                // console.log(`connected, id : ${body.username}`)
+
+
+                const payload = {
+                    type: 'answer',
+                    sdp: peer.localDescription
+                }
+
+                ws.send(JSON.stringify(payload));
+                break;
+            case 'getPeers':
+                let uuid = body.uqid;
+                const list = [];
+                peers.forEach((peer, key) => {
+                    if (key != uuid) {
+                        const peerInfo = {
+                            id: key,
+                            username: peer.username,
+                        }
+                        list.push(peerInfo);
+                    }
+                });
+                // console.log(`getPeers : ${list}`)
+                const peersPayload = {
+                    type: 'peers',
+                    peers: list
+                }
+                ws.send(JSON.stringify(peersPayload));
+                break;
+            case 'ice':
+                const user = peers.get(body.uqid);
+                // for (let k of peers.keys()){
+                //     console.log(`ice, user : ${k}`);
+                // }
+                // console.log('length: ', peers.size);
+                if (user.peer)
+                    user.peer.addIceCandidate(new webrtc.RTCIceCandidate(body.ice)).catch(e => console.log(e));
+                break;
+            case 'consume':
+                try {
+                    let { id, sdp, consumerId } = body;
+                    const remoteUser = peers.get(id);
+                    const newPeer = createPeer();
+                    consumers.set(consumerId, newPeer);
+                    const _desc = new webrtc.RTCSessionDescription(sdp);
+                    await consumers.get(consumerId).setRemoteDescription(_desc);
+
+                    remoteUser.stream.getTracks().forEach(track => {
+                        consumers.get(consumerId).addTrack(track, remoteUser.stream);
+                    });
+                    const _answer = await consumers.get(consumerId).createAnswer();
+                    await consumers.get(consumerId).setLocalDescription(_answer);
+
+                    const _payload = {
+                        type: 'consume',
+                        sdp: consumers.get(consumerId).localDescription,
+                        username: remoteUser.username,
+                        id,
+                        consumerId
+                    }
+
+                    ws.send(JSON.stringify(_payload));
+                } catch (error) {
+                    console.log(error)
+                }
+
+                break;
+            case 'consumer_ice':
+                if (consumers.has(body.consumerId)) {
+                    consumers.get(body.consumerId).addIceCandidate(new webrtc.RTCIceCandidate(body.ice)).catch(e => console.log(e));
+                }
+                break;
+            default:
+                wss.broadcast(message);
+
+        }
+    });
+
+    ws.on('error', () => ws.terminate());
 });
 
-// Remove user from session - 유저 나가면 삭제 처리
-router.post("/api-sessions/remove-user", function (req, res) {
-    var sessionName = req.body.sessionName;
-    var token = req.body.token;
-    // console.log(
-    //   "Removing user | {sessionName, token}={" +
-    //     sessionName +
-    //     ", " +
-    //     token +
-    //     "}"
-    // );
+wss.broadcast = function (data) {
+    peers.forEach(function (peer) {
+        if (peer.socket.readyState === WebSocket.OPEN) {
+            peer.socket.send(data);
+        }
+    });
+};
 
-    // If the session exists
-    if (mapSessions[sessionName] && mapSessionNamesTokens[sessionName]) {
-      var tokens = mapSessionNamesTokens[sessionName];
-      var index = tokens.indexOf(token);
 
-      if (index !== -1) {
-        tokens.splice(index, 1);
-        // console.log(sessionName + ": " + tokens.toString());
-      } else {
-        var msg = "Problems in the app server: the TOKEN wasn't valid";
-        // console.log(msg);
-        res.status(500).send(msg);
-      }
-      if (tokens.length == 0) {
-        // Last user left: session must be removed
-        // console.log(sessionName + " empty!");
-        delete mapSessions[sessionName];
-      }
-      res.status(200).send();
-    } else {
-      // var msg = "Problems in the app server: the SESSION does not exist";
-      // console.log(msg);
-      res.status(500).send(msg);
-    }
-});
-
-// login user data
-router.get('/users', (req, res, next) => {
-  res.json({users:`user`})
-});
-
-router.post('/leaveSession', (req, res, next) => {
-  let {sessionName, token} = req.body.params;
-  let data = {status: 200};
-  if (mapSessions[sessionName] && mapSessionNamesTokens[sessionName]) {
-      let tokens = mapSessionNamesTokens[sessionName];
-      let index = tokens.indexOf(token);
-
-      // If the token exists
-      if (index !== -1) {
-          // Token removed
-          tokens.splice(index, 1);
-          console.log(sessionName + ': ' + tokens.toString());
-      } else {
-          let msg = 'Problems in the app server: the TOKEN wasn\'t valid';
-          console.log(msg);
-          data.status = 500;
-
-      }
-      if (tokens.length == 0) {
-          // Last user left: session must be removed
-          console.log(sessionName + ' empty!');
-          delete mapSessions[sessionName];
-      }
-  }
-
-  res.json(data)
-});
-
-/* GET home page. */
-router.post('/connect', function (req, res, next) {
-
-  let {id, password, sessionId} = req.body.params;
-  let user = 1;
-  if (user) {
-      let loggedUser = id;
-      let clientData = id;
-      let sessionName = sessionId;
-      let role = OpenViduRole.PUBLISHER;
-      let serverData = JSON.stringify({serverData: loggedUser});
-
-      let tokenOptions = {
-          data: serverData,
-          role: role
-      };
-
-      if (mapSessions[sessionName]) {
-          let mySession = mapSessions[sessionName];
-
-          mySession.generateToken(tokenOptions)
-              .then(token => {
-                  mapSessionNamesTokens[sessionName].push(token);
-                  res.json({
-                      sessionName: sessionName,
-                      token: token,
-                      nickName: clientData,
-                      userName: loggedUser,
-                  })
-              }).catch(error => {
-              console.error(error)
-          })
-
-      } else {
-          console.log(`create New Session ${sessionName}`);
-
-          OV.createSession()
-              .then(session => {
-                  console.log(`promise then session : ${session}`)
-                  mapSessions[sessionName] = session;
-                  mapSessionNamesTokens[sessionName] = [];
-
-                  session.generateToken(tokenOptions)
-                      .then(token => {
-                          mapSessionNamesTokens[sessionName].push(token);
-                          res.json({
-                              sessionName: sessionName,
-                              token: token,
-                              nickName: clientData,
-                              userName: loggedUser,
-                          })
-                      })
-
-                      .catch(error => {
-                          console.error(error)
-                      })
-              })
-
-              .catch(error => {
-                  console.error(error)
-              })
-      }
-  } else {
-      console.log("로그인 실패 ")
-  }
-});
-
-module.exports = router;
+module.exports = wss;
