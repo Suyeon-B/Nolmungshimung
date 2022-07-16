@@ -9,7 +9,6 @@ import QuillCursors from "quill-cursors";
 import "quill/dist/quill.snow.css";
 import TextEditorUsers from "./TextEditorUsers";
 import styled from "styled-components";
-import { useParams } from "react-router-dom";
 import socket from "../../socket";
 
 const EditorBox = styled.div`
@@ -49,12 +48,11 @@ const OnlineFriends = styled.div`
 Quill.register("modules/cursors", QuillCursors);
 
 const HOST = `http://${process.env.REACT_APP_SERVER_IP}:7899`; // location of your server, use xxxxx to use sample, or follow this guide to build your own:
-// const TOKEN = "12345"; // either get it from your auth provider and validate with system integration, or use default system users:
 const myNickname = sessionStorage.getItem("myNickname");
+const DATA_TYPE = "share-memo"; // data type, typically corresponds to the table name
 
 const okdb = new OkdbClient(HOST, { timeout: 30000 });
 window.okdb = okdb;
-const DATA_TYPE = "todo-tasks"; // data type, typically corresponds to the table name
 
 const TOOLBAR_OPTIONS = [
   [{ align: [] }],
@@ -188,10 +186,7 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
         okdb
           .open(
             DATA_TYPE, // collection name
-            // project_Id,
-            // trip_Date,
-            // tripDate,
-            projectID,
+            projectID + tripDate,
             defaultValue, // default value to save if doesn't exist yet
             {
               type: "rich-text",
@@ -239,10 +234,7 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
       console.log("text-change ", delta, contents, source);
       delta.type = "rich-text";
       if (connectedRef.current) {
-        // okdb.op(DATA_TYPE, project_Id, trip_Date, delta).catch((err) => console.log("Error updating doc", err));
-        okdb
-          .op(DATA_TYPE, tripDate, delta)
-          .catch((err) => console.log("Error updating doc", err));
+        okdb.op(DATA_TYPE, projectID + tripDate, delta).catch((err) => console.log("Error updating doc", err));
       }
     });
     editor.on("selection-change", function (range, oldRange, source) {
@@ -301,13 +293,7 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
       <OnlineFriends>
         <h4>🍊 Online 친구들 </h4>
         <div className="online-item" key="000">
-          <svg
-            width="10"
-            focusable="false"
-            viewBox="0 0 10 10"
-            aria-hidden="true"
-            title="fontSize small"
-          >
+          <svg width="10" focusable="false" viewBox="0 0 10 10" aria-hidden="true" title="fontSize small">
             <circle cx="5" cy="5" r="5"></circle>
           </svg>
           me ({user ? user.name : "connecting..."})
