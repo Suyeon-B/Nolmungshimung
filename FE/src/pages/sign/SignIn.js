@@ -10,13 +10,13 @@ const kauthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=2d1c91f12a4c
 function SignIn() {
   const success = () => {
     Modal.success({
-      content: "회원가입 완료",
+      content: "로그인 완료",
     });
   };
 
   const fail = (msg) => {
     Modal.error({
-      title: "회원가입 실패",
+      title: "로그인 실패",
       content: msg,
     });
   };
@@ -48,14 +48,14 @@ function SignIn() {
     )
       .then((res) => res.json())
       .then((res) => {
-        // console.log("res : ", res);
+        console.log("res : ", res);
         if (res.loginSuccess === true) {
+          success();
           console.log("Sign In Success");
           sessionStorage.setItem("myNickname", res.user_name);
           sessionStorage.setItem("user_email", res.user_email);
-          success();
-          // navigate("/", { replace: true });
-          window.location.href = "/";
+          navigate("/", { replace: true });
+          // window.location.href = "/";
           login({ user: id });
         } else {
           fail(res.message);

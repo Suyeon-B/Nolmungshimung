@@ -1,12 +1,10 @@
 import { useState, createContext, useContext, useEffect } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
-import { getCookie, deleteCookie } from "./cookie";
+import { deleteCookie } from "./cookie";
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [userProjects, setUserProjects] = useState([]);
   useEffect(() => {
     // console.log("auth auth");
     //To know my current status, send Auth request
