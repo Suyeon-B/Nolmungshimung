@@ -38,7 +38,7 @@ const ProjectPage = (props) => {
       setItems(data);
       setItemsRoute(data.routes);
 
-      const joinVoice = new Sfu({projectId: projectId, });
+      const joinVoice = new Sfu({ projectId: projectId });
       // import Sfu from './Sfu'
       // Sfu.connect()
       joinVoice.on("onConnected", () => {
@@ -141,17 +141,17 @@ const ProjectPage = (props) => {
             setIsAddDel={setIsAddDel}
           />
         )}
-        {/* {!isFirstPage && ( */}
-        <SpotRoute
-          selectedIndex={selectedIndex}
-          item={itemsRoute}
-          setItemRoute={setItemsRoute}
-          itemId={items._id}
-          tripDate={tripDate}
-          setIsDrage={setIsDrage}
-          setIsAddDel={setIsAddDel}
-        />
-        {/* )} */}
+        {!isFirstPage && (
+          <SpotRoute
+            selectedIndex={selectedIndex}
+            item={itemsRoute}
+            setItemRoute={setItemsRoute}
+            itemId={items._id}
+            tripDate={tripDate}
+            setIsDrage={setIsDrage}
+            setIsAddDel={setIsAddDel}
+          />
+        )}
         {/* <SpotRoute
           selectedIndex={selectedIndex}
           item={itemsRoute}

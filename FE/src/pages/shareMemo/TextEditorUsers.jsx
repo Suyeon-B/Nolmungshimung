@@ -2,21 +2,21 @@ import React from "react";
 import MousePointer from "./MousePointer";
 
 const TextEditorUsers = ({ presences, selectedIndex }) => {
-  console.log(presences);
+  // console.log(presences);
   return (
     <>
       {Object.keys(presences).map((presenceId) => {
         const presence = presences[presenceId];
         const userColor = presence.color;
         const userSelectedIndex = presence.user.selectedIndex;
-        // if (selectedIndex !== userSelectedIndex) {
-        //   console.log(selectedIndex);
-        //   console.log(userSelectedIndex);
-        //   console.log(presences)
+        if (selectedIndex !== userSelectedIndex) {
+          // console.log(selectedIndex);
+          // console.log(userSelectedIndex);
+          // console.log(presences);
 
-        //   console.log("여기 걸리냐?");
-        //   return;
-        // }
+          // console.log("여기 걸리냐?");
+          return;
+        }
         let left = 0;
         let top = 0;
         if (presence.mousePointer && presence.mousePointer.left != null) {

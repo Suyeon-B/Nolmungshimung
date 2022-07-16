@@ -82,35 +82,18 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
   const editorRef = useRef(null);
   const mousePointerRef = useRef(null);
   const editorCursorRef = useRef(null);
-  // const [projectID, setProjectId] = useState(project_Id);
+  const [projectID, setProjectId] = useState(project_Id);
   // const [tripDate, setTripDate] = useState(trip_Date);
 
   const userName = sessionStorage.getItem("myNickname");
   const [tripDate, setTripDate] = useState(trip_Date);
+  const [test, setTest] = useState(1);
+
+  // useEffect(() => {
+  //   setTripDate(trip_Date);
+  // }, [trip_Date]);
 
   useEffect(() => {
-    setTripDate(trip_Date);
-  }, [trip_Date]);
-
-  useEffect(() => {
-    // socket.emit("sharedEditing", [projectID, selectedIndex]);
-    // socket.to(`${project_Id}`).emit("sharedEditing", selectedIndex);
-    socket.on("changeCurser", ([selectedIndex, friendName]) => {
-      // if (Object.keys(presences).length == 0) return;
-      setPresences((prev) => {
-        const newState = cloneDeep(prev);
-
-        newState[friendName].user.selectedIndex = selectedIndex;
-
-        // if (editorRef.current) {
-        //   const cursors = editorRef.current.getModule("cursors");
-        //   cursors.removeCursor(name);
-        // }
-        console.log("==========changeCurser============");
-        console.log(newState);
-        return newState;
-      });
-    });
     return () => {
       console.log(selectedIndex, "  공유 편집 나가기");
       // selectedIndex로 공유 편집 나가기 구현하기
@@ -118,6 +101,22 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
       setPresences({});
     };
   }, []);
+
+  useEffect(() => {
+    socket.on("changeCurser", ([selectedIndex, friendName]) => {
+      setPresences((prev) => {
+        const newState = cloneDeep(prev);
+        newState[friendName].user.selectedIndex = selectedIndex;
+        return newState;
+      });
+    });
+  }, []);
+
+  useEffect(() => {
+    console.log("changeDate", selectedIndex);
+    socket.emit("changeDate", [projectID, selectedIndex, userName]);
+    // okdb.sendPresence(presences);
+  }, [selectedIndex]);
 
   useEffect(() => {
     socket.on("delectCurser", (name) => {
@@ -160,7 +159,7 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
       });
     } else if (data.user && data.user.id) {
       // 온라인인 친구들의 커서를 띄웁니다.
-
+      console.log(data);
       setPresences((prev) => {
         const newState = cloneDeep(prev);
         // console.log(newState);
@@ -173,6 +172,8 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
         newState[id].color = userColor;
         if (editorRef.current) {
           const cursors = editorRef.current.getModule("cursors");
+          console.log("cursor==========================");
+          console.log(cursors);
           if (data.editorCursor) {
             cursors.createCursor(id, data.user.name, userColor);
             cursors.moveCursor(id, data.editorCursor);
@@ -212,8 +213,8 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
             DATA_TYPE, // collection name
             // project_Id,
             // trip_Date,
-            tripDate,
-            // projectID,
+            // tripDate,
+            projectID,
             defaultValue, // default value to save if doesn't exist yet
             {
               type: "rich-text",
@@ -223,6 +224,7 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
           )
           .then((data) => {
             // get data of opened doc
+            console.log(data);
             connectedRef.current = true;
             setDoc(data);
           })
@@ -234,7 +236,7 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
         console.error("[okdb] error connecting ", err);
         setError(err.message ? err.message : err);
       });
-  }, []);
+  }, [selectedIndex]);
 
   useEffect(() => {
     console.log("Editor init");
@@ -313,7 +315,12 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
       editorRef.current.setContents(doc);
     }
   }, [editorRef, doc]);
-  // console.log(presences);
+  // console.log(okdb);
+  const onTest = () => {
+    setTest(test + 1);
+    console.log(test);
+  };
+
   return (
     <EditorBox>
       {error && <Alert severity="error">{error}</Alert>}
@@ -321,6 +328,7 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
         <div id="editor-container"></div>
       </EditorContainer>
       <OnlineFriends>
+        <button onClick={() => onTest()}>테스트</button>
         <h4>🍊 Online 친구들 </h4>
         <div className="online-item" key="000">
           <svg
