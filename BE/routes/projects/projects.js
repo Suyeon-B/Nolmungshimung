@@ -23,7 +23,7 @@ router.post("/", async (req, res) => {
   ]);
 
   // 여행지 경로에 배열 추가하기
-  for (let i = 0; i < project["term"]; i++) {
+  for (let i = 0; i <= project["term"]; i++) {
     project["routes"].push([]);
   }
 
