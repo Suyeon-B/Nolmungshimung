@@ -5,6 +5,7 @@ import SearchMap from "./pages/search/Search";
 import Home from "./pages/Home";
 import Test from "./pages/test";
 import TextEditor from "./pages/shareMemo/TextEditor";
+import SpotDetail from "./components/spot/SpotDetail";
 import KakaoSignIn from "./components/sign/KakaoSignIn";
 import VoiceTalk from "./components/voiceTalk/voiceTalk";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
@@ -40,6 +41,7 @@ function App() {
           <BodyDiv>
             <ProjectSide />
             <Routes>
+              <Route path="detail/*" element={<SpotDetail />} />
               <Route path="signin/*" element={<SignIn />} />
               <Route path="signup/*" element={<SignUp />} />
               <Route path="voicetalk/*" element={<VoiceTalk />} />

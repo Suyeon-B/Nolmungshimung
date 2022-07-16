@@ -100,7 +100,7 @@ export default function SpotList({
   setIsAddDel,
 }) {
   // const [state, setState] = useState([testItem, testItem2]);
-  console.log(dayItem);
+
   const [state, setState] = useState([dayItem[selectedIndex]]);
 
   function onDragEnd(result) {
@@ -112,17 +112,22 @@ export default function SpotList({
     }
     const sInd = +source.droppableId;
     const dInd = +destination.droppableId;
-
+    console.log(`sInd: ${sInd}, dInd: ${dInd}`);
     if (sInd === dInd) {
       const items = reorder(
-        [...dayItem][sInd],
+        [...dayItem][selectedIndex],
+        // [dayItem[selectedIndex]][sInd],
         source.index,
         destination.index
       );
+      console.log(items);
       const newState = [...[...dayItem]];
-      newState[sInd] = items;
+      console.log("=====변경 전=====");
+      console.log(newState);
+      newState[selectedIndex] = items;
 
       setItemRoute(newState);
+      console.log(newState);
     } else {
       const result = move(
         [...dayItem][sInd],
@@ -135,6 +140,7 @@ export default function SpotList({
       newState[dInd] = result[dInd];
 
       setItemRoute(newState);
+      console.log(newState);
     }
     setIsDrage(true);
   }

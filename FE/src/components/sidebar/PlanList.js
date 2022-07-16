@@ -99,21 +99,24 @@ function PlanList({
       const items = reorder([...routes][sInd], source.index, destination.index);
       const newState = [...[...routes]];
       newState[sInd] = items;
+      console.log(newState);
       setRoutes(newState);
     } else {
       const result = move([...routes][sInd], [...routes][dInd], source, destination);
       const newState = [...[...routes]];
       newState[sInd] = result[sInd];
       newState[dInd] = result[dInd];
-
+      console.log(newState);
       setRoutes(newState);
     }
+    // console.log(`selectIdx: ${selectIdx}`);
+
     setIsDrage(true);
   }
 
-  useEffect(() => {
-    setSelectedDay(0);
-  }, [routes]);
+  // useEffect(() => {
+  //   setSelectedDay(0);
+  // }, [routes]);
 
   const onClick = (event) => {
     const selectIdx = +event.target.dataset.idx;
