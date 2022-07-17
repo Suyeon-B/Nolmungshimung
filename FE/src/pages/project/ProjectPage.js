@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { Link, Outlet, useParams } from "react-router-dom";
 import PlanSideBar from "../../components/sidebar/PlanSideBar";
 import Search from "../search/Search";
 import Sfu from "./Sfu";
@@ -14,7 +14,9 @@ const socket = io(`https://${process.env.REACT_APP_SERVER_IP}:3001`);
 import socket from "../../socket";
 
 async function fetchProjectById(_id) {
-  const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`);
+  const response = await fetch(
+    `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`
+  );
   // const response = await fetch(
   //   `https://438e69a6-c891-4d7e-bfd2-f30c4eba330f.mock.pstmn.io/projects/mokc`
   // );
@@ -23,7 +25,6 @@ async function fetchProjectById(_id) {
 
 const ProjectPage = (props) => {
   const { projectId, tripDate } = useParams();
-  const navigate = useNavigate();
 
   const [items, setItems] = useState(null);
   const [itemsRoute, setItemsRoute] = useState(null);
@@ -79,14 +80,17 @@ const ProjectPage = (props) => {
     async function UpdateInfo() {
       // const tmpProjectId = await fetchProjectById(projectId);
       try {
-        const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${projectId}`, {
-          method: "PATCH",
-          headers: {
-            "content-type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify(itemsRoute),
-        }).then((res) => res.json());
+        const response = await fetch(
+          `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${projectId}`,
+          {
+            method: "PATCH",
+            headers: {
+              "content-type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify(itemsRoute),
+          }
+        ).then((res) => res.json());
         // console.log(response);
       } catch (err) {
         console.log(err);
@@ -118,15 +122,6 @@ const ProjectPage = (props) => {
     setIsFirstPage(!isFirstPage);
   };
 
-  const moveSerchPage = () => {
-    setIsFirstPage(true);
-    navigate(`/project/${projectId}`);
-  };
-  const moveDetailPage = () => {
-    setIsFirstPage(false);
-    navigate(`/project/${projectId}/${items.trip_date[0]}`);
-  };
-
   return (
     <>
       {/* {data ? <div>is data</div> : <div>not data</div>} */}
@@ -139,8 +134,6 @@ const ProjectPage = (props) => {
         setSelectedIndex={setSelectedIndex}
         setIsDrage={setIsDrage}
         setIsAddDel={setIsAddDel}
-        moveDetailPage={moveDetailPage}
-        moveSerchPage={moveSerchPage}
       />
       <PlanSection>
         {isFirstPage && (
@@ -163,6 +156,13 @@ const ProjectPage = (props) => {
             setIsAddDel={setIsAddDel}
           />
         )}
+        {/* <SpotRoute
+          selectedIndex={selectedIndex}
+          item={itemsRoute}
+          setItemRoute={setItemsRoute}
+          itemId={items._id}
+          tripDate={tripDate}
+        /> */}
       </PlanSection>
       <Voicetalk projectId={projectId}/>
     </>
