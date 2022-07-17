@@ -114,15 +114,6 @@ const ProjectPage = (props) => {
     setIsFirstPage(!isFirstPage);
   };
 
-  const moveSerchPage = () => {
-    setIsFirstPage(true);
-    navigate(`/project/${projectId}`);
-  };
-  const moveDetailPage = () => {
-    setIsFirstPage(false);
-    navigate(`/project/${projectId}/${items.trip_date[0]}`);
-  };
-
   return (
     <>
       {/* {data ? <div>is data</div> : <div>not data</div>} */}
@@ -135,8 +126,6 @@ const ProjectPage = (props) => {
         setSelectedIndex={setSelectedIndex}
         setIsDrage={setIsDrage}
         setIsAddDel={setIsAddDel}
-        moveDetailPage={moveDetailPage}
-        moveSerchPage={moveSerchPage}
       />
       <PlanSection>
         {isFirstPage && (
@@ -154,7 +143,6 @@ const ProjectPage = (props) => {
             item={itemsRoute}
             setItemRoute={setItemsRoute}
             itemId={items._id}
-            tripDate={tripDate}
             setIsDrage={setIsDrage}
             setIsAddDel={setIsAddDel}
           />

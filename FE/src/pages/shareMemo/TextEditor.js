@@ -72,7 +72,7 @@ const colors = ["#FF8830", "#8DD664", "#FF6169", "#975FFE", "#0072BC"];
 
 const getUserColor = (index) => colors[index % colors.length];
 
-function TextEditor({ project_Id, trip_Date }) {
+function TextEditor({ project_Id }) {
   const [user, setUser] = useState(null);
   const [doc, setDoc] = useState(null);
   const [presences, setPresences] = useState({});
@@ -82,25 +82,19 @@ function TextEditor({ project_Id, trip_Date }) {
   const mousePointerRef = useRef(null);
   const editorCursorRef = useRef(null);
   const [projectID, setProjectId] = useState(project_Id);
-  const [tripDate, setTripDate] = useState(trip_Date);
   const userName = sessionStorage.getItem("myNickname");
 
   useEffect(() => {
     setProjectId(project_Id);
   }, [project_Id]);
   // console.log(projectID);
-  console.log(okdb);
-
-  useEffect(() => {
-    setTripDate(trip_Date);
-  }, [trip_Date]);
-  // console.log(tripDate);
+  // console.log(okdb);
 
   useEffect(() => {
     return () => {
-      console.log(tripDate, "  공유 편집 나가기");
+      console.log(projectID, "  공유 편집 나가기");
       // selectedIndex로 공유 편집 나가기 구현하기
-      socket.emit("exitSharedEditing", [projectID, tripDate, userName]);
+      socket.emit("exitSharedEditing", [projectID, userName]);
       setPresences({});
     };
   }, []);
@@ -168,7 +162,7 @@ function TextEditor({ project_Id, trip_Date }) {
   useEffect(() => {
     // 1. step - connect
     okdb
-      .connect({ myNickname, tripDate })
+      .connect({ myNickname, projectID })
       .then((user) => {
         setUser({ name: myNickname }); // 세션에 저장된 이름으로 내 이름을 띄웁니다.
         // 2. step - open document for collaborative editing
@@ -189,7 +183,7 @@ function TextEditor({ project_Id, trip_Date }) {
         okdb
           .open(
             DATA_TYPE, // collection name
-            projectID + tripDate,
+            projectID,
             defaultValue, // default value to save if doesn't exist yet
             {
               type: "rich-text",
@@ -210,7 +204,7 @@ function TextEditor({ project_Id, trip_Date }) {
         console.error("[okdb] error connecting ", err);
         setError(err.message ? err.message : err);
       });
-  }, [tripDate]);
+  }, [projectID]);
 
   useEffect(() => {
     console.log("Editor init");
@@ -237,7 +231,7 @@ function TextEditor({ project_Id, trip_Date }) {
       console.log("text-change ", delta, contents, source);
       delta.type = "rich-text";
       if (connectedRef.current) {
-        okdb.op(DATA_TYPE, projectID + tripDate, delta).catch((err) => console.log("Error updating doc", err));
+        okdb.op(DATA_TYPE, projectID, delta).catch((err) => console.log("Error updating doc", err));
       }
     });
     editor.on("selection-change", function (range, oldRange, source) {
@@ -301,7 +295,7 @@ function TextEditor({ project_Id, trip_Date }) {
           </svg>
           me ({user ? user.name : "connecting..."})
         </div>
-        <TextEditorUsers tripDate={tripDate} presences={presences} />
+        <TextEditorUsers projectID={projectID} presences={presences} />
       </OnlineFriends>
     </EditorBox>
   );

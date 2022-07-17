@@ -74,7 +74,6 @@ function PlanList({
   isFirstPage,
   setIsDrage,
   setIsAddDel,
-  trip_date,
 }) {
   const params = useParams();
   const navigate = useNavigate();
@@ -122,7 +121,7 @@ function PlanList({
     const selectIdx = +event.target.dataset.idx;
     setSelectedIndex(selectIdx);
     setSelectedDay(selectIdx);
-    navigate(`/project/${params.projectId}/${trip_date[selectIdx]}`);
+    // navigate(`/project/${params.projectId}/${trip_date[selectIdx]}`);
     // window.location.href = `/project/${params.projectId}/${trip_date[selectIdx]}`;
     isFirstPage && toggleIsPage();
   };
