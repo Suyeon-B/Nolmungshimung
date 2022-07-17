@@ -75,8 +75,8 @@ export const RequireAuth = ({ children }) => {
     // console.log(`auth in Auth : ${JSON.stringify(auth)}`);
     // console.log(`auth.user in Auth: ${JSON.stringify(auth.user)}`);
 
-    return children;
-    // return <Navigate to="/signin" />;
+    // return children;
+    return <Navigate to="/signin" />;
   }
   return children;
 };

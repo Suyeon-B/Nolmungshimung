@@ -11,7 +11,7 @@ function Profile() {
   // console.log(`auth.user:${JSON.stringify(auth.user.user_name)}`);
   return (
     <section>
-      {auth.user ? (
+      {auth?.user ? (
         <ProfileDetailComponent />
       ) : (
         <ProfileImg
@@ -144,36 +144,6 @@ const ProfileCircle = styled(ProfileDetailComponent)`
   bottom: 0;
   margin-bottom: 20px;
   left: 20px;
-`;
-
-const ProfileDetailContainer = styled.div`
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  margin-left: 80px;
-  margin-bottom: 70px;
-  border-radius: 15px;
-  display: flex;
-  width: 65px;
-  flex-direction: column;
-  background-color: #000000;
-  opacity: 0.8;
-  z-index: 4;
-`;
-
-const ProfileDetailBtn = styled.span`
-  border: 0px;
-  color: white;
-  padding: 5px;
-  border-bottom: 1px solid white;
-  text-align: center;
-`;
-const ProfileDetailXBtn = styled.span`
-  border: 0px;
-  color: white;
-  padding: 5px;
-  border-bottom: 1px solid white;
-  text-align: right;
 `;
 
 export default ProjectSide;

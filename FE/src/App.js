@@ -49,13 +49,20 @@ function App() {
               <Route path="detail/*" element={<SpotDetail />} />
               <Route path="signin/*" element={<SignIn />} />
               <Route path="signup/*" element={<SignUp />} />
-              <Route path="voicetalk/*" element={<VoiceTalk />} />
+              {/* <Route path="voicetalk/*" element={<VoiceTalk />} /> */}
               <Route path="/" element={<Home />} />
               <Route path="/kakao/signin" element={<KakaoSignIn />} />
-              <Route path="project/*" element={<CreateProject />} />
-              <Route path="hyuk/*" element={<SpotList />} />
+              <Route
+                path="project/*"
+                element={
+                  <RequireAuth>
+                    <CreateProject />
+                  </RequireAuth>
+                }
+              />
+              {/* <Route path="hyuk/*" element={<SpotList />} /> */}
               {/* <Route path="project/:projectId" element={<ProjectPage />} /> */}
-              <Route path="project/:projectId" element={<ProjectPage />} />
+              {/* <Route path="project/:projectId" element={<ProjectPage />} /> */}
 
               {/* <Route
                 path="project/:projectId/:tripDate"

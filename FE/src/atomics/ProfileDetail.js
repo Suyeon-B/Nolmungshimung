@@ -22,11 +22,13 @@ function ProfileDetailComponent() {
   return (
     <Popover
       content={content}
-      title={`My Email : ${sessionStorage?.getItem("user_email")}`}
+      // title={`My Email : ${sessionStorage?.getItem("user_email")}`}
+      title={`My Email : ${auth.user?.user_email}`}
       trigger="hover"
       placement="rightBottom"
     >
-      <ProfileHoverBtn>혁</ProfileHoverBtn>
+      <ProfileHoverBtn>{auth.user?.user_name.slice(0, 3)}</ProfileHoverBtn>
+      {/* <ProfileHoverBtn>혁</ProfileHoverBtn> */}
     </Popover>
   );
 }
