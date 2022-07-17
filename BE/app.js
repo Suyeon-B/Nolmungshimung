@@ -54,6 +54,7 @@ io.on("connection", (socket) => {
   });
   ////프로젝트 관련 소켓
   socket.on("projectJoin", (projectId) => {
+    console.log("join", projectId);
     socket.join(projectId);
   });
   socket.on("changeRoute", ([itemsRoute, projectId]) => {
@@ -61,8 +62,8 @@ io.on("connection", (socket) => {
   });
 
   socket.on("exitSharedEditing", ([projectID, selectedIndex, name]) => {
-    console.log(projectID, selectedIndex, name);
-    socket.broadcast.to(projectID).emit("delectCurser", name);
+    console.log("deleteCurser", projectID, selectedIndex, name);
+    socket.broadcast.to(projectID).emit("deleteCurser", name);
   });
 });
 
@@ -125,7 +126,7 @@ try {
       const userName = myNickname; // 나중에 users.user_name으로 바꾸기
       const userId = "1" + nameIdx;
       nameIdx = (nameIdx + 1) % 10;
-      return { id: userId, name: userName, selectedIndex: selectedIndex };
+      return { id: 1, name: userName, selectedIndex: selectedIndex };
     }
     console.log("auth attempt for ", myNickname, " failed");
     return null;
