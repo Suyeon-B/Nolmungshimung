@@ -65,7 +65,7 @@ const getCrawl = async (id) => {
       reviews: [],
       img: "",
     };
-    const browser = await puppeteer.launch({ headless: true });
+    const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
     await page.goto("https://place.map.kakao.com/" + id);
     try {
