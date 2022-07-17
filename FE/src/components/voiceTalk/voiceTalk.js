@@ -1,41 +1,55 @@
+// import { randomUUID } from 'crypto';
 import React, { useState, useEffect, useRef } from 'react';
 import Peer from 'simple-peer';
 import styled from 'styled-components';
-import io from 'socket.io-client';
-const socket = io(`https://${process.env.REACT_APP_SERVER_IP}:3003`);
+import socket from './voiceSocket';
+import NewAudio from './NewAudio';
 
-const Voicetalk = (props) => {
-  const currentUser = sessionStorage.getItem("user_email");
-  if (!currentUser){
-    alert('로그인 해주세요')
-    window.location.href = "/";
-  }
-
+const Room = (props) => {
+  const currentUser = sessionStorage.getItem('user_email');
   const [peers, setPeers] = useState([]);
   const [userVideoAudio, setUserVideoAudio] = useState({
-    localUser: { video: false, audio: true },
+    localUser: { video: true, audio: true },
   });
   const peersRef = useRef([]);
-  const userVideoRef = useRef();
+  const userAudioRef = useRef();
   const userStream = useRef();
-  const roomId = props.projectId;
+  // const roomId = props.match.params.roomId;
+  const roomId = props.projectId
+  // const currentUser = u
 
   useEffect(() => {
 
+    socket.emit('BE-check-user', { roomId: roomId, currentUser })
+    socket.on('FE-error-user-exist', ({ error }) => {
+      if (!error) {
+        // const roomName = roomRef.current.value;
+        // const userName = userRef.current.value;
+
+        sessionStorage.setItem('user', currentUser);
+        // props.history.push(`/room/${roomName}`);
+      } else {
+        console.log('User name already exist');
+        // setErr(error);
+        // setErrMsg('User name already exist');
+      }
+    });
     // Connect Camera & Mic
     navigator.mediaDevices
       .getUserMedia({ video: false, audio: true })
       .then((stream) => {
-        userVideoRef.current.srcObject = stream;
+        userAudioRef.current.srcObject = stream;
         userStream.current = stream;
-
         socket.emit('BE-join-room', { roomId, userName: currentUser });
+
         socket.on('FE-user-join', (users) => {
+          console.log(`FE-user-join ${users}`)
+
           // all users
           const peers = [];
           users.forEach(({ userId, info }) => {
             let { userName, audio } = info;
-            console.log('---------', userName, currentUser);
+
             if (userName !== currentUser) {
               const peer = createPeer(userId, socket.id, stream);
 
@@ -154,17 +168,24 @@ const Voicetalk = (props) => {
     return peersRef.current.find((p) => p.peerID === id);
   }
 
+  function createUserVideo(peer, index, arr) {
+    return (
+        <NewAudio key={index} peer={peer} number={arr.length} />
+    );
+  }
+
   return (
-    <>
-          {/* Current User Video */}
+        <>
             <MyVideo
-              ref={userVideoRef}
-              autoPlay
+              ref={userAudioRef}
+              // muted
             ></MyVideo>
-        </>
+          {peers &&
+            peers.map((peer, index, arr) => createUserVideo(peer, index, arr))}
+        </>        
   );
 };
 
 const MyVideo = styled.audio``;
 
-export default Voicetalk;
+export default Room;
