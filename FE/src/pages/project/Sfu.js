@@ -18,6 +18,11 @@ class Sfu {
       configuration: {
         iceServers: [
           {
+            urls: "turn:3.36.66.43",
+            username: "admin",
+            credential: "admin",
+          },
+          {
             urls: "turn:3.36.66.43:3478?transport=udp",
             username: "admin",
             credential: "admin",

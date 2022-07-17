@@ -1,286 +1,170 @@
-import React, {Component} from 'react';
-import {OpenVidu} from 'openvidu-browser'
-import axios from 'axios';
-// import './App.css';
-import UserVideoComponent from './UserVideoComponent';
+import React, { useState, useEffect, useRef } from 'react';
+import Peer from 'simple-peer';
+import styled from 'styled-components';
+import io from 'socket.io-client';
+const socket = io(`https://${process.env.REACT_APP_SERVER_IP}:3003`);
 
-class App extends Component {
+const Voicetalk = (props) => {
+  const currentUser = sessionStorage.getItem("user_email");
+  if (!currentUser){
+    alert('로그인 해주세요')
+    window.location.href = "/";
+  }
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            mySessionId: 'SessionA',
-            myId: 'publisher1',
-            myPassword: 'pass',
-            mySubscribers: [],
-            myToken: undefined,
-            session: undefined,
-            publisher: undefined,
-            mainStreamManager: undefined
-        };
-        this.OV = undefined;
-    }
+  const [peers, setPeers] = useState([]);
+  const [userVideoAudio, setUserVideoAudio] = useState({
+    localUser: { video: false, audio: true },
+  });
+  const peersRef = useRef([]);
+  const userVideoRef = useRef();
+  const userStream = useRef();
+  const roomId = props.projectId;
 
-    componentDidMount() {
-        axios.get(`https://${process.env.REACT_APP_SERVER_IP}:8443/voicetalk/users`)
-            .then(response => {
-                console.log(response.data)
-            })
-            .catch(error => {
-                console.error(error)
-            });
-        window.addEventListener('beforeunload', this.onbeforeunload);
-    }
+  useEffect(() => {
 
-    componentWillUnmount() {
-        window.removeEventListener('beforeunload', this.onbeforeunload);
-    }
+    // Connect Camera & Mic
+    navigator.mediaDevices
+      .getUserMedia({ video: false, audio: true })
+      .then((stream) => {
+        userVideoRef.current.srcObject = stream;
+        userStream.current = stream;
 
-    connServer = () => {
-        this.OV = new OpenVidu();
-        this.setState({
-            session: this.OV.initSession()
-        }, () => {
-            const {myId, myPassword, mySessionId, session} = this.state;
-            axios.post(`https://${process.env.REACT_APP_SERVER_IP}:8443/voicetalk/connect`, {
-                params: {
-                    id: myId,
-                    password: myPassword,
-                    sessionId: mySessionId
-                }
-            })
-                .then(response => {
-                    const {sessionName, token, userName} = response.data;
+        socket.emit('BE-join-room', { roomId, userName: currentUser });
+        socket.on('FE-user-join', (users) => {
+          // all users
+          const peers = [];
+          users.forEach(({ userId, info }) => {
+            let { userName, audio } = info;
+            console.log('---------', userName, currentUser);
+            if (userName !== currentUser) {
+              const peer = createPeer(userId, socket.id, stream);
 
-                    this.setState({
-                        mySessionId: sessionName,
-                        myToken: token
-                    });
+              peer.userName = userName;
+              peer.peerID = userId;
 
-                    session.connect(token, {clientData: userName})
-                        .then(() => {
+              peersRef.current.push({
+                peerID: userId,
+                peer,
+                userName,
+              });
+              peers.push(peer);
 
-                            let publisher = this.OV.initPublisher(undefined, {
-                                audioSource: undefined, // The source of audio. If undefined default microphone
-                                videoSource: undefined, // The source of video. If undefined default webcam
-                                publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
-                                publishVideo: true, // Whether you want to start publishing with your video enabled or not
-                                resolution: '640x480', // The resolution of your video
-                                frameRate: 30, // The frame rate of your video
-                                insertMode: 'APPEND', // How the video is inserted in the target element 'video-container'
-                                mirror: false, // Whether to mirror your local video or not
-                            });
+              setUserVideoAudio((preList) => {
+                return {
+                  ...preList,
+                  [peer.userName]: { audio },
+                };
+              });
+            }
+          });
 
-                            session.publish(publisher);
-                            this.setState({
-                                publisher: publisher,
-                                mainStreamManager: publisher
-                            });
-                        })
-                        .catch((err) => {
-                            console.log(`error ${err}`)
-                        });
-
-
-                    // Stream Created Event
-                    session.on('streamCreated', (event) => {
-                        let subscriber = session.subscribe(event.stream, undefined);
-                        let subscribers = this.state.mySubscribers;
-                        subscribers.push(subscriber);
-                        this.setState({
-                            mySubscribers: subscribers
-                        });
-                    });
-
-                    // On every Stream destroyed...
-                    session.on('streamDestroyed', (event) => {
-                        // Remove the stream from 'subscribers' array
-                        console.log("streamDestoryed");
-
-                        this.deleteSubscriber(event.stream.streamManager);
-                    });
-                })
-                .catch(response => console.log(response))
-        })
-    };
-
-
-    /**
-     * @description Send events to the server
-     * */
-    onbeforeunload = () => {
-        const {myToken, mySessionId} = this.state;
-        const params = {"token": myToken, "sessionName": mySessionId};
-
-        axios.post(`https://${process.env.REACT_APP_SERVER_IP}:8443/voicetalk/leaveSession`, {params : params})
-            .then(response => {
-                this.leaveSession();
-            })
-            .catch(error => {
-                console.error(error)
-            });
-    };
-
-
-    /**
-     * @description Delete streamManager from mySubscribers;
-     * */
-    deleteSubscriber = (streamManager) => {
-        let subscribers = this.state.mySubscribers;
-        let index = subscribers.indexOf(streamManager, 0);
-        if (index > -1) {
-            subscribers.splice(index, 1);
-            this.setState({
-                mySubscribers: subscribers
-            });
-        }
-    }
-
-    /**
-     * @description Switch selected element to main Video.
-     *
-     * @param {Object} stream - selected Video Stream
-     * */
-    handleMainVideoStream = (stream) => {
-        if (this.state.mainStreamManager !== stream) {
-            this.setState({
-                mainStreamManager: stream
-            })
-        }
-    };
-
-
-    /**
-     * @description leaveSession , initial state
-     * */
-    leaveSession = () => {
-
-        // disconnect session
-        let {session} = this.state;
-        if (session) {
-            session.disconnect();
-        }
-
-        // default settings
-        this.OV = null;
-        this.setState({
-            mySessionId: 'SessionA',
-            myId: 'publisher1',
-            myPassword: 'pass',
-            mySubscribers: [],
-            publisher: undefined,
-            mainStreamManager: undefined
+          setPeers(peers);
         });
+
+        socket.on('FE-receive-call', ({ signal, from, info }) => {
+          let { userName, audio } = info;
+          const peerIdx = findPeer(from);
+
+          if (!peerIdx) {
+            const peer = addPeer(signal, from, stream);
+
+            peer.userName = userName;
+
+            peersRef.current.push({
+              peerID: from,
+              peer,
+              userName: userName,
+            });
+            setPeers((users) => {
+              return [...users, peer];
+            });
+            setUserVideoAudio((preList) => {
+              return {
+                ...preList,
+                [peer.userName]: { audio },
+              };
+            });
+          }
+        });
+
+        socket.on('FE-call-accepted', ({ signal, answerId }) => {
+          const peerIdx = findPeer(answerId);
+          peerIdx.peer.signal(signal);
+        });
+
+        socket.on('FE-user-leave', ({ userId, userName }) => {
+          const peerIdx = findPeer(userId);
+          peerIdx.peer.destroy();
+          setPeers((users) => {
+            users = users.filter((user) => user.peerID !== peerIdx.peer.peerID);
+            return [...users];
+          });
+          peersRef.current = peersRef.current.filter(({ peerID }) => peerID !== userId );
+        });
+      });
+
+    return () => {
+      socket.disconnect();
     };
+    // eslint-disable-next-line
+  }, []);
 
-    /**
-     * @description Input element setState Event
-     *
-     * @param {Object} e - onChange Event
-     */
-    onChange = (e) => {
-        const {name, value} = e.target;
-        this.setState({
-            [name]: value
-        })
-    };
+  function createPeer(userId, caller, stream) {
+    const peer = new Peer({
+      initiator: true,
+      trickle: false,
+      stream,
+    });
 
-    render() {
-        const {publisher, myId, myPassword, mySessionId, mainStreamManager, mySubscribers} = this.state;
-        return (
-            <div className="container">
-                {publisher === undefined ? (
-                    <div id="join">
-                        <div id="img-div">
-                            <img src="resources/images/openvidu_grey_bg_transp_cropped.png" alt="OpenVidu logo"/>
-                        </div>
-                        <div id="join-dialog" className="jumbotron vertical-center">
-                            <h1> Join a video session </h1>
-                            <form className="form-group">
-                                <p>
-                                    <label>Id: </label>
-                                    <input
-                                        className="form-control"
-                                        type="text"
-                                        id="myId"
-                                        name="myId"
-                                        value={myId}
-                                        onChange={this.onChange}
+    peer.on('signal', (signal) => {
+      socket.emit('BE-call-user', {
+        userToCall: userId,
+        from: caller,
+        signal,
+      });
+    });
+    peer.on('disconnect', () => {
+      peer.destroy();
+    });
 
-                                    />
-                                </p>
-                                <p>
-                                    <label> Password: </label>
-                                    <input
-                                        className="form-control" type="text" id="myPassword" name="myPassword"
-                                        value={myPassword}  onChange={this.onChange}  required/>
-                                </p>
-                                <p>
-                                    <label> Session: </label>
-                                    <input
-                                        className="form-control"
-                                        type="text"
-                                        id="mySessionId"
-                                        name="mySessionId"
-                                        onChange={this.onChange}
-                                        value={mySessionId}
-                                        required
-                                    />
-                                </p>
-                                <p className="text-center">
-                                    <input className="btn btn-lg btn-success" name="commit" type="button" value="JOIN"
-                                           onClick={this.connServer}/>
-                                </p>
-                            </form>
-                        </div>
-                    </div>
-                ) : null}
+    return peer;
+  }
 
-                {publisher !== undefined ? (
-                    <div id="session">
-                        <div id="session-header">
-                            <h1 id="session-title">{mySessionId}</h1>
-                            <input
-                                className="btn btn-large btn-danger"
-                                type="button"
-                                id="buttonLeaveSession"
-                                onClick={this.onbeforeunload}
-                                value="Leave session"
-                            />
-                        </div>
+  function addPeer(incomingSignal, callerId, stream) {
+    const peer = new Peer({
+      initiator: false,
+      trickle: false,
+      stream,
+    });
 
-                        {/* Main Video Stream*/}
-                        {mainStreamManager !== undefined ? (
-                            <div id="main-video" className="stream-container col-md-6 col-xs-6">
-                                <UserVideoComponent streamManager={mainStreamManager}/>
-                            </div>
-                        ) : null}
-                        <div id="video-container" className="col-md-6">
+    peer.on('signal', (signal) => {
+      socket.emit('BE-accept-call', { signal, to: callerId });
+    });
 
-                            {/* my Video Stream*/}
-                            {publisher !== undefined ? (
-                                <div className="stream-container col-md-6 col-xs-6"
-                                     onClick={() => this.handleMainVideoStream(publisher)}>
-                                    <UserVideoComponent
-                                        streamManager={publisher}/>
-                                </div>
-                            ) : null}
+    peer.on('disconnect', () => {
+      peer.destroy();
+    });
 
+    peer.signal(incomingSignal);
 
-                            {/* my , other Video Stream */}
-                            {mySubscribers.map((sub, i) => (
-                                <div className="stream-container col-md-6 col-xs-6"
-                                     onClick={() => this.handleMainVideoStream(sub)}>
-                                    <UserVideoComponent streamManager={sub} key={i}/>
-                                </div>
-                            ))}
-                        </div>
+    return peer;
+  }
 
-                    </div>
-                ) : null}
-            </div>
-        );
-    }
-}
+  function findPeer(id) {
+    return peersRef.current.find((p) => p.peerID === id);
+  }
 
-export default App;
+  return (
+    <>
+          {/* Current User Video */}
+            <MyVideo
+              ref={userVideoRef}
+              autoPlay
+            ></MyVideo>
+        </>
+  );
+};
+
+const MyVideo = styled.audio``;
+
+export default Voicetalk;

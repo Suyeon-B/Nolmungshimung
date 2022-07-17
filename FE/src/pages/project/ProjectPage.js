@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { Link, Outlet, useParams } from "react-router-dom";
 import PlanSideBar from "../../components/sidebar/PlanSideBar";
 import Search from "../search/Search";
 import Sfu from "./Sfu";
 import SpotRoute from "../spotRoute/SpotRoute";
 import styled from "styled-components";
 import { BrowserRouter as Routes, Route, Navigate } from "react-router-dom";
+import Voicetalk from "../../components/voiceTalk/voiceTalk";
+import io from "socket.io-client";
 
-import socket from "../../socket";
+const socket = io(`https://${process.env.REACT_APP_SERVER_IP}:3001`);
+
+// import socket from "../../socket";
 
 async function fetchProjectById(_id) {
   const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`);
@@ -18,8 +22,7 @@ async function fetchProjectById(_id) {
 }
 
 const ProjectPage = (props) => {
-  const { projectId, tripDate } = useParams();
-  const navigate = useNavigate();
+  const { projectId } = useParams();
 
   const [items, setItems] = useState(null);
   const [itemsRoute, setItemsRoute] = useState(null);
@@ -37,14 +40,14 @@ const ProjectPage = (props) => {
       setItems(data);
       setItemsRoute(data.routes);
 
-      const joinVoice = new Sfu({ projectId: projectId });
-      // import Sfu from './Sfu'
-      // Sfu.connect()
-      joinVoice.on("onConnected", () => {
-        // joinVoice.join(projectId)
-        // console.log('joinVoice Start')
-        joinVoice.connect();
-      });
+      // const joinVoice = new Sfu({projectId: projectId, });
+      // // import Sfu from './Sfu'
+      // // Sfu.connect()
+      // joinVoice.on("onConnected", () => {
+      //   // joinVoice.join(projectId)
+      //   // console.log('joinVoice Start')
+      //   joinVoice.connect();
+      // });
 
       if (!isFirstPage) {
         setIsFirstPage(true);
@@ -147,7 +150,15 @@ const ProjectPage = (props) => {
             setIsAddDel={setIsAddDel}
           />
         )}
+        {/* <SpotRoute
+          selectedIndex={selectedIndex}
+          item={itemsRoute}
+          setItemRoute={setItemsRoute}
+          itemId={items._id}
+          tripDate={tripDate}
+        /> */}
       </PlanSection>
+      <Voicetalk projectId={projectId} />
     </>
   );
 };

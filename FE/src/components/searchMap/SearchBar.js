@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { SearchOutlined } from "@ant-design/icons";
 
 const SearchBar = (props) => {
   const [InputText, setInputText] = useState("");
@@ -15,8 +16,17 @@ const SearchBar = (props) => {
     setInputText("");
   };
   return (
-    <form onSubmit={handleSubmit}>
-      <fieldset>
+    <form
+      onSubmit={handleSubmit}
+      style={{
+        height: "50px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <StyledFieldset>
+        <SearchOutlined style={{ fontSize: "25px", color: "#ff8830" }} />
         <StyledInput
           type="text"
           id="search.keyword.query"
@@ -28,19 +38,37 @@ const SearchBar = (props) => {
           onChange={onChange}
           value={InputText}
         />
-        <input type="submit" id="search.keyword.submit" value="search" />
-      </fieldset>
+        <input
+          type="submit"
+          id="search.keyword.submit"
+          // value={<SearchOutlined />}
+          style={{ display: "none" }}
+          // style={{ marginLeft: "10px" }}
+        />
+      </StyledFieldset>
     </form>
   );
 };
 
+// const StyledInput = styled.input`
+const StyledFieldset = styled.fieldset`
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  border-radius: 5px;
+  padding-left: 15px;
+  border: 3px solid #ff8830;
+  width: 80%;
+  padding: 8px;
+`;
 const StyledInput = styled.input`
-  /* width: 300px;
-  height: 50px; */
-  border-radius: 10px;
+  height: 20px; */
+  border-radius: 5px;
   padding-left: 15px;
   font-style: normal;
   font-weight: 700;
   font-size: 18px;
+  outline : none;
+  border: 0;
 `;
 export default SearchBar;

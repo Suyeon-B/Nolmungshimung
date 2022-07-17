@@ -1,205 +1,122 @@
-const webrtc = require("wrtc");
-const { v4: uuidv4 } = require('uuid');
-const fs = require('fs');
-const http = require('http');
-const https = require('https');
-const WebSocket = require('ws');
-const express = require('express');
-const app = express();
+var express = require("express");
+var fs = require("fs");
+const path = require('path');
 
-app.use(express.static('public'));
-// based on examples at https://www.npmjs.com/package/ws 
-const WebSocketServer = WebSocket.Server;
+var app = express();
 
-let serverOptions = {
-    listenPort: 3003,
-    useHttps: true,
-    // httpsCertFile: '/home/ubuntu/simple_sfu/ssl/cert/ssl.crt',
-    // httpsKeyFile: '/home/ubuntu/simple_sfu/ssl/key/ssl.key',
-    // httpsCertFile: fs.readFileSync("nolshimung.pem"),
-    // httpsKeyFile: fs.readFileSync("nolshimung-key.pem")
-    cert: fs.readFileSync("nolshimung.pem"),
-    key: fs.readFileSync("nolshimung-key.pem")
+
+const privateKey = fs.readFileSync("nolshimung-key.pem", "utf8");
+const certificate = fs.readFileSync("nolshimung.pem", "utf8");
+const credentials = {
+  key: privateKey,
+  cert: certificate,
+  passphrase: process.env.PASSPHRASE,
 };
 
-let webServer = null;
-webServer = https.createServer(serverOptions, app);
-webServer.listen(serverOptions.listenPort);
-
-let peers = new Map();
-let consumers = new Map();
-
-function handleTrackEvent(e, peer, ws) {
-    if (e.streams && e.streams[0]) {
-        peers.get(peer).stream = e.streams[0];
-
-        const payload = {
-            type: 'newProducer',
-            id: peer,
-            username: peers.get(peer).username
-        }
-        wss.broadcast(JSON.stringify(payload));
-    }
-}
-
-function createPeer() {
-    let peer = new webrtc.RTCPeerConnection({
-        iceServers: [
-            {
-              urls: "turn:3.36.66.43:3478?transport=udp",
-              username: "admin",
-              credential: "admin",
-            },
-            {
-              urls: "turn:3.36.66.43:3478?transport=tcp",
-              username: "admin",
-              credential: "admin",
-            },
-            { urls: "stun:stun.l.google.com:19302" },
-            { urls: "stun:stun1.l.google.com:19302" },
-            { urls: "stun:stun2.l.google.com:19302" },
-            { urls: "stun:stun3.l.google.com:19302" },
-            { urls: "stun:stun4.l.google.com:19302" },
-            {
-                urls: 'turn:numb.viagenie.ca',
-                credential: 'muazkh',
-                username: 'webrtc@live.com'
-            },
-          ],
-    });
-
-    return peer;
-}
-
-// Create a server for handling websocket calls
-const wss = new WebSocketServer({ server: webServer });
-let rooms = {};
-let users = [{name: 'JG', use:false}, {name:'JG1', use:false}, {name:'JG2',use:false}, {name:'JG3',use:false}, {name:'JG4',use:false}, {name:'JG5',use:false}];
-
-wss.on('connection', function (ws, req) {
-    // let peerId = uuidv4();
-    let peerId = req.url.split('?')[1];
-    // const projectId = req.url.split('?')[1].split('/')[0];
-    // const id = req.url.split('?')[1].split('/')[1]
-    ws.id = peerId;
-    ws.on('close', (event) => {
-        peers.delete(ws.id);
-        consumers.delete(ws.id);
-        // console.log(JSON.stringify(users))
-        wss.broadcast(JSON.stringify({
-            type: 'user_left',
-            id: ws.id
-        }));
-    });
-
-    // console.log(`peerId : ${peerId}`)
-    ws.send(JSON.stringify({ 'type': 'welcome', 'id': peerId }));
-
-    ws.on('message', async function (message) {
-        const body = JSON.parse(message);
-        switch (body.type) {
-            case 'connect':
-                // console.log('connect!!!!!!!!!!! ');
-                // console.log('uqid = ', body.uqid)
-                peers.set(body.uqid, { socket: ws });
-                const peer = createPeer();
-                peers.get(body.uqid).username = body.username;
-                peers.get(body.uqid).peer = peer;
-                // console.log(`peer : ${peers.get(body.uqid).peer}`);
-                peer.ontrack = (e) => { handleTrackEvent(e, body.uqid, ws) };
-                const desc = new webrtc.RTCSessionDescription(body.sdp);
-                await peer.setRemoteDescription(desc);
-                const answer = await peer.createAnswer();
-                await peer.setLocalDescription(answer);
-                // console.log(`connected, id : ${body.username}`)
-
-
-                const payload = {
-                    type: 'answer',
-                    sdp: peer.localDescription
-                }
-
-                ws.send(JSON.stringify(payload));
-                break;
-            case 'getPeers':
-                let uuid = body.uqid;
-                const list = [];
-                peers.forEach((peer, key) => {
-                    // console.log(`key == uuid ? ${key}, ${uuid}`)
-                    if (key != uuid) {
-                        const peerInfo = {
-                            id: key,
-                            username: peer.username,
-                        }
-                        list.push(peerInfo);
-                    }
-                });
-                // console.log(`getPeers : ${list}`)
-                const peersPayload = {
-                    type: 'peers',
-                    peers: list
-                }
-                ws.send(JSON.stringify(peersPayload));
-                break;
-            case 'ice':
-                const user = peers.get(body.uqid);
-                // for (let k of peers.keys()){
-                //     console.log(`ice, user : ${k}`);
-                // }
-                // console.log('length: ', peers.size);
-                if (user.peer)
-                    user.peer.addIceCandidate(new webrtc.RTCIceCandidate(body.ice)).catch(e => console.log(e));
-                break;
-            case 'consume':
-                try {
-                    let { id, sdp, consumerId } = body;
-                    const remoteUser = peers.get(id);
-                    const newPeer = createPeer();
-                    consumers.set(consumerId, newPeer);
-                    const _desc = new webrtc.RTCSessionDescription(sdp);
-                    await consumers.get(consumerId).setRemoteDescription(_desc);
-
-                    remoteUser.stream.getTracks().forEach(track => {
-                        consumers.get(consumerId).addTrack(track, remoteUser.stream);
-                    });
-                    const _answer = await consumers.get(consumerId).createAnswer();
-                    await consumers.get(consumerId).setLocalDescription(_answer);
-
-                    const _payload = {
-                        type: 'consume',
-                        sdp: consumers.get(consumerId).localDescription,
-                        username: remoteUser.username,
-                        id,
-                        consumerId
-                    }
-
-                    ws.send(JSON.stringify(_payload));
-                } catch (error) {
-                    console.log(error)
-                }
-
-                break;
-            case 'consumer_ice':
-                if (consumers.has(body.consumerId)) {
-                    consumers.get(body.consumerId).addIceCandidate(new webrtc.RTCIceCandidate(body.ice)).catch(e => console.log(e));
-                }
-                break;
-            default:
-                wss.broadcast(message);
-
-        }
-    });
-
-    ws.on('error', () => ws.terminate());
+app.use(express.static(path.join(__dirname, "public")));
+var server = require("https").createServer(credentials, app);
+var io = require("socket.io")(server, {
+  cors: {
+    origin: "*",
+    credentials: true,
+  },
 });
 
-wss.broadcast = function (data) {
-    peers.forEach(function (peer) {
-        if (peer.socket.readyState === WebSocket.OPEN) {
-            peer.socket.send(data);
-        }
+let socketList = {};
+
+
+server.listen(3003, function () {
+  console.log("For Voice Socket IO server listening on port 3003");
+});
+
+// Socket
+io.on('connection', (socket) => {
+    console.log(`New User connected: ${socket.id}`);
+  
+    socket.on('disconnect', () => {
+      socket.disconnect();
+      console.log('User disconnected!');
     });
-};
+  
+    socket.on('BE-check-user', ({ roomId, userName }) => {
+      let error = false;
+  
+    //   io.sockets.in(roomId).clients((err, clients) => {
+        // Array.from(socket.rooms).forEach((err, clients) => {
+        Array.from(socket.rooms).forEach((client) => {
+          if (socketList[client] == userName) {
+            error = true;
+          }
+        });
+        socket.emit('FE-error-user-exist', { error });
+    //   });
+    });
+  
+    /**
+     * Join Room
+     */
+    socket.on('BE-join-room', ({ roomId, userName }) => {
+      // Socket Join RoomName
+      socket.join(roomId);
+      socketList[socket.id] = { userName, video: false, audio: true };
+    console.log(`소켓 시작 , ${socket.rooms[roomId]}`);
+      // Set User List
+    //   io.sockets.in(roomId).clients((err, clients) => {
+        // Array.from(socket.rooms).forEach((err, clients) => {
+        //     console.log('p------------', clients)
+        try {
+          const users = [];
+          Array.from(socket.rooms).forEach((client) => {
+            // Add User List
+            console.log('----', socketList[client], client)
+            users.push({ userId: client, info: socketList[client] });
+          });
+          socket.broadcast.except(roomId).emit('FE-user-join', users);
+          // io.sockets.in(roomId).emit('FE-user-join', users);
+        } catch (e) {
+          io.sockets.in(roomId).emit('FE-error-user-exist', { err: true });
+        }
+    //   });
+      console.log('----n o')
+    });
+  
+    socket.on('BE-call-user', ({ userToCall, from, signal }) => {
+      io.to(userToCall).emit('FE-receive-call', {
+        signal,
+        from,
+        info: socketList[socket.id],
+      });
+    });
+  
+    socket.on('BE-accept-call', ({ signal, to }) => {
+      io.to(to).emit('FE-call-accepted', {
+        signal,
+        answerId: socket.id,
+      });
+    });
+  
+    socket.on('BE-send-message', ({ roomId, msg, sender }) => {
+      io.sockets.in(roomId).emit('FE-receive-message', { msg, sender });
+    });
+  
+    socket.on('BE-leave-room', ({ roomId, leaver }) => {
+      delete socketList[socket.id];
+      socket.broadcast
+        .to(roomId)
+        .emit('FE-user-leave', { userId: socket.id, userName: [socket.id] });
+      io.sockets.sockets[socket.id].leave(roomId);
+    });
+  
+    socket.on('BE-toggle-camera-audio', ({ roomId, switchTarget }) => {
+      if (switchTarget === 'video') {
+        socketList[socket.id].video = !socketList[socket.id].video;
+      } else {
+        socketList[socket.id].audio = !socketList[socket.id].audio;
+      }
+      socket.broadcast
+        .to(roomId)
+        .emit('FE-toggle-camera', { userId: socket.id, switchTarget });
+    });
+  });
 
-
-module.exports = wss;
+module.exports = io;
