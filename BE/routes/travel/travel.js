@@ -61,34 +61,65 @@ const puppeteer = require("puppeteer");
 
 const getCrawl = async (id) => {
   try {
+    const data = {
+      reviews: [],
+      img: "",
+    };
     const browser = await puppeteer.launch({ headless: true });
     const page = await browser.newPage();
     await page.goto("https://place.map.kakao.com/" + id);
     try {
-      await page.waitForSelector(".evaluation_review li .comment_info p span", {
+      await page.waitForSelector(".evaluation_review li", {
         timeout: 1000,
       });
+      const resultRevies = await page.evaluate(() => {
+        let reviews = [];
+        const reviewEls = document.querySelectorAll(".evaluation_review li");
+        // console.log(commentEls.length);
+        if (reviewEls.length) {
+          reviewEls.forEach((v) => {
+            // console.log(v.innerText);
+            const star = v.querySelector(".star_info").innerText.charAt(0);
+            const comment = v.querySelector(".comment_info p").innerText;
+            reviews.push([star, comment]);
+          });
+        }
+
+        return reviews;
+      });
+      data.reviews = resultRevies;
     } catch (e) {
       await page.close();
       await browser.close();
-      return [];
+      data.reviews = [0];
+      return data;
     }
-    const result = await page.evaluate(() => {
-      let reviews = [];
-      const commentEls = document.querySelectorAll(
-        ".evaluation_review li .comment_info p span"
-      );
-      if (commentEls.length) {
-        commentEls.forEach((v) => {
-          reviews.push(v.innerText);
-        });
-      }
-      return reviews;
-    });
-    let reviews = result;
+
+    const page_now = await page.$(".link_present span");
+    await page_now.click();
+    await page.click(".link_present span");
+    try {
+      await page.waitForSelector(".view_image img", {
+        timeout: 500,
+      });
+
+      // console.log(await page.content());
+      const resultImg = await page.evaluate(() => {
+        let img = "";
+        const imgEls = document.querySelector(".view_image img");
+        if (imgEls) {
+          img = imgEls.src;
+        }
+        return img;
+      });
+
+      data.img = resultImg;
+    } catch (e) {
+      data.img = "";
+    }
     await page.close();
     await browser.close();
-    return reviews;
+    return data;
   } catch (e) {
     console.log(e);
     return null;
@@ -107,7 +138,7 @@ router.post("/place", async (req, res) => {
   // console.log(data);
   return res.status(200).send({
     success: true,
-    reviews: data,
+    data: data,
   });
 });
 
