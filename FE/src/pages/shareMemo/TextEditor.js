@@ -74,6 +74,8 @@ const colors = ["#FF8830", "#8DD664", "#FF6169", "#975FFE", "#0072BC"];
 
 const getUserColor = (index) => colors[index % colors.length];
 
+let newTs = new Set();
+
 function TextEditor({ project_Id, selectedIndex, trip_Date }) {
   const [user, setUser] = useState(null);
   const [doc, setDoc] = useState(null);
@@ -87,12 +89,10 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
   // const [tripDate, setTripDate] = useState(trip_Date);
 
   const userName = sessionStorage.getItem("myNickname");
-  // const [tripDate, setTripDate] = useState(trip_Date);
-  const [test, setTest] = useState(1);
-
-  // useEffect(() => {
-  //   setTripDate(trip_Date);
-  // }, [trip_Date]);
+  // console.log(okdb);
+  useEffect(() => {
+    setProjectId(project_Id);
+  }, [project_Id]);
 
   useEffect(() => {
     return () => {
@@ -104,7 +104,14 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
   }, []);
 
   useEffect(() => {
-    socket.on("delectCurser", (name) => {
+    console.log("날짜 변경");
+    socket.emit("exitSharedEditing", [projectID, selectedIndex, userName]);
+    setPresences({});
+  }, [selectedIndex]);
+
+  useEffect(() => {
+    socket.on("deleteCurser", (name) => {
+      console.log("deleteCurser", name);
       setPresences((prev) => {
         const newState = cloneDeep(prev);
         delete newState[name];
@@ -116,6 +123,8 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
 
         return newState;
       });
+
+      console.log(presences);
     });
   }, []);
 
@@ -150,7 +159,6 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
         newState[id].color = userColor;
         if (editorRef.current) {
           const cursors = editorRef.current.getModule("cursors");
-
           if (data.editorCursor) {
             cursors.createCursor(id, data.user.name, userColor);
             cursors.moveCursor(id, data.editorCursor);
@@ -169,6 +177,7 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
     okdb
       .connect({ myNickname, selectedIndex })
       .then((user) => {
+        console.log(user);
         setUser({ name: myNickname }); // 세션에 저장된 이름으로 내 이름을 띄웁니다.
         // 2. step - open document for collaborative editing
         const defaultValue = [
@@ -176,12 +185,17 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
             insert: "",
           },
         ];
+
         const onOperation = (data, meta) => {
           // callback to receive changes from others
-          console.log("onOperation", data, meta);
-          if (editorRef.current) {
-            console.log("Editor update", data);
-            editorRef.current.updateContents(data);
+
+          if (!newTs.has(meta.ts)) {
+            newTs.add(meta.ts);
+            if (meta.user.name === userName) return;
+            if (editorRef.current) {
+              console.log("Editor update");
+              editorRef.current.updateContents(data);
+            }
           }
         };
 
@@ -231,20 +245,24 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
     });
 
     editorRef.current = editor;
+    console.log(editorRef);
 
     editor.on("text-change", (delta, oldDelta, source) => {
       if (source !== "user") return;
       const contents = editor.getContents();
 
-      console.log("text-change ", delta, contents, source);
+      // console.log("text-change ", delta, contents, source);
       delta.type = "rich-text";
       if (connectedRef.current) {
         // okdb.op(DATA_TYPE, project_Id, trip_Date, delta).catch((err) => console.log("Error updating doc", err));
-        okdb.op(DATA_TYPE, projectID, delta).catch((err) => console.log("Error updating doc", err));
+        okdb
+          .op(DATA_TYPE, projectID, delta)
+          .catch((err) => console.log("Error updating doc", err));
       }
     });
+
     editor.on("selection-change", function (range, oldRange, source) {
-      console.log("Local cursor change: ", range);
+      // console.log("Local cursor change: ", range);
       editorCursorRef.current = range;
       if (connectedRef.current) {
         okdb.sendPresence({
@@ -299,7 +317,13 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
       <OnlineFriends>
         <h4>🍊 Online 친구들 </h4>
         <div className="online-item" key="000">
-          <svg width="10" focusable="false" viewBox="0 0 10 10" aria-hidden="true" title="fontSize small">
+          <svg
+            width="10"
+            focusable="false"
+            viewBox="0 0 10 10"
+            aria-hidden="true"
+            title="fontSize small"
+          >
             <circle cx="5" cy="5" r="5"></circle>
           </svg>
           me ({user ? user.name : "connecting..."})
