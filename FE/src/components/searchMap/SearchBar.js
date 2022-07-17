@@ -58,7 +58,7 @@ const StyledFieldset = styled.fieldset`
   border-radius: 5px;
   padding-left: 15px;
   border: 3px solid #ff8830;
-  width: 80%;
+  width: 85%;
   padding: 8px;
 `;
 const StyledInput = styled.input`

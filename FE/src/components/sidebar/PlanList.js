@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import styled from "styled-components";
+import "../../App.css";
 
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useEffect } from "react";
@@ -163,7 +164,7 @@ function PlanList({
                                   setIsAddDel(true);
                                 }}
                               >
-                                <img style={{ width: "16px" }} src="\statics\images\trash_can.png" />
+                                <img class="planListTrashCan" src="\statics\images\trash_can.png" />
                               </div>
                             </ItemInnerDiv>
                           </div>
@@ -212,6 +213,9 @@ const DateDetailBtn = styled.button`
   border: none;
   outline: 0;
 
+  margin-right: 10px;
+  margin-left: 10px;
+
   color: #757575;
   background-color: rgba(255, 255, 255, 0);
   /* &:hover {
@@ -224,6 +228,8 @@ const ItemInnerDiv = styled.div`
   justify-content: space-between;
   padding-top: 10px;
   padding-left: 25px;
+  // margin-right: 10px;
+  // margin-left: 10px;
 
   font-family: "Inter";
   font-style: normal;

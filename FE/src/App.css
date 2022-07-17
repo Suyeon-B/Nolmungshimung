@@ -4,3 +4,8 @@
   display: flex;
   flex-direction: row;
 }
+
+.planListTrashCan {
+  width: 16px;
+  margin-right: 15px;
+}

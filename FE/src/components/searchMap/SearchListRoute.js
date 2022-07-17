@@ -4,13 +4,14 @@ import styled from "styled-components";
 import { v4 as uuidV4 } from "uuid";
 import { overEvent, clickEvent, outEvent } from "../../pages/search/Search";
 import SearchDetail from "./SearchDetail";
+import { DownOutlined } from "@ant-design/icons";
+import { Dropdown, Menu, Space, Typography } from "antd";
+import "../../App.css";
 
 function GetGooglePlaceId(props) {
-  let url =
-    "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?";
+  let url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?";
   const api_key = "AIzaSyAFeyVrH7cjDHGVVLqhifBI-DFlTUwEn8E";
-  url =
-    url + "input=" + props.input + "&inputtype=textquery" + "&key=" + api_key;
+  url = url + "input=" + props.input + "&inputtype=textquery" + "&key=" + api_key;
   fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/travel/` + props.id)
     .then((response) => response.json())
     .then((data) => {
@@ -31,18 +32,15 @@ function GetGooglePlaceId(props) {
                   data.phone = props.phone;
                   data.place_url = props.place_url;
 
-                  fetch(
-                    `https://${process.env.REACT_APP_SERVER_IP}:8443/travel/${props.id}`,
-                    {
-                      method: "post",
-                      headers: {
-                        "content-type": "application/json",
-                        // "Access-Control-Allow-Origin" : '*'
-                      },
-                      body: JSON.stringify(data),
-                      // credentials: "include",
-                    }
-                  ).catch((error) => console.log("error:", error));
+                  fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/travel/${props.id}`, {
+                    method: "post",
+                    headers: {
+                      "content-type": "application/json",
+                      // "Access-Control-Allow-Origin" : '*'
+                    },
+                    body: JSON.stringify(data),
+                    // credentials: "include",
+                  }).catch((error) => console.log("error:", error));
                 })
                 .catch((error) => {
                   console.log("error:", error);
@@ -57,18 +55,15 @@ function GetGooglePlaceId(props) {
                 place_url: props.place_url,
                 result: null,
               };
-              fetch(
-                `https://${process.env.REACT_APP_SERVER_IP}:8443/travel/${props.id}`,
-                {
-                  method: "post",
-                  headers: {
-                    "content-type": "application/json",
-                    // "Access-Control-Allow-Origin" : '*'
-                  },
-                  body: JSON.stringify(kakaoData),
-                  // credentials: "include",
-                }
-              ).catch((error) => console.log("error:", error));
+              fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/travel/${props.id}`, {
+                method: "post",
+                headers: {
+                  "content-type": "application/json",
+                  // "Access-Control-Allow-Origin" : '*'
+                },
+                body: JSON.stringify(kakaoData),
+                // credentials: "include",
+              }).catch((error) => console.log("error:", error));
             }
           })
           .catch((error) => {
@@ -81,16 +76,13 @@ function GetGooglePlaceId(props) {
 
 const fetchAddTravelRoute = async (id, route) => {
   try {
-    const response = await fetch(
-      `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${id}`,
-      {
-        method: "post",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify(route),
-      }
-    );
+    const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${id}`, {
+      method: "post",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(route),
+    });
     const data = await response.json();
 
     // return response.json();
@@ -105,15 +97,7 @@ const culTripTermData = (startDate, day) => {
   return `${sDate.getMonth() + 1}월 ${sDate.getDate()}일`;
 };
 
-const SearchListRoute = ({
-  itemRoutes,
-  setItemRoutes,
-  projectId,
-  route,
-  idx,
-  startDate,
-  setIsAddDel,
-}) => {
+const SearchListRoute = ({ itemRoutes, setItemRoutes, projectId, route, idx, startDate, setIsAddDel }) => {
   const onClickAddRoute = (event) => {
     const uRoute = { ...route };
     uRoute["uid"] = uuidV4();
@@ -132,6 +116,7 @@ const SearchListRoute = ({
   const onClose = () => {
     setVisible(false);
   };
+
   return (
     <StyledLi
       // draggable
@@ -158,7 +143,7 @@ const SearchListRoute = ({
       <StyledRouteDiv>
         <StyledTile>{route.place_name}</StyledTile>
         <StyledDropDown>
-          <img src="\statics\images\hanlabbong.png" />
+          <img class="hanlabong" src="\statics\images\hanlabong.png" />
           <div className={"dropDownMenu"}>
             {itemRoutes.map((el, idx) => {
               return (
@@ -210,8 +195,8 @@ const SearchListRoute = ({
 const StyledLi = styled.li`
   border-bottom: 2px solid #ebebeb;
   padding-top: 20px;
-  padding-bottom: 10px;
-  padding-left: 12px;
+  padding-bottom: 15px;
+  padding-left: 25px;
 `;
 
 const StyledTile = styled.h2`
@@ -242,12 +227,13 @@ const StyledDropDown = styled.div`
       display: block;
       position: absolute;
       width: 90px;
-      margin-right: 4px;
-      left: -45px;
+      // margin-right: 50px;
+      left: -55px;
       top: 25px;
       background-color: rgb(147, 147, 147);
       border-radius: 3px;
       padding: 4px;
+      box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     }
   }
 `;
@@ -261,7 +247,7 @@ const StyledBtn = styled.button`
   padding-bottom: 5px;
   border: none;
   color: white;
-  font-size: 18px;
+  font-size: 15px;
   width: 100%;
   font-weight: 700;
   background-color: rgb(204, 204, 204, 0);
