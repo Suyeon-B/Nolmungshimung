@@ -27,6 +27,12 @@ async function SpotDetail(data) {
           console.log("Sign In Success");
           console.log(res.data);
           resolve(res.data);
+        } else {
+          console.log("400에러 왜...............");
+          resolve({
+            reviews: [],
+            img: "",
+          });
         }
       })
       .catch((err) => reject(err));
