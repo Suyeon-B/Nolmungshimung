@@ -108,6 +108,7 @@ app.use("/common", commonRouter);
 var OkdbServer = require("okdb-server");
 var options = {
   cors: {
+    allowedOrigins: "*",
     enabled: true,
   },
 };
