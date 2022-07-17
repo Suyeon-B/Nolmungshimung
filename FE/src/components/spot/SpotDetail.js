@@ -30,7 +30,7 @@ async function SpotDetail(data) {
         } else {
           console.log("400에러 왜...............");
           resolve({
-            reviews: [],
+            reviews: [[0]],
             img: "",
           });
         }
