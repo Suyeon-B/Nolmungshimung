@@ -22,12 +22,8 @@ const PlanSideBar = ({
         </NoneStyleBtn>
       </PlanTitleWrap>
       <SideBarBtnDIv>
-        {isFirstPage && (
-          <SideBarBtn onClick={toggleIsPage}>상세 일정 보러가기</SideBarBtn>
-        )}
-        {!isFirstPage && (
-          <SideBarBtn onClick={toggleIsPage}>장소 찾으러 가기</SideBarBtn>
-        )}
+        {isFirstPage && <SideBarBtn onClick={toggleIsPage}>상세 일정 보러가기</SideBarBtn>}
+        {!isFirstPage && <SideBarBtn onClick={toggleIsPage}>장소 찾으러 가기</SideBarBtn>}
       </SideBarBtnDIv>
 
       <PlanList

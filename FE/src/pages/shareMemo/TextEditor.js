@@ -87,7 +87,7 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
   // const [tripDate, setTripDate] = useState(trip_Date);
 
   const userName = sessionStorage.getItem("myNickname");
-  const [tripDate, setTripDate] = useState(trip_Date);
+  // const [tripDate, setTripDate] = useState(trip_Date);
   const [test, setTest] = useState(1);
 
   // useEffect(() => {
@@ -240,9 +240,7 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
       delta.type = "rich-text";
       if (connectedRef.current) {
         // okdb.op(DATA_TYPE, project_Id, trip_Date, delta).catch((err) => console.log("Error updating doc", err));
-        okdb
-          .op(DATA_TYPE, tripDate, delta)
-          .catch((err) => console.log("Error updating doc", err));
+        okdb.op(DATA_TYPE, projectID, delta).catch((err) => console.log("Error updating doc", err));
       }
     });
     editor.on("selection-change", function (range, oldRange, source) {
@@ -301,13 +299,7 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
       <OnlineFriends>
         <h4>🍊 Online 친구들 </h4>
         <div className="online-item" key="000">
-          <svg
-            width="10"
-            focusable="false"
-            viewBox="0 0 10 10"
-            aria-hidden="true"
-            title="fontSize small"
-          >
+          <svg width="10" focusable="false" viewBox="0 0 10 10" aria-hidden="true" title="fontSize small">
             <circle cx="5" cy="5" r="5"></circle>
           </svg>
           me ({user ? user.name : "connecting..."})

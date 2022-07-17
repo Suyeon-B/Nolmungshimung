@@ -98,12 +98,7 @@ function PlanList({
       console.log(newState);
       setRoutes(newState);
     } else {
-      const result = move(
-        [...routes][sInd],
-        [...routes][dInd],
-        source,
-        destination
-      );
+      const result = move([...routes][sInd], [...routes][dInd], source, destination);
       const newState = [...[...routes]];
       newState[sInd] = result[sInd];
       newState[dInd] = result[dInd];
@@ -134,16 +129,8 @@ function PlanList({
             <div key={ind} ref={(el) => (droppableRef.current[+ind] = el)}>
               <Droppable key={ind} droppableId={`${ind}`}>
                 {(provided, snapshot) => (
-                  <div
-                    ref={provided.innerRef}
-                    style={getListStyle(snapshot.isDragging)}
-                    {...provided.droppableProps}
-                  >
-                    <DateDetailBtnDiv
-                      data-idx={ind}
-                      onClick={onClick}
-                      selected={selectedDay}
-                    >
+                  <div ref={provided.innerRef} style={getListStyle(snapshot.isDragging)} {...provided.droppableProps}>
+                    <DateDetailBtnDiv data-idx={ind} onClick={onClick} selected={selectedDay}>
                       <DateDetailBtn data-idx={ind} onClick={onClick}>
                         {culTripTermData(startDate, ind)}
                       </DateDetailBtn>
@@ -157,20 +144,13 @@ function PlanList({
                       </DateDetailBtn>
                     </DateDetailBtnDiv>
                     {el.map((item, index) => (
-                      <Draggable
-                        key={item.uid}
-                        draggableId={item.uid}
-                        index={index}
-                      >
+                      <Draggable key={item.uid} draggableId={item.uid} index={index}>
                         {(provided, snapshot) => (
                           <div
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
-                            style={getItemStyle(
-                              snapshot.isDragging,
-                              provided.draggableProps.style
-                            )}
+                            style={getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
                           >
                             <ItemInnerDiv>
                               {item.place_name}
@@ -183,10 +163,7 @@ function PlanList({
                                   setIsAddDel(true);
                                 }}
                               >
-                                <img
-                                  style={{ width: "16px" }}
-                                  src="\statics\images\trash_can.png"
-                                />
+                                <img style={{ width: "16px" }} src="\statics\images\trash_can.png" />
                               </div>
                             </ItemInnerDiv>
                           </div>
@@ -220,8 +197,7 @@ const DateDetailBtnDiv = styled.div`
   justify-content: space-between;
   border-radius: 5px;
 
-  background-color: ${(props) =>
-    props.selected === props["data-idx"] && "#DEDEDE"};
+  background-color: ${(props) => props.selected === props["data-idx"] && "#DEDEDE"};
 
   &:hover {
     background-color: #dedede;
