@@ -60,9 +60,9 @@ io.on("connection", (socket) => {
     socket.broadcast.to(projectId).emit("updateRoute", itemsRoute);
   });
 
-  socket.on("exitSharedEditing", ([projectID, selectedIndex, name]) => {
-    console.log(projectID, selectedIndex, name);
-    socket.broadcast.to(projectID).emit("delectCurser", name);
+  socket.on("exitSharedEditing", ([projectID, tripDate, name]) => {
+    console.log(projectID, tripDate, name);
+    socket.broadcast.to(projectID).emit("deleteCurser", name);
   });
 });
 

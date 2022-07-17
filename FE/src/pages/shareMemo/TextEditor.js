@@ -89,9 +89,12 @@ function TextEditor({ project_Id, trip_Date }) {
     setProjectId(project_Id);
   }, [project_Id]);
   // console.log(projectID);
-  console.log(okdb);
+  // console.log(okdb);
 
   useEffect(() => {
+    console.log("=======trip_Date=====");
+
+    socket.emit("exitSharedEditing", [projectID, tripDate, userName]);
     setTripDate(trip_Date);
   }, [trip_Date]);
   // console.log(tripDate);
@@ -107,6 +110,7 @@ function TextEditor({ project_Id, trip_Date }) {
 
   useEffect(() => {
     socket.on("delectCurser", (name) => {
+      console.log("delectCurser");
       setPresences((prev) => {
         const newState = cloneDeep(prev);
         delete newState[name];
@@ -179,9 +183,9 @@ function TextEditor({ project_Id, trip_Date }) {
         ];
         const onOperation = (data, meta) => {
           // callback to receive changes from others
-          console.log("onOperation", data, meta);
+          // console.log("onOperation", data, meta);
           if (editorRef.current) {
-            console.log("Editor update", data);
+            // console.log("Editor update", data);
             editorRef.current.updateContents(data);
           }
         };
@@ -237,11 +241,13 @@ function TextEditor({ project_Id, trip_Date }) {
       console.log("text-change ", delta, contents, source);
       delta.type = "rich-text";
       if (connectedRef.current) {
-        okdb.op(DATA_TYPE, projectID + tripDate, delta).catch((err) => console.log("Error updating doc", err));
+        okdb
+          .op(DATA_TYPE, projectID + tripDate, delta)
+          .catch((err) => console.log("Error updating doc", err));
       }
     });
     editor.on("selection-change", function (range, oldRange, source) {
-      console.log("Local cursor change: ", range);
+      // console.log("Local cursor change: ", range);
       editorCursorRef.current = range;
       if (connectedRef.current) {
         okdb.sendPresence({
@@ -296,7 +302,13 @@ function TextEditor({ project_Id, trip_Date }) {
       <OnlineFriends>
         <h4>🍊 Online 친구들 </h4>
         <div className="online-item" key="000">
-          <svg width="10" focusable="false" viewBox="0 0 10 10" aria-hidden="true" title="fontSize small">
+          <svg
+            width="10"
+            focusable="false"
+            viewBox="0 0 10 10"
+            aria-hidden="true"
+            title="fontSize small"
+          >
             <circle cx="5" cy="5" r="5"></circle>
           </svg>
           me ({user ? user.name : "connecting..."})
