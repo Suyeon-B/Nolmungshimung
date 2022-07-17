@@ -3,7 +3,6 @@ import styled from "styled-components";
 
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
 
 const StyledDragDropContext = styled(DragDropContext)``;
 
@@ -74,10 +73,7 @@ function PlanList({
   isFirstPage,
   setIsDrage,
   setIsAddDel,
-  trip_date,
 }) {
-  const params = useParams();
-  const navigate = useNavigate();
   const droppableRef = useRef([]);
   const [selectedDay, setSelectedDay] = useState(0);
   // console.log(routes);
@@ -122,8 +118,6 @@ function PlanList({
     const selectIdx = +event.target.dataset.idx;
     setSelectedIndex(selectIdx);
     setSelectedDay(selectIdx);
-    navigate(`/project/${params.projectId}/${trip_date[selectIdx]}`);
-    // window.location.href = `/project/${params.projectId}/${trip_date[selectIdx]}`;
     isFirstPage && toggleIsPage();
   };
 

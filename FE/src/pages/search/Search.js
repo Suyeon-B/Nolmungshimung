@@ -230,7 +230,6 @@ const StyledMapDiv = styled.div`
   height: 100vh;
   min-width: calc(100% - 330px);
   position: relative;
-  background-color: red;
 `;
 
 const StyledUl = styled.ul``;

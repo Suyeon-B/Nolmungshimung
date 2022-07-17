@@ -9,6 +9,7 @@ import QuillCursors from "quill-cursors";
 import "quill/dist/quill.snow.css";
 import TextEditorUsers from "./TextEditorUsers";
 import styled from "styled-components";
+import { useParams } from "react-router-dom";
 import socket from "../../socket";
 
 const EditorBox = styled.div`
@@ -48,11 +49,12 @@ const OnlineFriends = styled.div`
 Quill.register("modules/cursors", QuillCursors);
 
 const HOST = `http://${process.env.REACT_APP_SERVER_IP}:7899`; // location of your server, use xxxxx to use sample, or follow this guide to build your own:
+// const TOKEN = "12345"; // either get it from your auth provider and validate with system integration, or use default system users:
 const myNickname = sessionStorage.getItem("myNickname");
-const DATA_TYPE = "share-memo"; // data type, typically corresponds to the table name
 
 const okdb = new OkdbClient(HOST, { timeout: 30000 });
 window.okdb = okdb;
+const DATA_TYPE = "todo-tasks"; // data type, typically corresponds to the table name
 
 const TOOLBAR_OPTIONS = [
   [{ align: [] }],
@@ -72,7 +74,9 @@ const colors = ["#FF8830", "#8DD664", "#FF6169", "#975FFE", "#0072BC"];
 
 const getUserColor = (index) => colors[index % colors.length];
 
-function TextEditor({ project_Id, trip_Date }) {
+let newTs = new Set();
+
+function TextEditor({ project_Id, selectedIndex, trip_Date }) {
   const [user, setUser] = useState(null);
   const [doc, setDoc] = useState(null);
   const [presences, setPresences] = useState({});
@@ -82,35 +86,32 @@ function TextEditor({ project_Id, trip_Date }) {
   const mousePointerRef = useRef(null);
   const editorCursorRef = useRef(null);
   const [projectID, setProjectId] = useState(project_Id);
-  const [tripDate, setTripDate] = useState(trip_Date);
-  const userName = sessionStorage.getItem("myNickname");
+  // const [tripDate, setTripDate] = useState(trip_Date);
 
+  const userName = sessionStorage.getItem("myNickname");
+  // console.log(okdb);
   useEffect(() => {
     setProjectId(project_Id);
   }, [project_Id]);
-  // console.log(projectID);
-  // console.log(okdb);
-
-  useEffect(() => {
-    console.log("=======trip_Date=====");
-
-    socket.emit("exitSharedEditing", [projectID, tripDate, userName]);
-    setTripDate(trip_Date);
-  }, [trip_Date]);
-  // console.log(tripDate);
 
   useEffect(() => {
     return () => {
-      console.log(tripDate, "  공유 편집 나가기");
+      console.log(selectedIndex, "  공유 편집 나가기");
       // selectedIndex로 공유 편집 나가기 구현하기
-      socket.emit("exitSharedEditing", [projectID, tripDate, userName]);
+      socket.emit("exitSharedEditing", [projectID, selectedIndex, userName]);
       setPresences({});
     };
   }, []);
 
   useEffect(() => {
-    socket.on("delectCurser", (name) => {
-      console.log("delectCurser");
+    console.log("날짜 변경");
+    socket.emit("exitSharedEditing", [projectID, selectedIndex, userName]);
+    setPresences({});
+  }, [selectedIndex]);
+
+  useEffect(() => {
+    socket.on("deleteCurser", (name) => {
+      console.log("deleteCurser", name);
       setPresences((prev) => {
         const newState = cloneDeep(prev);
         delete newState[name];
@@ -119,8 +120,11 @@ function TextEditor({ project_Id, trip_Date }) {
           const cursors = editorRef.current.getModule("cursors");
           cursors.removeCursor(name);
         }
+
         return newState;
       });
+
+      console.log(presences);
     });
   }, []);
 
@@ -155,7 +159,6 @@ function TextEditor({ project_Id, trip_Date }) {
         newState[id].color = userColor;
         if (editorRef.current) {
           const cursors = editorRef.current.getModule("cursors");
-
           if (data.editorCursor) {
             cursors.createCursor(id, data.user.name, userColor);
             cursors.moveCursor(id, data.editorCursor);
@@ -172,8 +175,9 @@ function TextEditor({ project_Id, trip_Date }) {
   useEffect(() => {
     // 1. step - connect
     okdb
-      .connect({ myNickname, tripDate })
+      .connect({ myNickname, selectedIndex })
       .then((user) => {
+        console.log(user);
         setUser({ name: myNickname }); // 세션에 저장된 이름으로 내 이름을 띄웁니다.
         // 2. step - open document for collaborative editing
         const defaultValue = [
@@ -181,19 +185,27 @@ function TextEditor({ project_Id, trip_Date }) {
             insert: "",
           },
         ];
+
         const onOperation = (data, meta) => {
           // callback to receive changes from others
-          // console.log("onOperation", data, meta);
-          if (editorRef.current) {
-            // console.log("Editor update", data);
-            editorRef.current.updateContents(data);
+
+          if (!newTs.has(meta.ts)) {
+            newTs.add(meta.ts);
+            if (meta.user.name === userName) return;
+            if (editorRef.current) {
+              console.log("Editor update");
+              editorRef.current.updateContents(data);
+            }
           }
         };
 
         okdb
           .open(
             DATA_TYPE, // collection name
-            projectID + tripDate,
+            // project_Id,
+            // trip_Date,
+            // tripDate,
+            projectID,
             defaultValue, // default value to save if doesn't exist yet
             {
               type: "rich-text",
@@ -214,7 +226,7 @@ function TextEditor({ project_Id, trip_Date }) {
         console.error("[okdb] error connecting ", err);
         setError(err.message ? err.message : err);
       });
-  }, [tripDate]);
+  }, [selectedIndex]);
 
   useEffect(() => {
     console.log("Editor init");
@@ -233,19 +245,22 @@ function TextEditor({ project_Id, trip_Date }) {
     });
 
     editorRef.current = editor;
+    console.log(editorRef);
 
     editor.on("text-change", (delta, oldDelta, source) => {
       if (source !== "user") return;
       const contents = editor.getContents();
 
-      console.log("text-change ", delta, contents, source);
+      // console.log("text-change ", delta, contents, source);
       delta.type = "rich-text";
       if (connectedRef.current) {
+        // okdb.op(DATA_TYPE, project_Id, trip_Date, delta).catch((err) => console.log("Error updating doc", err));
         okdb
-          .op(DATA_TYPE, projectID + tripDate, delta)
+          .op(DATA_TYPE, projectID, delta)
           .catch((err) => console.log("Error updating doc", err));
       }
     });
+
     editor.on("selection-change", function (range, oldRange, source) {
       // console.log("Local cursor change: ", range);
       editorCursorRef.current = range;
@@ -313,7 +328,7 @@ function TextEditor({ project_Id, trip_Date }) {
           </svg>
           me ({user ? user.name : "connecting..."})
         </div>
-        <TextEditorUsers tripDate={tripDate} presences={presences} />
+        <TextEditorUsers selectedIndex={selectedIndex} presences={presences} />
       </OnlineFriends>
     </EditorBox>
   );

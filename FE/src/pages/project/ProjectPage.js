@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { Link, Outlet, useParams } from "react-router-dom";
 import PlanSideBar from "../../components/sidebar/PlanSideBar";
 import Search from "../search/Search";
 import Sfu from "./Sfu";
@@ -24,8 +24,7 @@ async function fetchProjectById(_id) {
 }
 
 const ProjectPage = (props) => {
-  const { projectId, tripDate } = useParams();
-  const navigate = useNavigate();
+  const { projectId } = useParams();
 
   const [items, setItems] = useState(null);
   const [itemsRoute, setItemsRoute] = useState(null);
@@ -123,15 +122,6 @@ const ProjectPage = (props) => {
     setIsFirstPage(!isFirstPage);
   };
 
-  const moveSerchPage = () => {
-    setIsFirstPage(true);
-    navigate(`/project/${projectId}`);
-  };
-  const moveDetailPage = () => {
-    setIsFirstPage(false);
-    navigate(`/project/${projectId}/${items.trip_date[0]}`);
-  };
-
   return (
     <>
       {/* {data ? <div>is data</div> : <div>not data</div>} */}
@@ -144,8 +134,6 @@ const ProjectPage = (props) => {
         setSelectedIndex={setSelectedIndex}
         setIsDrage={setIsDrage}
         setIsAddDel={setIsAddDel}
-        moveDetailPage={moveDetailPage}
-        moveSerchPage={moveSerchPage}
       />
       <PlanSection>
         {isFirstPage && (
@@ -163,11 +151,17 @@ const ProjectPage = (props) => {
             item={itemsRoute}
             setItemRoute={setItemsRoute}
             itemId={items._id}
-            tripDate={tripDate}
             setIsDrage={setIsDrage}
             setIsAddDel={setIsAddDel}
           />
         )}
+        {/* <SpotRoute
+          selectedIndex={selectedIndex}
+          item={itemsRoute}
+          setItemRoute={setItemsRoute}
+          itemId={items._id}
+          tripDate={tripDate}
+        /> */}
       </PlanSection>
       <Voicetalk projectId={projectId} />
     </>
