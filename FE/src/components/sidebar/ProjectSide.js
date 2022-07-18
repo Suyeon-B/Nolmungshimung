@@ -97,12 +97,7 @@ function ProjectSide() {
 
   return (
     <>
-      <StyledMenu
-        theme="Light"
-        mode="inline"
-        defaultSelectedKeys={["1"]}
-        items={[LogoObj, ...items]}
-      />
+      <StyledMenu theme="Light" mode="inline" defaultSelectedKeys={["1"]} items={[LogoObj, ...items]} />
       <Profile />
     </>
   );
@@ -127,7 +122,7 @@ const ProfileImg = styled.img`
 `;
 
 const ProfileCircle = styled(ProfileDetailComponent)`
-  background-color: green;
+  background-color: #339f46;
   width: 60px;
   height: 60px;
   border-radius: 50%;

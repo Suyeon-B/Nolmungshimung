@@ -20,16 +20,13 @@ function Footer() {
   useEffect(() => {
     // * 이거아님 보이스톡 들온 사람이 출력돼야함
     if (projectId === null) return;
-    fetch(
-      `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${projectId}`,
-      {
-        method: "get",
-        headers: {
-          "content-type": "application/json",
-        },
-        credentials: "include",
-      }
-    )
+    fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${projectId}`, {
+      method: "get",
+      headers: {
+        "content-type": "application/json",
+      },
+      credentials: "include",
+    })
       .then((res) => res.json())
       .then((res) => {
         // console.log("res : ", res);
@@ -55,9 +52,9 @@ function Footer() {
   return (
     <FooterContainer>
       {mic ? (
-        <AudioFilled style={{ fontSize: "35px" }} onClick={onClickMic} />
+        <AudioFilled style={{ fontSize: "28px" }} onClick={onClickMic} />
       ) : (
-        <AudioMutedOutlined style={{ fontSize: "35px" }} onClick={onClickMic} />
+        <AudioMutedOutlined style={{ fontSize: "28px" }} onClick={onClickMic} />
       )}
       {profiles}
       {/* <FriendProfile nickName={"윤혁"} />
@@ -76,13 +73,17 @@ const FooterContainer = styled.div`
   background: #e7e7e7;
   border-radius: 50px;
   display: flex;
-  margin-left: 25px;
+  margin-left: 10px;
   align-items: center;
-  padding-left: 8px;
-  padding-right: 8px;
+  padding: 5px 15px 5px 15px;
   overflow: auto;
   white-space: nowrap;
   justify-content: space-between;
+  position: absolute;
+  bottom: 20px;
+  min-width: 200px;
+  width: 280px;
+  height: 60px;
 `;
 
 export default Footer;

@@ -38,7 +38,7 @@ const ProfileBtn = styled.p`
 `;
 
 const ProfileHoverBtn = styled.div`
-  background-color: green;
+  background-color: #339f46;
   width: 60px;
   height: 60px;
   border-radius: 50%;

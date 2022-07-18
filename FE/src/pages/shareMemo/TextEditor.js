@@ -38,6 +38,9 @@ const EditorContainer = styled.div`
   .ql-editor {
     min-height: 290px;
     max-height: 290px;
+    width: 100%;
+    height: calc(80% - 17px);
+    calc(50% - 37px);
   }
 `;
 
@@ -70,7 +73,7 @@ const Alert = (props) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 };
 
-const colors = ["#FF8830", "#8DD664", "#FF6169", "#975FFE", "#0072BC"];
+const colors = ["#FF8A3D", "#8DD664", "#FF6169", "#975FFE", "#0072BC"];
 
 const getUserColor = (index) => colors[index % colors.length];
 
@@ -174,58 +177,60 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
 
   useEffect(() => {
     // 1. step - connect
-    okdb
-      .connect({ myNickname, selectedIndex })
-      .then((user) => {
-        console.log(user);
-        setUser({ name: myNickname }); // 세션에 저장된 이름으로 내 이름을 띄웁니다.
-        // 2. step - open document for collaborative editing
-        const defaultValue = [
-          {
-            insert: "",
-          },
-        ];
-
-        const onOperation = (data, meta) => {
-          // callback to receive changes from others
-
-          if (!newTs.has(meta.ts)) {
-            newTs.add(meta.ts);
-            if (meta.user.name === userName) return;
-            if (editorRef.current) {
-              console.log("Editor update");
-              editorRef.current.updateContents(data);
-            }
-          }
-        };
-
-        okdb
-          .open(
-            DATA_TYPE, // collection name
-            // project_Id,
-            // trip_Date,
-            // tripDate,
-            projectID,
-            defaultValue, // default value to save if doesn't exist yet
+    if (myNickname) {
+      okdb
+        .connect({ myNickname, selectedIndex })
+        .then((user) => {
+          console.log(user);
+          setUser({ name: myNickname }); // 세션에 저장된 이름으로 내 이름을 띄웁니다.
+          // 2. step - open document for collaborative editing
+          const defaultValue = [
             {
-              type: "rich-text",
-              onPresence: presenceCallback, // changes for online status and cursors
-              onOp: onOperation, // process incremental delta changes directly, supported by Quill
+              insert: "",
+            },
+          ];
+
+          const onOperation = (data, meta) => {
+            // callback to receive changes from others
+
+            if (!newTs.has(meta.ts)) {
+              newTs.add(meta.ts);
+              if (meta.user.name === userName) return;
+              if (editorRef.current) {
+                console.log("Editor update");
+                editorRef.current.updateContents(data);
+              }
             }
-          )
-          .then((data) => {
-            // get data of opened doc
-            connectedRef.current = true;
-            setDoc(data);
-          })
-          .catch((err) => {
-            console.log("Error opening doc ", err);
-          });
-      })
-      .catch((err) => {
-        console.error("[okdb] error connecting ", err);
-        setError(err.message ? err.message : err);
-      });
+          };
+
+          okdb
+            .open(
+              DATA_TYPE, // collection name
+              // project_Id,
+              // trip_Date,
+              // tripDate,
+              projectID,
+              defaultValue, // default value to save if doesn't exist yet
+              {
+                type: "rich-text",
+                onPresence: presenceCallback, // changes for online status and cursors
+                onOp: onOperation, // process incremental delta changes directly, supported by Quill
+              }
+            )
+            .then((data) => {
+              // get data of opened doc
+              connectedRef.current = true;
+              setDoc(data);
+            })
+            .catch((err) => {
+              console.log("Error opening doc ", err);
+            });
+        })
+        .catch((err) => {
+          console.error("[okdb] error connecting ", err);
+          setError(err.message ? err.message : err);
+        });
+    }
   }, [selectedIndex]);
 
   useEffect(() => {
@@ -255,9 +260,7 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
       delta.type = "rich-text";
       if (connectedRef.current) {
         // okdb.op(DATA_TYPE, project_Id, trip_Date, delta).catch((err) => console.log("Error updating doc", err));
-        okdb
-          .op(DATA_TYPE, projectID, delta)
-          .catch((err) => console.log("Error updating doc", err));
+        okdb.op(DATA_TYPE, projectID, delta).catch((err) => console.log("Error updating doc", err));
       }
     });
 
@@ -314,22 +317,6 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
       <EditorContainer>
         <div id="editor-container"></div>
       </EditorContainer>
-      <OnlineFriends>
-        <h4>🍊 Online 친구들 </h4>
-        <div className="online-item" key="000">
-          <svg
-            width="10"
-            focusable="false"
-            viewBox="0 0 10 10"
-            aria-hidden="true"
-            title="fontSize small"
-          >
-            <circle cx="5" cy="5" r="5"></circle>
-          </svg>
-          me ({user ? user.name : "connecting..."})
-        </div>
-        <TextEditorUsers selectedIndex={selectedIndex} presences={presences} />
-      </OnlineFriends>
     </EditorBox>
   );
 }

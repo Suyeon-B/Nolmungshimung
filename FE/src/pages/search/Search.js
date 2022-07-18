@@ -27,7 +27,7 @@ var selectedMarker = null;
 var infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
 // 검색 결과 목록이나 마커를 클릭했을 때 장소명을 표출할 인포윈도우를 생성합니다
 function displayInfowindow(marker, title) {
-  var content = '<div style="padding:5px;z-index:1;">' + title + "</div>";
+  var content = '<div style="padding:5px;">' + title + "</div>";
   infowindow.setContent(content);
   infowindow.open(currentMap, marker);
 }
@@ -59,13 +59,7 @@ function createMarkerImage(markerSize, markerUrl) {
   return markerImage;
 }
 
-const Search = ({
-  itemRoutes,
-  setItemRoutes,
-  projectId,
-  startDate,
-  setIsAddDel,
-}) => {
+const Search = ({ itemRoutes, setItemRoutes, projectId, startDate, setIsAddDel }) => {
   const [searchPlace, setSearchPlace] = useState("");
   // 검색결과 배열에 담아줌
   const [Places, setPlaces] = useState([]);
@@ -94,11 +88,7 @@ const Search = ({
     currentMap = map;
     const ps = new kakao.maps.services.Places();
 
-    ps.keywordSearch(
-      searchPlace ? searchPlace : "제주도",
-      placesSearchCB,
-      searchOption
-    );
+    ps.keywordSearch(searchPlace ? searchPlace : "제주도", placesSearchCB, searchOption);
 
     // 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
     function placesSearchCB(data, status, pagination) {
@@ -197,10 +187,7 @@ const Search = ({
                 setIsAddDel={setIsAddDel}
               />
             ))}
-          <div
-            id="pagination"
-            style={{ position: "relative", zIndex: 2 }}
-          ></div>
+          <div id="pagination" style={{ position: "relative", zIndex: 2 }}></div>
         </ul>
       </SearchListDiv>
       <StyledMapDiv id="searchMap"></StyledMapDiv>
