@@ -52,7 +52,6 @@ const OnlineFriends = styled.div`
 Quill.register("modules/cursors", QuillCursors);
 
 const HOST = `http://${process.env.REACT_APP_SERVER_IP}:7899`; // location of your server, use xxxxx to use sample, or follow this guide to build your own:
-// const TOKEN = "12345"; // either get it from your auth provider and validate with system integration, or use default system users:
 const myNickname = sessionStorage.getItem("myNickname");
 
 const okdb = new OkdbClient(HOST, { timeout: 30000 });
@@ -92,7 +91,7 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
   // const [tripDate, setTripDate] = useState(trip_Date);
 
   const userName = sessionStorage.getItem("myNickname");
-  // console.log(okdb);
+  console.log(okdb);
   useEffect(() => {
     setProjectId(project_Id);
   }, [project_Id]);
@@ -267,9 +266,7 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
       delta.type = "rich-text";
       if (connectedRef.current) {
         // okdb.op(DATA_TYPE, project_Id, trip_Date, delta).catch((err) => console.log("Error updating doc", err));
-        okdb
-          .op(DATA_TYPE, projectID, delta)
-          .catch((err) => console.log("Error updating doc", err));
+        okdb.op(DATA_TYPE, projectID, delta).catch((err) => console.log("Error updating doc", err));
       }
     });
 

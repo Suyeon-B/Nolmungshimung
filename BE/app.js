@@ -109,6 +109,7 @@ var OkdbServer = require("okdb-server");
 var options = {
   cors: {
     enabled: true,
+    allowedOrigins: `https://${process.env.REACT_APP_SERVER_IP}:3000`,
   },
 };
 var okdb = new OkdbServer(options);
@@ -119,10 +120,10 @@ try {
   okdb.handlers().auth(({ myNickname, selectedIndex }) => {
     if (myNickname) {
       console.log("auth attempt for ", myNickname, " success");
-      const userName = myNickname; // 나중에 users.user_name으로 바꾸기
+      const userName = myNickname;
       const userId = "1" + nameIdx;
       nameIdx = (nameIdx + 1) % 10;
-      return { id: 1, name: userName, selectedIndex: selectedIndex };
+      return { id: userId, name: userName, selectedIndex: selectedIndex };
     }
     console.log("auth attempt for ", myNickname, " failed");
     return null;
