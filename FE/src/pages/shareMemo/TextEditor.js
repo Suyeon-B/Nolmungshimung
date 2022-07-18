@@ -157,9 +157,16 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
           id,
           ...data,
         };
+
         const index = Object.keys(newState).findIndex((item) => item === id);
+        // console.log(newState);
+        // console.log(index);
         const userColor = getUserColor(index);
         newState[id].color = userColor;
+        // if (newState[id].color === undefined) {
+
+        // }
+
         if (editorRef.current) {
           const cursors = editorRef.current.getModule("cursors");
           if (data.editorCursor) {
@@ -260,7 +267,9 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
       delta.type = "rich-text";
       if (connectedRef.current) {
         // okdb.op(DATA_TYPE, project_Id, trip_Date, delta).catch((err) => console.log("Error updating doc", err));
-        okdb.op(DATA_TYPE, projectID, delta).catch((err) => console.log("Error updating doc", err));
+        okdb
+          .op(DATA_TYPE, projectID, delta)
+          .catch((err) => console.log("Error updating doc", err));
       }
     });
 
@@ -310,13 +319,14 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
       editorRef.current.setContents(doc);
     }
   }, [editorRef, doc]);
-
+  // console.log(presences);
   return (
     <EditorBox>
       {error && <Alert severity="error">{error}</Alert>}
       <EditorContainer>
         <div id="editor-container"></div>
       </EditorContainer>
+      <TextEditorUsers selectedIndex={selectedIndex} presences={presences} />
     </EditorBox>
   );
 }

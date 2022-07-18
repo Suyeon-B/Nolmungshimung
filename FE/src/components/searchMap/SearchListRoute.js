@@ -9,9 +9,11 @@ import { Dropdown, Menu, Space, Typography } from "antd";
 import "../../App.css";
 
 function GetGooglePlaceId(props) {
-  let url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?";
+  let url =
+    "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?";
   const api_key = "AIzaSyAFeyVrH7cjDHGVVLqhifBI-DFlTUwEn8E";
-  url = url + "input=" + props.input + "&inputtype=textquery" + "&key=" + api_key;
+  url =
+    url + "input=" + props.input + "&inputtype=textquery" + "&key=" + api_key;
   fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/travel/` + props.id)
     .then((response) => response.json())
     .then((data) => {
@@ -32,15 +34,18 @@ function GetGooglePlaceId(props) {
                   data.phone = props.phone;
                   data.place_url = props.place_url;
 
-                  fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/travel/${props.id}`, {
-                    method: "post",
-                    headers: {
-                      "content-type": "application/json",
-                      // "Access-Control-Allow-Origin" : '*'
-                    },
-                    body: JSON.stringify(data),
-                    // credentials: "include",
-                  }).catch((error) => console.log("error:", error));
+                  fetch(
+                    `https://${process.env.REACT_APP_SERVER_IP}:8443/travel/${props.id}`,
+                    {
+                      method: "post",
+                      headers: {
+                        "content-type": "application/json",
+                        // "Access-Control-Allow-Origin" : '*'
+                      },
+                      body: JSON.stringify(data),
+                      // credentials: "include",
+                    }
+                  ).catch((error) => console.log("error:", error));
                 })
                 .catch((error) => {
                   console.log("error:", error);
@@ -55,15 +60,18 @@ function GetGooglePlaceId(props) {
                 place_url: props.place_url,
                 result: null,
               };
-              fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/travel/${props.id}`, {
-                method: "post",
-                headers: {
-                  "content-type": "application/json",
-                  // "Access-Control-Allow-Origin" : '*'
-                },
-                body: JSON.stringify(kakaoData),
-                // credentials: "include",
-              }).catch((error) => console.log("error:", error));
+              fetch(
+                `https://${process.env.REACT_APP_SERVER_IP}:8443/travel/${props.id}`,
+                {
+                  method: "post",
+                  headers: {
+                    "content-type": "application/json",
+                    // "Access-Control-Allow-Origin" : '*'
+                  },
+                  body: JSON.stringify(kakaoData),
+                  // credentials: "include",
+                }
+              ).catch((error) => console.log("error:", error));
             }
           })
           .catch((error) => {
@@ -77,13 +85,16 @@ import SpotDetail from "../../components/spot/SpotDetail";
 
 const fetchAddTravelRoute = async (id, route) => {
   try {
-    const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${id}`, {
-      method: "post",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(route),
-    });
+    const response = await fetch(
+      `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${id}`,
+      {
+        method: "post",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(route),
+      }
+    );
     const data = await response.json();
 
     // return response.json();
@@ -165,7 +176,7 @@ const SearchListRoute = ({
       <StyledRouteDiv>
         <StyledTile>{route.place_name}</StyledTile>
         <StyledDropDown>
-          <img class="hanlabong" src="\statics\images\hanlabong.png" />
+          <img className="hanlabong" src="\statics\images\hanlabong.png" />
           <div className={"dropDownMenu"}>
             {itemRoutes.map((el, idx) => {
               return (
@@ -191,7 +202,9 @@ const SearchListRoute = ({
       <a target="_blank" onClick={showDrawer} style={{ color: "#FF8A3D" }}>
         상세보기
       </a>
-      {contests !== null && <SearchDetail onClose={onClose} visible={visible} contents={contests} />}
+      {contests !== null && (
+        <SearchDetail onClose={onClose} visible={visible} contents={contests} />
+      )}
     </StyledLi>
   );
 };
