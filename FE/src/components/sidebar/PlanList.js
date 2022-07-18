@@ -87,6 +87,7 @@ const getListStyle = (isDraggingOver) => ({
 });
 
 const culTripTermData = (startDate, day) => {
+  console.log(day);
   const sDate = new Date(startDate.slice(0, 3));
   sDate.setDate(sDate.getDate() + day);
   return `# ${sDate.getMonth() + 1}월 ${sDate.getDate()}일`;
@@ -150,6 +151,7 @@ function PlanList({
 
   const onClick = (event) => {
     const selectIdx = +event.target.dataset.idx;
+
     setSelectedIndex(selectIdx);
     setSelectedDay(selectIdx);
     isFirstPage && toggleIsPage();
@@ -179,6 +181,8 @@ function PlanList({
                           if (DATA[el].user.selectedIndex === ind) {
                             return (
                               <svg
+                                data-idx={ind}
+                                key={el}
                                 width="10"
                                 fill={DATA[el].color}
                                 focusable="false"
@@ -186,7 +190,12 @@ function PlanList({
                                 aria-hidden="true"
                                 title="fontSize small"
                               >
-                                <circle cx="5" cy="5" r="5"></circle>
+                                <circle
+                                  data-idx={ind}
+                                  cx="5"
+                                  cy="5"
+                                  r="5"
+                                ></circle>
                               </svg>
                             );
                           }

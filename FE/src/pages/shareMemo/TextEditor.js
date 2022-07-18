@@ -188,7 +188,6 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
       okdb
         .connect({ myNickname, selectedIndex })
         .then((user) => {
-          console.log(user);
           setUser({ name: myNickname }); // 세션에 저장된 이름으로 내 이름을 띄웁니다.
           // 2. step - open document for collaborative editing
           const defaultValue = [
@@ -315,7 +314,7 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
 
   useEffect(() => {
     if (doc && editorRef.current) {
-      console.log("Editor update", doc);
+      // console.log("Editor update", doc);
       editorRef.current.setContents(doc);
     }
   }, [editorRef, doc]);

@@ -33,7 +33,7 @@ const ProjectPage = (props) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isDrage, setIsDrage] = useState(false);
   const [isAddDel, setIsAddDel] = useState(false);
-
+  console.log(`selectedIndex: ${selectedIndex}`);
   useEffect(() => {
     if (projectId === null) return;
     async function fetchInfo() {
@@ -155,13 +155,6 @@ const ProjectPage = (props) => {
             setIsAddDel={setIsAddDel}
           />
         )}
-        {/* <SpotRoute
-          selectedIndex={selectedIndex}
-          item={itemsRoute}
-          setItemRoute={setItemsRoute}
-          itemId={items._id}
-          tripDate={tripDate}
-        /> */}
       </PlanSection>
       <Voicetalk projectId={projectId} />
     </>
