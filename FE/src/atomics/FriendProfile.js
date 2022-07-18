@@ -13,12 +13,14 @@ function FriendProfile(props) {
 }
 
 const FriendProfileContainer = styled.div`
-  min-width: 51px;
-  height: 51px;
+  min-width: 45px;
+  min-height: 45px;
+  height: 45px;
+  width: 45px;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #ff8830;
+  background: #ff8a3d;
   border-radius: 50%;
   border: 1.5px solid #e7e7e7;
 `;

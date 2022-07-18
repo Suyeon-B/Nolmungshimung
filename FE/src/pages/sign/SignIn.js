@@ -47,7 +47,7 @@ function SignIn() {
       }
     )
       .then((res) => res.json())
-      .then((res) => {
+      .then(async (res) => {
         console.log("res : ", res);
         if (res.loginSuccess === true) {
           success();
@@ -56,7 +56,7 @@ function SignIn() {
           sessionStorage.setItem("user_email", res.user_email);
           // navigate("/", { replace: true });
           window.location.href = "/";
-          login({ user: id });
+          await login({ user: id });
         } else {
           fail(res.message);
         }

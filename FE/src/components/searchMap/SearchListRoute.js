@@ -73,6 +73,7 @@ function GetGooglePlaceId(props) {
     })
     .catch((error) => console.log(error));
 }
+import SpotDetail from "../../components/spot/SpotDetail";
 
 const fetchAddTravelRoute = async (id, route) => {
   try {
@@ -97,7 +98,15 @@ const culTripTermData = (startDate, day) => {
   return `${sDate.getMonth() + 1}월 ${sDate.getDate()}일`;
 };
 
-const SearchListRoute = ({ itemRoutes, setItemRoutes, projectId, route, idx, startDate, setIsAddDel }) => {
+const SearchListRoute = ({
+  itemRoutes,
+  setItemRoutes,
+  projectId,
+  route, //place
+  idx,
+  startDate,
+  setIsAddDel,
+}) => {
   const onClickAddRoute = (event) => {
     const uRoute = { ...route };
     uRoute["uid"] = uuidV4();
@@ -108,13 +117,26 @@ const SearchListRoute = ({ itemRoutes, setItemRoutes, projectId, route, idx, sta
   };
 
   const [visible, setVisible] = useState(false);
+  const [contests, setContents] = useState(null);
 
-  const showDrawer = () => {
+  const showDrawer = async () => {
+    const detail = await SpotDetail(route.id);
+    setContents({
+      address_name: route.address_name,
+      category_group_name: route.category_group_name,
+      phone: route.phone,
+      place_name: route.place_name,
+      place_url: route.place_url,
+      road_address_name: route.road_address_name,
+      reivew: detail.reviews,
+      img: detail.img,
+    });
     setVisible(true);
   };
 
   const onClose = () => {
     setVisible(false);
+    setContents(null);
   };
 
   return (
@@ -166,29 +188,10 @@ const SearchListRoute = ({ itemRoutes, setItemRoutes, projectId, route, idx, sta
       <p>{route.category_group_name}</p>
       <p>{route.phone}</p>
       {/* <a target="_blank" href={route.place_url} onClick={showDrawer}> */}
-      <a target="_blank" onClick={showDrawer}>
-        카카오맵에서 상세보기
+      <a target="_blank" onClick={showDrawer} style={{ color: "#FF8A3D" }}>
+        상세보기
       </a>
-      <SearchDetail onClose={onClose} visible={visible} />
-      {/* {route.road_address_name
-          ? GetGooglePlaceId({
-              input: route.road_address_name + "" + route.place_name,
-              id: route.id,
-              place_name: route.place_name,
-              road_address_name: route.road_address_name,
-              category_group_name: route.category_group_name,
-              phone: route.phone,
-              place_url: route.place_url,
-            })
-          : GetGooglePlaceId({
-              input: route.address_name + "" + route.place_name,
-              id: route.id,
-              place_name: route.place_name,
-              road_address_name: route.address_name,
-              category_group_name: route.category_group_name,
-              phone: route.phone,
-              place_url: route.place_url,
-            })} */}
+      {contests !== null && <SearchDetail onClose={onClose} visible={visible} contents={contests} />}
     </StyledLi>
   );
 };
@@ -203,7 +206,7 @@ const StyledTile = styled.h2`
   font-style: normal;
   font-weight: 700;
   font-size: 18px;
-  color: #2d56bc;
+  color: #232a3c;
   margin-bottom: 14px;
 `;
 

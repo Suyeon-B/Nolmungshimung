@@ -22,11 +22,13 @@ function ProfileDetailComponent() {
   return (
     <Popover
       content={content}
-      title={`My Email : ${sessionStorage?.getItem("user_email")}`}
+      // title={`My Email : ${sessionStorage?.getItem("user_email")}`}
+      title={`My Email : ${auth.user?.user_email}`}
       trigger="hover"
       placement="rightBottom"
     >
-      <ProfileHoverBtn>혁</ProfileHoverBtn>
+      {/* <ProfileHoverBtn>혁</ProfileHoverBtn> */}
+      <ProfileHoverBtn>{auth.user?.user_name.slice(0, 3)}</ProfileHoverBtn>
     </Popover>
   );
 }
@@ -36,7 +38,7 @@ const ProfileBtn = styled.p`
 `;
 
 const ProfileHoverBtn = styled.div`
-  background-color: green;
+  background-color: #339f46;
   width: 60px;
   height: 60px;
   border-radius: 50%;

@@ -12,23 +12,31 @@ import React, { useState } from "react";
 //     searchPlace(InputText);
 //   };
 async function SpotDetail(data) {
-  console.log(data);
-  await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/travel/place`, {
-    method: "post",
-    headers: {
-      "content-type": "application/json",
-    },
-    // credentials: "include",
-    body: JSON.stringify({ data }),
-  })
-    .then((res) => res.json())
-    .then((res) => {
-      console.log(res.reviews);
-      if (res.Success === true) {
-        console.log("Sign In Success");
-      }
+  return new Promise((resolve, reject) => {
+    fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/travel/place`, {
+      method: "post",
+      headers: {
+        "content-type": "application/json",
+      },
+      // credentials: "include",
+      body: JSON.stringify({ data }),
     })
-    .catch((err) => console.log(`err: ${err}`));
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.success === true) {
+          console.log("Sign In Success");
+          console.log(res.data);
+          resolve(res.data);
+        } else {
+          console.log("400에러 왜...............");
+          resolve({
+            reviews: [[0]],
+            img: "",
+          });
+        }
+      })
+      .catch((err) => reject(err));
+  });
 }
 // return (
 //   <div>

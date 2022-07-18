@@ -1,5 +1,6 @@
 import { useState, createContext, useContext, useEffect } from "react";
-import { deleteCookie } from "./cookie";
+import { deleteCookie, getCookie } from "./cookie";
+import { Navigate } from "react-router-dom";
 
 const AuthContext = createContext(null);
 
@@ -39,6 +40,7 @@ export const AuthProvider = ({ children }) => {
   // }, [user]);
 
   console.log("AuthProvider");
+  console.log(user);
   // console.log("ss", userProjects);
 
   // sessionStorage.setItem("information", userProjects);
@@ -71,12 +73,26 @@ export const RequireAuth = ({ children }) => {
   const auth = useAuth();
   // console.log(`auth in Auth: ${JSON.stringify(auth)}`);
 
-  if (!auth.user) {
+  if (!auth?.user) {
     // console.log(`auth in Auth : ${JSON.stringify(auth)}`);
     // console.log(`auth.user in Auth: ${JSON.stringify(auth.user)}`);
 
-    return children;
-    // return <Navigate to="/signin" />;
+    // return children;
+    return <Navigate to="/signin" />;
+  }
+  return children;
+};
+
+export const NotRequireAuth = ({ children }) => {
+  const auth = useAuth();
+  // console.log(`auth in Auth: ${JSON.stringify(auth)}`);
+
+  if (auth?.user) {
+    // console.log(`auth in Auth : ${JSON.stringify(auth)}`);
+    // console.log(`auth.user in Auth: ${JSON.stringify(auth.user)}`);
+
+    // return children;
+    return <Navigate to="/" />;
   }
   return children;
 };

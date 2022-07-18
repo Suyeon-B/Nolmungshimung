@@ -30,7 +30,7 @@ function MarkMap(props) {
 
   let color = {
     FD6: "#975FFE",
-    AT4: "#FF8830", // 관광, 명소
+    AT4: "#FF8A3D", // 관광, 명소
     CE7: "#FF6169", // 음식점>카페
     AD5: "#8DD664", // 숙박
     "": "#CFCFCF",
@@ -60,7 +60,7 @@ function MarkMap(props) {
     const container = document.getElementById("myMap");
     const options = {
       center: new kakao.maps.LatLng(33.450701, 126.570667),
-      // draggable: false,
+      // ble: false,
       level: 3,
     };
     const map = new kakao.maps.Map(container, options);
@@ -101,16 +101,8 @@ function MarkMap(props) {
       var infowindow = new kakao.maps.InfoWindow({
         content: linePath[i].title, // 인포윈도우에 표시할 내용
       });
-      kakao.maps.event.addListener(
-        marker,
-        "mouseover",
-        makeOverListener(map, marker, infowindow)
-      );
-      kakao.maps.event.addListener(
-        marker,
-        "mouseout",
-        makeOutListener(infowindow)
-      );
+      kakao.maps.event.addListener(marker, "mouseover", makeOverListener(map, marker, infowindow));
+      kakao.maps.event.addListener(marker, "mouseout", makeOutListener(infowindow));
     }
     if (linePath.length > 0) {
       setBounds(map, bounds);

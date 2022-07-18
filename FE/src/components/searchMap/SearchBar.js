@@ -26,7 +26,7 @@ const SearchBar = (props) => {
       }}
     >
       <StyledFieldset>
-        <SearchOutlined style={{ fontSize: "25px", color: "#ff8830" }} />
+        <SearchOutlined style={{ fontSize: "25px", color: "#FF8A3D" }} />
         <StyledInput
           type="text"
           id="search.keyword.query"
@@ -57,7 +57,7 @@ const StyledFieldset = styled.fieldset`
   flex-direction: row;
   border-radius: 5px;
   padding-left: 15px;
-  border: 3px solid #ff8830;
+  border: 3px solid #ff8a3d;
   width: 85%;
   padding: 8px;
 `;

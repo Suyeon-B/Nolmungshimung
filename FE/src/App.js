@@ -5,7 +5,6 @@ import SearchMap from "./pages/search/Search";
 import Home from "./pages/Home";
 import Test from "./pages/test";
 import TextEditor from "./pages/shareMemo/TextEditor";
-import SpotDetail from "./components/spot/SpotDetail";
 import KakaoSignIn from "./components/sign/KakaoSignIn";
 import VoiceTalk from "./components/voiceTalk/voiceTalk";
 import {
@@ -25,7 +24,11 @@ import "./App.css";
 import "./reset.css";
 import { QueryClient, QueryClientProvider } from "react-query";
 import ProjectPage from "./pages/project/ProjectPage";
-import { AuthProvider, RequireAuth } from "./components/auth/Auth";
+import {
+  AuthProvider,
+  RequireAuth,
+  NotRequireAuth,
+} from "./components/auth/Auth";
 
 // react query devtool
 import { ReactQueryDevtools } from "react-query/devtools";
@@ -46,16 +49,42 @@ function App() {
           <BodyDiv>
             <ProjectSide />
             <Routes>
-              <Route path="detail/*" element={<SpotDetail />} />
-              <Route path="signin/*" element={<SignIn />} />
+              <Route
+                path="signin/*"
+                element={
+                  <NotRequireAuth>
+                    <SignIn />
+                  </NotRequireAuth>
+                }
+              />
               <Route path="signup/*" element={<SignUp />} />
               <Route path="voicetalk/*" element={<VoiceTalk />} />
               <Route path="/" element={<Home />} />
-              <Route path="/kakao/signin" element={<KakaoSignIn />} />
-              <Route path="project/*" element={<CreateProject />} />
-              <Route path="hyuk/*" element={<SpotList />} />
+              <Route
+                path="/kakao/signin"
+                element={
+                  <NotRequireAuth>
+                    <KakaoSignIn />
+                  </NotRequireAuth>
+                }
+              />
+              <Route
+                path="project/*"
+                element={
+                  <RequireAuth>
+                    <CreateProject />
+                  </RequireAuth>
+                }
+              />
               {/* <Route path="project/:projectId" element={<ProjectPage />} /> */}
-              <Route path="project/:projectId" element={<ProjectPage />} />
+              <Route
+                path="project/:projectId"
+                element={
+                  <RequireAuth>
+                    <ProjectPage />
+                  </RequireAuth>
+                }
+              />
 
               {/* <Route
                 path="project/:projectId/:tripDate"
