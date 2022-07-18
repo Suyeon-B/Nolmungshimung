@@ -55,7 +55,6 @@ const OnlineFriends = styled.div`
 Quill.register("modules/cursors", QuillCursors);
 
 const HOST = `http://${process.env.REACT_APP_SERVER_IP}:7899`; // location of your server, use xxxxx to use sample, or follow this guide to build your own:
-// const TOKEN = "12345"; // either get it from your auth provider and validate with system integration, or use default system users:
 const myNickname = sessionStorage.getItem("myNickname");
 
 const okdb = new OkdbClient(HOST, { timeout: 30000 });
@@ -95,7 +94,6 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
   const { connectUser, setConnectUser } = useContext(ConnectuserContext);
 
   const userName = sessionStorage.getItem("myNickname");
-
   useEffect(() => {
     setProjectId(project_Id);
   }, [project_Id]);
