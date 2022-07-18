@@ -7,28 +7,20 @@ import Test from "./pages/test";
 import TextEditor from "./pages/shareMemo/TextEditor";
 import KakaoSignIn from "./components/sign/KakaoSignIn";
 import VoiceTalk from "./components/voiceTalk/voiceTalk";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import ProjectSide from "./components/sidebar/ProjectSide";
 import PlanSideBar from "./components/sidebar/PlanSideBar";
 import CreateProject from "./components/CreateProject";
 import SpotList from "./components/spot/SpotList";
 import SpotRoute from "./pages/spotRoute/SpotRoute";
+import TextYquill from "./components/shareMemo/TextYquill";
 import styled from "styled-components";
 
 import "./App.css";
 import "./reset.css";
 import { QueryClient, QueryClientProvider } from "react-query";
 import ProjectPage from "./pages/project/ProjectPage";
-import {
-  AuthProvider,
-  RequireAuth,
-  NotRequireAuth,
-} from "./components/auth/Auth";
+import { AuthProvider, RequireAuth, NotRequireAuth } from "./components/auth/Auth";
 
 // react query devtool
 import { ReactQueryDevtools } from "react-query/devtools";
