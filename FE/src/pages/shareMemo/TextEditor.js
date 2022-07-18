@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import "./TextEditor.css";
 import { Alert as MuiAlert } from "@material-ui/lab";
 import OkdbClient from "okdb-client";
@@ -11,17 +11,21 @@ import TextEditorUsers from "./TextEditorUsers";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
 import socket from "../../socket";
+import { ConnectuserContext } from "../../context/ConnectUserContext";
 
 const EditorBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: flex-start;
   padding-top: 20px;
+  width: 100%;
 `;
 const EditorContainer = styled.div`
+  width: 79%;
+  background-color: #ffff;
   div#container {
     height: 35vh;
-    width: 61vw;
+    width: 80vw;
     padding: 1%;
   }
   .ql-toolbar.ql-snow {
@@ -40,7 +44,6 @@ const EditorContainer = styled.div`
     max-height: 290px;
     width: 100%;
     height: calc(80% - 17px);
-    calc(50% - 37px);
   }
 `;
 
@@ -89,13 +92,40 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
   const mousePointerRef = useRef(null);
   const editorCursorRef = useRef(null);
   const [projectID, setProjectId] = useState(project_Id);
-  // const [tripDate, setTripDate] = useState(trip_Date);
+  const { connectUser, setConnectUser } = useContext(ConnectuserContext);
 
   const userName = sessionStorage.getItem("myNickname");
-  // console.log(okdb);
+
   useEffect(() => {
     setProjectId(project_Id);
   }, [project_Id]);
+
+  useEffect(() => {
+    Object.keys(presences).map((presenceId) => {
+      if (presenceId === userName) return;
+      if (connectUser[presenceId] === undefined) {
+        console.log(connectUser[presenceId]);
+        setConnectUser(presences);
+      }
+      // setConnectUser(presences);
+      else if (
+        connectUser[presenceId].user.selectedIndex !==
+        presences[presenceId].user.selectedIndex
+      ) {
+        console.log("============");
+        console.log(
+          presences[presenceId],
+          presences[presenceId].user.selectedIndex
+        );
+        console.log(
+          connectUser[presenceId],
+          connectUser[presenceId].user.selectedIndex
+        );
+        setConnectUser(presences);
+      }
+    });
+  }, [presences]);
+  console.log(connectUser);
 
   useEffect(() => {
     return () => {
@@ -159,12 +189,9 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
         };
 
         const index = Object.keys(newState).findIndex((item) => item === id);
-        // console.log(newState);
-        // console.log(index);
         const userColor = getUserColor(index);
         newState[id].color = userColor;
         // if (newState[id].color === undefined) {
-
         // }
 
         if (editorRef.current) {
@@ -256,7 +283,6 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
     });
 
     editorRef.current = editor;
-    console.log(editorRef);
 
     editor.on("text-change", (delta, oldDelta, source) => {
       if (source !== "user") return;
@@ -318,7 +344,7 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
       editorRef.current.setContents(doc);
     }
   }, [editorRef, doc]);
-  // console.log(presences);
+  console.log(presences);
   return (
     <EditorBox>
       {error && <Alert severity="error">{error}</Alert>}

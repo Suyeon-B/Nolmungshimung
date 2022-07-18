@@ -7,6 +7,7 @@ import SpotRoute from "../spotRoute/SpotRoute";
 import styled from "styled-components";
 import { BrowserRouter as Routes, Route, Navigate } from "react-router-dom";
 import Voicetalk from "../../components/voiceTalk/voiceTalk";
+import { ConnectuserContext } from "../../context/ConnectUserContext";
 // import io from "socket.io-client";
 
 // const socket = io(`https://${process.env.REACT_APP_SERVER_IP}:3001`);
@@ -33,7 +34,8 @@ const ProjectPage = (props) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isDrage, setIsDrage] = useState(false);
   const [isAddDel, setIsAddDel] = useState(false);
-  console.log(`selectedIndex: ${selectedIndex}`);
+  const [connectUser, setConnectUser] = useState({});
+
   useEffect(() => {
     if (projectId === null) return;
     async function fetchInfo() {
@@ -123,7 +125,7 @@ const ProjectPage = (props) => {
   };
 
   return (
-    <>
+    <ConnectuserContext.Provider value={{ connectUser, setConnectUser }}>
       {/* {data ? <div>is data</div> : <div>not data</div>} */}
       <PlanSideBar
         item={items}
@@ -157,7 +159,7 @@ const ProjectPage = (props) => {
         )}
       </PlanSection>
       <Voicetalk projectId={projectId} />
-    </>
+    </ConnectuserContext.Provider>
   );
 };
 const PlanSection = styled.section`

@@ -3,7 +3,8 @@ import styled from "styled-components";
 import "../../App.css";
 
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
+import { ConnectuserContext } from "../../context/ConnectUserContext";
 
 const StyledDragDropContext = styled(DragDropContext)``;
 
@@ -87,7 +88,6 @@ const getListStyle = (isDraggingOver) => ({
 });
 
 const culTripTermData = (startDate, day) => {
-  console.log(day);
   const sDate = new Date(startDate.slice(0, 3));
   sDate.setDate(sDate.getDate() + day);
   return `# ${sDate.getMonth() + 1}월 ${sDate.getDate()}일`;
@@ -96,7 +96,6 @@ const culTripTermData = (startDate, day) => {
 function PlanList({
   toggleIsPage,
   startDate,
-  term,
   routes,
   setRoutes,
   setSelectedIndex,
@@ -106,6 +105,7 @@ function PlanList({
 }) {
   const droppableRef = useRef([]);
   const [selectedDay, setSelectedDay] = useState(0);
+  const { connectUser, setConnectUser } = useContext(ConnectuserContext);
   // console.log(routes);
   if (!routes) {
     return <div>Loading...</div>;
@@ -177,14 +177,15 @@ function PlanList({
                     >
                       <DateDetailBtn data-idx={ind} onClick={onClick}>
                         {culTripTermData(startDate, ind)}
-                        {Object.keys(DATA).map((el) => {
-                          if (DATA[el].user.selectedIndex === ind) {
+                        {Object.keys(connectUser).map((el) => {
+                          console.log(connectUser[el]);
+                          if (connectUser[el].user.selectedIndex === ind) {
                             return (
                               <svg
                                 data-idx={ind}
                                 key={el}
                                 width="10"
-                                fill={DATA[el].color}
+                                fill={connectUser[el].color}
                                 focusable="false"
                                 viewBox="0 0 10 10"
                                 aria-hidden="true"
