@@ -21,6 +21,34 @@ const reorder = (list, startIndex, endIndex) => {
   return result;
 };
 
+const DATA = {
+  a: {
+    color: "#FF8A3D",
+    id: "a",
+    user: { id: 1, name: "a", selectedIndex: 0 },
+  },
+  b: {
+    color: "#8DD664",
+    id: "b",
+    user: { id: 2, name: "b", selectedIndex: 1 },
+  },
+  c: {
+    color: "#FF6169",
+    id: "c",
+    user: { id: 3, name: "c", selectedIndex: 2 },
+  },
+  d: {
+    color: "#975FFE",
+    id: "d",
+    user: { id: 4, name: "d", selectedIndex: 1 },
+  },
+  e: {
+    color: "#0072BC",
+    id: "e",
+    user: { id: 5, name: "e", selectedIndex: 0 },
+  },
+};
+
 /**
  * Moves an item from one list to another list.
  */
@@ -99,7 +127,12 @@ function PlanList({
       console.log(newState);
       setRoutes(newState);
     } else {
-      const result = move([...routes][sInd], [...routes][dInd], source, destination);
+      const result = move(
+        [...routes][sInd],
+        [...routes][dInd],
+        source,
+        destination
+      );
       const newState = [...[...routes]];
       newState[sInd] = result[sInd];
       newState[dInd] = result[dInd];
@@ -130,10 +163,34 @@ function PlanList({
             <div key={ind} ref={(el) => (droppableRef.current[+ind] = el)}>
               <Droppable key={ind} droppableId={`${ind}`}>
                 {(provided, snapshot) => (
-                  <div ref={provided.innerRef} style={getListStyle(snapshot.isDragging)} {...provided.droppableProps}>
-                    <DateDetailBtnDiv data-idx={ind} onClick={onClick} selected={selectedDay}>
+                  <div
+                    ref={provided.innerRef}
+                    style={getListStyle(snapshot.isDragging)}
+                    {...provided.droppableProps}
+                  >
+                    <DateDetailBtnDiv
+                      data-idx={ind}
+                      onClick={onClick}
+                      selected={selectedDay}
+                    >
                       <DateDetailBtn data-idx={ind} onClick={onClick}>
                         {culTripTermData(startDate, ind)}
+                        {Object.keys(DATA).map((el) => {
+                          if (DATA[el].user.selectedIndex === ind) {
+                            return (
+                              <svg
+                                width="10"
+                                fill={DATA[el].color}
+                                focusable="false"
+                                viewBox="0 0 10 10"
+                                aria-hidden="true"
+                                title="fontSize small"
+                              >
+                                <circle cx="5" cy="5" r="5"></circle>
+                              </svg>
+                            );
+                          }
+                        })}
                       </DateDetailBtn>
                       <DateDetailBtn data-idx={ind} onClick={onClick}>
                         <img
@@ -145,13 +202,20 @@ function PlanList({
                       </DateDetailBtn>
                     </DateDetailBtnDiv>
                     {el.map((item, index) => (
-                      <Draggable key={item.uid} draggableId={item.uid} index={index}>
+                      <Draggable
+                        key={item.uid}
+                        draggableId={item.uid}
+                        index={index}
+                      >
                         {(provided, snapshot) => (
                           <div
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
-                            style={getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
+                            style={getItemStyle(
+                              snapshot.isDragging,
+                              provided.draggableProps.style
+                            )}
                           >
                             <ItemInnerDiv>
                               {item.place_name}
@@ -165,7 +229,7 @@ function PlanList({
                                 }}
                               >
                                 <svg
-                                  class="planListTrashCan"
+                                  className="planListTrashCan"
                                   fill="#7C8289"
                                   width="12"
                                   xmlns="http://www.w3.org/2000/svg"
@@ -206,7 +270,8 @@ const DateDetailBtnDiv = styled.div`
   justify-content: space-between;
   border-radius: 5px;
 
-  background-color: ${(props) => props.selected === props["data-idx"] && "#ebebeb"};
+  background-color: ${(props) =>
+    props.selected === props["data-idx"] && "#ebebeb"};
 
   &:hover {
     background-color: #ebebeb;

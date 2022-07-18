@@ -92,7 +92,13 @@ const getListStyle = (isDraggingOver) => ({
 
 const transDayItem = (dayItem, selectedIndex) => {};
 
-export default function SpotList({ dayItem, setItemRoute, selectedIndex, setIsDrage, setIsAddDel }) {
+export default function SpotList({
+  dayItem,
+  setItemRoute,
+  selectedIndex,
+  setIsDrage,
+  setIsAddDel,
+}) {
   // const [state, setState] = useState([testItem, testItem2]);
 
   const [state, setState] = useState([dayItem[selectedIndex]]);
@@ -119,7 +125,12 @@ export default function SpotList({ dayItem, setItemRoute, selectedIndex, setIsDr
 
       setItemRoute(newState);
     } else {
-      const result = move([...dayItem][sInd], [...dayItem][dInd], source, destination);
+      const result = move(
+        [...dayItem][sInd],
+        [...dayItem][dInd],
+        source,
+        destination
+      );
       const newState = [...[...dayItem]];
       newState[sInd] = result[sInd];
       newState[dInd] = result[dInd];
@@ -135,15 +146,26 @@ export default function SpotList({ dayItem, setItemRoute, selectedIndex, setIsDr
         {[dayItem[selectedIndex]].map((el, ind) => (
           <Droppable key={ind} droppableId={`${ind}`}>
             {(provided, snapshot) => (
-              <div ref={provided.innerRef} style={getListStyle(snapshot.isDragging)} {...provided.droppableProps}>
+              <div
+                ref={provided.innerRef}
+                style={getListStyle(snapshot.isDragging)}
+                {...provided.droppableProps}
+              >
                 {el.map((item, index) => (
-                  <Draggable key={item.uid} draggableId={item.uid} index={index}>
+                  <Draggable
+                    key={item.uid}
+                    draggableId={item.uid}
+                    index={index}
+                  >
                     {(provided, snapshot) => (
                       <div
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
-                        style={getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
+                        style={getItemStyle(
+                          snapshot.isDragging,
+                          provided.draggableProps.style
+                        )}
                       >
                         <div
                           style={{

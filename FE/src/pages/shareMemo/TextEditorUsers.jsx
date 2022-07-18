@@ -25,7 +25,7 @@ const TextEditorUsers = ({ presences, selectedIndex }) => {
 
         return (
           <div className="online-item" key={presenceId}>
-            <svg
+            {/* <svg
               width="10"
               fill={userColor}
               focusable="false"
@@ -34,8 +34,8 @@ const TextEditorUsers = ({ presences, selectedIndex }) => {
               title="fontSize small"
             >
               <circle cx="5" cy="5" r="5"></circle>
-            </svg>
-            {presence.user.name}
+            </svg> */}
+            {/* {presence.user.name} */}
             {presence.mousePointer && presence.mousePointer.left != null && (
               <div id="cursor" className="cursor-block" style={{ left, top }}>
                 <MousePointer color={userColor} />

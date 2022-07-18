@@ -217,7 +217,7 @@ const SearchListRoute = ({
       <StyledRouteDiv>
         <StyledTile>{route.place_name}</StyledTile>
         <StyledDropDown>
-          <img class="hanlabong" src="\statics\images\hanlabong.png" />
+          <img className="hanlabong" src="\statics\images\hanlabong.png" />
           <div className={"dropDownMenu"}>
             {itemRoutes.map((el, idx) => {
               return (

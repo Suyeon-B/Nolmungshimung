@@ -52,7 +52,6 @@ const OnlineFriends = styled.div`
 Quill.register("modules/cursors", QuillCursors);
 
 const HOST = `http://${process.env.REACT_APP_SERVER_IP}:7899`; // location of your server, use xxxxx to use sample, or follow this guide to build your own:
-// const TOKEN = "12345"; // either get it from your auth provider and validate with system integration, or use default system users:
 const myNickname = sessionStorage.getItem("myNickname");
 
 const okdb = new OkdbClient(HOST, { timeout: 30000 });
@@ -92,7 +91,7 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
   // const [tripDate, setTripDate] = useState(trip_Date);
 
   const userName = sessionStorage.getItem("myNickname");
-  // console.log(okdb);
+  console.log(okdb);
   useEffect(() => {
     setProjectId(project_Id);
   }, [project_Id]);
@@ -157,9 +156,16 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
           id,
           ...data,
         };
+
         const index = Object.keys(newState).findIndex((item) => item === id);
+        // console.log(newState);
+        // console.log(index);
         const userColor = getUserColor(index);
         newState[id].color = userColor;
+        // if (newState[id].color === undefined) {
+
+        // }
+
         if (editorRef.current) {
           const cursors = editorRef.current.getModule("cursors");
           if (data.editorCursor) {
@@ -310,13 +316,14 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
       editorRef.current.setContents(doc);
     }
   }, [editorRef, doc]);
-
+  // console.log(presences);
   return (
     <EditorBox>
       {error && <Alert severity="error">{error}</Alert>}
       <EditorContainer>
         <div id="editor-container"></div>
       </EditorContainer>
+      <TextEditorUsers selectedIndex={selectedIndex} presences={presences} />
     </EditorBox>
   );
 }
