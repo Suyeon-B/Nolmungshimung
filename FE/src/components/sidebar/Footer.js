@@ -20,13 +20,16 @@ function Footer() {
   useEffect(() => {
     // * 이거아님 보이스톡 들온 사람이 출력돼야함
     if (projectId === null) return;
-    fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${projectId}`, {
-      method: "get",
-      headers: {
-        "content-type": "application/json",
-      },
-      credentials: "include",
-    })
+    fetch(
+      `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${projectId}`,
+      {
+        method: "get",
+        headers: {
+          "content-type": "application/json",
+        },
+        credentials: "include",
+      }
+    )
       .then((res) => res.json())
       .then((res) => {
         // console.log("res : ", res);
