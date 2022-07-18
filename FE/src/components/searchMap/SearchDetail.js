@@ -3,21 +3,37 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 import "./Drawer.css";
 
-const App = (s) => <Rate disabled defaultValue={s} />;
+const api_key = "AIzaSyAFeyVrH7cjDHGVVLqhifBI-DFlTUwEn8E";
+
+const App = (s) => (
+  <Rate style={{ marginBottom: "10px" }} disabled defaultValue={s} />
+);
 function SearchDetail(props) {
-  console.log("들어옴");
+  const imgUrl = [];
+  if (props.contents.photos) {
+    props.contents.photos.map((el, idx) => {
+      imgUrl.push(
+        `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${el["photo_reference"]}&sensor=false&key=${api_key}`
+      );
+    });
+  }
+  console.log(imgUrl[0]);
   return (
     <Drawer
       title=""
       placement="right"
       onClose={props.onClose}
       visible={props.visible}
-      width={380}
+      width={450}
       className="site-form-in-drawer-wrapper"
     >
       <div style={{ marginLeft: "10px", marginRight: "10px" }}>
-        <div>{props.contents.place_name}</div>
-        {/* <StyledImg src={props.contents.img} />
+        <StyledImg src={imgUrl[0]} />
+
+        {/* {imgUrl?imgUrl.map((el, idx) =>{
+          
+        }): <StyledImg src='기본 이미지' /> } */}
+
         <StyledTitle>{props.contents.place_name}</StyledTitle>
         <p
           style={{
@@ -32,7 +48,7 @@ function SearchDetail(props) {
         </p>
         <StyleIcon>
           <svg
-            class="icon"
+            className="icon"
             xmlns="http://www.w3.org/2000/svg"
             fill="#FF8A3D"
             width="19"
@@ -42,11 +58,11 @@ function SearchDetail(props) {
           </svg>
         </StyleIcon>
 
-        <StyleText>{props.contents.address_name}</StyleText>
+        <StyleText>{props.contents.road_address_name}</StyleText>
         <p />
         <StyleIcon>
           <svg
-            class="icon"
+            className="icon"
             xmlns="http://www.w3.org/2000/svg"
             fill="#FF8A3D"
             width="22"
@@ -76,7 +92,7 @@ function SearchDetail(props) {
             fill="#FF8A3D"
             width="22"
             viewBox="0 0 576 512"
-            class="icon"
+            className="icon"
           >
             <path d="M575.8 255.5C575.8 273.5 560.8 287.6 543.8 287.6H511.8L512.5 447.7C512.5 450.5 512.3 453.1 512 455.8V472C512 494.1 494.1 512 472 512H456C454.9 512 453.8 511.1 452.7 511.9C451.3 511.1 449.9 512 448.5 512H392C369.9 512 352 494.1 352 472V384C352 366.3 337.7 352 320 352H256C238.3 352 224 366.3 224 384V472C224 494.1 206.1 512 184 512H128.1C126.6 512 125.1 511.9 123.6 511.8C122.4 511.9 121.2 512 120 512H104C81.91 512 64 494.1 64 472V360C64 359.1 64.03 358.1 64.09 357.2V287.6H32.05C14.02 287.6 0 273.5 0 255.5C0 246.5 3.004 238.5 10.01 231.5L266.4 8.016C273.4 1.002 281.4 0 288.4 0C295.4 0 303.4 2.004 309.5 7.014L564.8 231.5C572.8 238.5 576.9 246.5 575.8 255.5L575.8 255.5z" />
           </svg>
@@ -86,34 +102,39 @@ function SearchDetail(props) {
         </StyleText>
         <br />
         <hr />
+        <div
+          style={{
+            fontSize: "18px",
+            fontStyle: "board",
+            marginTop: "15px",
+            marginBottom: "5px",
+          }}
+        >
+          리뷰 요약
+        </div>
+        {App(Math.floor(props.contents.rating))}
+        <span> {props.contents.rating} / 5.0 점</span>
+        <div
+          style={{ fontSize: "18px", fontStyle: "board", marginBottom: "10px" }}
+        >
+          리뷰
+        </div>
+        {props.contents.reviews &&
+          props.contents.reviews.map((item, index) => (
+            <li>
+              {item["author_name"]} : {item["text"]}
+            </li>
+          ))}
         <br />
-        {App(props.contents.reivew[0][0])}
-        <br />
-        {props.contents.reivew.map((item, index) => (
-          <li>
-            {item[0]}/5점 : {item[1]}
-          </li>
-        ))}
-        <br />
-        <p> 후기 더보기 ... </p> */}
+        <a href={props.contents.place_url} target="_blank">
+          {" "}
+          후기 더보기 ...{" "}
+        </a>
       </div>
     </Drawer>
   );
 }
-export function LoadingDetail(props) {
-  return (
-    <Drawer
-      title=""
-      placement="right"
-      onClose={props.onClose}
-      visible={props.visible}
-      width={380}
-      // className="site-form-in-drawer-wrapper"
-    >
-      loading
-    </Drawer>
-  );
-}
+
 const StyledImg = styled.img`
   width: 300px;
   height: 280px;
@@ -134,11 +155,11 @@ const StyleText = styled.span`
   font-style: normal;
   font-size: 15px;
 `;
-const StyleUl = styled.ul``;
 
 const StyleIcon = styled.span`
   .icon {
     margin: 5px;
   }
 `;
+
 export default SearchDetail;
