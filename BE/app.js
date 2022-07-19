@@ -28,6 +28,7 @@ const credentials = {
   passphrase: process.env.PASSPHRASE,
 };
 var server = require("https").createServer(credentials, app);
+// var server = require("http").createServer(app);
 var io = require("socket.io")(server, {
   cors: {
     origin: "*",
@@ -116,7 +117,7 @@ var OkdbServer = require("okdb-server");
 var options = {
   cors: {
     enabled: true,
-    allowedOrigins: `https://${process.env.REACT_APP_SERVER_IP}:3000`,
+    allowedOrigins: `http://localhost:3000`,
   },
 };
 var okdb = new OkdbServer(options);

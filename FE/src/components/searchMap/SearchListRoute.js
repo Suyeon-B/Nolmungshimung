@@ -52,6 +52,11 @@ const SearchListRoute = ({
 
   const [visible, setVisible] = useState(false);
   const [contests, setContents] = useState(null);
+  const [isActive, setIsActive] = useState(false);
+
+  const handleClick = () => {
+    setIsActive((current) => !current);
+  };
 
   function GetGooglePlace(props) {
     let url = "/place-api/findplacefromtext/json?";
@@ -204,6 +209,10 @@ const SearchListRoute = ({
       // onDragEnter={(event) => dragFunction(event, "enter")}
       // onDragLeave={(event) => dragFunction(event, "leave")}
       // className="dragAndDrop"
+
+      style={{
+        backgroundColor: isActive ? "#ebebeb" : "",
+      }}
       key={idx}
       onMouseOver={() => {
         overEvent(idx);
@@ -213,6 +222,7 @@ const SearchListRoute = ({
       }}
       onClick={() => {
         clickEvent(idx);
+        handleClick();
       }}
     >
       {/* <span>{i + 1}</span> */}
@@ -314,4 +324,5 @@ const StyledBtn = styled.button`
     background-color: rgb(96, 96, 96);
   }
 `;
+
 export default SearchListRoute;
