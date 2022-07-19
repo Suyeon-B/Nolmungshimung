@@ -8,6 +8,7 @@ import styled from "styled-components";
 import { BrowserRouter as Routes, Route, Navigate } from "react-router-dom";
 import Voicetalk from "../../components/voiceTalk/voiceTalk";
 import { ConnectuserContext } from "../../context/ConnectUserContext";
+
 // import io from "socket.io-client";
 
 // const socket = io(`https://${process.env.REACT_APP_SERVER_IP}:3001`);
@@ -35,7 +36,6 @@ const ProjectPage = (props) => {
   const [isDrage, setIsDrage] = useState(false);
   const [isAddDel, setIsAddDel] = useState(false);
   const [connectUser, setConnectUser] = useState({});
-
   useEffect(() => {
     if (projectId === null) return;
     async function fetchInfo() {
@@ -149,6 +149,7 @@ const ProjectPage = (props) => {
         )}
         {!isFirstPage && (
           <SpotRoute
+            startDate={items.start_date}
             selectedIndex={selectedIndex}
             item={itemsRoute}
             setItemRoute={setItemsRoute}

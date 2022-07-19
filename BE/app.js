@@ -12,10 +12,12 @@ var projectsRouter = require("./routes/projects/projects");
 var travelRouter = require("./routes/travel/travel");
 var commonRouter = require("./routes/common/common");
 var voiceRouter = require("./routes/voicetalk/voicetalk");
+var notificationRouter = require("./routes/notification/notification");
 var mongodb = require("dotenv").config();
 var fs = require("fs");
 
 voiceRouter;
+notificationRouter;
 
 var app = express();
 // [원영] 소켓 서버 추가
@@ -101,6 +103,7 @@ app.use("/users", usersRouter);
 app.use("/projects", projectsRouter);
 app.use("/travel", travelRouter);
 app.use("/common", commonRouter);
+app.use("/notificationRouter", notificationRouter);
 // app.use("/voicetalk", voiceRouter);
 
 // [수연] share-memo with collaborative cursors
