@@ -11,6 +11,7 @@ import { ConnectuserContext } from "../../context/ConnectUserContext";
 import cloneDeep from "lodash/cloneDeep";
 import { useAuth } from "../../components/auth/Auth";
 import useNotification from "../../atomics/Notification";
+import { notification } from "antd";
 
 // import io from "socket.io-client";
 
@@ -75,7 +76,7 @@ const ProjectPage = (props) => {
     socket.on("connectUser", (connectUserInfo) => {
       console.log("connectUser", connectUserInfo);
       setConnectUser(connectUserInfo);
-      console.log(connectUser)
+      console.log(connectUser);
     });
   }, []);
 
@@ -88,6 +89,7 @@ const ProjectPage = (props) => {
       auth.user === null
     )
       return;
+    console.log("projectJoin");
     socket.emit("projectJoin", [projectId, auth.user.user_name]);
 
     return () => {
@@ -142,13 +144,38 @@ const ProjectPage = (props) => {
 
   useEffect(() => {
     socket.on("notify", (user_name) => {
+      // console.log("nnn");
       // console.log(user_name);
       // console.log("i receive notify");
-      // triggerNotif(user_name);
-      const triggerNotif = useNotification("놀멍쉬멍", {
-        body: `${user_name}님이 입장했습니다.`,
-      });
-      triggerNotif();
+      // 모달 버전 크롬 알람안되면 이거씁시다.
+      const openNotificationWithIcon = (type) => {
+        notification[type]({
+          message: "놀멍쉬멍",
+          description: `${user_name}님이 입장했습니다.`,
+        });
+      };
+      openNotificationWithIcon("success");
+      // const triggerNotif = useNotification("놀멍쉬멍", {
+      //   body: `${user_name}님이 입장했습니다.`,
+      // });
+      // triggerNotif();
+      // console.log("입장");
+    });
+  }, []);
+  useEffect(() => {
+    socket.on("attentionPlease", ([date, user_name]) => {
+      const openNotificationWithIcon = (type) => {
+        notification[type]({
+          message: "놀멍쉬멍",
+          description: `${user_name}님이 ${date} 페이지로 당신을 부르고 있어요!`,
+        });
+      };
+      openNotificationWithIcon("success");
+      // const triggerNotif = useNotification("놀멍쉬멍", {
+      //   body: `${user_name}님이 ${date} 페이지로 당신을 부르고 있어요!`,
+      // });
+      // triggerNotif();
+      console.log("ddd");
     });
   }, []);
 
