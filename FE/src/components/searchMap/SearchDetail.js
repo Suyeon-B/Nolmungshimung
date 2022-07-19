@@ -28,11 +28,9 @@ function SearchDetail(props) {
       className="site-form-in-drawer-wrapper"
     >
       <div style={{ marginLeft: "10px", marginRight: "10px" }}>
-        <StyledImg src={imgUrl[0]} />
-
-        {/* {imgUrl?imgUrl.map((el, idx) =>{
-          
-        }): <StyledImg src='기본 이미지' /> } */}
+        <div>
+          <StyledImg src={imgUrl[0]} />
+        </div>
 
         <StyledTitle>{props.contents.place_name}</StyledTitle>
         <p
