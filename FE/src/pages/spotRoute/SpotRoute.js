@@ -3,6 +3,7 @@ import styled from "styled-components";
 import SpotList from "../../components/spot/SpotList";
 import MarkMap from "../../components/MarkMap/MarkMap";
 import TextEditor from "../shareMemo/TextEditor";
+import CursorTest from "../shareMemo/CursorTest";
 import SearchDetail from "../../components/searchMap/SearchDetail";
 import useNotification from "../../atomics/Notification";
 import { AlertFilled } from "@ant-design/icons";
@@ -85,6 +86,7 @@ function SpotRoute({
         <SpotRouteMap id="myMap" />
       </SpotRouteSection>
 
+      <CursorTest project_Id={itemId} selectedIndex={selectedIndex} />
       {/* <TextEditor project_Id={itemId} selectedIndex={selectedIndex} /> */}
       {contents !== null && (
         <SearchDetail onClose={onClose} visible={visible} contents={contents} />
