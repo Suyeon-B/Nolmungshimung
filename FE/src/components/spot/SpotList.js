@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { DeleteOutlined } from "@ant-design/icons";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import SearchDetail from "../searchMap/SearchDetail";
 
 const SidePlanListDiv = styled.div`
   height: 100%;
@@ -101,6 +102,8 @@ const getListStyle = (isDraggingOver) => ({
 const transDayItem = (dayItem, selectedIndex) => {};
 
 export default function SpotList({
+  handleVisible,
+  handleContents,
   dayItem,
   setItemRoute,
   selectedIndex,
@@ -189,7 +192,7 @@ export default function SpotList({
                             <SpotTitle
                               className="spotTitle"
                               onClick={() => {
-                                console.log("dd");
+                                handleVisible(true), handleContents(item);
                               }}
                             >
                               <SpotItemIndex

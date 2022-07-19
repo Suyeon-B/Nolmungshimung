@@ -342,6 +342,7 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
       editorRef.current.setContents(doc);
     }
   }, [editorRef, doc]);
+
   console.log(presences);
   return (
     <EditorBox>
