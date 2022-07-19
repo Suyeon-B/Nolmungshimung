@@ -10,7 +10,7 @@ import SpotDetail from "../../components/spot/SpotDetail";
 const fetchAddTravelRoute = async (id, route) => {
   try {
     const response = await fetch(
-      `http://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${id}`,
+      `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${id}`,
       {
         method: "post",
         headers: {
