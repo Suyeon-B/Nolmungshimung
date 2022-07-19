@@ -9,6 +9,7 @@ const App = (s) => (
   <Rate style={{ marginBottom: "10px" }} disabled defaultValue={s} />
 );
 function SearchDetail(props) {
+  console.log(props);
   const imgUrl = [];
   if (props.contents.photos) {
     props.contents.photos.map((el, idx) => {
