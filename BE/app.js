@@ -83,9 +83,33 @@ io.on("connection", (socket) => {
       projectSocketRoom[projectId][userName].color =
         colors[Object.keys(projectSocketRoom[projectId]).length - 1];
       socket.join(projectId);
-
-      socket.broadcast.to(projectId).emit("notify", userName);
       io.to(projectId).emit("connectUser", projectSocketRoom[projectId]);
+    } catch (error) {
+      console.log(error);
+    }
+    try {
+      // console.log("==================");
+      socket.broadcast.to(projectId).emit("notify", userName);
+    } catch (error) {
+      console.log(error);
+    }
+    try {
+      // console.log("========attention==========");
+      socket.on("attention", (date) => {
+        // console.log("==================");
+        // console.log(`date : ${date}`);
+        // console.log(projectId);
+        // console.log(`user_name:${userName}`);
+        // socket.emit("attentionPlease", [date, userName]);
+        try {
+          // console.log("ooooo");
+          socket.broadcast
+            .to(projectId)
+            .emit("attentionPlease", [date, userName]);
+        } catch (error) {
+          console.log(error);
+        }
+      });
     } catch (error) {
       console.log(error);
     }
@@ -132,7 +156,7 @@ io.on("connection", (socket) => {
         .to(projectId + selectedIndex)
         .emit("mouse_update", mouseInfo);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   });
   ////
@@ -143,7 +167,7 @@ io.on("connection", (socket) => {
         .to(projectId)
         .emit("connectUser", projectSocketRoom[projectId]);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   });
 });

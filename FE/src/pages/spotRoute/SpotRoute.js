@@ -7,6 +7,7 @@ import CursorTest from "../shareMemo/CursorTest";
 import SearchDetail from "../../components/searchMap/SearchDetail";
 import useNotification from "../../atomics/Notification";
 import { AlertFilled } from "@ant-design/icons";
+import socket from "../../socket";
 
 function SpotRoute({
   startDate,
@@ -17,6 +18,7 @@ function SpotRoute({
   setIsDrage,
   setIsAddDel,
 }) {
+  const [notifyFlag, setNotifyFlag] = useState(false);
   const [visible, setVisible] = useState(false);
   const [contents, setContents] = useState(null);
   // const [routes, setRoutes] = useState(item.routes);
@@ -49,18 +51,24 @@ function SpotRoute({
     setContents(null);
   };
 
+  useEffect(() => {
+    if (notifyFlag === false) return;
+    // console.log(notifyFlag);
+    socket.emit("attention", culTripTermData(startDate, selectedIndex));
+    setNotifyFlag(false);
+    // console.log("attention");
+  }, [notifyFlag]);
+
   const culTripTermData = (startDate, day) => {
     const sDate = new Date(startDate.slice(0, 3));
     sDate.setDate(sDate.getDate() + day);
     return `${sDate.getMonth() + 1}월 ${sDate.getDate()}일`;
   };
-
-  const triggerNotif = useNotification("놀멍쉬멍", {
-    body: `원영이가 ${culTripTermData(
-      startDate,
-      selectedIndex
-    )} 페이지로 당신을 부르고 있어요!`,
-  });
+  const callFriends = () => {
+    // console.log(`notify flag is ${notifyFlag}`);
+    setNotifyFlag(true);
+    // console.log(`notify flag is ${notifyFlag}`);
+  };
   return (
     <SpotRouteContainer>
       <SpotRouteTitle>
@@ -69,8 +77,12 @@ function SpotRoute({
         </SpotRouteTitleDay>
         <AlertFilled
           style={{ color: "#ff8a3d", fontSize: "34px", marginLeft: "15px" }}
-          onClick={triggerNotif}
+          onClick={callFriends}
         />
+        {/* <AlertFilled
+          style={{ color: "#ff8a3d", fontSize: "34px", marginLeft: "15px" }}
+          onClick={triggerNotif}
+        /> */}
         <span>주목시키기</span>
       </SpotRouteTitle>
       <SpotRouteSection>
