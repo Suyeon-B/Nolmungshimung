@@ -69,8 +69,6 @@ const PlanSideBar = ({
         setIsDrage={setIsDrage}
         setIsAddDel={setIsAddDel}
       />
-
-      <Footer></Footer>
     </SideBar>
   );
 };
