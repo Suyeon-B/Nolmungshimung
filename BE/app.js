@@ -54,15 +54,33 @@ io.on("connection", (socket) => {
     console.log("message:", msg);
   });
   ////프로젝트 관련 소켓
-  socket.on("projectJoin", ([projectId, user_name]) => {
-    console.log("join", projectId);
-    socket.join(projectId);
-    console.log("====================");
-    console.log(user_name);
-    console.log("====================");
-    // 입장 알람 송신
-    // socket.emit("notify", user_name);
-    socket.broadcast.to(projectId).emit("notify", user_name);
+  socket.on("projectJoin", ([projectId, userName, selectedIndex]) => {
+    try {
+      console.log("projectJoin", projectId);
+      projectSocketRoom[projectId] = {
+        ...projectSocketRoom[projectId],
+        [userName]: {
+          selectedIndex,
+        },
+      };
+      projectSocketRoom[projectId][userName].color =
+        colors[Object.keys(projectSocketRoom[projectId]).length - 1];
+      socket.join(projectId);
+
+      socket.broadcast.to(projectId).emit("notify", userName);
+      io.to(projectId).emit("connectUser", projectSocketRoom[projectId]);
+    } catch (error) {
+      console.log(error);
+    }
+
+    socket.on("attention", (date) => {
+      // console.log(`date : ${date}`);
+      // console.log(projectId);
+      // console.log(`user_name:${user_name}`);
+      // socket.emit("attentionPlease", [date, user_name]);
+
+      socket.broadcast.to(projectId).emit("attentionPlease", [date, userName]);
+    });
   });
 
   socket.on("changeRoute", ([itemsRoute, projectId]) => {
