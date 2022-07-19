@@ -158,7 +158,7 @@ const SearchListRoute = ({
 
   function FindDetailContents(props) {
     //1. 디비에 있나 확인
-    let result;
+
     fetch(
       `https://${process.env.REACT_APP_SERVER_IP}:8443/travel/` + props.place_id
     ) //get
@@ -166,8 +166,7 @@ const SearchListRoute = ({
       .then((data) => {
         if (data.message === "success") {
           console.log("db에 있습니다");
-          result = data.data;
-          setContents(result);
+          setContents(data.data);
         } else {
           console.log("디비에 없음");
           GetGooglePlace(props);

@@ -3,6 +3,7 @@ import styled from "styled-components";
 import SpotList from "../../components/spot/SpotList";
 import MarkMap from "../../components/MarkMap/MarkMap";
 import TextEditor from "../shareMemo/TextEditor";
+import SearchDetail from "../../components/searchMap/SearchDetail";
 import useNotification from "../../atomics/Notification";
 import { AlertFilled } from "@ant-design/icons";
 
@@ -15,13 +16,37 @@ function SpotRoute({
   setIsDrage,
   setIsAddDel,
 }) {
+  const [visible, setVisible] = useState(false);
+  const [contents, setContents] = useState(null);
   // const [routes, setRoutes] = useState(item.routes);
   // console.log("=================");
   // console.log(item[0]);
   // console.log("=================");
   // useEffect(() => {
+  const handleVisible = (value) => {
+    setVisible(value);
+  };
+  const handleContents = (value) => {
+    fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/travel/` + value.id) //get
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.message === "success") {
+          console.log("db에 있습니다");
+          setContents(data.data);
+        } else {
+          console.log("디비에 없음");
+        }
+      })
+      .catch((error) => console.log(error));
+    // console.log(value.id);
+    // setContents(value);
+  };
   MarkMap(item[selectedIndex]);
   // }, [...item[0]]);
+  const onClose = () => {
+    setVisible(false);
+    setContents(null);
+  };
 
   const culTripTermData = (startDate, day) => {
     const sDate = new Date(startDate.slice(0, 3));
@@ -54,11 +79,16 @@ function SpotRoute({
           setItemRoute={setItemRoute}
           setIsDrage={setIsDrage}
           setIsAddDel={setIsAddDel}
+          handleVisible={handleVisible}
+          handleContents={handleContents}
         />
         <SpotRouteMap id="myMap" />
       </SpotRouteSection>
 
       {/* <TextEditor project_Id={itemId} selectedIndex={selectedIndex} /> */}
+      {contents !== null && (
+        <SearchDetail onClose={onClose} visible={visible} contents={contents} />
+      )}
     </SpotRouteContainer>
   );
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import PlanList from "./PlanList";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Footer from "./Footer";
 
 const PlanSideBar = ({
   item,
