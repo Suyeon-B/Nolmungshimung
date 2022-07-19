@@ -125,13 +125,15 @@ const ProjectPage = (props) => {
 
   useEffect(() => {
     socket.on("notify", (user_name) => {
-      // console.log(user_name);
-      // console.log("i receive notify");
+      console.log("nnn");
+      console.log(user_name);
+      console.log("i receive notify");
       // triggerNotif(user_name);
       const triggerNotif = useNotification("놀멍쉬멍", {
         body: `${user_name}님이 입장했습니다.`,
       });
       triggerNotif();
+      console.log("입장");
     });
   }, []);
 

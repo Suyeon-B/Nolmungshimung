@@ -5,6 +5,8 @@ import MarkMap from "../../components/MarkMap/MarkMap";
 import TextEditor from "../shareMemo/TextEditor";
 import useNotification from "../../atomics/Notification";
 import { AlertFilled } from "@ant-design/icons";
+import socket from "../../socket";
+import { useAuth } from "../../components/auth/Auth";
 
 function SpotRoute({
   startDate,
@@ -15,6 +17,8 @@ function SpotRoute({
   setIsDrage,
   setIsAddDel,
 }) {
+  const auth = useAuth();
+  const [notifyFlag, setNotifyFlag] = useState(false);
   // const [routes, setRoutes] = useState(item.routes);
   // console.log("=================");
   // console.log(item[0]);
@@ -23,18 +27,42 @@ function SpotRoute({
   MarkMap(item[selectedIndex]);
   // }, [...item[0]]);
 
+  useEffect(() => {
+    if (
+      auth === null ||
+      auth === undefined ||
+      auth.user === undefined ||
+      auth.user === null
+    )
+      return;
+    if (notifyFlag === false) return;
+    socket.emit("attention", culTripTermData(startDate, selectedIndex));
+    setNotifyFlag(false);
+    // socket.emit("attention", culTripTermData(startDate, selectedIndex), () => {
+    //   setNotifyFlag(false);
+    // });
+    console.log("attention");
+  }, [notifyFlag]);
+
+  useEffect(() => {
+    socket.on("attentionPlease", ([date, user_name]) => {
+      // console.log("attention please on");
+      const triggerNotif = useNotification("놀멍쉬멍", {
+        body: `${user_name}님이 ${date} 페이지로 당신을 부르고 있어요!`,
+      });
+      triggerNotif();
+      console.log("ddd");
+    });
+  }, []);
   const culTripTermData = (startDate, day) => {
     const sDate = new Date(startDate.slice(0, 3));
     sDate.setDate(sDate.getDate() + day);
     return `${sDate.getMonth() + 1}월 ${sDate.getDate()}일`;
   };
-
-  const triggerNotif = useNotification("놀멍쉬멍", {
-    body: `원영이가 ${culTripTermData(
-      startDate,
-      selectedIndex
-    )} 페이지로 당신을 부르고 있어요!`,
-  });
+  const callFriends = () => {
+    setNotifyFlag(true);
+    console.log(`notify flag is ${notifyFlag}`);
+  };
   return (
     <SpotRouteContainer>
       <SpotRouteTitle>
@@ -43,8 +71,12 @@ function SpotRoute({
         </SpotRouteTitleDay>
         <AlertFilled
           style={{ color: "#ff8a3d", fontSize: "34px", marginLeft: "15px" }}
-          onClick={triggerNotif}
+          onClick={callFriends}
         />
+        {/* <AlertFilled
+          style={{ color: "#ff8a3d", fontSize: "34px", marginLeft: "15px" }}
+          onClick={triggerNotif}
+        /> */}
         <span>주목시키기</span>
       </SpotRouteTitle>
       <SpotRouteSection>
