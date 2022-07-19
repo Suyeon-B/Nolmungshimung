@@ -13,7 +13,7 @@ import React, { useState } from "react";
 //   };
 async function SpotDetail(data) {
   return new Promise((resolve, reject) => {
-    fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/travel/place`, {
+    fetch(`http://${process.env.REACT_APP_SERVER_IP}:8443/travel/place`, {
       method: "post",
       headers: {
         "content-type": "application/json",

@@ -14,7 +14,7 @@ function GetGooglePlaceId(props) {
   const api_key = "AIzaSyAFeyVrH7cjDHGVVLqhifBI-DFlTUwEn8E";
   url =
     url + "input=" + props.input + "&inputtype=textquery" + "&key=" + api_key;
-  fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/travel/` + props.id)
+  fetch(`http://${process.env.REACT_APP_SERVER_IP}:8443/travel/` + props.id)
     .then((response) => response.json())
     .then((data) => {
       if (data.message != "success") {
@@ -35,7 +35,7 @@ function GetGooglePlaceId(props) {
                   data.place_url = props.place_url;
 
                   fetch(
-                    `https://${process.env.REACT_APP_SERVER_IP}:8443/travel/${props.id}`,
+                    `http://${process.env.REACT_APP_SERVER_IP}:8443/travel/${props.id}`,
                     {
                       method: "post",
                       headers: {
@@ -61,7 +61,7 @@ function GetGooglePlaceId(props) {
                 result: null,
               };
               fetch(
-                `https://${process.env.REACT_APP_SERVER_IP}:8443/travel/${props.id}`,
+                `http://${process.env.REACT_APP_SERVER_IP}:8443/travel/${props.id}`,
                 {
                   method: "post",
                   headers: {
@@ -86,7 +86,7 @@ import SpotDetail from "../../components/spot/SpotDetail";
 const fetchAddTravelRoute = async (id, route) => {
   try {
     const response = await fetch(
-      `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${id}`,
+      `http://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${id}`,
       {
         method: "post",
         headers: {

@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../components/auth/Auth";
 import { Modal } from "antd";
 
-const kauthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=2d1c91f12a4c8020dbcc39ddb0c368b0&redirect_uri=https://${process.env.REACT_APP_SERVER_IP}:3000/kakao/signin&response_type=code`;
+const kauthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=2d1c91f12a4c8020dbcc39ddb0c368b0&redirect_uri=http://${process.env.REACT_APP_SERVER_IP}:3000/kakao/signin&response_type=code`;
 
 function SignIn() {
   const success = () => {
@@ -36,7 +36,7 @@ function SignIn() {
 
   async function singInUser(data) {
     await fetch(
-      `https://${process.env.REACT_APP_SERVER_IP}:8443/users/signin`,
+      `http://${process.env.REACT_APP_SERVER_IP}:8443/users/signin`,
       {
         method: "post",
         headers: {

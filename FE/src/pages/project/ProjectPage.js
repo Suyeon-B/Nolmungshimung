@@ -9,13 +9,13 @@ import { BrowserRouter as Routes, Route, Navigate } from "react-router-dom";
 import Voicetalk from "../../components/voiceTalk/voiceTalk";
 // import io from "socket.io-client";
 
-// const socket = io(`https://${process.env.REACT_APP_SERVER_IP}:3001`);
+// const socket = io(`http://${process.env.REACT_APP_SERVER_IP}:3001`);
 
 import socket from "../../socket";
 
 async function fetchProjectById(_id) {
   const response = await fetch(
-    `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`
+    `http://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`
   );
   // const response = await fetch(
   //   `https://438e69a6-c891-4d7e-bfd2-f30c4eba330f.mock.pstmn.io/projects/mokc`
@@ -81,7 +81,7 @@ const ProjectPage = (props) => {
       // const tmpProjectId = await fetchProjectById(projectId);
       try {
         const response = await fetch(
-          `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${projectId}`,
+          `http://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${projectId}`,
           {
             method: "PATCH",
             headers: {
