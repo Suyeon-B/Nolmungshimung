@@ -17,7 +17,6 @@ const useNotification = (title, options) => {
       new Notification(title, options);
     }
   };
-  useEffect(() => {});
   return fireNotif;
 };
 

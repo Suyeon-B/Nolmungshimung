@@ -8,6 +8,8 @@ import styled from "styled-components";
 import { BrowserRouter as Routes, Route, Navigate } from "react-router-dom";
 import Voicetalk from "../../components/voiceTalk/voiceTalk";
 import { ConnectuserContext } from "../../context/ConnectUserContext";
+import { useAuth } from "../../components/auth/Auth";
+import useNotification from "../../atomics/Notification";
 
 // import io from "socket.io-client";
 
@@ -27,6 +29,7 @@ async function fetchProjectById(_id) {
 
 const ProjectPage = (props) => {
   const { projectId } = useParams();
+  const auth = useAuth();
 
   const [items, setItems] = useState(null);
   const [itemsRoute, setItemsRoute] = useState(null);
@@ -65,7 +68,14 @@ const ProjectPage = (props) => {
   }, [projectId]);
 
   useEffect(() => {
-    socket.emit("projectJoin", projectId);
+    if (
+      auth === null ||
+      auth === undefined ||
+      auth.user === undefined ||
+      auth.user === null
+    )
+      return;
+    socket.emit("projectJoin", [projectId, auth.user.user_name]);
 
     return () => {
       socket.off("connect");
@@ -73,7 +83,7 @@ const ProjectPage = (props) => {
       setIsDrage(false);
       // console.log("project page unmount");
     };
-  }, [projectId]);
+  }, [projectId, auth]);
 
   useEffect(() => {
     if (itemsRoute === null) return;
@@ -113,6 +123,18 @@ const ProjectPage = (props) => {
     });
   }, []);
 
+  useEffect(() => {
+    socket.on("notify", (user_name) => {
+      // console.log(user_name);
+      // console.log("i receive notify");
+      // triggerNotif(user_name);
+      const triggerNotif = useNotification("놀멍쉬멍", {
+        body: `${user_name}님이 입장했습니다.`,
+      });
+      triggerNotif();
+    });
+  }, []);
+
   if (isLoading) {
     if (items) {
       setIsLoading(false);
@@ -123,6 +145,12 @@ const ProjectPage = (props) => {
   const toggleIsPage = () => {
     setIsFirstPage(!isFirstPage);
   };
+
+  // const triggerNotif = () => {
+  //   useNotification("놀멍쉬멍", {
+  //     body: `${auth.user?.user_name}이 입장했어요!`,
+  //   });
+  // };
 
   return (
     <ConnectuserContext.Provider value={{ connectUser, setConnectUser }}>
@@ -160,6 +188,7 @@ const ProjectPage = (props) => {
         )}
       </PlanSection>
       <Voicetalk projectId={projectId} />
+      {/* <button onClick={triggerNotif}>ㅇㅇ </button> */}
     </ConnectuserContext.Provider>
   );
 };

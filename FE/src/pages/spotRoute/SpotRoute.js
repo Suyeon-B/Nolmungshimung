@@ -5,9 +5,6 @@ import MarkMap from "../../components/MarkMap/MarkMap";
 import TextEditor from "../shareMemo/TextEditor";
 import useNotification from "../../atomics/Notification";
 import { AlertFilled } from "@ant-design/icons";
-import io from "socket.io-client";
-
-const socket = io(`https://${process.env.REACT_APP_SERVER_IP}:3005`);
 
 function SpotRoute({
   startDate,
@@ -32,12 +29,6 @@ function SpotRoute({
     return `${sDate.getMonth() + 1}월 ${sDate.getDate()}일`;
   };
 
-  useEffect(() => {
-    socket.emit("");
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
   const triggerNotif = useNotification("놀멍쉬멍", {
     body: `원영이가 ${culTripTermData(
       startDate,

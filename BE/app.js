@@ -12,12 +12,10 @@ var projectsRouter = require("./routes/projects/projects");
 var travelRouter = require("./routes/travel/travel");
 var commonRouter = require("./routes/common/common");
 var voiceRouter = require("./routes/voicetalk/voicetalk");
-var notificationRouter = require("./routes/notification/notification");
 var mongodb = require("dotenv").config();
 var fs = require("fs");
 
 voiceRouter;
-notificationRouter;
 
 var app = express();
 // [원영] 소켓 서버 추가
@@ -55,10 +53,17 @@ io.on("connection", (socket) => {
     console.log("message:", msg);
   });
   ////프로젝트 관련 소켓
-  socket.on("projectJoin", (projectId) => {
+  socket.on("projectJoin", ([projectId, user_name]) => {
     console.log("join", projectId);
     socket.join(projectId);
+    console.log("====================");
+    console.log(user_name);
+    console.log("====================");
+    // 입장 알람 송신
+    // socket.emit("notify", user_name);
+    socket.broadcast.to(projectId).emit("notify", user_name);
   });
+
   socket.on("changeRoute", ([itemsRoute, projectId]) => {
     socket.broadcast.to(projectId).emit("updateRoute", itemsRoute);
   });
@@ -103,7 +108,6 @@ app.use("/users", usersRouter);
 app.use("/projects", projectsRouter);
 app.use("/travel", travelRouter);
 app.use("/common", commonRouter);
-app.use("/notificationRouter", notificationRouter);
 // app.use("/voicetalk", voiceRouter);
 
 // [수연] share-memo with collaborative cursors
