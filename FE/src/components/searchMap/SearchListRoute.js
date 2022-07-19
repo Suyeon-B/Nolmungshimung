@@ -10,7 +10,7 @@ import SpotDetail from "../../components/spot/SpotDetail";
 const fetchAddTravelRoute = async (id, route) => {
   try {
     const response = await fetch(
-      `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${id}`,
+      `http://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${id}`,
       {
         method: "post",
         headers: {
@@ -52,6 +52,11 @@ const SearchListRoute = ({
 
   const [visible, setVisible] = useState(false);
   const [contests, setContents] = useState(null);
+  const [isActive, setIsActive] = useState(false);
+
+  const handleClick = () => {
+    setIsActive((current) => !current);
+  };
 
   function GetGooglePlace(props) {
     let url = "/place-api/findplacefromtext/json?";
@@ -204,6 +209,10 @@ const SearchListRoute = ({
       // onDragEnter={(event) => dragFunction(event, "enter")}
       // onDragLeave={(event) => dragFunction(event, "leave")}
       // className="dragAndDrop"
+
+      style={{
+        backgroundColor: isActive ? "#ebebeb" : "",
+      }}
       key={idx}
       onMouseOver={() => {
         overEvent(idx);
@@ -213,6 +222,7 @@ const SearchListRoute = ({
       }}
       onClick={() => {
         clickEvent(idx);
+        handleClick();
       }}
     >
       {/* <span>{i + 1}</span> */}
@@ -314,4 +324,5 @@ const StyledBtn = styled.button`
     background-color: rgb(96, 96, 96);
   }
 `;
+
 export default SearchListRoute;

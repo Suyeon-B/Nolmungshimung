@@ -34,6 +34,14 @@ const testItem = [
 //   { id: "item-71", title: "장소7" },
 // ];
 
+let color = {
+  FD6: "#975FFE",
+  AT4: "#FF8A3D", // 관광, 명소
+  CE7: "#FF6169", // 음식점>카페
+  AD5: "#8DD664", // 숙박
+  "": "#CFCFCF",
+};
+
 const getItems = (count, offset = 0) =>
   Array.from({ length: count }, (v, k) => k).map((k) => ({
     id: `item-${k + offset}-${new Date().getTime()}`,
@@ -184,10 +192,20 @@ export default function SpotList({
                                 console.log("dd");
                               }}
                             >
-                              <SpotItemIndex>{index + 1}</SpotItemIndex>
+                              <SpotItemIndex
+                                style={{
+                                  background: color[item.category_group_code],
+                                }}
+                              >
+                                {index + 1}
+                              </SpotItemIndex>
                               {item.place_name}
                             </SpotTitle>
-                            <SpotCategory>{item.category}</SpotCategory>
+                            <SpotCategory>
+                              {item.category_group_name
+                                ? item.category_group_name
+                                : "-"}
+                            </SpotCategory>
                           </SpotItemDiv>
                           <DeleteOutlined
                             style={{ fontSize: "25px" }}
@@ -220,7 +238,6 @@ const SpotItemIndex = styled.div`
   width: 25px;
   height: 25px;
   border-radius: 50%;
-  background: #ff8a3d;
   text-align: center;
   font-size: 18px;
   margin-right: 10px;
@@ -249,4 +266,6 @@ const SpotCategory = styled.span`
   color: #adadad;
   font-weight: 700;
   font-size: 10px;
+  margin-left: 35px;
+  margin-top: 3px;
 `;

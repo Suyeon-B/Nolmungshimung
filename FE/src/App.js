@@ -52,9 +52,9 @@ function App() {
               <Route
                 path="signin/*"
                 element={
-                  <NotRequireAuth>
+                  // <NotRequireAuth>
                     <SignIn />
-                  </NotRequireAuth>
+                  // </NotRequireAuth>
                 }
               />
               <Route path="signup/*" element={<SignUp />} />
@@ -63,26 +63,26 @@ function App() {
               <Route
                 path="/kakao/signin"
                 element={
-                  <NotRequireAuth>
+                  // <NotRequireAuth>
                     <KakaoSignIn />
-                  </NotRequireAuth>
+                  // </NotRequireAuth>
                 }
               />
               <Route
                 path="project/*"
                 element={
-                  <RequireAuth>
+                  // <RequireAuth>
                     <CreateProject />
-                  </RequireAuth>
+                  // {/* </RequireAuth> */}
                 }
               />
               {/* <Route path="project/:projectId" element={<ProjectPage />} /> */}
               <Route
                 path="project/:projectId"
                 element={
-                  <RequireAuth>
+                  // <RequireAuth>
                     <ProjectPage />
-                  </RequireAuth>
+                  // </RequireAuth>
                 }
               />
 
