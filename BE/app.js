@@ -27,8 +27,8 @@ const credentials = {
   cert: certificate,
   passphrase: process.env.PASSPHRASE,
 };
-// var server = require("https").createServer(credentials, app);
-var server = require("http").createServer(app);
+var server = require("https").createServer(credentials, app);
+// var server = require("http").createServer(app);
 var io = require("socket.io")(server, {
   cors: {
     origin: "*",
