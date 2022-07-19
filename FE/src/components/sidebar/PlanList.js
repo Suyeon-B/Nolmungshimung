@@ -173,7 +173,7 @@ function PlanList({
                         {culTripTermData(startDate, ind)}
 
                         {Object.keys(connectUser).map((key) => {
-                          console.log(connectUser[key]);
+                          // console.log(connectUser[key]);
                           if (key === userName) return;
                           if (connectUser[key].selectedIndex === ind) {
                             return (
