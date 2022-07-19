@@ -57,7 +57,15 @@ function App() {
                   </NotRequireAuth>
                 }
               />
-              <Route path="signup/*" element={<SignUp />} />
+              <Route
+                path="signup/*"
+                element={
+                  <NotRequireAuth>
+                    {" "}
+                    <SignUp />{" "}
+                  </NotRequireAuth>
+                }
+              />
               <Route path="voicetalk/*" element={<VoiceTalk />} />
               <Route path="/" element={<Home />} />
               <Route
@@ -76,15 +84,7 @@ function App() {
                   </RequireAuth>
                 }
               />
-              {/* <Route path="project/:projectId" element={<ProjectPage />} /> */}
-              <Route
-                path="project/:projectId"
-                element={
-                  <RequireAuth>
-                    <ProjectPage />
-                  </RequireAuth>
-                }
-              />
+              <Route path="project/:projectId" element={<ProjectPage />} />
 
               {/* <Route
                 path="project/:projectId/:tripDate"
