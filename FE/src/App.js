@@ -32,8 +32,7 @@ import {
 
 // react query devtool
 import { ReactQueryDevtools } from "react-query/devtools";
-
-import SocketTest from "./components/SocketTest";
+import CalendarTest from "./components/CalendarTest";
 
 const queryClient = new QueryClient(); // 인스턴스 생성
 const BodyDiv = styled.div`
@@ -81,11 +80,10 @@ function App() {
                 element={
                   // <RequireAuth>
                   <CreateProject />
-                  // {/* </RequireAuth> */}
                 }
               />
               <Route path="project/:projectId" element={<ProjectPage />} />
-
+              <Route path="Calendar/*" element={<CalendarTest />} />
               {/* <Route
                 path="project/:projectId/:tripDate"
                 element={<ProjectPage />}
