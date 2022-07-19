@@ -3,6 +3,7 @@ import styled from "styled-components";
 import SpotList from "../../components/spot/SpotList";
 import MarkMap from "../../components/MarkMap/MarkMap";
 import TextEditor from "../shareMemo/TextEditor";
+import CursorTest from "../shareMemo/CursorTest";
 
 function SpotRoute({
   item,
@@ -33,7 +34,7 @@ function SpotRoute({
         <SpotRouteMap id="myMap" />
       </SpotRouteSection>
 
-      <TextEditor project_Id={itemId} selectedIndex={selectedIndex} />
+      <CursorTest project_Id={itemId} selectedIndex={selectedIndex} />
     </SpotRouteContainer>
   );
 }

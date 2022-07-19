@@ -8,6 +8,7 @@ import styled from "styled-components";
 import { BrowserRouter as Routes, Route, Navigate } from "react-router-dom";
 import Voicetalk from "../../components/voiceTalk/voiceTalk";
 import { ConnectuserContext } from "../../context/ConnectUserContext";
+import cloneDeep from "lodash/cloneDeep";
 // import io from "socket.io-client";
 
 // const socket = io(`https://${process.env.REACT_APP_SERVER_IP}:3001`);
@@ -23,6 +24,7 @@ async function fetchProjectById(_id) {
   // );
   return response.json();
 }
+const colors = ["#FF8A3D", "#8DD664", "#FF6169", "#975FFE", "#0072BC"];
 
 const ProjectPage = (props) => {
   const { projectId } = useParams();
@@ -35,6 +37,7 @@ const ProjectPage = (props) => {
   const [isDrage, setIsDrage] = useState(false);
   const [isAddDel, setIsAddDel] = useState(false);
   const [connectUser, setConnectUser] = useState({});
+  const userName = sessionStorage.getItem("myNickname");
 
   useEffect(() => {
     if (projectId === null) return;
@@ -65,9 +68,18 @@ const ProjectPage = (props) => {
   }, [projectId]);
 
   useEffect(() => {
-    socket.emit("projectJoin", projectId);
+    socket.on("connectUser", (connectUserInfo) => {
+      console.log("connectUser", connectUserInfo);
+      setConnectUser(connectUserInfo);
+    });
+  }, []);
+
+  useEffect(() => {
+    socket.emit("projectJoin", [projectId, userName, selectedIndex]);
+    // 접속한 유저에 대한 정보 저장하기
 
     return () => {
+      socket.emit("projectLeave", [projectId, userName]);
       socket.off("connect");
       socket.off("disconnect");
       setIsDrage(false);
@@ -77,7 +89,6 @@ const ProjectPage = (props) => {
 
   useEffect(() => {
     if (itemsRoute === null) return;
-    console.log("socket: change Route");
 
     async function UpdateInfo() {
       // const tmpProjectId = await fetchProjectById(projectId);
@@ -112,6 +123,10 @@ const ProjectPage = (props) => {
       setItemsRoute(itemsRoute);
     });
   }, []);
+
+  useEffect(() => {
+    socket.emit("updateUserIndex", [projectId, userName, selectedIndex]);
+  }, [selectedIndex]);
 
   if (isLoading) {
     if (items) {
