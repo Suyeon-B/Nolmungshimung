@@ -27,7 +27,7 @@ function SearchDetail(props) {
       width={450}
       className="site-form-in-drawer-wrapper"
     >
-      <div style={{ marginLeft: "10px", marginRight: "10px" }}>
+      <div style={{ marginLeft: "15px", marginRight: "15px" }}>
         <div>
           <StyledImg src={imgUrl[0]} />
         </div>
