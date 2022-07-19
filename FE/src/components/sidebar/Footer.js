@@ -67,18 +67,23 @@ function Footer(props) {
 }
 
 const FooterContainer = styled.div`
-  width: 250px;
-  height: 86px;
-  background: #e7e7e7;
-  border-radius: 50px;
-  display: flex;
-  margin-left: 25px;
-  align-items: center;
-  padding-left: 8px;
-  padding-right: 8px;
-  overflow: auto;
-  white-space: nowrap;
-  justify-content: space-between;
+width: 250px;
+height: 86px;
+background: #e7e7e7;
+border-radius: 50px;
+display: flex;
+margin-left: 8.5%;
+align-items: center;
+padding: 5px 15px 5px 15px;
+overflow: auto;
+white-space: nowrap;
+justify-content: space-between;
+position: fixed;
+bottom: 20px;
+min-width: 200px;
+// width: 280px;
+width: auto;
+height: 60px;
 `;
 
 export default Footer;
