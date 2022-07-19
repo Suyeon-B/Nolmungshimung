@@ -53,14 +53,14 @@ function MarkMap(props) {
     const polyline = new kakao.maps.Polyline({
       path: latlngs, // 선을 구성하는 좌표배열 입니다
       strokeWeight: 5, // 선의 두께 입니다
-      strokeColor: "#FFAE00", // 선의 색깔입니다
+      strokeColor: "black", // 선의 색깔입니다
       strokeOpacity: 0.7, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
       strokeStyle: "solid", // 선의 스타일입니다s
     });
     const container = document.getElementById("myMap");
     const options = {
       center: new kakao.maps.LatLng(33.450701, 126.570667),
-      // ble: false,
+      draggable: false,
       level: 3,
     };
     const map = new kakao.maps.Map(container, options);
@@ -101,8 +101,16 @@ function MarkMap(props) {
       var infowindow = new kakao.maps.InfoWindow({
         content: linePath[i].title, // 인포윈도우에 표시할 내용
       });
-      kakao.maps.event.addListener(marker, "mouseover", makeOverListener(map, marker, infowindow));
-      kakao.maps.event.addListener(marker, "mouseout", makeOutListener(infowindow));
+      kakao.maps.event.addListener(
+        marker,
+        "mouseover",
+        makeOverListener(map, marker, infowindow)
+      );
+      kakao.maps.event.addListener(
+        marker,
+        "mouseout",
+        makeOutListener(infowindow)
+      );
     }
     if (linePath.length > 0) {
       setBounds(map, bounds);

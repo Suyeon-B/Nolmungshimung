@@ -1,7 +1,10 @@
 const mongoose = require("mongoose");
 
 const travelSchema = mongoose.Schema({
-    travel_id: {
+  provider: {
+    type: Number, //1은 구글 2는 카카오
+  },
+  place_id: {
     type: String,
     unique: true,
   },
@@ -23,11 +26,11 @@ const travelSchema = mongoose.Schema({
   place_url: {
     type: String,
   },
-  photo: {
+  photos: {
     type: Array,
   },
-  photo_reference: {
-    type: String ,
+  photo: {
+    type: String,
   },
   rating: {
     type: String,
@@ -39,13 +42,11 @@ const travelSchema = mongoose.Schema({
     type: String,
   },
   opening_hours: {
-    type: Object
-  }
+    type: Object,
+  },
 });
 
 //useFlag 값 : 0(삭제), 1(이메일 인증 필요), 2(정상적으로 사용 가능한 상태)
-
-
 
 const Travel = mongoose.model("Travel", travelSchema);
 
