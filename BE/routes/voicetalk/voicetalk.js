@@ -14,7 +14,8 @@ const credentials = {
 };
 
 app.use(express.static(path.join(__dirname, "public")));
-var server = require("https").createServer(credentials, app);
+// var server = require("https").createServer(credentials, app);
+var server = require("http").createServer(app);
 var io = require("socket.io")(server, {
   cors: {
     origin: "*",
@@ -54,13 +55,12 @@ io.on('connection', (socket) => {
   /**
    * Join Room
    */
-  socket.on('BE-join-room', async({ roomId, userName }) => {
+  socket.on('BE-join-room', async({ roomId, userName, nickName }) => {
     // Socket Join RoomName
     await socket.join(roomId);
-    socketList[socket.id] = { userName, video: true, audio: true };
-    console.log(`dhsi우냐? : ${JSON.stringify(socketList)}`);
-    console.log(io.sockets.in(roomId).allSockets())
-    console.log(await io.allSockets())
+    socketList[socket.id] = { userName, nickName, audio: true };
+    console.log(`입장 : ${JSON.stringify(socketList)}`);
+
     // Set User List
     // await io.sockets.in(roomId).allSockets((err, clients) => {
     //   console.log('clients:::::: ', clients)
@@ -101,11 +101,20 @@ io.on('connection', (socket) => {
   });
 
   socket.on('BE-leave-room', ({ roomId, leaver }) => {
+    console.log(`퇴장전 : ${JSON.stringify(socketList)}`);
     delete socketList[socket.id];
+    console.log(`퇴장후 : ${JSON.stringify(socketList)}`);
     socket.broadcast
       .to(roomId)
-      .emit('FE-user-leave', { userId: socket.id, userName: [socket.id] });
-    io.sockets.sockets[socket.id].leave(roomId);
+      .emit('FE-user-leave', { userId: socket.id, userName: leaver });
+    // io.sockets.sockets[socket.id].leave(roomId);
+    // io.scokets.in(roomId).allSockets()[socket.id].le
+  });
+
+  socket.on('abc', (avc ) => {
+    console.log("==========================");
+    console.log(avc)
+    console.log("==========================");
   });
 
   socket.on('BE-toggle-camera-audio', ({ roomId, switchTarget }) => {
