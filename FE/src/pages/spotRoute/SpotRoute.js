@@ -8,7 +8,6 @@ import SearchDetail from "../../components/searchMap/SearchDetail";
 import useNotification from "../../atomics/Notification";
 import { AlertFilled } from "@ant-design/icons";
 import socket from "../../socket";
-import { useAuth } from "../../components/auth/Auth";
 
 function SpotRoute({
   startDate,
@@ -19,7 +18,6 @@ function SpotRoute({
   setIsDrage,
   setIsAddDel,
 }) {
-  const auth = useAuth();
   const [notifyFlag, setNotifyFlag] = useState(false);
   const [visible, setVisible] = useState(false);
   const [contents, setContents] = useState(null);
@@ -54,40 +52,22 @@ function SpotRoute({
   };
 
   useEffect(() => {
-    if (
-      auth === null ||
-      auth === undefined ||
-      auth.user === undefined ||
-      auth.user === null
-    )
-      return;
     if (notifyFlag === false) return;
+    // console.log(notifyFlag);
     socket.emit("attention", culTripTermData(startDate, selectedIndex));
     setNotifyFlag(false);
-    // socket.emit("attention", culTripTermData(startDate, selectedIndex), () => {
-    //   setNotifyFlag(false);
-    // });
-    console.log("attention");
+    // console.log("attention");
   }, [notifyFlag]);
 
-  useEffect(() => {
-    socket.on("attentionPlease", ([date, user_name]) => {
-      // console.log("attention please on");
-      const triggerNotif = useNotification("놀멍쉬멍", {
-        body: `${user_name}님이 ${date} 페이지로 당신을 부르고 있어요!`,
-      });
-      triggerNotif();
-      console.log("ddd");
-    });
-  }, []);
   const culTripTermData = (startDate, day) => {
     const sDate = new Date(startDate.slice(0, 3));
     sDate.setDate(sDate.getDate() + day);
     return `${sDate.getMonth() + 1}월 ${sDate.getDate()}일`;
   };
   const callFriends = () => {
+    // console.log(`notify flag is ${notifyFlag}`);
     setNotifyFlag(true);
-    console.log(`notify flag is ${notifyFlag}`);
+    // console.log(`notify flag is ${notifyFlag}`);
   };
   return (
     <SpotRouteContainer>
