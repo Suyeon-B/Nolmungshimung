@@ -1,12 +1,10 @@
 import React, { useState } from "react";
-import Calendar from "react-calendar";
+
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
 import "react-calendar/dist/Calendar.css"; // css import
+import CalendarTest from "./CalendarTest";
 
 const setDay = (value) => {
-  const days = ["일", "월", "화", "수", "목", "금", "토"];
-
   return [
     value.getFullYear(),
     value.getMonth() + 1,
@@ -15,34 +13,17 @@ const setDay = (value) => {
   ];
 };
 
-const culTripData = (startDate, term) => {
-  const sDate = new Date(startDate.slice(0, 3));
-  const arr = [];
-  arr.push(`${sDate.getFullYear()}${sDate.getMonth() + 1}${sDate.getDate()}`);
-  for (let i = 0; i < term; i++) {
-    sDate.setDate(sDate.getDate() + 1);
-
-    arr.push(`${sDate.getFullYear()}${sDate.getMonth() + 1}${sDate.getDate()}`);
-  }
-  console.log(arr);
-  return arr;
-};
-
 const CreateProject = () => {
-  const navigate = useNavigate();
   const [projectTitle, setProjectTitle] = useState("");
-  const [showStartBtn, setShowStartBtn] = useState(false);
-  const [showEndtBtn, setShowEndtBtn] = useState(false);
-  const [value, onChange] = useState(new Date());
+  const [showCalendar, setShowCalendar] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
 
-  const settedStartDate = (value) => {
-    setStartDate(setDay(value));
+  const settedDate = (startDate, endDate) => {
+    setStartDate(setDay(startDate));
+    setEndDate(setDay(endDate));
   };
-  const settedEndDate = (value) => {
-    setEndDate(setDay(value));
-  };
+
   const onChangeProjectTitle = (event) => {
     setProjectTitle(event.target.value);
   };
@@ -60,7 +41,6 @@ const CreateProject = () => {
     const eDate = new Date(endDate[0], endDate[1], endDate[2]).getTime();
 
     const term = parseInt((eDate - sDate) / (1000 * 60 * 60 * 24));
-    const trip_date = culTripData(startDate, term);
     const project = [
       sessionStorage.getItem("user_email"),
       {
@@ -96,7 +76,7 @@ const CreateProject = () => {
         />
         <CreateBtns>
           <CalendarBtnContainer>
-            <CalendarBtn onClick={() => setShowStartBtn(!showStartBtn)}>
+            <CalendarBtn onClick={() => setShowCalendar(!showCalendar)}>
               <img
                 width={"50px"}
                 alt=""
@@ -108,7 +88,7 @@ const CreateProject = () => {
                   : "여행 시작 날짜"}
               </CalendarBtnDay>
             </CalendarBtn>
-            <CalendarBtn onClick={() => setShowEndtBtn(!showEndtBtn)}>
+            <CalendarBtn onClick={() => setShowCalendar(!showCalendar)}>
               <img
                 width={"50px"}
                 alt=""
@@ -124,10 +104,7 @@ const CreateProject = () => {
           </CreateProjectSubmit>
         </CreateBtns>
         <CalendarContainer>
-          {showStartBtn && (
-            <Calendar onChange={settedStartDate} value={value} />
-          )}
-          {showEndtBtn && <Calendar onChange={settedEndDate} value={value} />}
+          {showCalendar && <CalendarTest settedDate={settedDate} />}
         </CalendarContainer>
       </CalenderForm>
     </PageContainer>
@@ -153,7 +130,7 @@ const CalenderForm = styled.form`
 `;
 const TitleInput = styled.input`
   margin-bottom: 20px;
-  width: 499px;
+  width: 812px;
   height: 80px;
   box-shadow: inset 2px 4px 4px rgba(0, 0, 0, 0.25);
   border: 0;
@@ -198,8 +175,8 @@ const CalendarContainer = styled.div`
   margin-top: 20px;
 `;
 const CreateProjectSubmit = styled.button`
-  width: 151px;
-  height: 131px;
+  width: 166px;
+  height: 100px;
   font-size: 30px;
   filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
   border: 0;
