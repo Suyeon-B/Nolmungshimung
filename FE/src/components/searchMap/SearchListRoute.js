@@ -20,7 +20,6 @@ const fetchAddTravelRoute = async (id, route) => {
       }
     );
     const data = await response.json();
-
     // return response.json();
   } catch (error) {
     console.log(error);
@@ -68,6 +67,7 @@ const SearchListRoute = ({
           fetch(url + data.candidates[0].place_id + "&key=" + api_key)
             .then((res) => res.json())
             .then((data) => {
+              console.log(data);
               const travel = {
                 provider: 1,
                 place_id: props.place_id,
@@ -76,13 +76,15 @@ const SearchListRoute = ({
                 category_group_name: props.category_group_name,
                 phone: props.phone,
                 place_url: props.place_url,
-                photos: data.result ? data.result.photos : null,
-                rating: data.result ? data.result.rating : null,
-                reviews: data.result ? data.result.reviews : null,
-                user_ratings_total: data.result
+                photos: data.result.photos ? data.result.photos : null,
+                rating: data.result.rating ? data.result.rating : null,
+                reviews: data.result.reviews ? data.result.reviews : null,
+                user_ratings_total: data.result.user_ratings_total
                   ? data.result.user_ratings_total
                   : null,
-                opening_hours: data.result ? data.result.opening_hours : null,
+                opening_hours: data.result.opening_hours
+                  ? data.result.opening_hours
+                  : null,
               };
 
               console.log(travel);
