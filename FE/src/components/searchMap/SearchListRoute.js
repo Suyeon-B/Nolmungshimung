@@ -20,7 +20,6 @@ const fetchAddTravelRoute = async (id, route) => {
       }
     );
     const data = await response.json();
-
     // return response.json();
   } catch (error) {
     console.log(error);
@@ -53,6 +52,11 @@ const SearchListRoute = ({
 
   const [visible, setVisible] = useState(false);
   const [contests, setContents] = useState(null);
+  const [isActive, setIsActive] = useState(false);
+
+  const handleClick = () => {
+    setIsActive((current) => !current);
+  };
 
   function GetGooglePlace(props) {
     let url = "/place-api/findplacefromtext/json?";
@@ -68,6 +72,7 @@ const SearchListRoute = ({
           fetch(url + data.candidates[0].place_id + "&key=" + api_key)
             .then((res) => res.json())
             .then((data) => {
+              console.log(data);
               const travel = {
                 provider: 1,
                 place_id: props.place_id,
@@ -76,13 +81,15 @@ const SearchListRoute = ({
                 category_group_name: props.category_group_name,
                 phone: props.phone,
                 place_url: props.place_url,
-                photos: data.result ? data.result.photos : null,
-                rating: data.result ? data.result.rating : null,
-                reviews: data.result ? data.result.reviews : null,
-                user_ratings_total: data.result
+                photos: data.result.photos ? data.result.photos : null,
+                rating: data.result.rating ? data.result.rating : null,
+                reviews: data.result.reviews ? data.result.reviews : null,
+                user_ratings_total: data.result.user_ratings_total
                   ? data.result.user_ratings_total
                   : null,
-                opening_hours: data.result ? data.result.opening_hours : null,
+                opening_hours: data.result.opening_hours
+                  ? data.result.opening_hours
+                  : null,
               };
 
               console.log(travel);
@@ -151,7 +158,7 @@ const SearchListRoute = ({
 
   function FindDetailContents(props) {
     //1. 디비에 있나 확인
-    let result;
+
     fetch(
       `https://${process.env.REACT_APP_SERVER_IP}:8443/travel/` + props.place_id
     ) //get
@@ -159,8 +166,7 @@ const SearchListRoute = ({
       .then((data) => {
         if (data.message === "success") {
           console.log("db에 있습니다");
-          result = data.data;
-          setContents(result);
+          setContents(data.data);
         } else {
           console.log("디비에 없음");
           GetGooglePlace(props);
@@ -202,6 +208,10 @@ const SearchListRoute = ({
       // onDragEnter={(event) => dragFunction(event, "enter")}
       // onDragLeave={(event) => dragFunction(event, "leave")}
       // className="dragAndDrop"
+
+      style={{
+        backgroundColor: isActive ? "#ebebeb" : "",
+      }}
       key={idx}
       onMouseOver={() => {
         overEvent(idx);
@@ -211,6 +221,7 @@ const SearchListRoute = ({
       }}
       onClick={() => {
         clickEvent(idx);
+        handleClick();
       }}
     >
       {/* <span>{i + 1}</span> */}
@@ -312,4 +323,5 @@ const StyledBtn = styled.button`
     background-color: rgb(96, 96, 96);
   }
 `;
+
 export default SearchListRoute;

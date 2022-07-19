@@ -28,6 +28,7 @@ const credentials = {
   passphrase: process.env.PASSPHRASE,
 };
 var server = require("https").createServer(credentials, app);
+// var server = require("http").createServer(app);
 var io = require("socket.io")(server, {
   cors: {
     origin: "*",
@@ -72,6 +73,7 @@ io.on("connection", (socket) => {
   */
   socket.on("projectJoin", ([projectId, userName, selectedIndex]) => {
     try {
+      console.log("projectJoin", projectId);
       projectSocketRoom[projectId] = {
         ...projectSocketRoom[projectId],
         [userName]: {
@@ -82,6 +84,7 @@ io.on("connection", (socket) => {
         colors[Object.keys(projectSocketRoom[projectId]).length - 1];
       socket.join(projectId);
 
+      socket.broadcast.to(projectId).emit("notify", userName);
       io.to(projectId).emit("connectUser", projectSocketRoom[projectId]);
     } catch (error) {
       console.log(error);
@@ -187,7 +190,7 @@ var OkdbServer = require("okdb-server");
 var options = {
   cors: {
     enabled: true,
-    allowedOrigins: `https://${process.env.REACT_APP_SERVER_IP}:3000`,
+    allowedOrigins: `http://localhost:3000`,
   },
 };
 var okdb = new OkdbServer(options);
