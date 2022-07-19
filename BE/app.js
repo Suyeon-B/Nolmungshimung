@@ -54,10 +54,17 @@ io.on("connection", (socket) => {
     console.log("message:", msg);
   });
   ////프로젝트 관련 소켓
-  socket.on("projectJoin", (projectId) => {
+  socket.on("projectJoin", ([projectId, user_name]) => {
     console.log("join", projectId);
     socket.join(projectId);
+    console.log("====================");
+    console.log(user_name);
+    console.log("====================");
+    // 입장 알람 송신
+    // socket.emit("notify", user_name);
+    socket.broadcast.to(projectId).emit("notify", user_name);
   });
+
   socket.on("changeRoute", ([itemsRoute, projectId]) => {
     socket.broadcast.to(projectId).emit("updateRoute", itemsRoute);
   });
