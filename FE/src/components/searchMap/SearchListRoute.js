@@ -6,6 +6,7 @@ import { overEvent, clickEvent, outEvent } from "../../pages/search/Search";
 import SearchDetail from "./SearchDetail";
 import "../../App.css";
 import SpotDetail from "../../components/spot/SpotDetail";
+import { useEffect } from "react";
 
 const fetchAddTravelRoute = async (id, route) => {
   try {
@@ -33,6 +34,7 @@ const culTripTermData = (startDate, day) => {
 };
 
 const SearchListRoute = ({
+  id,
   itemRoutes,
   setItemRoutes,
   projectId,
@@ -40,6 +42,8 @@ const SearchListRoute = ({
   idx,
   startDate,
   setIsAddDel,
+  selected,
+  handleSelect,
 }) => {
   const onClickAddRoute = (event) => {
     const uRoute = { ...route };
@@ -52,11 +56,6 @@ const SearchListRoute = ({
 
   const [visible, setVisible] = useState(false);
   const [contests, setContents] = useState(null);
-  const [isActive, setIsActive] = useState(false);
-
-  const handleClick = () => {
-    setIsActive((current) => !current);
-  };
 
   function GetGooglePlace(props) {
     let url = "/place-api/findplacefromtext/json?";
@@ -158,7 +157,7 @@ const SearchListRoute = ({
 
   function FindDetailContents(props) {
     //1. 디비에 있나 확인
-
+    let result;
     fetch(
       `https://${process.env.REACT_APP_SERVER_IP}:8443/travel/` + props.place_id
     ) //get
@@ -166,7 +165,8 @@ const SearchListRoute = ({
       .then((data) => {
         if (data.message === "success") {
           console.log("db에 있습니다");
-          setContents(data.data);
+          result = data.data;
+          setContents(result);
         } else {
           console.log("디비에 없음");
           GetGooglePlace(props);
@@ -208,9 +208,9 @@ const SearchListRoute = ({
       // onDragEnter={(event) => dragFunction(event, "enter")}
       // onDragLeave={(event) => dragFunction(event, "leave")}
       // className="dragAndDrop"
-
+      id={id}
       style={{
-        backgroundColor: isActive ? "#ebebeb" : "",
+        backgroundColor: selected ? "#ebebeb" : "",
       }}
       key={idx}
       onMouseOver={() => {
@@ -221,7 +221,7 @@ const SearchListRoute = ({
       }}
       onClick={() => {
         clickEvent(idx);
-        handleClick();
+        handleSelect(idx);
       }}
     >
       {/* <span>{i + 1}</span> */}
