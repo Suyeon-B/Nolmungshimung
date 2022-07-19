@@ -29,7 +29,7 @@ function FriendInvite() {
   };
 
   useEffect(() => {
-    fetch(`http://${process.env.REACT_APP_SERVER_IP}:8443/projects/friends/${projectId}`, {
+    fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/friends/${projectId}`, {
       method: "get",
       headers: {
         "content-type": "application/json",
@@ -46,7 +46,7 @@ function FriendInvite() {
   const onClickPlus = () => {
     let data = { email };
     console.log("friends:", friends);
-    fetch(`http://${process.env.REACT_APP_SERVER_IP}:8443/projects/friends/${projectId}`, {
+    fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/friends/${projectId}`, {
       method: "post",
       headers: {
         "content-type": "application/json",

@@ -58,8 +58,8 @@ export default function TextEditor({ project_Id }) {
   }, [project_Id]);
   console.log(projectID);
   useEffect(() => {
-    const s = io(`http://${process.env.REACT_APP_SERVER_IP}:3001`);
-    // const s = io(`http://${process.env.REACT_APP_SERVER_IP}:3002`);
+    const s = io(`https://${process.env.REACT_APP_SERVER_IP}:3001`);
+    // const s = io(`https://${process.env.REACT_APP_SERVER_IP}:3002`);
     setSocket(s);
     return () => {
       s.disconnect();

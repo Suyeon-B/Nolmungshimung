@@ -54,7 +54,7 @@ const OnlineFriends = styled.div`
 
 Quill.register("modules/cursors", QuillCursors);
 
-const HOST = `http://${process.env.REACT_APP_SERVER_IP}:7899`; // location of your server, use xxxxx to use sample, or follow this guide to build your own:
+const HOST = `https://${process.env.REACT_APP_SERVER_IP}:7899`; // location of your server, use xxxxx to use sample, or follow this guide to build your own:
 const myNickname = sessionStorage.getItem("myNickname");
 
 const okdb = new OkdbClient(HOST, { timeout: 30000 });
@@ -342,6 +342,7 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
       editorRef.current.setContents(doc);
     }
   }, [editorRef, doc]);
+
   console.log(presences);
   return (
     <EditorBox>

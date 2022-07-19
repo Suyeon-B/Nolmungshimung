@@ -14,8 +14,8 @@ const credentials = {
 };
 
 app.use(express.static(path.join(__dirname, "public")));
-// var server = require("https").createServer(credentials, app);
-var server = require("http").createServer(app);
+var server = require("https").createServer(credentials, app);
+// var server = require("http").createServer(app);
 var io = require("socket.io")(server, {
   cors: {
     origin: "*",

@@ -6,11 +6,12 @@ import { overEvent, clickEvent, outEvent } from "../../pages/search/Search";
 import SearchDetail from "./SearchDetail";
 import "../../App.css";
 import SpotDetail from "../../components/spot/SpotDetail";
+import { useEffect } from "react";
 
 const fetchAddTravelRoute = async (id, route) => {
   try {
     const response = await fetch(
-      `http://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${id}`,
+      `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${id}`,
       {
         method: "post",
         headers: {
@@ -33,6 +34,7 @@ const culTripTermData = (startDate, day) => {
 };
 
 const SearchListRoute = ({
+  id,
   itemRoutes,
   setItemRoutes,
   projectId,
@@ -40,6 +42,8 @@ const SearchListRoute = ({
   idx,
   startDate,
   setIsAddDel,
+  selected,
+  handleSelect,
 }) => {
   const onClickAddRoute = (event) => {
     const uRoute = { ...route };
@@ -52,11 +56,6 @@ const SearchListRoute = ({
 
   const [visible, setVisible] = useState(false);
   const [contests, setContents] = useState(null);
-  const [isActive, setIsActive] = useState(false);
-
-  const handleClick = () => {
-    setIsActive((current) => !current);
-  };
 
   function GetGooglePlace(props) {
     let url = "/place-api/findplacefromtext/json?";
@@ -209,9 +208,9 @@ const SearchListRoute = ({
       // onDragEnter={(event) => dragFunction(event, "enter")}
       // onDragLeave={(event) => dragFunction(event, "leave")}
       // className="dragAndDrop"
-
+      id={id}
       style={{
-        backgroundColor: isActive ? "#ebebeb" : "",
+        backgroundColor: selected ? "#ebebeb" : "",
       }}
       key={idx}
       onMouseOver={() => {
@@ -222,7 +221,7 @@ const SearchListRoute = ({
       }}
       onClick={() => {
         clickEvent(idx);
-        handleClick();
+        handleSelect(idx);
       }}
     >
       {/* <span>{i + 1}</span> */}

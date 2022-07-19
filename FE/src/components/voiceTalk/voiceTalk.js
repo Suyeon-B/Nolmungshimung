@@ -231,7 +231,6 @@ const Room = (props) => {
     
         <>
           {console.log('보이스톡에서 : ', peers)}
-          <Footer toggleCameraAudio={toggleCameraAudio} myNickName={currentNick} users={peers}/>
           <MyVideo
             ref={userAudioRef}
             muted
@@ -239,6 +238,8 @@ const Room = (props) => {
           ></MyVideo>
         {peers &&
           peers.map((peer, index, arr) => createUserVideo(peer, index, arr))}
+        <Footer toggleCameraAudio={toggleCameraAudio} myNickName={currentNick} users={peers}/>
+
         </>        
   );
 };

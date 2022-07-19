@@ -8,24 +8,30 @@ import styled from "styled-components";
 import { BrowserRouter as Routes, Route, Navigate } from "react-router-dom";
 import Voicetalk from "../../components/voiceTalk/voiceTalk";
 import { ConnectuserContext } from "../../context/ConnectUserContext";
+import cloneDeep from "lodash/cloneDeep";
+import { useAuth } from "../../components/auth/Auth";
+import useNotification from "../../atomics/Notification";
+
 // import io from "socket.io-client";
 
-// const socket = io(`http://${process.env.REACT_APP_SERVER_IP}:3001`);
+// const socket = io(`https://${process.env.REACT_APP_SERVER_IP}:3001`);
 
 import socket from "../../socket";
 
 async function fetchProjectById(_id) {
   const response = await fetch(
-    `http://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`
+    `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`
   );
   // const response = await fetch(
   //   `https://438e69a6-c891-4d7e-bfd2-f30c4eba330f.mock.pstmn.io/projects/mokc`
   // );
   return response.json();
 }
+const colors = ["#FF8A3D", "#8DD664", "#FF6169", "#975FFE", "#0072BC"];
 
 const ProjectPage = (props) => {
   const { projectId } = useParams();
+  const auth = useAuth();
 
   const [items, setItems] = useState(null);
   const [itemsRoute, setItemsRoute] = useState(null);
@@ -35,6 +41,7 @@ const ProjectPage = (props) => {
   const [isDrage, setIsDrage] = useState(false);
   const [isAddDel, setIsAddDel] = useState(false);
   const [connectUser, setConnectUser] = useState({});
+  const userName = sessionStorage.getItem("myNickname");
 
   useEffect(() => {
     if (projectId === null) return;
@@ -65,25 +72,41 @@ const ProjectPage = (props) => {
   }, [projectId]);
 
   useEffect(() => {
-    socket.emit("projectJoin", projectId);
+    socket.on("connectUser", (connectUserInfo) => {
+      console.log("connectUser", connectUserInfo);
+      setConnectUser(connectUserInfo);
+      console.log(connectUser)
+    });
+  }, []);
+
+  useEffect(() => {
+    // 접속한 유저에 대한 정보 저장하기
+    if (
+      auth === null ||
+      auth === undefined ||
+      auth.user === undefined ||
+      auth.user === null
+    )
+      return;
+    socket.emit("projectJoin", [projectId, auth.user.user_name]);
 
     return () => {
+      socket.emit("projectLeave", [projectId, userName]);
       socket.off("connect");
       socket.off("disconnect");
       setIsDrage(false);
       // console.log("project page unmount");
     };
-  }, [projectId]);
+  }, [projectId, auth]);
 
   useEffect(() => {
     if (itemsRoute === null) return;
-    console.log("socket: change Route");
 
     async function UpdateInfo() {
       // const tmpProjectId = await fetchProjectById(projectId);
       try {
         const response = await fetch(
-          `http://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${projectId}`,
+          `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${projectId}`,
           {
             method: "PATCH",
             headers: {
@@ -113,6 +136,22 @@ const ProjectPage = (props) => {
     });
   }, []);
 
+  useEffect(() => {
+    socket.emit("updateUserIndex", [projectId, userName, selectedIndex]);
+  }, [selectedIndex]);
+
+  useEffect(() => {
+    socket.on("notify", (user_name) => {
+      // console.log(user_name);
+      // console.log("i receive notify");
+      // triggerNotif(user_name);
+      const triggerNotif = useNotification("놀멍쉬멍", {
+        body: `${user_name}님이 입장했습니다.`,
+      });
+      triggerNotif();
+    });
+  }, []);
+
   if (isLoading) {
     if (items) {
       setIsLoading(false);
@@ -123,6 +162,12 @@ const ProjectPage = (props) => {
   const toggleIsPage = () => {
     setIsFirstPage(!isFirstPage);
   };
+
+  // const triggerNotif = () => {
+  //   useNotification("놀멍쉬멍", {
+  //     body: `${auth.user?.user_name}이 입장했어요!`,
+  //   });
+  // };
 
   return (
     <ConnectuserContext.Provider value={{ connectUser, setConnectUser }}>
@@ -149,6 +194,7 @@ const ProjectPage = (props) => {
         )}
         {!isFirstPage && (
           <SpotRoute
+            startDate={items.start_date}
             selectedIndex={selectedIndex}
             item={itemsRoute}
             setItemRoute={setItemsRoute}
@@ -159,6 +205,7 @@ const ProjectPage = (props) => {
         )}
       </PlanSection>
       <Voicetalk projectId={projectId} />
+      {/* <button onClick={triggerNotif}>ㅇㅇ </button> */}
     </ConnectuserContext.Provider>
   );
 };
