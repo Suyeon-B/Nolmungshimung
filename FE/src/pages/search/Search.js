@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import SearchListRoute from "../../components/searchMap/SearchListRoute";
 import SearchBar from "../../components/searchMap/SearchBar";
 import styled from "styled-components";
+// import NomalMarker from "../../../public/statics/images/location-dot-solid.svg";
 
 const { kakao } = window;
 
@@ -59,7 +60,13 @@ function createMarkerImage(markerSize, markerUrl) {
   return markerImage;
 }
 
-const Search = ({ itemRoutes, setItemRoutes, projectId, startDate, setIsAddDel }) => {
+const Search = ({
+  itemRoutes,
+  setItemRoutes,
+  projectId,
+  startDate,
+  setIsAddDel,
+}) => {
   const [searchPlace, setSearchPlace] = useState("");
   // 검색결과 배열에 담아줌
   const [Places, setPlaces] = useState([]);
@@ -88,7 +95,11 @@ const Search = ({ itemRoutes, setItemRoutes, projectId, startDate, setIsAddDel }
     currentMap = map;
     const ps = new kakao.maps.services.Places();
 
-    ps.keywordSearch(searchPlace ? searchPlace : "제주도", placesSearchCB, searchOption);
+    ps.keywordSearch(
+      searchPlace ? searchPlace : "제주도",
+      placesSearchCB,
+      searchOption
+    );
 
     // 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
     function placesSearchCB(data, status, pagination) {
@@ -187,7 +198,10 @@ const Search = ({ itemRoutes, setItemRoutes, projectId, startDate, setIsAddDel }
                 setIsAddDel={setIsAddDel}
               />
             ))}
-          <div id="pagination" style={{ position: "relative", zIndex: 2 }}></div>
+          <div
+            id="pagination"
+            style={{ position: "relative", zIndex: 2 }}
+          ></div>
         </ul>
       </SearchListDiv>
       <StyledMapDiv id="searchMap"></StyledMapDiv>

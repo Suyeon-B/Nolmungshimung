@@ -4,83 +4,7 @@ import styled from "styled-components";
 import { v4 as uuidV4 } from "uuid";
 import { overEvent, clickEvent, outEvent } from "../../pages/search/Search";
 import SearchDetail from "./SearchDetail";
-import { DownOutlined } from "@ant-design/icons";
-import { Dropdown, Menu, Space, Typography } from "antd";
 import "../../App.css";
-
-function GetGooglePlaceId(props) {
-  let url =
-    "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?";
-  const api_key = "AIzaSyAFeyVrH7cjDHGVVLqhifBI-DFlTUwEn8E";
-  url =
-    url + "input=" + props.input + "&inputtype=textquery" + "&key=" + api_key;
-  fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/travel/` + props.id)
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.message != "success") {
-        fetch(url)
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.candidates[0] && data.candidates[0].place_id) {
-              let url =
-                "https://maps.googleapis.com/maps/api/place/details/json?fields=name,rating,formatted_phone_number,photo,type,opening_hours,price_level,review,user_ratings_total&place_id=";
-              fetch(url + data.candidates[0].place_id + "&key=" + api_key)
-                .then((res) => res.json())
-                .then((data) => {
-                  data.id = props.id;
-                  data.place_name = props.place_name;
-                  data.road_address_name = props.road_address_name;
-                  data.category_group_name = props.category_group_name;
-                  data.phone = props.phone;
-                  data.place_url = props.place_url;
-
-                  fetch(
-                    `https://${process.env.REACT_APP_SERVER_IP}:8443/travel/${props.id}`,
-                    {
-                      method: "post",
-                      headers: {
-                        "content-type": "application/json",
-                        // "Access-Control-Allow-Origin" : '*'
-                      },
-                      body: JSON.stringify(data),
-                      // credentials: "include",
-                    }
-                  ).catch((error) => console.log("error:", error));
-                })
-                .catch((error) => {
-                  console.log("error:", error);
-                });
-            } else {
-              let kakaoData = {
-                id: props.id,
-                place_name: props.place_name,
-                road_address_name: props.road_address_name,
-                category_group_name: props.category_group_name,
-                phone: props.phone,
-                place_url: props.place_url,
-                result: null,
-              };
-              fetch(
-                `https://${process.env.REACT_APP_SERVER_IP}:8443/travel/${props.id}`,
-                {
-                  method: "post",
-                  headers: {
-                    "content-type": "application/json",
-                    // "Access-Control-Allow-Origin" : '*'
-                  },
-                  body: JSON.stringify(kakaoData),
-                  // credentials: "include",
-                }
-              ).catch((error) => console.log("error:", error));
-            }
-          })
-          .catch((error) => {
-            console.log("error:", error);
-          });
-      }
-    })
-    .catch((error) => console.log(error));
-}
 import SpotDetail from "../../components/spot/SpotDetail";
 
 const fetchAddTravelRoute = async (id, route) => {
@@ -96,7 +20,6 @@ const fetchAddTravelRoute = async (id, route) => {
       }
     );
     const data = await response.json();
-
     // return response.json();
   } catch (error) {
     console.log(error);
@@ -130,19 +53,139 @@ const SearchListRoute = ({
   const [visible, setVisible] = useState(false);
   const [contests, setContents] = useState(null);
 
-  const showDrawer = async () => {
-    const detail = await SpotDetail(route.id);
-    setContents({
-      address_name: route.address_name,
+  function GetGooglePlace(props) {
+    let url = "/place-api/findplacefromtext/json?";
+    const api_key = "AIzaSyAFeyVrH7cjDHGVVLqhifBI-DFlTUwEn8E";
+    url =
+      url + "input=" + props.input + "&inputtype=textquery" + "&key=" + api_key;
+    fetch(url) //google맵 지도 검색
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.candidates[0] && data.candidates[0].place_id) {
+          let url =
+            "/place-api/details/json?fields=name,rating,formatted_phone_number,photo,type,opening_hours,price_level,review,user_ratings_total&place_id=";
+          fetch(url + data.candidates[0].place_id + "&key=" + api_key)
+            .then((res) => res.json())
+            .then((data) => {
+              console.log(data);
+              const travel = {
+                provider: 1,
+                place_id: props.place_id,
+                place_name: props.place_name,
+                road_address_name: props.road_address_name,
+                category_group_name: props.category_group_name,
+                phone: props.phone,
+                place_url: props.place_url,
+                photos: data.result.photos ? data.result.photos : null,
+                rating: data.result.rating ? data.result.rating : null,
+                reviews: data.result.reviews ? data.result.reviews : null,
+                user_ratings_total: data.result.user_ratings_total
+                  ? data.result.user_ratings_total
+                  : null,
+                opening_hours: data.result.opening_hours
+                  ? data.result.opening_hours
+                  : null,
+              };
+
+              console.log(travel);
+              fetch(
+                `https://${process.env.REACT_APP_SERVER_IP}:8443/travel/${props.place_id}`,
+                {
+                  method: "post",
+                  headers: {
+                    "content-type": "application/json",
+                  },
+                  body: JSON.stringify(travel),
+                  // credentials: "include",
+                }
+              )
+                .then(() => {
+                  console.log("구글 디비 저장완");
+                  setContents(travel);
+                })
+                .catch((error) => console.log("error:", error));
+            })
+            .catch((error) => {
+              console.log("error:", error);
+            });
+        } else {
+          // 못찾았을때 카카오 크롤링
+          const detail = SpotDetail(route.id);
+          const KakaoTravel = {
+            provider: 2,
+            place_id: props.place_id,
+            place_name: props.place_name,
+            road_address_name: props.road_address_name,
+            category_group_name: props.category_group_name,
+            phone: props.phone,
+            place_url: props.place_url,
+            photo: detail.img,
+            rating: detail.reviews ? detail.reviews[0][0] : 0,
+            reviews: detail.reviews ? detail.reviews : null,
+            user_ratings_total: null,
+            opening_hours: null,
+          };
+
+          console.log(KakaoTravel);
+          fetch(
+            `https://${process.env.REACT_APP_SERVER_IP}:8443/travel/${props.place_id}`,
+            {
+              //post - db 저장
+              method: "post",
+              headers: {
+                "content-type": "application/json",
+              },
+              body: JSON.stringify(KakaoTravel),
+              // credentials: "include",
+            }
+          )
+            .then(() => {
+              console.log("카카오 디비 저장완");
+              setContents(KakaoTravel);
+            })
+            .catch((error) => console.log("error:", error));
+        }
+      })
+      .catch((error) => {
+        console.log("error:", error);
+      });
+  }
+
+  function FindDetailContents(props) {
+    //1. 디비에 있나 확인
+    let result;
+    fetch(
+      `https://${process.env.REACT_APP_SERVER_IP}:8443/travel/` + props.place_id
+    ) //get
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.message === "success") {
+          console.log("db에 있습니다");
+          result = data.data;
+          setContents(result);
+        } else {
+          console.log("디비에 없음");
+          GetGooglePlace(props);
+        }
+        setVisible(true);
+      })
+      .catch((error) => console.log(error));
+  }
+
+  const showDrawer = () => {
+    const data = {
+      input: route.road_address_name + "" + route.place_name,
+      place_id: route.id,
+      place_name: route.place_name,
+      road_address_name: route.road_address_name
+        ? route.road_address_name
+        : route.address_name,
       category_group_name: route.category_group_name,
       phone: route.phone,
-      place_name: route.place_name,
       place_url: route.place_url,
-      road_address_name: route.road_address_name,
-      reivew: detail.reviews,
-      img: detail.img,
-    });
-    setVisible(true);
+    };
+
+    FindDetailContents(data);
   };
 
   const onClose = () => {

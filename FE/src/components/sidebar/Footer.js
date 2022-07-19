@@ -32,8 +32,7 @@ function Footer() {
     )
       .then((res) => res.json())
       .then((res) => {
-        // console.log("res : ", res);
-        setFriends([...friends, ...res.people.map((el) => el[1])]);
+        setFriends([...res.people.map((el) => el[1])]);
       })
       .catch((err) => console.log(`err: ${err}`));
   }, [projectId]);
