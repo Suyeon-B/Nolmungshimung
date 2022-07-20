@@ -2,22 +2,15 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import SpotList from "../../components/spot/SpotList";
 import MarkMap from "../../components/MarkMap/MarkMap";
-import TextEditor from "../shareMemo/TextEditor";
+import MemoTestRtc from "../../components/shareMemo/MemoRtc";
+// import TextEditor from "../shareMemo/TextEditor";
 import CursorTest from "../shareMemo/CursorTest";
 import SearchDetail from "../../components/searchMap/SearchDetail";
 import useNotification from "../../atomics/Notification";
 import { AlertFilled } from "@ant-design/icons";
 import socket from "../../socket";
 
-function SpotRoute({
-  startDate,
-  item,
-  setItemRoute,
-  itemId,
-  selectedIndex,
-  setIsDrage,
-  setIsAddDel,
-}) {
+function SpotRoute({ startDate, item, setItemRoute, itemId, selectedIndex, setIsDrage, setIsAddDel }) {
   const [notifyFlag, setNotifyFlag] = useState(false);
   const [visible, setVisible] = useState(false);
   const [contents, setContents] = useState(null);
@@ -72,13 +65,8 @@ function SpotRoute({
   return (
     <SpotRouteContainer>
       <SpotRouteTitle>
-        <SpotRouteTitleDay>
-          {culTripTermData(startDate, selectedIndex)}
-        </SpotRouteTitleDay>
-        <AlertFilled
-          style={{ color: "#ff8a3d", fontSize: "34px", marginLeft: "15px" }}
-          onClick={callFriends}
-        />
+        <SpotRouteTitleDay>{culTripTermData(startDate, selectedIndex)}</SpotRouteTitleDay>
+        <AlertFilled style={{ color: "#ff8a3d", fontSize: "34px", marginLeft: "15px" }} onClick={callFriends} />
         {/* <AlertFilled
           style={{ color: "#ff8a3d", fontSize: "34px", marginLeft: "15px" }}
           onClick={triggerNotif}
@@ -97,12 +85,10 @@ function SpotRoute({
         />
         <SpotRouteMap id="myMap" />
       </SpotRouteSection>
-
       <CursorTest project_Id={itemId} selectedIndex={selectedIndex} />
       {/* <TextEditor project_Id={itemId} selectedIndex={selectedIndex} /> */}
-      {contents !== null && (
-        <SearchDetail onClose={onClose} visible={visible} contents={contents} />
-      )}
+      <MemoTestRtc project_Id={itemId} />
+      {contents !== null && <SearchDetail onClose={onClose} visible={visible} contents={contents} />}
     </SpotRouteContainer>
   );
 }

@@ -40,17 +40,7 @@ server.listen(3001, function () {
   console.log("Socket IO server listening on port 3001");
 });
 
-const colors = [
-  "#FF8A3D",
-  "#8DD664",
-  "#FF6169",
-  "#975FFE",
-  "#0072BC",
-  "#F6282B",
-  "#FAD700",
-  "#05FFCC",
-  "#4A4A4A",
-];
+const colors = ["#FF8A3D", "#8DD664", "#FF6169", "#975FFE", "#0072BC", "#F6282B", "#FAD700", "#05FFCC", "#4A4A4A"];
 
 const projectSocketRoom = {};
 
@@ -80,8 +70,7 @@ io.on("connection", (socket) => {
           selectedIndex,
         },
       };
-      projectSocketRoom[projectId][userName].color =
-        colors[Object.keys(projectSocketRoom[projectId]).length - 1];
+      projectSocketRoom[projectId][userName].color = colors[Object.keys(projectSocketRoom[projectId]).length - 1];
       socket.join(projectId);
       io.to(projectId).emit("connectUser", projectSocketRoom[projectId]);
     } catch (error) {
@@ -103,9 +92,7 @@ io.on("connection", (socket) => {
         // socket.emit("attentionPlease", [date, userName]);
         try {
           // console.log("ooooo");
-          socket.broadcast
-            .to(projectId)
-            .emit("attentionPlease", [date, userName]);
+          socket.broadcast.to(projectId).emit("attentionPlease", [date, userName]);
         } catch (error) {
           console.log(error);
         }
@@ -137,9 +124,7 @@ io.on("connection", (socket) => {
   });
   socket.on("detail_date_leave", ([project_Id, userName, selectedIndex]) => {
     console.log("detail_date_leave", selectedIndex);
-    socket.broadcast
-      .to(project_Id + selectedIndex)
-      .emit("deleteCurser", userName);
+    socket.broadcast.to(project_Id + selectedIndex).emit("deleteCurser", userName);
 
     socket.leave(project_Id + selectedIndex);
   });
@@ -152,9 +137,7 @@ io.on("connection", (socket) => {
     // console.log(projectId, mouseInfo, selectedIndex, userName);
     try {
       mouseInfo[userName].color = projectSocketRoom[projectId][userName].color;
-      socket.broadcast
-        .to(projectId + selectedIndex)
-        .emit("mouse_update", mouseInfo);
+      socket.broadcast.to(projectId + selectedIndex).emit("mouse_update", mouseInfo);
     } catch (error) {
       // console.log(error);
     }
@@ -163,9 +146,7 @@ io.on("connection", (socket) => {
   socket.on("updateUserIndex", ([projectId, userName, selectedIndex]) => {
     try {
       projectSocketRoom[projectId][userName].selectedIndex = selectedIndex;
-      socket.broadcast
-        .to(projectId)
-        .emit("connectUser", projectSocketRoom[projectId]);
+      socket.broadcast.to(projectId).emit("connectUser", projectSocketRoom[projectId]);
     } catch (error) {
       // console.log(error);
     }
@@ -210,50 +191,50 @@ app.use("/common", commonRouter);
 
 // [수연] share-memo with collaborative cursors
 // create and start server on 7899 port by default
-var OkdbServer = require("okdb-server");
-var options = {
-  cors: {
-    enabled: true,
-    allowedOrigins: `http://localhost:3000`,
-  },
-};
-var okdb = new OkdbServer(options);
+// var OkdbServer = require("okdb-server");
+// var options = {
+//   cors: {
+//     enabled: true,
+//     allowedOrigins: `https://${process.env.REACT_APP_SERVER_IP}:3000`,
+//   },
+// };
+// var okdb = new OkdbServer(options);
 
-// sample authentication, e.g. should validate your own auth token
-let nameIdx = 0;
-try {
-  okdb.handlers().auth(({ myNickname, selectedIndex }) => {
-    if (myNickname) {
-      console.log("auth attempt for ", myNickname, " success");
-      const userName = myNickname;
-      const userId = "1" + nameIdx;
-      nameIdx = (nameIdx + 1) % 10;
-      return { id: userId, name: userName, selectedIndex: selectedIndex };
-    }
-    console.log("auth attempt for ", myNickname, " failed");
-    return null;
-  });
-} catch (err) {
-  console.log(err);
-}
+// // sample authentication, e.g. should validate your own auth token
+// let nameIdx = 0;
+// try {
+//   okdb.handlers().auth(({ myNickname, selectedIndex }) => {
+//     if (myNickname) {
+//       console.log("auth attempt for ", myNickname, " success");
+//       const userName = myNickname;
+//       const userId = "1" + nameIdx;
+//       nameIdx = (nameIdx + 1) % 10;
+//       return { id: userId, name: userName, selectedIndex: selectedIndex };
+//     }
+//     console.log("auth attempt for ", myNickname, " failed");
+//     return null;
+//   });
+// } catch (err) {
+//   console.log(err);
+// }
 
-// Handling Ctrl-C (workaround for Windows)
-if (process.platform === "win32") {
-  var rl = require("readline").createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
+// // Handling Ctrl-C (workaround for Windows)
+// if (process.platform === "win32") {
+//   var rl = require("readline").createInterface({
+//     input: process.stdin,
+//     output: process.stdout,
+//   });
 
-  rl.on("SIGINT", function () {
-    process.emit("SIGINT");
-  });
-}
-//graceful shutdown on Ctrl-C (all other platforms)
-process.on("SIGINT", function () {
-  okdb.stop(() => {
-    console.log("server stopped");
-    process.exit();
-  });
-});
+//   rl.on("SIGINT", function () {
+//     process.emit("SIGINT");
+//   });
+// }
+// //graceful shutdown on Ctrl-C (all other platforms)
+// process.on("SIGINT", function () {
+//   okdb.stop(() => {
+//     console.log("server stopped");
+//     process.exit();
+//   });
+// });
 
 module.exports = app;
