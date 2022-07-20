@@ -70,7 +70,8 @@ const getItemStyle = (isDragging, draggableStyle, color, userName) => ({
   // change background colour if dragging
   background: isDragging ? "#EBEBEB" : "none",
 
-  border: userName === null ? `3px solid ${color}` : `white`,
+  // border: userName === undefined ? null : `3px solid ${color}`,
+  border: `3px solid ${color}`,
 
   // styles we need to apply on draggables
   ...draggableStyle,
@@ -108,12 +109,35 @@ function PlanList({
   }
 
   function onDragStart(result) {
-    console.log("drag start");
-    console.log("사용자 색 : ", connectUser[userName]);
+    // console.log("drag start");
+    console.log("사용자 색 : ", connectUser[userName].color);
     // socket.emit("grabSpot", [projectId, userName, result.source.index]);
-
-    // const newState = [...[...routes]];
-
+    // console.log(result.source.droppableId);
+    // console.log(result.source.index);
+    const newState = [...[...routes]];
+    const { source, destination } = result;
+    // console.log(newState);
+    // console.log(newState[result.source.droppableId][result.source.index].lock);
+    // if
+    // console.log(source);
+    // console.log(newState[source.droppableId][source.index]);
+    const lockAcquire = newState[source.droppableId][source.index].userName;
+    // console.log(lockAcquire);
+    if (
+      lockAcquire === null ||
+      lockAcquire === userName ||
+      lockAcquire === undefined
+    ) {
+      // console.log(newState[source.droppableId][source.index].lock);
+      newState[source.droppableId][source.index].lock =
+        connectUser[userName].color;
+      newState[source.droppableId][source.index].user_name = userName;
+    } else {
+      alert("다른 친구가 옮기고 있습니다 ! 잠시 기다려 주세요!");
+    }
+    setRoutes(newState);
+    // console.log(newState);
+    setIsDrage(true);
     // console.log(newState[result]);
   }
 
@@ -134,6 +158,7 @@ function PlanList({
       newState[sInd] = items;
 
       newState[sInd][result.destination.index].user_name = null;
+      newState[sInd][result.destination.index].lock = "white";
 
       setRoutes(newState);
     } else {
@@ -146,13 +171,9 @@ function PlanList({
       const newState = [...[...routes]];
       newState[sInd] = result[sInd];
       newState[dInd] = result[dInd];
-      // console.log(`source : ${JSON.stringify(source)}`);
-      // console.log(`destination : ${JSON.stringify(destination)}`);
-      // console.log(destination.droppableId);
-      // console.log(destination.index);
-      console.log(newState[dInd].result);
-      // newState[dInd][destination.droppableId].user_name = null;
-      // newState[dInd][destination.droppableId].lock = "white"; // 수정예쩡
+      // console.log(newState[dInd][destination.index]);
+      newState[dInd][destination.index].user_name = null;
+      newState[dInd][destination.index].lock = "white"; // 수정예쩡
       // console.log(newState[dInd][destination.droppableId].user_name);
       setRoutes(newState);
     }
@@ -236,7 +257,8 @@ function PlanList({
                         index={index}
                       >
                         {(provided, snapshot) => (
-                          <div
+                          <PlanItemDiv
+                            userColor={item.lock}
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
@@ -248,7 +270,9 @@ function PlanList({
                             )}
                           >
                             <ItemInnerDiv>
-                              {item.place_name}
+                              {item.place_name.length > 11
+                                ? item.place_name.slice(0, 12) + " ..."
+                                : item.place_name}
                               <div
                                 type="button"
                                 onClick={() => {
@@ -258,6 +282,19 @@ function PlanList({
                                   setIsAddDel(true);
                                 }}
                               >
+                                {item.user_name && (
+                                  <div
+                                    style={{
+                                      position: "absolute",
+                                      marginTop: "20px",
+                                      backgroundColor: `${item.lock}`,
+                                      color: "white",
+                                      padding: "2px",
+                                    }}
+                                  >
+                                    {item.user_name}
+                                  </div>
+                                )}
                                 <svg
                                   className="planListTrashCan"
                                   fill="#7C8289"
@@ -269,7 +306,7 @@ function PlanList({
                                 </svg>
                               </div>
                             </ItemInnerDiv>
-                          </div>
+                          </PlanItemDiv>
                         )}
                       </Draggable>
                     ))}
@@ -349,6 +386,25 @@ const ItemInnerDiv = styled.div`
   .planListTrashCan {
     margin-right: 17px;
   }
+`;
+
+const PlanItemDiv = styled.div`
+  @keyframes color {
+    0% {
+      border: ${(props) => `4px solid ${props.userColor}`};
+    }
+    33% {
+      border: ${(props) => `4px solid ${props.userColor}`};
+    }
+    66% {
+      border: ${(props) => `4px solid ${props.userColor}`};
+    }
+    100% {
+      border: none;
+    }
+  }
+
+  animation: color 1s linear;
 `;
 
 export default PlanList;
