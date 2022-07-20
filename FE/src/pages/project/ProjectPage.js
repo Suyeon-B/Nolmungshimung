@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, Outlet, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import PlanSideBar from "../../components/sidebar/PlanSideBar";
 import Search from "../search/Search";
 import Sfu from "./Sfu";
@@ -8,14 +8,9 @@ import styled from "styled-components";
 import { BrowserRouter as Routes, Route, Navigate } from "react-router-dom";
 import Voicetalk from "../../components/voiceTalk/voiceTalk";
 import { ConnectuserContext } from "../../context/ConnectUserContext";
-import cloneDeep from "lodash/cloneDeep";
 import { useAuth } from "../../components/auth/Auth";
 import useNotification from "../../atomics/Notification";
 import { notification } from "antd";
-
-// import io from "socket.io-client";
-
-// const socket = io(`https://${process.env.REACT_APP_SERVER_IP}:3001`);
 
 import socket from "../../socket";
 
@@ -23,12 +18,8 @@ async function fetchProjectById(_id) {
   const response = await fetch(
     `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`
   );
-  // const response = await fetch(
-  //   `https://438e69a6-c891-4d7e-bfd2-f30c4eba330f.mock.pstmn.io/projects/mokc`
-  // );
   return response.json();
 }
-const colors = ["#FF8A3D", "#8DD664", "#FF6169", "#975FFE", "#0072BC"];
 
 const ProjectPage = (props) => {
   const { projectId } = useParams();
@@ -76,7 +67,6 @@ const ProjectPage = (props) => {
     socket.on("connectUser", (connectUserInfo) => {
       console.log("connectUser", connectUserInfo);
       setConnectUser(connectUserInfo);
-      console.log(connectUser);
     });
   }, []);
 
@@ -97,7 +87,7 @@ const ProjectPage = (props) => {
       socket.off("connect");
       socket.off("disconnect");
       setIsDrage(false);
-      // console.log("project page unmount");
+      console.log("project page unmount");
     };
   }, [projectId, auth]);
 
@@ -105,7 +95,6 @@ const ProjectPage = (props) => {
     if (itemsRoute === null) return;
 
     async function UpdateInfo() {
-      // const tmpProjectId = await fetchProjectById(projectId);
       try {
         const response = await fetch(
           `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${projectId}`,

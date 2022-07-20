@@ -104,7 +104,7 @@ function PlanList({
   if (!routes) {
     return <div>Loading...</div>;
   }
-
+  console.log(connectUser);
   function onDragEnd(result) {
     const { source, destination } = result;
 
