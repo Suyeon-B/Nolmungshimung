@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useParams } from "react";
 import styled from "styled-components";
 import SpotList from "../../components/spot/SpotList";
 import MarkMap from "../../components/MarkMap/MarkMap";
@@ -10,10 +10,20 @@ import useNotification from "../../atomics/Notification";
 import { AlertFilled } from "@ant-design/icons";
 import socket from "../../socket";
 
-function SpotRoute({ startDate, item, setItemRoute, itemId, selectedIndex, setIsDrage, setIsAddDel }) {
+function SpotRoute({
+  startDate,
+  item,
+  setItemRoute,
+  itemId,
+  selectedIndex,
+  setIsDrage,
+  setIsAddDel,
+  projectId,
+}) {
   const [notifyFlag, setNotifyFlag] = useState(false);
   const [visible, setVisible] = useState(false);
   const [contents, setContents] = useState(null);
+
   // const [routes, setRoutes] = useState(item.routes);
   // console.log("=================");
   // console.log(item[0]);
@@ -43,11 +53,17 @@ function SpotRoute({ startDate, item, setItemRoute, itemId, selectedIndex, setIs
     setVisible(false);
     setContents(null);
   };
-
+  const userName = sessionStorage.getItem("myNickname");
   useEffect(() => {
     if (notifyFlag === false) return;
     // console.log(notifyFlag);
-    socket.emit("attention", culTripTermData(startDate, selectedIndex));
+    socket.emit(
+      "attention",
+      culTripTermData(startDate, selectedIndex),
+      selectedIndex,
+      projectId,
+      userName
+    );
     setNotifyFlag(false);
     // console.log("attention");
   }, [notifyFlag]);
@@ -65,8 +81,13 @@ function SpotRoute({ startDate, item, setItemRoute, itemId, selectedIndex, setIs
   return (
     <SpotRouteContainer>
       <SpotRouteTitle>
-        <SpotRouteTitleDay>{culTripTermData(startDate, selectedIndex)}</SpotRouteTitleDay>
-        <AlertFilled style={{ color: "#ff8a3d", fontSize: "34px", marginLeft: "15px" }} onClick={callFriends} />
+        <SpotRouteTitleDay>
+          {culTripTermData(startDate, selectedIndex)}
+        </SpotRouteTitleDay>
+        <AlertFilled
+          style={{ color: "#ff8a3d", fontSize: "34px", marginLeft: "15px" }}
+          onClick={callFriends}
+        />
         {/* <AlertFilled
           style={{ color: "#ff8a3d", fontSize: "34px", marginLeft: "15px" }}
           onClick={triggerNotif}
@@ -87,7 +108,9 @@ function SpotRoute({ startDate, item, setItemRoute, itemId, selectedIndex, setIs
       </SpotRouteSection>
       <CursorTest project_Id={itemId} selectedIndex={selectedIndex} />
       <MemoTestRtc project_Id={itemId} />
-      {contents !== null && <SearchDetail onClose={onClose} visible={visible} contents={contents} />}
+      {contents !== null && (
+        <SearchDetail onClose={onClose} visible={visible} contents={contents} />
+      )}
     </SpotRouteContainer>
   );
 }

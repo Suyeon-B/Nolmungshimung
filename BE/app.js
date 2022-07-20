@@ -40,7 +40,17 @@ server.listen(3001, function () {
   console.log("Socket IO server listening on port 3001");
 });
 
-const colors = ["#FF8A3D", "#8DD664", "#FF6169", "#975FFE", "#0072BC", "#F6282B", "#FAD700", "#05FFCC", "#4A4A4A"];
+const colors = [
+  "#FF8A3D",
+  "#8DD664",
+  "#FF6169",
+  "#975FFE",
+  "#0072BC",
+  "#F6282B",
+  "#FAD700",
+  "#05FFCC",
+  "#4A4A4A",
+];
 
 const projectSocketRoom = {};
 
@@ -70,7 +80,8 @@ io.on("connection", (socket) => {
           selectedIndex,
         },
       };
-      projectSocketRoom[projectId][userName].color = colors[Object.keys(projectSocketRoom[projectId]).length - 1];
+      projectSocketRoom[projectId][userName].color =
+        colors[Object.keys(projectSocketRoom[projectId]).length - 1];
       socket.join(projectId);
       io.to(projectId).emit("connectUser", projectSocketRoom[projectId]);
     } catch (error) {
@@ -82,25 +93,28 @@ io.on("connection", (socket) => {
     } catch (error) {
       console.log(error);
     }
-    try {
-      // console.log("========attention==========");
-      socket.on("attention", (date) => {
-        // console.log("==================");
-        // console.log(`date : ${date}`);
-        // console.log(projectId);
-        // console.log(`user_name:${userName}`);
-        // socket.emit("attentionPlease", [date, userName]);
-        try {
-          // console.log("ooooo");
-          socket.broadcast.to(projectId).emit("attentionPlease", [date, userName]);
-        } catch (error) {
-          console.log(error);
-        }
-      });
-    } catch (error) {
-      console.log(error);
-    }
   });
+
+  try {
+    // console.log("========attention==========");
+    socket.on("attention", (date, selectedIndex, projectId, userName) => {
+      // console.log("==================");
+      // console.log(`date : ${date}`);
+      console.log("attention", projectId);
+      // console.log(`user_name:${userName}`);
+      // socket.emit("attentionPlease", [date, userName]);
+      try {
+        // console.log("ooooo");
+        socket.broadcast
+          .to(projectId)
+          .emit("attentionPlease", [date, userName], selectedIndex);
+      } catch (error) {
+        console.log(error);
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
 
   socket.on("projectLeave", ([projectId, userName]) => {
     try {
@@ -124,7 +138,9 @@ io.on("connection", (socket) => {
   });
   socket.on("detail_date_leave", ([project_Id, userName, selectedIndex]) => {
     console.log("detail_date_leave", selectedIndex);
-    socket.broadcast.to(project_Id + selectedIndex).emit("deleteCurser", userName);
+    socket.broadcast
+      .to(project_Id + selectedIndex)
+      .emit("deleteCurser", userName);
 
     socket.leave(project_Id + selectedIndex);
   });
@@ -137,7 +153,9 @@ io.on("connection", (socket) => {
     // console.log(projectId, mouseInfo, selectedIndex, userName);
     try {
       mouseInfo[userName].color = projectSocketRoom[projectId][userName].color;
-      socket.broadcast.to(projectId + selectedIndex).emit("mouse_update", mouseInfo);
+      socket.broadcast
+        .to(projectId + selectedIndex)
+        .emit("mouse_update", mouseInfo);
     } catch (error) {
       // console.log(error);
     }
@@ -146,7 +164,9 @@ io.on("connection", (socket) => {
   socket.on("updateUserIndex", ([projectId, userName, selectedIndex]) => {
     try {
       projectSocketRoom[projectId][userName].selectedIndex = selectedIndex;
-      socket.broadcast.to(projectId).emit("connectUser", projectSocketRoom[projectId]);
+      socket.broadcast
+        .to(projectId)
+        .emit("connectUser", projectSocketRoom[projectId]);
     } catch (error) {
       // console.log(error);
     }

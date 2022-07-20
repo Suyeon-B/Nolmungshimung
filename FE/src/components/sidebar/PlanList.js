@@ -96,6 +96,8 @@ function PlanList({
   isFirstPage,
   setIsDrage,
   setIsAddDel,
+  attentionIndex,
+  setAttentionIndex,
 }) {
   const droppableRef = useRef([]);
   const [selectedDay, setSelectedDay] = useState(0);
@@ -104,7 +106,7 @@ function PlanList({
   if (!routes) {
     return <div>Loading...</div>;
   }
-
+  console.log(`attentionIndex: ${attentionIndex}`);
   function onDragEnd(result) {
     const { source, destination } = result;
 
@@ -149,6 +151,9 @@ function PlanList({
     setSelectedIndex(selectIdx);
     setSelectedDay(selectIdx);
     isFirstPage && toggleIsPage();
+    if (selectIdx === attentionIndex) {
+      setAttentionIndex(-1);
+    }
   };
 
   return (
@@ -168,6 +173,7 @@ function PlanList({
                       data-idx={ind}
                       onClick={onClick}
                       selected={selectedDay}
+                      attention={attentionIndex}
                     >
                       <DateDetailBtn data-idx={ind} onClick={onClick}>
                         {culTripTermData(startDate, ind)}
@@ -278,6 +284,11 @@ const DateDetailBtnDiv = styled.div`
 
   background-color: ${(props) =>
     props.selected === props["data-idx"] && "#ebebeb"};
+
+  background-color: ${(props) =>
+    props.attention === props["data-idx"] && "yellow"};
+
+  transition: all ease 2s 0s;
 
   &:hover {
     background-color: #ebebeb;
