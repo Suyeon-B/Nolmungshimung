@@ -7,14 +7,14 @@ import styled from "styled-components";
 import socket from "../../socket";
 
 const EditorBox = styled.div`
-  display: flex;
+  /* display: flex;
   justify-content: center;
   align-items: flex-start;
   padding-top: 20px;
-  width: 100%;
+  width: 100%; */
 `;
 
-function TextEditor({ project_Id, selectedIndex }) {
+function Cursor({ project_Id, selectedIndex }) {
   const [presences, setPresences] = useState({});
   const userName = sessionStorage.getItem("myNickname");
 
@@ -83,4 +83,4 @@ function TextEditor({ project_Id, selectedIndex }) {
   );
 }
 
-export default TextEditor;
+export default Cursor;
