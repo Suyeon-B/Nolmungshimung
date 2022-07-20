@@ -13,6 +13,7 @@ import CreateProject from "./components/CreateProject";
 import SpotList from "./components/spot/SpotList";
 import SpotRoute from "./pages/spotRoute/SpotRoute";
 import styled from "styled-components";
+// import TextEditor from "./components/shareMemo/test";
 
 import "./App.css";
 import "./reset.css";
@@ -91,7 +92,7 @@ function App() {
                 }
               /> */}
               <Route path="*" element={<Navigate to="/" replace />} />
-              {/* <Route path="test" element={<MemoTestRtc />} /> */}
+              {/* <Route path="test/:projectId" element={<TextEditor />} /> */}
             </Routes>
           </BodyDiv>
         </Router>

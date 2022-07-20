@@ -86,7 +86,10 @@ const MemoTestRtc = ({ project_Id }) => {
 
   const modulesRef = {
     toolbar: TOOLBAR_OPTIONS,
-    cursors: true,
+    cursors: {
+      transformOnTextChange: true,
+      toggleFlag: true,
+    },
     history: {
       // Local undo shouldn't undo changes
       // from remote users
