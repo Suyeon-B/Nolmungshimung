@@ -3,8 +3,7 @@ import SignUp from "./pages/sign/SignUp";
 import SignIn from "./pages/sign/SignIn";
 import SearchMap from "./pages/search/Search";
 import Home from "./pages/Home";
-import Test from "./pages/test";
-import TextEditor from "./pages/shareMemo/TextEditor";
+import Test from "./pages/Test";
 import KakaoSignIn from "./components/sign/KakaoSignIn";
 import VoiceTalk from "./components/voiceTalk/voiceTalk";
 import {
@@ -32,8 +31,7 @@ import {
 
 // react query devtool
 import { ReactQueryDevtools } from "react-query/devtools";
-
-import SocketTest from "./components/SocketTest";
+import CalendarTest from "./components/CalendarTest";
 
 const queryClient = new QueryClient(); // 인스턴스 생성
 const BodyDiv = styled.div`
@@ -81,11 +79,11 @@ function App() {
                 element={
                   // <RequireAuth>
                   <CreateProject />
-                  // {/* </RequireAuth> */}
                 }
               />
               <Route path="project/:projectId" element={<ProjectPage />} />
-
+              <Route path="Calendar/*" element={<CalendarTest />} />
+              <Route path="result/*" element={<Test />} />
               {/* <Route
                 path="project/:projectId/:tripDate"
                 element={<ProjectPage />}
@@ -103,6 +101,7 @@ function App() {
                 }
               /> */}
               <Route path="*" element={<Navigate to="/" replace />} />
+              {/* <Route path="test" element={<MemoTestRtc />} /> */}
             </Routes>
           </BodyDiv>
         </Router>

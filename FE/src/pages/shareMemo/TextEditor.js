@@ -355,4 +355,4 @@ function TextEditor({ project_Id, selectedIndex, trip_Date }) {
   );
 }
 
-export default TextEditor;
+// export default TextEditor;

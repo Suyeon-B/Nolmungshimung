@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useParams } from "react";
 import styled from "styled-components";
 import SpotList from "../../components/spot/SpotList";
 import MarkMap from "../../components/MarkMap/MarkMap";
-import TextEditor from "../shareMemo/TextEditor";
-import CursorTest from "../shareMemo/CursorTest";
+import MemoTestRtc from "../../components/shareMemo/MemoRtc";
+// import TextEditor from "../shareMemo/TextEditor";
+import Cursor from "../shareMemo/Cursor";
 import SearchDetail from "../../components/searchMap/SearchDetail";
 import useNotification from "../../atomics/Notification";
 import { AlertFilled } from "@ant-design/icons";
 import socket from "../../socket";
+import { Navigate } from "react-router-dom";
 
 function SpotRoute({
   startDate,
@@ -17,10 +19,12 @@ function SpotRoute({
   selectedIndex,
   setIsDrage,
   setIsAddDel,
+  projectId,
 }) {
   const [notifyFlag, setNotifyFlag] = useState(false);
   const [visible, setVisible] = useState(false);
   const [contents, setContents] = useState(null);
+
   // const [routes, setRoutes] = useState(item.routes);
   // console.log("=================");
   // console.log(item[0]);
@@ -50,11 +54,17 @@ function SpotRoute({
     setVisible(false);
     setContents(null);
   };
-
+  const userName = sessionStorage.getItem("myNickname");
   useEffect(() => {
     if (notifyFlag === false) return;
     // console.log(notifyFlag);
-    socket.emit("attention", culTripTermData(startDate, selectedIndex));
+    socket.emit(
+      "attention",
+      culTripTermData(startDate, selectedIndex),
+      selectedIndex,
+      projectId,
+      userName
+    );
     setNotifyFlag(false);
     // console.log("attention");
   }, [notifyFlag]);
@@ -69,6 +79,10 @@ function SpotRoute({
     setNotifyFlag(true);
     // console.log(`notify flag is ${notifyFlag}`);
   };
+
+  const onClcikResult = () => {
+    window.location.replace("/result");
+  };
   return (
     <SpotRouteContainer>
       <SpotRouteTitle>
@@ -79,11 +93,8 @@ function SpotRoute({
           style={{ color: "#ff8a3d", fontSize: "34px", marginLeft: "15px" }}
           onClick={callFriends}
         />
-        {/* <AlertFilled
-          style={{ color: "#ff8a3d", fontSize: "34px", marginLeft: "15px" }}
-          onClick={triggerNotif}
-        /> */}
         <span>주목시키기</span>
+        <SpotRouteTitleBtn onClick={onClcikResult}>작성 완료</SpotRouteTitleBtn>
       </SpotRouteTitle>
       <SpotRouteSection>
         <SpotList
@@ -97,9 +108,8 @@ function SpotRoute({
         />
         <SpotRouteMap id="myMap" />
       </SpotRouteSection>
-
-      <CursorTest project_Id={itemId} selectedIndex={selectedIndex} />
-      {/* <TextEditor project_Id={itemId} selectedIndex={selectedIndex} /> */}
+      <Cursor project_Id={itemId} selectedIndex={selectedIndex} />
+      <MemoTestRtc project_Id={itemId} />
       {contents !== null && (
         <SearchDetail onClose={onClose} visible={visible} contents={contents} />
       )}
@@ -131,6 +141,7 @@ const SpotRouteSection = styled.section`
   width: 100%;
   height: calc(50% - 37px);
   justify-content: center;
+  margin-bottom: 20px;
 `;
 
 const SpotRouteTitle = styled.section`
@@ -150,6 +161,14 @@ const SpotRouteTitleDay = styled.span`
 `;
 
 const SpotRouteTitleBtn = styled.button`
+  right: 40px;
+  position: absolute;
+  background-color: #ff8a3d;
+  border: 0;
+  border-radius: 4px;
+  padding: 14px;
+  color: #f8f9fa;
+  font-weight: 800;
   cursor: pointer;
 `;
 

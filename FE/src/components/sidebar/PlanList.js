@@ -16,34 +16,6 @@ const reorder = (list, startIndex, endIndex) => {
   return result;
 };
 
-const DATA = {
-  a: {
-    color: "#FF8A3D",
-    id: "a",
-    user: { id: 1, name: "a", selectedIndex: 0 },
-  },
-  b: {
-    color: "#8DD664",
-    id: "b",
-    user: { id: 2, name: "b", selectedIndex: 1 },
-  },
-  c: {
-    color: "#FF6169",
-    id: "c",
-    user: { id: 3, name: "c", selectedIndex: 2 },
-  },
-  d: {
-    color: "#975FFE",
-    id: "d",
-    user: { id: 4, name: "d", selectedIndex: 1 },
-  },
-  e: {
-    color: "#0072BC",
-    id: "e",
-    user: { id: 5, name: "e", selectedIndex: 0 },
-  },
-};
-
 /**
  * Moves an item from one list to another list.
  */
@@ -82,6 +54,7 @@ const getListStyle = (isDraggingOver) => ({
   padding: grid,
   // width: 250,
   width: "100%",
+  borderBottom: "3px solid #ebebeb",
 });
 
 const culTripTermData = (startDate, day) => {
@@ -99,6 +72,8 @@ function PlanList({
   isFirstPage,
   setIsDrage,
   setIsAddDel,
+  attentionIndex,
+  setAttentionIndex,
 }) {
   const droppableRef = useRef([]);
   const [selectedDay, setSelectedDay] = useState(0);
@@ -141,6 +116,7 @@ function PlanList({
     // console.log(newState[result]);
   }
 
+  console.log(`attentionIndex: ${attentionIndex}`);
   function onDragEnd(result) {
     // console.log(result);
     const { source, destination } = result;
@@ -192,6 +168,9 @@ function PlanList({
     setSelectedIndex(selectIdx);
     setSelectedDay(selectIdx);
     isFirstPage && toggleIsPage();
+    if (selectIdx === attentionIndex) {
+      setAttentionIndex(-1);
+    }
   };
 
   return (
@@ -211,6 +190,7 @@ function PlanList({
                       data-idx={ind}
                       onClick={onClick}
                       selected={selectedDay}
+                      attention={attentionIndex}
                     >
                       <DateDetailBtn data-idx={ind} onClick={onClick}>
                         {culTripTermData(startDate, ind)}
@@ -335,10 +315,16 @@ const DateDetailBtnDiv = styled.div`
   height: 30px;
   display: flex;
   justify-content: space-between;
+
   border-radius: 5px;
 
   background-color: ${(props) =>
     props.selected === props["data-idx"] && "#ebebeb"};
+
+  background-color: ${(props) =>
+    props.attention === props["data-idx"] && "yellow"};
+
+  /* transition: all ease 2s 0s; */
 
   &:hover {
     background-color: #ebebeb;

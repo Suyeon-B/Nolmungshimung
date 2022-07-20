@@ -93,27 +93,28 @@ io.on("connection", (socket) => {
     } catch (error) {
       console.log(error);
     }
-    try {
-      // console.log("========attention==========");
-      socket.on("attention", (date) => {
-        // console.log("==================");
-        // console.log(`date : ${date}`);
-        // console.log(projectId);
-        // console.log(`user_name:${userName}`);
-        // socket.emit("attentionPlease", [date, userName]);
-        try {
-          // console.log("ooooo");
-          socket.broadcast
-            .to(projectId)
-            .emit("attentionPlease", [date, userName]);
-        } catch (error) {
-          console.log(error);
-        }
-      });
-    } catch (error) {
-      console.log(error);
-    }
   });
+
+  try {
+    // console.log("========attention==========");
+    socket.on("attention", (date, selectedIndex, projectId, userName) => {
+      // console.log("==================");
+      // console.log(`date : ${date}`);
+      console.log("attention", projectId);
+      // console.log(`user_name:${userName}`);
+      // socket.emit("attentionPlease", [date, userName]);
+      try {
+        // console.log("ooooo");
+        socket.broadcast
+          .to(projectId)
+          .emit("attentionPlease", [date, userName], selectedIndex);
+      } catch (error) {
+        console.log(error);
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
 
   socket.on("projectLeave", ([projectId, userName]) => {
     try {
@@ -213,50 +214,50 @@ app.use("/common", commonRouter);
 
 // [수연] share-memo with collaborative cursors
 // create and start server on 7899 port by default
-var OkdbServer = require("okdb-server");
-var options = {
-  cors: {
-    enabled: true,
-    allowedOrigins: `http://localhost:3000`,
-  },
-};
-var okdb = new OkdbServer(options);
+// var OkdbServer = require("okdb-server");
+// var options = {
+//   cors: {
+//     enabled: true,
+//     allowedOrigins: `https://${process.env.REACT_APP_SERVER_IP}:3000`,
+//   },
+// };
+// var okdb = new OkdbServer(options);
 
-// sample authentication, e.g. should validate your own auth token
-let nameIdx = 0;
-try {
-  okdb.handlers().auth(({ myNickname, selectedIndex }) => {
-    if (myNickname) {
-      console.log("auth attempt for ", myNickname, " success");
-      const userName = myNickname;
-      const userId = "1" + nameIdx;
-      nameIdx = (nameIdx + 1) % 10;
-      return { id: userId, name: userName, selectedIndex: selectedIndex };
-    }
-    console.log("auth attempt for ", myNickname, " failed");
-    return null;
-  });
-} catch (err) {
-  console.log(err);
-}
+// // sample authentication, e.g. should validate your own auth token
+// let nameIdx = 0;
+// try {
+//   okdb.handlers().auth(({ myNickname, selectedIndex }) => {
+//     if (myNickname) {
+//       console.log("auth attempt for ", myNickname, " success");
+//       const userName = myNickname;
+//       const userId = "1" + nameIdx;
+//       nameIdx = (nameIdx + 1) % 10;
+//       return { id: userId, name: userName, selectedIndex: selectedIndex };
+//     }
+//     console.log("auth attempt for ", myNickname, " failed");
+//     return null;
+//   });
+// } catch (err) {
+//   console.log(err);
+// }
 
-// Handling Ctrl-C (workaround for Windows)
-if (process.platform === "win32") {
-  var rl = require("readline").createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
+// // Handling Ctrl-C (workaround for Windows)
+// if (process.platform === "win32") {
+//   var rl = require("readline").createInterface({
+//     input: process.stdin,
+//     output: process.stdout,
+//   });
 
-  rl.on("SIGINT", function () {
-    process.emit("SIGINT");
-  });
-}
-//graceful shutdown on Ctrl-C (all other platforms)
-process.on("SIGINT", function () {
-  okdb.stop(() => {
-    console.log("server stopped");
-    process.exit();
-  });
-});
+//   rl.on("SIGINT", function () {
+//     process.emit("SIGINT");
+//   });
+// }
+// //graceful shutdown on Ctrl-C (all other platforms)
+// process.on("SIGINT", function () {
+//   okdb.stop(() => {
+//     console.log("server stopped");
+//     process.exit();
+//   });
+// });
 
 module.exports = app;

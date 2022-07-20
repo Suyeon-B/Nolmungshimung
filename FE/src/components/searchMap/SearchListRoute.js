@@ -7,6 +7,7 @@ import SearchDetail from "./SearchDetail";
 import "../../App.css";
 import SpotDetail from "../../components/spot/SpotDetail";
 import { useEffect } from "react";
+import { PlusCircleTwoTone } from "@ant-design/icons";
 
 const fetchAddTravelRoute = async (id, route) => {
   try {
@@ -232,7 +233,11 @@ const SearchListRoute = ({
       <StyledRouteDiv>
         <StyledTile>{route.place_name}</StyledTile>
         <StyledDropDown>
-          <img className="hanlabong" src="\statics\images\hanlabong.png" />
+          {/* <img className="hanlabong" src="\statics\images\hanlabong.png" /> */}
+          <PlusCircleTwoTone
+            style={{ fontSize: "30px" }}
+            twoToneColor="#FF8A3D"
+          />
           <div className={"dropDownMenu"}>
             {itemRoutes.map((el, idx) => {
               return (
