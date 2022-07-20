@@ -41,7 +41,10 @@ const getItemStyle = (isDragging, draggableStyle) => ({
 
   // change background colour if dragging
   background: isDragging ? "#EBEBEB" : "none",
-
+  // transitionProperty: "backgroundColor ,none",
+  // transitionDuration: "2s",
+  // transition: "background ease 2s 0s",
+  // background: ,
   // styles we need to apply on draggables
   ...draggableStyle,
 });
@@ -193,7 +196,7 @@ function PlanList({
                         index={index}
                       >
                         {(provided, snapshot) => (
-                          <div
+                          <StyleRouteDiv
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
@@ -224,7 +227,7 @@ function PlanList({
                                 </svg>
                               </div>
                             </ItemInnerDiv>
-                          </div>
+                          </StyleRouteDiv>
                         )}
                       </Draggable>
                     ))}
@@ -239,6 +242,31 @@ function PlanList({
     </div>
   );
 }
+
+const StyleRouteDiv = styled.div`
+  @keyframes color {
+    0% {
+      background: #2bb8ff;
+    }
+    20% {
+      background: #59c7ff;
+    }
+    40% {
+      background: #60caff;
+    }
+    60% {
+      background: #89d7ff;
+    }
+    80% {
+      background: #a3e0ff;
+    }
+    100% {
+      background: none;
+    }
+  }
+  border-radius: 5px;
+  animation: color 2s linear;
+`;
 
 const SidePlanListDiv = styled.div`
   height: 75vh;
