@@ -238,6 +238,7 @@ const SearchListDiv = styled.div`
     display: none;
   }
   /* background-color: red; */
+  scroll-behavior: smooth;
 `;
 
 const StyledMapDiv = styled.div`
@@ -245,7 +246,5 @@ const StyledMapDiv = styled.div`
   min-width: calc(100% - 330px);
   position: relative;
 `;
-
-const StyledUl = styled.ul``;
 
 export default React.memo(Search);

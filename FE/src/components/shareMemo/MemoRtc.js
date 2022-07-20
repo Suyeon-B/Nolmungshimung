@@ -1,25 +1,34 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
 import { QuillBinding } from "y-quill";
 import Quill from "quill";
 import QuillCursors from "quill-cursors";
 import ReactQuill from "react-quill";
-// import "react-quill/dist/quill.snow.css";
 import styled from "styled-components";
+import { ConnectuserContext } from "../../context/ConnectUserContext";
 
+<<<<<<< HEAD
+=======
 const EditorBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 47%;
+  // height: 47%;
 `;
 
 const EditorContainer = styled.div`
-  div#container {
-    height: 35vh;
-    width: 61vw;
-    padding: 1%;
+  // div#container {
+  //   height: 35vh;
+  //   width: 61vw;
+  //   padding: 1%;
+  // }
+  height: 35vh;
+  width: 61vw;
+  padding: 1%;
+  height: 47%;
+  .ql-editor {
+    height: 200px;
   }
   .ql-toolbar.ql-snow {
     border-radius: 5px 5px 0px 0px;
@@ -31,6 +40,7 @@ const EditorContainer = styled.div`
     font-weight: bold;
   }
 `;
+>>>>>>> b23737fe55a803ade99186683fa546f910446055
 const TOOLBAR_OPTIONS = [
   [{ align: [] }],
   [{ header: [1, 2, 3, false] }],
@@ -40,33 +50,36 @@ const TOOLBAR_OPTIONS = [
   [{ indent: "+1" }, { indent: "-1" }],
   ["link", "blockquote"],
 ];
-export const usercolors = [
-  { color: "#ff8a3d" }, // 주황색
-  { color: "#339f46" }, // 초록색
-  { color: "#2b96ad" }, // 파란색
-  { color: "#975FFE" }, // 보라색
-  { color: "#232a3c" }, // 남색
-  { color: "#FF6169" }, // 핑크색
-];
 
-const MemoTestRtc = () => {
-  const editorRef = useRef();
+const MemoTestRtc = ({ project_Id }) => {
+  // const editorRef = useRef();
   let quillRef = null;
   let reactQuillRef = null;
   Quill.register("modules/cursors", QuillCursors);
   // const [aware, setAwareness] = useState(null);
+  const [projectID, setProjectId] = useState(project_Id);
+  const { connectUser, setConnectUser } = useContext(ConnectuserContext);
+
+  const userName = sessionStorage.getItem("myNickname");
+  useEffect(() => {
+    setProjectId(project_Id);
+  }, [project_Id]);
+
   useEffect(() => {
     attachQuillRefs();
 
     const ydoc = new Y.Doc();
-    const provider = new WebrtcProvider("share-memo", ydoc);
-    const ytext = ydoc.getText("quill");
+    const provider = new WebrtcProvider(`${projectID}`, ydoc);
+    const ytext = ydoc.getText(`${projectID}`);
     provider.awareness.setLocalStateField("user", {
-      name: "suyeon",
-      color: "#FF6169",
+      name: userName,
+      color: connectUser[userName].color,
     });
 
     const binding = new QuillBinding(ytext, quillRef, provider.awareness);
+    // return () => {
+    //   WebrtcProvider.destroy();
+    // };
   }, []);
 
   const attachQuillRefs = () => {
@@ -85,7 +98,7 @@ const MemoTestRtc = () => {
   };
 
   return (
-    <EditorBox>
+    <StyledEditorBox>
       <EditorContainer>
         <ReactQuill
           ref={(el) => {
@@ -95,8 +108,42 @@ const MemoTestRtc = () => {
           theme={"snow"}
         />
       </EditorContainer>
-    </EditorBox>
+    </StyledEditorBox>
   );
 };
+
+const StyledEditorBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 47%;
+  /* background-color: red; */
+
+  width: 58vw;
+`;
+
+const EditorContainer = styled.div`
+  /* background-color: blue; */
+  width: 100%;
+  height: 100%;
+  .quill {
+    height: 84%;
+  }
+  div#container {
+    height: 35vh;
+    width: 61vw;
+    padding: 1%;
+  }
+  .ql-toolbar.ql-snow {
+    border-radius: 5px 5px 0px 0px;
+  }
+  .ql-container.ql-snow {
+    border-radius: 0 0 5px 5px;
+    /* height: 195px; */
+  }
+  .ql-editor strong {
+    font-weight: bold;
+  }
+`;
 
 export default MemoTestRtc;
