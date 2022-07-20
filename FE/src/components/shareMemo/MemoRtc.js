@@ -8,29 +8,6 @@ import ReactQuill from "react-quill";
 import styled from "styled-components";
 import { ConnectuserContext } from "../../context/ConnectUserContext";
 
-const EditorBox = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 47%;
-`;
-
-const EditorContainer = styled.div`
-  div#container {
-    height: 35vh;
-    width: 61vw;
-    padding: 1%;
-  }
-  .ql-toolbar.ql-snow {
-    border-radius: 5px 5px 0px 0px;
-  }
-  .ql-container.ql-snow {
-    border-radius: 0 0 5px 5px;
-  }
-  .ql-editor strong {
-    font-weight: bold;
-  }
-`;
 const TOOLBAR_OPTIONS = [
   [{ align: [] }],
   [{ header: [1, 2, 3, false] }],
@@ -85,7 +62,7 @@ const MemoTestRtc = ({ project_Id }) => {
   };
 
   return (
-    <EditorBox>
+    <StyledEditorBox>
       <EditorContainer>
         <ReactQuill
           ref={(el) => {
@@ -95,8 +72,42 @@ const MemoTestRtc = ({ project_Id }) => {
           theme={"snow"}
         />
       </EditorContainer>
-    </EditorBox>
+    </StyledEditorBox>
   );
 };
+
+const StyledEditorBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 47%;
+  /* background-color: red; */
+
+  width: 58vw;
+`;
+
+const EditorContainer = styled.div`
+  /* background-color: blue; */
+  width: 100%;
+  height: 100%;
+  .quill {
+    height: 84%;
+  }
+  div#container {
+    height: 35vh;
+    width: 61vw;
+    padding: 1%;
+  }
+  .ql-toolbar.ql-snow {
+    border-radius: 5px 5px 0px 0px;
+  }
+  .ql-container.ql-snow {
+    border-radius: 0 0 5px 5px;
+    /* height: 195px; */
+  }
+  .ql-editor strong {
+    font-weight: bold;
+  }
+`;
 
 export default MemoTestRtc;

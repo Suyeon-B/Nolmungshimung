@@ -76,12 +76,10 @@ function Footer(props) {
 }
 
 const FooterContainer = styled.div`
-  width: 250px;
-  height: 86px;
   background: #e7e7e7;
   border-radius: 50px;
   display: flex;
-  margin-left: 8.5%;
+  /* margin-left: 8.5%; */
   align-items: center;
   padding: 5px 15px 5px 15px;
   overflow: auto;
@@ -90,9 +88,27 @@ const FooterContainer = styled.div`
   position: fixed;
   bottom: 20px;
   min-width: 200px;
-  // width: 280px;
-  width: auto;
+  width: 280px;
+  /* width: auto; */
   height: 60px;
+  white-space: nowrap;
+  left: 7vw;
+
+  ::-webkit-scrollbar {
+    /* width: 0px;
+    height: 7px; */
+    display: none;
+  }
+
+  //::-webkit-scrollbar-thumb {
+  //height: 1%; /* 스크롤바의 길이 */
+  //background: #ff8a3d; /* 스크롤바의 색상 */
+  //border-radius: 10px;
+  //}
+
+  //::-webkit-scrollbar-track {
+  //background: rgba(33, 122, 244, 0.1); /*스크롤바 뒷 배경 색상*/
+  //}
 `;
 
 export default Footer;

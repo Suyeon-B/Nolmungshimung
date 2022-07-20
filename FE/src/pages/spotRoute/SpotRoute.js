@@ -4,7 +4,7 @@ import SpotList from "../../components/spot/SpotList";
 import MarkMap from "../../components/MarkMap/MarkMap";
 import MemoTestRtc from "../../components/shareMemo/MemoRtc";
 // import TextEditor from "../shareMemo/TextEditor";
-import CursorTest from "../shareMemo/CursorTest";
+import Cursor from "../shareMemo/Cursor";
 import SearchDetail from "../../components/searchMap/SearchDetail";
 import useNotification from "../../atomics/Notification";
 import { AlertFilled } from "@ant-design/icons";
@@ -106,7 +106,7 @@ function SpotRoute({
         />
         <SpotRouteMap id="myMap" />
       </SpotRouteSection>
-      <CursorTest project_Id={itemId} selectedIndex={selectedIndex} />
+      <Cursor project_Id={itemId} selectedIndex={selectedIndex} />
       <MemoTestRtc project_Id={itemId} />
       {contents !== null && (
         <SearchDetail onClose={onClose} visible={visible} contents={contents} />
@@ -139,6 +139,7 @@ const SpotRouteSection = styled.section`
   width: 100%;
   height: calc(50% - 37px);
   justify-content: center;
+  margin-bottom: 20px;
 `;
 
 const SpotRouteTitle = styled.section`
