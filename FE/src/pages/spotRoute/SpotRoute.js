@@ -86,7 +86,6 @@ function SpotRoute({ startDate, item, setItemRoute, itemId, selectedIndex, setIs
         <SpotRouteMap id="myMap" />
       </SpotRouteSection>
       <CursorTest project_Id={itemId} selectedIndex={selectedIndex} />
-      {/* <TextEditor project_Id={itemId} selectedIndex={selectedIndex} /> */}
       <MemoTestRtc project_Id={itemId} />
       {contents !== null && <SearchDetail onClose={onClose} visible={visible} contents={contents} />}
     </SpotRouteContainer>

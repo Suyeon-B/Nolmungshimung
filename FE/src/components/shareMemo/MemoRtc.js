@@ -1,12 +1,12 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
 import { QuillBinding } from "y-quill";
 import Quill from "quill";
 import QuillCursors from "quill-cursors";
 import ReactQuill from "react-quill";
-// import "react-quill/dist/quill.snow.css";
 import styled from "styled-components";
+import { ConnectuserContext } from "../../context/ConnectUserContext";
 
 const EditorBox = styled.div`
   display: flex;
@@ -40,30 +40,30 @@ const TOOLBAR_OPTIONS = [
   [{ indent: "+1" }, { indent: "-1" }],
   ["link", "blockquote"],
 ];
-export const usercolors = [
-  { color: "#ff8a3d" }, // 주황색
-  { color: "#339f46" }, // 초록색
-  { color: "#2b96ad" }, // 파란색
-  { color: "#975FFE" }, // 보라색
-  { color: "#232a3c" }, // 남색
-  { color: "#FF6169" }, // 핑크색
-];
 
-const MemoTestRtc = () => {
-  const editorRef = useRef();
+const MemoTestRtc = ({ project_Id }) => {
+  // const editorRef = useRef();
   let quillRef = null;
   let reactQuillRef = null;
   Quill.register("modules/cursors", QuillCursors);
   // const [aware, setAwareness] = useState(null);
+  const [projectID, setProjectId] = useState(project_Id);
+  const { connectUser, setConnectUser } = useContext(ConnectuserContext);
+
+  const userName = sessionStorage.getItem("myNickname");
+  useEffect(() => {
+    setProjectId(project_Id);
+  }, [project_Id]);
+
   useEffect(() => {
     attachQuillRefs();
 
     const ydoc = new Y.Doc();
-    const provider = new WebrtcProvider("share-memo", ydoc);
+    const provider = new WebrtcProvider(`${projectID}`, ydoc);
     const ytext = ydoc.getText("quill");
     provider.awareness.setLocalStateField("user", {
-      name: "suyeon",
-      color: "#FF6169",
+      name: userName,
+      color: connectUser[userName].color,
     });
 
     const binding = new QuillBinding(ytext, quillRef, provider.awareness);
