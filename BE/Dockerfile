@@ -5,7 +5,7 @@ WORKDIR "/app"
 
 COPY ./package.json ./
 
-RUN npm install -g nodemon \
+RUN npm install -g pm2 \
  && npm install
 
 ENV HOST 0.0.0.0
