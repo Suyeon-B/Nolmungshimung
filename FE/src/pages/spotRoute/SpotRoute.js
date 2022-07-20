@@ -9,6 +9,7 @@ import SearchDetail from "../../components/searchMap/SearchDetail";
 import useNotification from "../../atomics/Notification";
 import { AlertFilled } from "@ant-design/icons";
 import socket from "../../socket";
+import { Navigate } from "react-router-dom";
 
 function SpotRoute({
   startDate,
@@ -78,6 +79,10 @@ function SpotRoute({
     setNotifyFlag(true);
     // console.log(`notify flag is ${notifyFlag}`);
   };
+
+  const onClcikResult = () => {
+    window.location.replace("/result");
+  };
   return (
     <SpotRouteContainer>
       <SpotRouteTitle>
@@ -88,11 +93,8 @@ function SpotRoute({
           style={{ color: "#ff8a3d", fontSize: "34px", marginLeft: "15px" }}
           onClick={callFriends}
         />
-        {/* <AlertFilled
-          style={{ color: "#ff8a3d", fontSize: "34px", marginLeft: "15px" }}
-          onClick={triggerNotif}
-        /> */}
         <span>주목시키기</span>
+        <SpotRouteTitleBtn onClick={onClcikResult}>작성 완료</SpotRouteTitleBtn>
       </SpotRouteTitle>
       <SpotRouteSection>
         <SpotList
@@ -159,6 +161,14 @@ const SpotRouteTitleDay = styled.span`
 `;
 
 const SpotRouteTitleBtn = styled.button`
+  right: 40px;
+  position: absolute;
+  background-color: #ff8a3d;
+  border: 0;
+  border-radius: 4px;
+  padding: 14px;
+  color: #f8f9fa;
+  font-weight: 800;
   cursor: pointer;
 `;
 
