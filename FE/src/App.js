@@ -4,7 +4,6 @@ import SignIn from "./pages/sign/SignIn";
 import SearchMap from "./pages/search/Search";
 import Home from "./pages/Home";
 import Test from "./pages/test";
-import TextEditor from "./pages/shareMemo/TextEditor";
 import KakaoSignIn from "./components/sign/KakaoSignIn";
 import VoiceTalk from "./components/voiceTalk/voiceTalk";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
@@ -13,7 +12,6 @@ import PlanSideBar from "./components/sidebar/PlanSideBar";
 import CreateProject from "./components/CreateProject";
 import SpotList from "./components/spot/SpotList";
 import SpotRoute from "./pages/spotRoute/SpotRoute";
-import TextYquill from "./components/shareMemo/TextYquill";
 import styled from "styled-components";
 
 import "./App.css";
@@ -95,6 +93,7 @@ function App() {
                 }
               /> */}
               <Route path="*" element={<Navigate to="/" replace />} />
+              {/* <Route path="test" element={<MemoTestRtc />} /> */}
             </Routes>
           </BodyDiv>
         </Router>

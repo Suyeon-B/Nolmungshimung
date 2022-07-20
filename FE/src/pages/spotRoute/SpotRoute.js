@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import SpotList from "../../components/spot/SpotList";
 import MarkMap from "../../components/MarkMap/MarkMap";
-import TextEditor from "../../components/shareMemo/TextYquill";
+import MemoTestRtc from "../../components/shareMemo/MemoRtc";
 
 function SpotRoute({ item, setItemRoute, itemId, selectedIndex, setIsDrage, setIsAddDel }) {
   // const [routes, setRoutes] = useState(item.routes);
@@ -25,9 +25,7 @@ function SpotRoute({ item, setItemRoute, itemId, selectedIndex, setIsDrage, setI
         />
         <SpotRouteMap id="myMap" />
       </SpotRouteSection>
-
-      {/* <TextEditor project_Id={itemId} selectedIndex={selectedIndex} /> */}
-      <TextEditor project_Id={itemId} />
+      <MemoTestRtc project_Id={itemId} />
     </SpotRouteContainer>
   );
 }
