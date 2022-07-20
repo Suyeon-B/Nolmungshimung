@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useParams } from "react";
 import styled from "styled-components";
 import SpotList from "../../components/spot/SpotList";
 import MarkMap from "../../components/MarkMap/MarkMap";
@@ -17,10 +17,12 @@ function SpotRoute({
   selectedIndex,
   setIsDrage,
   setIsAddDel,
+  projectId,
 }) {
   const [notifyFlag, setNotifyFlag] = useState(false);
   const [visible, setVisible] = useState(false);
   const [contents, setContents] = useState(null);
+
   // const [routes, setRoutes] = useState(item.routes);
   // console.log("=================");
   // console.log(item[0]);
@@ -50,11 +52,17 @@ function SpotRoute({
     setVisible(false);
     setContents(null);
   };
-
+  const userName = sessionStorage.getItem("myNickname");
   useEffect(() => {
     if (notifyFlag === false) return;
     // console.log(notifyFlag);
-    socket.emit("attention", culTripTermData(startDate, selectedIndex));
+    socket.emit(
+      "attention",
+      culTripTermData(startDate, selectedIndex),
+      selectedIndex,
+      projectId,
+      userName
+    );
     setNotifyFlag(false);
     // console.log("attention");
   }, [notifyFlag]);

@@ -33,6 +33,7 @@ const ProjectPage = (props) => {
   const [isDrage, setIsDrage] = useState(false);
   const [isAddDel, setIsAddDel] = useState(false);
   const [connectUser, setConnectUser] = useState({});
+  const [attentionIndex, setAttentionIndex] = useState(-1);
   const userName = sessionStorage.getItem("myNickname");
 
   useEffect(() => {
@@ -137,6 +138,7 @@ const ProjectPage = (props) => {
       // console.log(user_name);
       // console.log("i receive notify");
       // 모달 버전 크롬 알람안되면 이거씁시다.
+
       const openNotificationWithIcon = (type) => {
         notification[type]({
           message: "놀멍쉬멍",
@@ -152,7 +154,9 @@ const ProjectPage = (props) => {
     });
   }, []);
   useEffect(() => {
-    socket.on("attentionPlease", ([date, user_name]) => {
+    socket.on("attentionPlease", ([date, user_name], attentionIdx) => {
+      console.log(date, attentionIdx);
+      setAttentionIndex(attentionIdx);
       const openNotificationWithIcon = (type) => {
         notification[type]({
           message: "놀멍쉬멍",
@@ -197,6 +201,8 @@ const ProjectPage = (props) => {
         setSelectedIndex={setSelectedIndex}
         setIsDrage={setIsDrage}
         setIsAddDel={setIsAddDel}
+        attentionIndex={attentionIndex}
+        setAttentionIndex={setAttentionIndex}
       />
       <PlanSection>
         {isFirstPage && (
@@ -210,6 +216,7 @@ const ProjectPage = (props) => {
         )}
         {!isFirstPage && (
           <SpotRoute
+            projectId={projectId}
             startDate={items.start_date}
             selectedIndex={selectedIndex}
             item={itemsRoute}

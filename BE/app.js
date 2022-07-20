@@ -93,27 +93,28 @@ io.on("connection", (socket) => {
     } catch (error) {
       console.log(error);
     }
-    try {
-      // console.log("========attention==========");
-      socket.on("attention", (date) => {
-        // console.log("==================");
-        // console.log(`date : ${date}`);
-        // console.log(projectId);
-        // console.log(`user_name:${userName}`);
-        // socket.emit("attentionPlease", [date, userName]);
-        try {
-          // console.log("ooooo");
-          socket.broadcast
-            .to(projectId)
-            .emit("attentionPlease", [date, userName]);
-        } catch (error) {
-          console.log(error);
-        }
-      });
-    } catch (error) {
-      console.log(error);
-    }
   });
+
+  try {
+    // console.log("========attention==========");
+    socket.on("attention", (date, selectedIndex, projectId, userName) => {
+      // console.log("==================");
+      // console.log(`date : ${date}`);
+      console.log("attention", projectId);
+      // console.log(`user_name:${userName}`);
+      // socket.emit("attentionPlease", [date, userName]);
+      try {
+        // console.log("ooooo");
+        socket.broadcast
+          .to(projectId)
+          .emit("attentionPlease", [date, userName], selectedIndex);
+      } catch (error) {
+        console.log(error);
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
 
   socket.on("projectLeave", ([projectId, userName]) => {
     try {
