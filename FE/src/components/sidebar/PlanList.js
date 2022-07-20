@@ -62,13 +62,15 @@ const move = (source, destination, droppableSource, droppableDestination) => {
 };
 const grid = 8;
 
-const getItemStyle = (isDragging, draggableStyle) => ({
+const getItemStyle = (isDragging, draggableStyle, color, userName) => ({
   // some basic styles to make the items look a bit nicer
 
   userSelect: "none",
 
   // change background colour if dragging
   background: isDragging ? "#EBEBEB" : "none",
+
+  border: userName === null ? `3px solid ${color}` : `white`,
 
   // styles we need to apply on draggables
   ...draggableStyle,
@@ -105,7 +107,18 @@ function PlanList({
     return <div>Loading...</div>;
   }
 
+  function onDragStart(result) {
+    console.log("drag start");
+    console.log("사용자 색 : ", connectUser[userName]);
+    // socket.emit("grabSpot", [projectId, userName, result.source.index]);
+
+    // const newState = [...[...routes]];
+
+    // console.log(newState[result]);
+  }
+
   function onDragEnd(result) {
+    // console.log(result);
     const { source, destination } = result;
 
     // dropped outside the list
@@ -120,6 +133,8 @@ function PlanList({
       const newState = [...[...routes]];
       newState[sInd] = items;
 
+      newState[sInd][result.destination.index].user_name = null;
+
       setRoutes(newState);
     } else {
       const result = move(
@@ -131,7 +146,14 @@ function PlanList({
       const newState = [...[...routes]];
       newState[sInd] = result[sInd];
       newState[dInd] = result[dInd];
-
+      // console.log(`source : ${JSON.stringify(source)}`);
+      // console.log(`destination : ${JSON.stringify(destination)}`);
+      // console.log(destination.droppableId);
+      // console.log(destination.index);
+      console.log(newState[dInd].result);
+      // newState[dInd][destination.droppableId].user_name = null;
+      // newState[dInd][destination.droppableId].lock = "white"; // 수정예쩡
+      // console.log(newState[dInd][destination.droppableId].user_name);
       setRoutes(newState);
     }
     // console.log(`selectIdx: ${selectIdx}`);
@@ -154,7 +176,7 @@ function PlanList({
   return (
     <div>
       <SidePlanListDiv>
-        <StyledDragDropContext onDragEnd={onDragEnd}>
+        <StyledDragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
           {[...routes].map((el, ind) => (
             <div key={ind} ref={(el) => (droppableRef.current[+ind] = el)}>
               <Droppable key={ind} droppableId={`${ind}`}>
@@ -220,7 +242,9 @@ function PlanList({
                             {...provided.dragHandleProps}
                             style={getItemStyle(
                               snapshot.isDragging,
-                              provided.draggableProps.style
+                              provided.draggableProps.style,
+                              item.lock,
+                              item.user_name
                             )}
                           >
                             <ItemInnerDiv>

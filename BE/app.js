@@ -170,6 +170,9 @@ io.on("connection", (socket) => {
       // console.log(error);
     }
   });
+
+  // [Hyeok] Grab Routes
+  // socket.on("grabSpot", ([projectId, userName, selectedIndex])=>{});
 });
 
 // mongoose
