@@ -28,6 +28,7 @@ const credentials = {
   passphrase: process.env.PASSPHRASE,
 };
 var server = require("https").createServer(credentials, app);
+// var server = require("http").createServer(app);
 var io = require("socket.io")(server, {
   cors: {
     origin: "*",
@@ -38,6 +39,10 @@ var io = require("socket.io")(server, {
 server.listen(3001, function () {
   console.log("Socket IO server listening on port 3001");
 });
+
+const colors = ["#FF8A3D", "#8DD664", "#FF6169", "#975FFE", "#0072BC", "#F6282B", "#FAD700", "#05FFCC", "#4A4A4A"];
+
+const projectSocketRoom = {};
 
 io.on("connection", (socket) => {
   //connection
@@ -53,17 +58,98 @@ io.on("connection", (socket) => {
     console.log("message:", msg);
   });
   ////프로젝트 관련 소켓
-  socket.on("projectJoin", (projectId) => {
-    console.log("join", projectId);
-    socket.join(projectId);
+  /* 프로젝트에 입장시 입장한 유저 projectSocketRoom에 저장
+    프로젝트에 접속한 모든 유저에게 socket 이벤트 전송
+  */
+  socket.on("projectJoin", ([projectId, userName, selectedIndex]) => {
+    try {
+      console.log("projectJoin", projectId);
+      projectSocketRoom[projectId] = {
+        ...projectSocketRoom[projectId],
+        [userName]: {
+          selectedIndex,
+        },
+      };
+      projectSocketRoom[projectId][userName].color = colors[Object.keys(projectSocketRoom[projectId]).length - 1];
+      socket.join(projectId);
+      io.to(projectId).emit("connectUser", projectSocketRoom[projectId]);
+    } catch (error) {
+      console.log(error);
+    }
+    try {
+      // console.log("==================");
+      socket.broadcast.to(projectId).emit("notify", userName);
+    } catch (error) {
+      console.log(error);
+    }
+    try {
+      // console.log("========attention==========");
+      socket.on("attention", (date) => {
+        // console.log("==================");
+        // console.log(`date : ${date}`);
+        // console.log(projectId);
+        // console.log(`user_name:${userName}`);
+        // socket.emit("attentionPlease", [date, userName]);
+        try {
+          // console.log("ooooo");
+          socket.broadcast.to(projectId).emit("attentionPlease", [date, userName]);
+        } catch (error) {
+          console.log(error);
+        }
+      });
+    } catch (error) {
+      console.log(error);
+    }
   });
+
+  socket.on("projectLeave", ([projectId, userName]) => {
+    try {
+      console.log("projectLeave", projectId);
+      socket.leave(projectId);
+      delete projectSocketRoom[projectId][userName];
+      console.log(projectSocketRoom[projectId]);
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
   socket.on("changeRoute", ([itemsRoute, projectId]) => {
     socket.broadcast.to(projectId).emit("updateRoute", itemsRoute);
   });
 
+  //마우스 커서 관련 socket
+  socket.on("detail_date_join", ([project_Id, selectedIndex]) => {
+    console.log("detail_date_join", selectedIndex);
+    socket.join(project_Id + selectedIndex);
+  });
+  socket.on("detail_date_leave", ([project_Id, userName, selectedIndex]) => {
+    console.log("detail_date_leave", selectedIndex);
+    socket.broadcast.to(project_Id + selectedIndex).emit("deleteCurser", userName);
+
+    socket.leave(project_Id + selectedIndex);
+  });
   socket.on("exitSharedEditing", ([projectID, selectedIndex, name]) => {
     console.log("deleteCurser", projectID, selectedIndex, name);
     socket.broadcast.to(projectID).emit("deleteCurser", name);
+  });
+
+  socket.on("mouse_move", ([projectId, mouseInfo, selectedIndex, userName]) => {
+    // console.log(projectId, mouseInfo, selectedIndex, userName);
+    try {
+      mouseInfo[userName].color = projectSocketRoom[projectId][userName].color;
+      socket.broadcast.to(projectId + selectedIndex).emit("mouse_update", mouseInfo);
+    } catch (error) {
+      // console.log(error);
+    }
+  });
+  ////
+  socket.on("updateUserIndex", ([projectId, userName, selectedIndex]) => {
+    try {
+      projectSocketRoom[projectId][userName].selectedIndex = selectedIndex;
+      socket.broadcast.to(projectId).emit("connectUser", projectSocketRoom[projectId]);
+    } catch (error) {
+      // console.log(error);
+    }
   });
 });
 

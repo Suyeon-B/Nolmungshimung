@@ -1,0 +1,39 @@
+version: "3"
+services: 
+    react-app-nolshimung:
+        # image: react-app-nolshimung
+        build: ./FE
+        stdin_open: true
+        ports: 
+            - "3000:3000"
+            - "443:3000"
+        # networks: 
+        #     - mern-app
+    api-server-nolshimung:
+        # image: api-server-nolshimung
+        build: ./BE
+        ports:
+            - "8443:8443"
+            - "7889:7889"
+            - "3001:3001"
+            - "3003:3003"
+        # links: 
+        #     - mongo
+        # depends_on: 
+        #     - mongo
+        # networks: 
+        #     - mern-app    
+    # mongo:
+    #     image: mongo
+    #     ports: 
+    #         - "27017:27017"
+        # networks: 
+        #     - mern-app
+        # volumes: 
+        #     - mongo-data:/Users/gyu/Documents/db
+    # networks: 
+    #     mern-app:
+    #         driver: bridge
+    # volumes: 
+    #     mongo-data:
+    #         driver: local

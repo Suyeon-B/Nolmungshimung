@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import PlanList from "./PlanList";
 import Footer from "./Footer";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const PlanSideBar = ({
   item,
@@ -70,8 +69,6 @@ const PlanSideBar = ({
         setIsDrage={setIsDrage}
         setIsAddDel={setIsAddDel}
       />
-
-      <Footer></Footer>
     </SideBar>
   );
 };

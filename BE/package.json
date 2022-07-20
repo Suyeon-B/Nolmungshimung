@@ -26,8 +26,7 @@
     "request": "^2.88.2",
     "request-ip": "^3.3.0",
     "socket.io": "^4.5.1",
-    "wrtc": "^0.4.7",
-    "ws": "^8.8.1"
+    "wrtc": "^0.4.7"
   },
   "devDependencies": {
     "nodemon": "^2.0.19"

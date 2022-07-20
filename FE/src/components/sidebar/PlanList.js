@@ -3,15 +3,10 @@ import styled from "styled-components";
 import "../../App.css";
 
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
+import { ConnectuserContext } from "../../context/ConnectUserContext";
 
 const StyledDragDropContext = styled(DragDropContext)``;
-
-const getItems = (count, offset = 0) =>
-  Array.from({ length: count }, (v, k) => k).map((k) => ({
-    id: `item-${k + offset}-${new Date().getTime()}`,
-    content: `item ${k + offset}`,
-  }));
 
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
@@ -95,7 +90,6 @@ const culTripTermData = (startDate, day) => {
 function PlanList({
   toggleIsPage,
   startDate,
-  term,
   routes,
   setRoutes,
   setSelectedIndex,
@@ -105,7 +99,8 @@ function PlanList({
 }) {
   const droppableRef = useRef([]);
   const [selectedDay, setSelectedDay] = useState(0);
-  // console.log(routes);
+  const { connectUser, setConnectUser } = useContext(ConnectuserContext);
+  const userName = sessionStorage.getItem("myNickname");
   if (!routes) {
     return <div>Loading...</div>;
   }
@@ -124,7 +119,7 @@ function PlanList({
       const items = reorder([...routes][sInd], source.index, destination.index);
       const newState = [...[...routes]];
       newState[sInd] = items;
-      console.log(newState);
+
       setRoutes(newState);
     } else {
       const result = move(
@@ -136,7 +131,7 @@ function PlanList({
       const newState = [...[...routes]];
       newState[sInd] = result[sInd];
       newState[dInd] = result[dInd];
-      console.log(newState);
+
       setRoutes(newState);
     }
     // console.log(`selectIdx: ${selectIdx}`);
@@ -150,6 +145,7 @@ function PlanList({
 
   const onClick = (event) => {
     const selectIdx = +event.target.dataset.idx;
+
     setSelectedIndex(selectIdx);
     setSelectedDay(selectIdx);
     isFirstPage && toggleIsPage();
@@ -175,18 +171,28 @@ function PlanList({
                     >
                       <DateDetailBtn data-idx={ind} onClick={onClick}>
                         {culTripTermData(startDate, ind)}
-                        {Object.keys(DATA).map((el) => {
-                          if (DATA[el].user.selectedIndex === ind) {
+
+                        {Object.keys(connectUser).map((key) => {
+                          // console.log(connectUser[key]);
+                          if (key === userName) return;
+                          if (connectUser[key].selectedIndex === ind) {
                             return (
                               <svg
+                                data-idx={ind}
+                                key={key}
                                 width="10"
-                                fill={DATA[el].color}
+                                fill={connectUser[key].color}
                                 focusable="false"
                                 viewBox="0 0 10 10"
                                 aria-hidden="true"
                                 title="fontSize small"
                               >
-                                <circle cx="5" cy="5" r="5"></circle>
+                                <circle
+                                  data-idx={ind}
+                                  cx="5"
+                                  cy="5"
+                                  r="5"
+                                ></circle>
                               </svg>
                             );
                           }

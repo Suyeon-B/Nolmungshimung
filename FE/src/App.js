@@ -22,8 +22,7 @@ import { AuthProvider, RequireAuth, NotRequireAuth } from "./components/auth/Aut
 
 // react query devtool
 import { ReactQueryDevtools } from "react-query/devtools";
-
-import SocketTest from "./components/SocketTest";
+import CalendarTest from "./components/CalendarTest";
 
 const queryClient = new QueryClient(); // 인스턴스 생성
 const BodyDiv = styled.div`
@@ -42,40 +41,39 @@ function App() {
               <Route
                 path="signin/*"
                 element={
+                  // <NotRequireAuth>
+                  <SignIn />
+                  // </NotRequireAuth>
+                }
+              />
+              <Route
+                path="signup/*"
+                element={
                   <NotRequireAuth>
-                    <SignIn />
+                    {" "}
+                    <SignUp />{" "}
                   </NotRequireAuth>
                 }
               />
-              <Route path="signup/*" element={<SignUp />} />
               <Route path="voicetalk/*" element={<VoiceTalk />} />
               <Route path="/" element={<Home />} />
               <Route
                 path="/kakao/signin"
                 element={
-                  <NotRequireAuth>
-                    <KakaoSignIn />
-                  </NotRequireAuth>
+                  // <NotRequireAuth>
+                  <KakaoSignIn />
+                  // </NotRequireAuth>
                 }
               />
               <Route
                 path="project/*"
                 element={
-                  <RequireAuth>
-                    <CreateProject />
-                  </RequireAuth>
+                  // <RequireAuth>
+                  <CreateProject />
                 }
               />
-              {/* <Route path="project/:projectId" element={<ProjectPage />} /> */}
-              <Route
-                path="project/:projectId"
-                element={
-                  <RequireAuth>
-                    <ProjectPage />
-                  </RequireAuth>
-                }
-              />
-
+              <Route path="project/:projectId" element={<ProjectPage />} />
+              <Route path="Calendar/*" element={<CalendarTest />} />
               {/* <Route
                 path="project/:projectId/:tripDate"
                 element={<ProjectPage />}

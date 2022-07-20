@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import SearchListRoute from "../../components/searchMap/SearchListRoute";
 import SearchBar from "../../components/searchMap/SearchBar";
 import styled from "styled-components";
+// import NomalMarker from "../../../public/statics/images/location-dot-solid.svg";
 
 const { kakao } = window;
 
@@ -59,10 +60,21 @@ function createMarkerImage(markerSize, markerUrl) {
   return markerImage;
 }
 
-const Search = ({ itemRoutes, setItemRoutes, projectId, startDate, setIsAddDel }) => {
+const Search = ({
+  itemRoutes,
+  setItemRoutes,
+  projectId,
+  startDate,
+  setIsAddDel,
+}) => {
   const [searchPlace, setSearchPlace] = useState("");
   // 검색결과 배열에 담아줌
   const [Places, setPlaces] = useState([]);
+  const [click, setClick] = useState(null);
+
+  const handleSelect = (value) => {
+    setClick(value);
+  };
 
   var sw = new kakao.maps.LatLng(33.592161526546604, 126.04650255976554),
     ne = new kakao.maps.LatLng(33.14572269165777, 127.07480227781775);
@@ -88,7 +100,11 @@ const Search = ({ itemRoutes, setItemRoutes, projectId, startDate, setIsAddDel }
     currentMap = map;
     const ps = new kakao.maps.services.Places();
 
-    ps.keywordSearch(searchPlace ? searchPlace : "제주도", placesSearchCB, searchOption);
+    ps.keywordSearch(
+      searchPlace ? searchPlace : "제주도",
+      placesSearchCB,
+      searchOption
+    );
 
     // 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
     function placesSearchCB(data, status, pagination) {
@@ -164,6 +180,14 @@ const Search = ({ itemRoutes, setItemRoutes, projectId, startDate, setIsAddDel }
       });
       kakao.maps.event.addListener(marker, "click", function () {
         clickEvent(i);
+        setClick(i);
+
+        let sec = document.querySelector(`#list${i}`);
+        let positionEle = sec.getBoundingClientRect().top;
+        if (positionEle <= 0 || positionEle >= window.innerHeight - 100) {
+          document.getElementById("searchBar").scrollTop = sec.offsetTop - 200;
+        }
+
         // place.id 보내서 크롤링하기
       });
     }
@@ -171,12 +195,13 @@ const Search = ({ itemRoutes, setItemRoutes, projectId, startDate, setIsAddDel }
 
   return (
     <Wapper>
-      <SearchListDiv>
+      <SearchListDiv id="searchBar">
         <SearchBar changePlace={setSearchPlace} />
         <ul>
           {Places &&
             Places.map((item, i) => (
               <SearchListRoute
+                id={"list" + i}
                 key={i}
                 itemRoutes={itemRoutes}
                 setItemRoutes={setItemRoutes}
@@ -185,9 +210,14 @@ const Search = ({ itemRoutes, setItemRoutes, projectId, startDate, setIsAddDel }
                 idx={i}
                 startDate={startDate}
                 setIsAddDel={setIsAddDel}
+                selected={click === i ? true : false}
+                handleSelect={handleSelect}
               />
             ))}
-          <div id="pagination" style={{ position: "relative", zIndex: 2 }}></div>
+          <div
+            id="pagination"
+            style={{ position: "relative", zIndex: 2 }}
+          ></div>
         </ul>
       </SearchListDiv>
       <StyledMapDiv id="searchMap"></StyledMapDiv>
