@@ -12,14 +12,21 @@ const EditorBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 47%;
+  // height: 47%;
 `;
 
 const EditorContainer = styled.div`
-  div#container {
-    height: 35vh;
-    width: 61vw;
-    padding: 1%;
+  // div#container {
+  //   height: 35vh;
+  //   width: 61vw;
+  //   padding: 1%;
+  // }
+  height: 35vh;
+  width: 61vw;
+  padding: 1%;
+  height: 47%;
+  .ql-editor {
+    height: 200px;
   }
   .ql-toolbar.ql-snow {
     border-radius: 5px 5px 0px 0px;
@@ -60,13 +67,16 @@ const MemoTestRtc = ({ project_Id }) => {
 
     const ydoc = new Y.Doc();
     const provider = new WebrtcProvider(`${projectID}`, ydoc);
-    const ytext = ydoc.getText("quill");
+    const ytext = ydoc.getText(`${projectID}`);
     provider.awareness.setLocalStateField("user", {
       name: userName,
       color: connectUser[userName].color,
     });
 
     const binding = new QuillBinding(ytext, quillRef, provider.awareness);
+    // return () => {
+    //   WebrtcProvider.destroy();
+    // };
   }, []);
 
   const attachQuillRefs = () => {
