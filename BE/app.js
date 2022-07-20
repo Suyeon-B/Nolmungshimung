@@ -81,7 +81,7 @@ io.on("connection", (socket) => {
         },
       };
       projectSocketRoom[projectId][userName].color =
-        colors[Object.keys(projectSocketRoom[projectId]).length - 1];
+        colors[Object.keys(projectSocketRoom[projectId]).length];
       socket.join(projectId);
       io.to(projectId).emit("connectUser", projectSocketRoom[projectId]);
     } catch (error) {

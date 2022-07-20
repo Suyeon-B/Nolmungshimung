@@ -45,6 +45,10 @@ const getItemStyle = (isDragging, draggableStyle, color, userName) => ({
   // border: userName === undefined ? null : `3px solid ${color}`,
   border: `3px solid ${color}`,
 
+  // transitionProperty: "backgroundColor ,none",
+  // transitionDuration: "2s",
+  // transition: "background ease 2s 0s",
+  // background: ,
   // styles we need to apply on draggables
   ...draggableStyle,
 });
@@ -239,6 +243,8 @@ function PlanList({
                         {(provided, snapshot) => (
                           <PlanItemDiv
                             userColor={item.lock}
+                            // <StyleRouteDiv
+
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
@@ -287,6 +293,7 @@ function PlanList({
                               </div>
                             </ItemInnerDiv>
                           </PlanItemDiv>
+                          // </StyleRouteDiv>
                         )}
                       </Draggable>
                     ))}
@@ -301,6 +308,31 @@ function PlanList({
     </div>
   );
 }
+
+const StyleRouteDiv = styled.div`
+  @keyframes color {
+    0% {
+      background: #2bb8ff;
+    }
+    20% {
+      background: #59c7ff;
+    }
+    40% {
+      background: #60caff;
+    }
+    60% {
+      background: #89d7ff;
+    }
+    80% {
+      background: #a3e0ff;
+    }
+    100% {
+      background: none;
+    }
+  }
+  border-radius: 5px;
+  animation: color 2s linear;
+`;
 
 const SidePlanListDiv = styled.div`
   height: 75vh;
