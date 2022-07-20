@@ -4,15 +4,9 @@ import SignIn from "./pages/sign/SignIn";
 import SearchMap from "./pages/search/Search";
 import Home from "./pages/Home";
 import Test from "./pages/test";
-import TextEditor from "./pages/shareMemo/TextEditor";
 import KakaoSignIn from "./components/sign/KakaoSignIn";
 import VoiceTalk from "./components/voiceTalk/voiceTalk";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import ProjectSide from "./components/sidebar/ProjectSide";
 import PlanSideBar from "./components/sidebar/PlanSideBar";
 import CreateProject from "./components/CreateProject";
@@ -24,11 +18,7 @@ import "./App.css";
 import "./reset.css";
 import { QueryClient, QueryClientProvider } from "react-query";
 import ProjectPage from "./pages/project/ProjectPage";
-import {
-  AuthProvider,
-  RequireAuth,
-  NotRequireAuth,
-} from "./components/auth/Auth";
+import { AuthProvider, RequireAuth, NotRequireAuth } from "./components/auth/Auth";
 
 // react query devtool
 import { ReactQueryDevtools } from "react-query/devtools";
@@ -101,6 +91,7 @@ function App() {
                 }
               /> */}
               <Route path="*" element={<Navigate to="/" replace />} />
+              {/* <Route path="test" element={<MemoTestRtc />} /> */}
             </Routes>
           </BodyDiv>
         </Router>
