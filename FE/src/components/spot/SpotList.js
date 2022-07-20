@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import styled from "styled-components";
 import { DeleteOutlined } from "@ant-design/icons";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import SearchDetail from "../searchMap/SearchDetail";
+import socket from "../../socket";
+import { useParams } from "react-router-dom";
+import { ConnectuserContext } from "../../context/ConnectUserContext";
 
 const SidePlanListDiv = styled.div`
   height: 100%;
+  .div
 `;
 const StyledDragDropContext = styled(DragDropContext)``;
 
@@ -75,18 +79,6 @@ const move = (source, destination, droppableSource, droppableDestination) => {
 };
 const grid = 8;
 
-const getItemStyle = (isDragging, draggableStyle) => ({
-  // some basic styles to make the items look a bit nicer
-
-  userSelect: "none",
-
-  margin: `0 0 ${grid}px 0`,
-  // change background colour if dragging
-  background: isDragging ? "rgba(183, 183, 183, 0.45)" : "white",
-  padding: "10px",
-  // styles we need to apply on draggables
-  ...draggableStyle,
-});
 const getListStyle = (isDraggingOver) => ({
   // background: isDraggingOver ? "rgba(183, 183, 183, 0.45)" : "white",
   // margin: "50px",
@@ -111,12 +103,63 @@ export default function SpotList({
   setIsAddDel,
 }) {
   // const [state, setState] = useState([testItem, testItem2]);
+  const { projectId } = useParams();
+  const { connectUser, setConnectUser } = useContext(ConnectuserContext);
+  const userName = sessionStorage.getItem("myNickname");
+  const getItemStyle = (isDragging, draggableStyle, color, userName) => ({
+    // some basic styles to make the items look a bit nicer
+
+    userSelect: "none",
+
+    margin: `0 0 ${grid}px 0`,
+    // change background colour if dragging
+    background: isDragging ? "#EBEBEB" : "none",
+    // border: isDragging ? `1px solid red` : "white",
+    // border: userName === undefined ? null : `3px solid ${color}`,
+    border: `3px solid ${color}`,
+
+    // transitionDuration: "2s",
+    // border: `${color}`,
+    // ${userName} ,
+
+    // styles we need to apply on draggables
+    ...draggableStyle,
+  });
 
   const [state, setState] = useState([dayItem[selectedIndex]]);
 
+  function onDragStart(result) {
+    // console.log(result);
+    // console.log("drag start");
+    // console.log(dayItem[selectedIndex][result.source.index]);
+    // console.log("사용자 색 : ", connectUser[userName].color);
+    // console.log("사용자 닉네임 : ", userName);
+    const newState = [...[...dayItem]];
+    // console.log(newState[selectedIndex][result.source.index].lock);
+    // console.log(newState[selectedIndex][result.source.index].user_name);
+    const lockAcquire = newState[selectedIndex][result.source.index].user_name;
+    // if username === 자기랑 다르면 못움직이게 alert
+    if (
+      lockAcquire === null ||
+      lockAcquire === userName ||
+      lockAcquire == undefined
+    ) {
+      newState[selectedIndex][result.source.index].lock =
+        connectUser[userName].color;
+      newState[selectedIndex][result.source.index].user_name = userName;
+    } else {
+      alert("다른 친구가 옮기고 있습니다 ! 잠시 기다려주세요!");
+    }
+    // newState[selectedIndex][resuslt.source.index].user_name = null;
+    setItemRoute(newState);
+    setIsDrage(true);
+
+    // socket.emit("grabSpot", [projectId, userName, result.source.index]);
+  }
+
   function onDragEnd(result) {
     const { source, destination } = result;
-
+    // console.log("drag end");
     // dropped outside the list
     if (!destination) {
       return;
@@ -133,9 +176,14 @@ export default function SpotList({
 
       const newState = [...[...dayItem]];
       newState[selectedIndex] = items;
+      // console.log(newState[selectedIndex][result.destination.index].color);
+      newState[selectedIndex][result.destination.index].user_name = null;
+      newState[selectedIndex][result.destination.index].lock = "white"; //수정 예쩡
 
+      // console.log("drag end IN newState[selectedIndex] : ", newState);
       setItemRoute(newState);
     } else {
+      console.log("spot list else 여기오면ㅇ ㅏㄴ됨");
       const result = move(
         [...dayItem][sInd],
         [...dayItem][dInd],
@@ -144,7 +192,9 @@ export default function SpotList({
       );
       const newState = [...[...dayItem]];
       newState[sInd] = result[sInd];
+      // console.log("drag end IN newState[sInd] : ", newState[sInd]);
       newState[dInd] = result[dInd];
+      // newState[dInd][result.source.index].user_name = userName;
 
       setItemRoute(newState);
     }
@@ -153,7 +203,7 @@ export default function SpotList({
 
   return (
     <SidePlanListDiv>
-      <StyledDragDropContext onDragEnd={onDragEnd}>
+      <StyledDragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
         {[dayItem[selectedIndex]].map((el, ind) => (
           <Droppable key={ind} droppableId={`${ind}`}>
             {(provided, snapshot) => (
@@ -167,26 +217,33 @@ export default function SpotList({
                     key={item.uid}
                     draggableId={item.uid}
                     index={index}
+                    // projectUserName={item.user_name}
+                    // projectLock={item.lock}
+                    // isDragDisabled={true} // Drag 불가능
                   >
                     {(provided, snapshot) => (
-                      <div
+                      <SpotListItemDiv
+                        user_color={item.lock}
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
                         style={getItemStyle(
                           snapshot.isDragging,
-                          provided.draggableProps.style
+                          provided.draggableProps.style,
+                          item.lock,
+                          item.user_name
                         )}
+                        // draggable
+                        // onDragStart={() => {
+                        //   console.log("DRAGINGNG");
+                        // }}
                       >
                         <div
                           style={{
                             display: "flex",
                             justifyContent: "space-evenly",
+                            padding: "5px",
                           }}
-                          onMouseOver={() => {
-                            <button>TEST</button>;
-                          }}
-                          onMouseOut={() => {}}
                         >
                           <SpotItemDiv>
                             <SpotTitle
@@ -198,17 +255,36 @@ export default function SpotList({
                               <SpotItemIndex
                                 style={{
                                   background: color[item.category_group_code],
+                                  width: "25px",
+                                  fontSize: "13px",
                                 }}
                               >
                                 {index + 1}
                               </SpotItemIndex>
-                              {item.place_name}
+                              {item.place_name.length > 11
+                                ? item.place_name.slice(0, 12) + " ..."
+                                : item.place_name}
+                              {/* {item.place_name} */}
                             </SpotTitle>
                             <SpotCategory>
                               {item.category_group_name
                                 ? item.category_group_name
                                 : "-"}
                             </SpotCategory>
+                            {item.user_name && (
+                              <div
+                                style={{
+                                  position: "absolute",
+                                  marginTop: "63px",
+                                  marginLeft: "270px",
+                                  backgroundColor: `${item.lock}`,
+                                  color: "white",
+                                  padding: "2px",
+                                }}
+                              >
+                                {item.user_name}
+                              </div>
+                            )}
                           </SpotItemDiv>
                           <DeleteOutlined
                             style={{ fontSize: "25px" }}
@@ -222,7 +298,7 @@ export default function SpotList({
                             }}
                           />
                         </div>
-                      </div>
+                      </SpotListItemDiv>
                     )}
                   </Draggable>
                 ))}
@@ -238,11 +314,11 @@ export default function SpotList({
 
 const SpotItemIndex = styled.div`
   display: inline-flex;
-  width: 25px;
+  width: 20px;
   height: 25px;
   border-radius: 50%;
   text-align: center;
-  font-size: 18px;
+  font-size: 12px;
   margin-right: 10px;
   color: white;
   justify-content: center;
@@ -271,4 +347,23 @@ const SpotCategory = styled.span`
   font-size: 10px;
   margin-left: 35px;
   margin-top: 3px;
+`;
+
+const SpotListItemDiv = styled.div`
+  @keyframes color {
+    0% {
+      border: ${(props) => `4px solid ${props.userColor}`};
+    }
+    33% {
+      border: ${(props) => `4px solid ${props.userColor}`};
+    }
+    66% {
+      border: ${(props) => `4px solid ${props.userColor}`};
+    }
+    100% {
+      border: none;
+    }
+  }
+
+  animation: color 1s linear;
 `;
