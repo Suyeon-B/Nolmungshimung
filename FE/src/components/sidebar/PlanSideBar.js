@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import PlanList from "./PlanList";
+import { useNavigate } from "react-router-dom";
 import Footer from "./Footer";
 
 const PlanSideBar = ({
@@ -15,21 +16,18 @@ const PlanSideBar = ({
   attentionIndex,
   setAttentionIndex,
 }) => {
+  const navigate = useNavigate();
   return (
     <SideBar>
       <PlanTitleWrap>
-        <PlanTitle>{item.project_title}</PlanTitle>
-        <NoneStyleBtn>
-          <svg
-            className="left_toggle_arrow"
-            fill="#7C8289"
-            width="22"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 448 512"
-          >
-            <path d="M77.25 256l137.4-137.4c12.5-12.5 12.5-32.75 0-45.25s-32.75-12.5-45.25 0l-160 160c-12.5 12.5-12.5 32.75 0 45.25l160 160C175.6 444.9 183.8 448 192 448s16.38-3.125 22.62-9.375c12.5-12.5 12.5-32.75 0-45.25L77.25 256zM269.3 256l137.4-137.4c12.5-12.5 12.5-32.75 0-45.25s-32.75-12.5-45.25 0l-160 160c-12.5 12.5-12.5 32.75 0 45.25l160 160C367.6 444.9 375.8 448 384 448s16.38-3.125 22.62-9.375c12.5-12.5 12.5-32.75 0-45.25L269.3 256z" />
-          </svg>
+        <NoneStyleBtn
+          onClick={() => {
+            navigate("/");
+          }}
+        >
+          <img width={"35px"} src="\statics\images\homeIcon.png" />
         </NoneStyleBtn>
+        <PlanTitle>{item.project_title}</PlanTitle>
       </PlanTitleWrap>
       <SideBarBtnDIv>
         {isFirstPage && (
