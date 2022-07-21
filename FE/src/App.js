@@ -3,7 +3,7 @@ import SignUp from "./pages/sign/SignUp";
 import SignIn from "./pages/sign/SignIn";
 import SearchMap from "./pages/search/Search";
 import Home from "./pages/Home";
-import Test from "./pages/Test";
+// import Test from "./pages/Test";
 import KakaoSignIn from "./components/sign/KakaoSignIn";
 import VoiceTalk from "./components/voiceTalk/voiceTalk";
 import {
@@ -83,7 +83,7 @@ function App() {
               />
               <Route path="project/:projectId" element={<ProjectPage />} />
               <Route path="Calendar/*" element={<CalendarTest />} />
-              <Route path="result/*" element={<Test />} />
+              {/* <Route path="result/*" element={<Test />} /> */}
               {/* <Route
                 path="project/:projectId/:tripDate"
                 element={<ProjectPage />}
