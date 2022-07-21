@@ -12,10 +12,12 @@ var projectsRouter = require("./routes/projects/projects");
 var travelRouter = require("./routes/travel/travel");
 var commonRouter = require("./routes/common/common");
 var voiceRouter = require("./routes/voicetalk/voicetalk");
+var memoRouter = require("./routes/sharememo/shareMemo");
 var mongodb = require("dotenv").config();
 var fs = require("fs");
 
 voiceRouter;
+memoRouter;
 
 var app = express();
 // [원영] 소켓 서버 추가
