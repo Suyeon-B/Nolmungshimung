@@ -1,19 +1,18 @@
 import React from "react";
-import MarkMap from "../components/MarkMap/MarkMap";
+import styled from "styled-components";
+
 function Test() {
-  MarkMap();
-  return (
-    <div>
-      <h1>지도</h1>
-      <div
-        id="myMap"
-        style={{
-          width: "500px",
-          height: "500px",
-        }}
-      ></div>
-    </div>
-  );
+  return <ResultImage src="/statics/images/signUpBackground.png" />;
 }
+
+const ResultImage = styled.img`
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background-size: cover;
+  background-repeat: no-repeat;
+`;
 
 export default Test;

@@ -42,17 +42,17 @@ server.listen(3001, function () {
   console.log("Socket IO server listening on port 3001");
 });
 
-const colors = [
-  "#FF8A3D",
-  "#8DD664",
-  "#FF6169",
-  "#975FFE",
-  "#0072BC",
-  "#F6282B",
-  "#FAD700",
-  "#05FFCC",
-  "#4A4A4A",
-];
+const colors = {
+  "#FF8A3D": [],
+  "#8DD664": [],
+  "#FF6169": [],
+  "#975FFE": [],
+  "#0072BC": [],
+  "#F6282B": [],
+  "#FAD700": [],
+  "#05FFCC": [],
+  "#4A4A4A": [],
+};
 
 const projectSocketRoom = {};
 
@@ -82,8 +82,20 @@ io.on("connection", (socket) => {
           selectedIndex,
         },
       };
-      projectSocketRoom[projectId][userName].color =
-        colors[Object.keys(projectSocketRoom[projectId]).length - 1];
+      let colorIndex = 0;
+
+      for (let color in colors) {
+        if (!colors[color].includes(projectId)) {
+          projectSocketRoom[projectId][userName].color = color;
+          colors[color].push(projectId);
+          break;
+        }
+      }
+      console.log(colors);
+
+      // projectSocketRoom[projectId][userName].color =
+      //   colors[Object.keys(projectSocketRoom[projectId]).length];
+
       socket.join(projectId);
       io.to(projectId).emit("connectUser", projectSocketRoom[projectId]);
     } catch (error) {
@@ -122,6 +134,10 @@ io.on("connection", (socket) => {
     try {
       console.log("projectLeave", projectId);
       socket.leave(projectId);
+      const userColor = projectSocketRoom[projectId][userName].color;
+      colors[userColor] = colors[userColor].filter((id) => {
+        return id !== projectId;
+      });
       delete projectSocketRoom[projectId][userName];
       console.log(projectSocketRoom[projectId]);
     } catch (error) {
@@ -173,6 +189,9 @@ io.on("connection", (socket) => {
       // console.log(error);
     }
   });
+
+  // [Hyeok] Grab Routes
+  // socket.on("grabSpot", ([projectId, userName, selectedIndex])=>{});
 });
 
 // mongoose

@@ -1,11 +1,9 @@
 import React, { useState } from "react";
-import dragFunction from "./DragAndDrop";
 import styled from "styled-components";
 import { v4 as uuidV4 } from "uuid";
 import { overEvent, clickEvent, outEvent } from "../../pages/search/Search";
 import SearchDetail from "./SearchDetail";
 import "../../App.css";
-import SpotDetail from "../../components/spot/SpotDetail";
 import { useEffect } from "react";
 import { PlusCircleTwoTone } from "@ant-design/icons";
 
@@ -50,6 +48,10 @@ const SearchListRoute = ({
     const uRoute = { ...route };
     uRoute["uid"] = uuidV4();
     fetchAddTravelRoute(projectId, uRoute);
+    // console.log(uRoute);
+    uRoute.lock = "white"; // 색들어감 (락기능)
+    uRoute.user_name = null; // 잡고있는 유저의 닉네임이 들어갈것임 (락 푸는 기능)
+    console.log(uRoute);
     itemRoutes[event.target.dataset.idx].push(uRoute);
     setItemRoutes([...itemRoutes]);
     setIsAddDel(true);
@@ -58,119 +60,31 @@ const SearchListRoute = ({
   const [visible, setVisible] = useState(false);
   const [contests, setContents] = useState(null);
 
-  function GetGooglePlace(props) {
-    let url = "/place-api/findplacefromtext/json?";
-    const api_key = "AIzaSyAFeyVrH7cjDHGVVLqhifBI-DFlTUwEn8E";
-    url =
-      url + "input=" + props.input + "&inputtype=textquery" + "&key=" + api_key;
-    fetch(url) //google맵 지도 검색
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.candidates[0] && data.candidates[0].place_id) {
-          let url =
-            "/place-api/details/json?fields=name,rating,formatted_phone_number,photo,type,opening_hours,price_level,review,user_ratings_total&place_id=";
-          fetch(url + data.candidates[0].place_id + "&key=" + api_key)
-            .then((res) => res.json())
-            .then((data) => {
-              console.log(data);
-              const travel = {
-                provider: 1,
-                place_id: props.place_id,
-                place_name: props.place_name,
-                road_address_name: props.road_address_name,
-                category_group_name: props.category_group_name,
-                phone: props.phone,
-                place_url: props.place_url,
-                photos: data.result.photos ? data.result.photos : null,
-                rating: data.result.rating ? data.result.rating : null,
-                reviews: data.result.reviews ? data.result.reviews : null,
-                user_ratings_total: data.result.user_ratings_total
-                  ? data.result.user_ratings_total
-                  : null,
-                opening_hours: data.result.opening_hours
-                  ? data.result.opening_hours
-                  : null,
-              };
-
-              console.log(travel);
-              fetch(
-                `https://${process.env.REACT_APP_SERVER_IP}:8443/travel/${props.place_id}`,
-                {
-                  method: "post",
-                  headers: {
-                    "content-type": "application/json",
-                  },
-                  body: JSON.stringify(travel),
-                  // credentials: "include",
-                }
-              )
-                .then(() => {
-                  console.log("구글 디비 저장완");
-                  setContents(travel);
-                })
-                .catch((error) => console.log("error:", error));
-            })
-            .catch((error) => {
-              console.log("error:", error);
-            });
-        } else {
-          // 못찾았을때 카카오 크롤링
-          const detail = SpotDetail(route.id);
-          const KakaoTravel = {
-            provider: 2,
-            place_id: props.place_id,
-            place_name: props.place_name,
-            road_address_name: props.road_address_name,
-            category_group_name: props.category_group_name,
-            phone: props.phone,
-            place_url: props.place_url,
-            photo: detail.img,
-            rating: detail.reviews ? detail.reviews[0][0] : 0,
-            reviews: detail.reviews ? detail.reviews : null,
-            user_ratings_total: null,
-            opening_hours: null,
-          };
-
-          console.log(KakaoTravel);
-          fetch(
-            `https://${process.env.REACT_APP_SERVER_IP}:8443/travel/${props.place_id}`,
-            {
-              //post - db 저장
-              method: "post",
-              headers: {
-                "content-type": "application/json",
-              },
-              body: JSON.stringify(KakaoTravel),
-              // credentials: "include",
-            }
-          )
-            .then(() => {
-              console.log("카카오 디비 저장완");
-              setContents(KakaoTravel);
-            })
-            .catch((error) => console.log("error:", error));
-        }
-      })
-      .catch((error) => {
-        console.log("error:", error);
-      });
-  }
-
   function FindDetailContents(props) {
     //1. 디비에 있나 확인
-    let result;
+
     fetch(
-      `https://${process.env.REACT_APP_SERVER_IP}:8443/travel/` + props.place_id
+      `https://${process.env.REACT_APP_SERVER_IP}:8443/travel/find/` +
+        props.place_id,
+      {
+        method: "POST", // 또는 'PUT'
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(props),
+      }
     ) //get
       .then((response) => response.json())
       .then((data) => {
-        if (data.message === "success") {
+        if (data.status === 200) {
+          console.log(data);
           console.log("db에 있습니다");
-          result = data.data;
-          setContents(result);
-        } else {
+          setContents(data.data);
+        } else if (data.status === 206) {
           console.log("디비에 없음");
-          GetGooglePlace(props);
+          setContents(data.data);
+        } else {
+          console.log(data.message);
         }
         setVisible(true);
       })
@@ -200,15 +114,6 @@ const SearchListRoute = ({
 
   return (
     <StyledLi
-      // draggable
-      // onDragOver={(event) => {
-      //   event.preventDefault();
-      //   // return dragFunction(event, "over");
-      // }}
-      // onDrop={(event) => dragFunction(event, "Drop")}
-      // onDragEnter={(event) => dragFunction(event, "enter")}
-      // onDragLeave={(event) => dragFunction(event, "leave")}
-      // className="dragAndDrop"
       id={id}
       style={{
         backgroundColor: selected ? "#ebebeb" : "",

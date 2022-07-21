@@ -34,7 +34,7 @@ const move = (source, destination, droppableSource, droppableDestination) => {
 };
 const grid = 8;
 
-const getItemStyle = (isDragging, draggableStyle) => ({
+const getItemStyle = (isDragging, draggableStyle, color, userName) => ({
   // some basic styles to make the items look a bit nicer
 
   userSelect: "none",
@@ -42,6 +42,13 @@ const getItemStyle = (isDragging, draggableStyle) => ({
   // change background colour if dragging
   background: isDragging ? "#EBEBEB" : "none",
 
+  // border: userName === undefined ? null : `3px solid ${color}`,
+  border: `3px solid ${color}`,
+
+  // transitionProperty: "backgroundColor ,none",
+  // transitionDuration: "2s",
+  // transition: "background ease 2s 0s",
+  // background: ,
   // styles we need to apply on draggables
   ...draggableStyle,
 });
@@ -79,8 +86,42 @@ function PlanList({
   if (!routes) {
     return <div>Loading...</div>;
   }
-  console.log(`attentionIndex: ${attentionIndex}`);
+
+  function onDragStart(result) {
+    // console.log("drag start");
+    // console.log("사용자 색 : ", connectUser[userName].color);
+    // socket.emit("grabSpot", [projectId, userName, result.source.index]);
+    // console.log(result.source.droppableId);
+    // console.log(result.source.index);
+    const newState = [...[...routes]];
+    const { source, destination } = result;
+    // console.log(newState);
+    // console.log(newState[result.source.droppableId][result.source.index].lock);
+    // if
+    // console.log(source);
+    // console.log(newState[source.droppableId][source.index]);
+    const lockAcquire = newState[source.droppableId][source.index].userName;
+    // console.log(lockAcquire);
+    if (
+      lockAcquire === null ||
+      lockAcquire === userName ||
+      lockAcquire === undefined
+    ) {
+      // console.log(newState[source.droppableId][source.index].lock);
+      newState[source.droppableId][source.index].lock =
+        connectUser[userName].color;
+      newState[source.droppableId][source.index].user_name = userName;
+    } else {
+      alert("다른 친구가 옮기고 있습니다 ! 잠시 기다려 주세요!");
+    }
+    setRoutes(newState);
+    // console.log(newState);
+    setIsDrage(true);
+    // console.log(newState[result]);
+  }
+
   function onDragEnd(result) {
+    // console.log(result);
     const { source, destination } = result;
 
     // dropped outside the list
@@ -95,6 +136,9 @@ function PlanList({
       const newState = [...[...routes]];
       newState[sInd] = items;
 
+      newState[sInd][result.destination.index].user_name = null;
+      newState[sInd][result.destination.index].lock = "white";
+
       setRoutes(newState);
     } else {
       const result = move(
@@ -106,7 +150,10 @@ function PlanList({
       const newState = [...[...routes]];
       newState[sInd] = result[sInd];
       newState[dInd] = result[dInd];
-
+      // console.log(newState[dInd][destination.index]);
+      newState[dInd][destination.index].user_name = null;
+      newState[dInd][destination.index].lock = "white"; // 수정예쩡
+      // console.log(newState[dInd][destination.droppableId].user_name);
       setRoutes(newState);
     }
     // console.log(`selectIdx: ${selectIdx}`);
@@ -132,7 +179,7 @@ function PlanList({
   return (
     <div>
       <SidePlanListDiv>
-        <StyledDragDropContext onDragEnd={onDragEnd}>
+        <StyledDragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
           {[...routes].map((el, ind) => (
             <div key={ind} ref={(el) => (droppableRef.current[+ind] = el)}>
               <Droppable key={ind} droppableId={`${ind}`}>
@@ -193,17 +240,24 @@ function PlanList({
                         index={index}
                       >
                         {(provided, snapshot) => (
-                          <div
+                          <PlanItemDiv
+                            userColor={item.lock}
+                            // <StyleRouteDiv
+
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
                             style={getItemStyle(
                               snapshot.isDragging,
-                              provided.draggableProps.style
+                              provided.draggableProps.style,
+                              item.lock,
+                              item.user_name
                             )}
                           >
                             <ItemInnerDiv>
-                              {item.place_name}
+                              {item.place_name.length > 11
+                                ? item.place_name.slice(0, 12) + " ..."
+                                : item.place_name}
                               <div
                                 type="button"
                                 onClick={() => {
@@ -213,6 +267,19 @@ function PlanList({
                                   setIsAddDel(true);
                                 }}
                               >
+                                {item.user_name && (
+                                  <div
+                                    style={{
+                                      position: "absolute",
+                                      marginTop: "20px",
+                                      backgroundColor: `${item.lock}`,
+                                      color: "white",
+                                      padding: "2px",
+                                    }}
+                                  >
+                                    {item.user_name}
+                                  </div>
+                                )}
                                 <svg
                                   className="planListTrashCan"
                                   fill="#7C8289"
@@ -224,7 +291,8 @@ function PlanList({
                                 </svg>
                               </div>
                             </ItemInnerDiv>
-                          </div>
+                          </PlanItemDiv>
+                          // </StyleRouteDiv>
                         )}
                       </Draggable>
                     ))}
@@ -239,6 +307,31 @@ function PlanList({
     </div>
   );
 }
+
+const StyleRouteDiv = styled.div`
+  @keyframes color {
+    0% {
+      background: #2bb8ff;
+    }
+    20% {
+      background: #59c7ff;
+    }
+    40% {
+      background: #60caff;
+    }
+    60% {
+      background: #89d7ff;
+    }
+    80% {
+      background: #a3e0ff;
+    }
+    100% {
+      background: none;
+    }
+  }
+  border-radius: 5px;
+  animation: color 2s linear;
+`;
 
 const SidePlanListDiv = styled.div`
   height: 75vh;
@@ -310,6 +403,25 @@ const ItemInnerDiv = styled.div`
   .planListTrashCan {
     margin-right: 17px;
   }
+`;
+
+const PlanItemDiv = styled.div`
+  @keyframes color {
+    0% {
+      border: ${(props) => `4px solid ${props.userColor}`};
+    }
+    33% {
+      border: ${(props) => `4px solid ${props.userColor}`};
+    }
+    66% {
+      border: ${(props) => `4px solid ${props.userColor}`};
+    }
+    100% {
+      border: none;
+    }
+  }
+
+  animation: color 1s linear;
 `;
 
 export default PlanList;
