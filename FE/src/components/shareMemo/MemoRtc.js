@@ -8,39 +8,6 @@ import ReactQuill from "react-quill";
 import styled from "styled-components";
 import { ConnectuserContext } from "../../context/ConnectUserContext";
 
-<<<<<<< HEAD
-=======
-const EditorBox = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  // height: 47%;
-`;
-
-const EditorContainer = styled.div`
-  // div#container {
-  //   height: 35vh;
-  //   width: 61vw;
-  //   padding: 1%;
-  // }
-  height: 35vh;
-  width: 61vw;
-  padding: 1%;
-  height: 47%;
-  .ql-editor {
-    height: 200px;
-  }
-  .ql-toolbar.ql-snow {
-    border-radius: 5px 5px 0px 0px;
-  }
-  .ql-container.ql-snow {
-    border-radius: 0 0 5px 5px;
-  }
-  .ql-editor strong {
-    font-weight: bold;
-  }
-`;
->>>>>>> b23737fe55a803ade99186683fa546f910446055
 const TOOLBAR_OPTIONS = [
   [{ align: [] }],
   [{ header: [1, 2, 3, false] }],
@@ -52,11 +19,9 @@ const TOOLBAR_OPTIONS = [
 ];
 
 const MemoTestRtc = ({ project_Id }) => {
-  // const editorRef = useRef();
   let quillRef = null;
   let reactQuillRef = null;
   Quill.register("modules/cursors", QuillCursors);
-  // const [aware, setAwareness] = useState(null);
   const [projectID, setProjectId] = useState(project_Id);
   const { connectUser, setConnectUser } = useContext(ConnectuserContext);
 
@@ -76,10 +41,19 @@ const MemoTestRtc = ({ project_Id }) => {
       color: connectUser[userName].color,
     });
 
+    // const template = "8ab..";
+    // const myDoc = new Y.Doc();
+    // const provider = new WebrtcProvider(`${projectID}`, myDoc);
+    // provider.awareness.setLocalStateField("user", {
+    //   name: userName,
+    //   color: connectUser[userName].color,
+    // });
+    // Y.applyUpdate(myDoc, fromBase64(template));
     const binding = new QuillBinding(ytext, quillRef, provider.awareness);
-    // return () => {
-    //   WebrtcProvider.destroy();
-    // };
+
+    return () => {
+      provider.destroy();
+    };
   }, []);
 
   const attachQuillRefs = () => {
