@@ -1,8 +1,6 @@
 import React from "react";
 import SignUp from "./pages/sign/SignUp";
 import SignIn from "./pages/sign/SignIn";
-import SearchMap from "./pages/search/Search";
-import Home from "./pages/Home";
 import Result from "./pages/Result";
 import KakaoSignIn from "./components/sign/KakaoSignIn";
 import VoiceTalk from "./components/voiceTalk/voiceTalk";
@@ -12,11 +10,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import ProjectSide from "./components/sidebar/ProjectSide";
-import PlanSideBar from "./components/sidebar/PlanSideBar";
 import CreateProject from "./components/CreateProject";
-import SpotList from "./components/spot/SpotList";
-import SpotRoute from "./pages/spotRoute/SpotRoute";
 import styled from "styled-components";
 // import TextEditor from "./components/shareMemo/test";
 
@@ -33,6 +27,7 @@ import {
 // react query devtool
 import { ReactQueryDevtools } from "react-query/devtools";
 import CalendarTest from "./components/CalendarTest";
+import HomeNew from "./pages/HomeNew";
 
 const queryClient = new QueryClient(); // 인스턴스 생성
 const BodyDiv = styled.div`
@@ -46,7 +41,7 @@ function App() {
       <AuthProvider>
         <Router>
           <BodyDiv>
-            <ProjectSide />
+            {/* <ProjectSide /> */}
             <Routes>
               <Route
                 path="signin/*"
@@ -66,7 +61,8 @@ function App() {
                 }
               />
               <Route path="voicetalk/*" element={<VoiceTalk />} />
-              <Route path="/" element={<Home />} />
+              {/* <Route path="/" element={<Home />} /> */}
+              <Route path="/" element={<HomeNew />} />
               <Route
                 path="/kakao/signin"
                 element={
@@ -107,7 +103,7 @@ function App() {
           </BodyDiv>
         </Router>
       </AuthProvider>
-      <ReactQueryDevtools />
+      {/* <ReactQueryDevtools /> */}
     </QueryClientProvider>
   );
 }
