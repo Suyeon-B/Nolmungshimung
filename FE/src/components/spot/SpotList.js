@@ -110,13 +110,19 @@ export default function SpotList({
     // some basic styles to make the items look a bit nicer
 
     userSelect: "none",
-
-    margin: `0 0 ${grid}px 0`,
+    height: "41px",
+    // margin: `0 0 ${grid}px 0`,
     // change background colour if dragging
     background: isDragging ? "#EBEBEB" : "none",
-    // border: isDragging ? `1px solid red` : "white",
-    // border: userName === undefined ? null : `3px solid ${color}`,
-    border: `3px solid ${color}`,
+    boxSizing: "border-box",
+    // mozBoxSizing: "border-box",
+    // webkitBoxSizing: "border-box",
+
+    // border: `4px solid ${color}`,
+    boxShadow: `inset 0px 0px 0px 3px ${color}`,
+    // border: `3px solid ${color}`,
+    // outline: `2px solid ${color}`,
+    // outlineOffset: "-5px",
 
     // transitionDuration: "2s",
     // border: `${color}`,
@@ -242,7 +248,7 @@ export default function SpotList({
                           style={{
                             display: "flex",
                             justifyContent: "space-evenly",
-                            padding: "5px",
+                            // padding: "5px",
                           }}
                         >
                           <SpotItemDiv>
@@ -261,8 +267,8 @@ export default function SpotList({
                               >
                                 {index + 1}
                               </SpotItemIndex>
-                              {item.place_name.length > 11
-                                ? item.place_name.slice(0, 12) + " ..."
+                              {item.place_name.length > 10
+                                ? item.place_name.slice(0, 11) + " ..."
                                 : item.place_name}
                               {/* {item.place_name} */}
                             </SpotTitle>
@@ -329,7 +335,7 @@ const SpotItemDiv = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  height: 30px;
+  height: 40px;
   width: 250px;
 `;
 
@@ -349,19 +355,22 @@ const SpotCategory = styled.span`
   margin-top: 3px;
 `;
 
+// box-shadow: inset 0px 0px 0px 10px #f00;
 const SpotListItemDiv = styled.div`
+  height: 41px;
+  box-sizing: border-box;
   @keyframes color {
     0% {
-      border: ${(props) => `4px solid ${props.userColor}`};
+      boxshadow: ${(props) => `inset 0px 0px 0px 3px ${props.userColor}`};
     }
     33% {
-      border: ${(props) => `4px solid ${props.userColor}`};
+      boxshadow: ${(props) => `inset 0px 0px 0px 3px ${props.userColor}`};
     }
     66% {
-      border: ${(props) => `4px solid ${props.userColor}`};
+      boxshadow: ${(props) => `inset 0px 0px 0px 3px ${props.userColor}`};
     }
     100% {
-      border: none;
+      boxshadow: none;
     }
   }
 
