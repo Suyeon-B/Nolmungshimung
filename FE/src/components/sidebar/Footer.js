@@ -20,8 +20,6 @@ function Footer(props) {
     // "금잔디연",
   ]);
   // ! 빈배열이어야함 나중에 지울건데 예씨임
-  console.log("Footer");
-  console.log(connectUser);
 
   useEffect(() => {
     // 이거아님 보이스톡 들온 사람이 출력돼야함
@@ -95,7 +93,7 @@ const FooterContainer = styled.div`
   /* width: auto; */
   height: 60px;
   white-space: nowrap;
-  left: 7vw;
+  left: 0.5vw;
 
   ::-webkit-scrollbar {
     /* width: 0px;
