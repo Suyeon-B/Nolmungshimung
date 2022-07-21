@@ -153,6 +153,8 @@ const Search = ({
           el.onclick = (function (i) {
             return function () {
               pagination.gotoPage(i);
+              setClick(null);
+              document.getElementById("searchBar").scrollTop = 0;
             };
           })(i);
         }
@@ -196,7 +198,7 @@ const Search = ({
   return (
     <Wapper>
       <SearchListDiv id="searchBar">
-        <SearchBar changePlace={setSearchPlace} />
+        <SearchBar changePlace={setSearchPlace} handleSelect={handleSelect} />
         <ul>
           {Places &&
             Places.map((item, i) => (
