@@ -123,7 +123,7 @@ const ResultProjectTitle = styled.span`
   font-family: "Inter";
   font-style: normal;
   font-weight: 900;
-  font-size: 40px;
+  font-size: 35px;
   line-height: 36px;
   color: #ff8a3d;
 `;
@@ -131,23 +131,23 @@ const ResultProjectTitle = styled.span`
 const ResultTitle = styled.section`
   font-family: "Inter";
   font-style: normal;
-  font-weight: 700;
-  font-size: 30px;
+  font-weight: 800;
+  font-size: 25px;
   line-height: 36px;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 `;
 
 const ResultLine = styled.div`
-  border-bottom: 3px solid lightgray;
-  margin-bottom: 15px;
-  margin-top: 10px;
+  border-bottom: 4px solid lightgray;
+  margin-bottom: 25px;
+  margin-top: 20px;
 `;
 
 const ResultRoute = styled.li`
   font-family: "Inter";
   font-style: normal;
   font-weight: 700;
-  font-size: 24px;
+  font-size: 17px;
   line-height: 29px;
   marign-bottom: 9px;
 `;

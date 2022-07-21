@@ -43,7 +43,9 @@ const getItemStyle = (isDragging, draggableStyle, color, userName) => ({
   background: isDragging ? "#EBEBEB" : "none",
 
   // border: userName === undefined ? null : `3px solid ${color}`,
-  border: `3px solid ${color}`,
+  // border: `3px solid ${color}`,
+  boxShadow: `inset 0px 0px 0px 3px ${color}`,
+  boxSizing: "border-box",
 
   // transitionProperty: "backgroundColor ,none",
   // transitionDuration: "2s",
@@ -406,6 +408,8 @@ const ItemInnerDiv = styled.div`
 `;
 
 const PlanItemDiv = styled.div`
+  height: 41px;
+  box-sizing: border-box;
   @keyframes color {
     0% {
       border: ${(props) => `4px solid ${props.userColor}`};
