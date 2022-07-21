@@ -152,11 +152,13 @@ const SearchListRoute = ({
       </StyledRouteDiv>
       {route.road_address_name ? (
         <div>
-          <p title={route.road_address_name}>{route.road_address_name}</p>
+          <p title={route.road_address_name}>
+            {route.road_address_name.substr(8)}
+          </p>
           {/* <p title = {route.address_name}>{route.address_name}</p> */}
         </div>
       ) : (
-        <p>{route.address_name}</p>
+        <p>{route.address_name.substr(8)}</p>
       )}
       <p>{route.category_group_name}</p>
       <p>{route.phone}</p>
