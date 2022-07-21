@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useParams } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import SpotList from "../../components/spot/SpotList";
 import MarkMap from "../../components/MarkMap/MarkMap";
@@ -6,10 +6,9 @@ import MemoTestRtc from "../../components/shareMemo/MemoRtc";
 // import TextEditor from "../shareMemo/TextEditor";
 import Cursor from "../shareMemo/Cursor";
 import SearchDetail from "../../components/searchMap/SearchDetail";
-import useNotification from "../../atomics/Notification";
 import { AlertFilled } from "@ant-design/icons";
 import socket from "../../socket";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function SpotRoute({
   startDate,
@@ -24,6 +23,7 @@ function SpotRoute({
   const [notifyFlag, setNotifyFlag] = useState(false);
   const [visible, setVisible] = useState(false);
   const [contents, setContents] = useState(null);
+  let navigate = useNavigate();
 
   // const [routes, setRoutes] = useState(item.routes);
   // console.log("=================");
@@ -81,19 +81,21 @@ function SpotRoute({
   };
 
   const onClcikResult = () => {
-    window.location.replace("/result");
+    navigate(`/project/${projectId}/result`, { replace: true });
   };
   return (
     <SpotRouteContainer>
       <SpotRouteTitle>
-        <SpotRouteTitleDay>
-          {culTripTermData(startDate, selectedIndex)}
-        </SpotRouteTitleDay>
-        <AlertFilled
-          style={{ color: "#ff8a3d", fontSize: "34px", marginLeft: "15px" }}
-          onClick={callFriends}
-        />
-        <span>주목시키기</span>
+        <section>
+          <SpotRouteTitleDay>
+            {culTripTermData(startDate, selectedIndex)}
+          </SpotRouteTitleDay>
+          <AlertFilled
+            style={{ color: "#ff8a3d", fontSize: "34px", marginLeft: "15px" }}
+            onClick={callFriends}
+          />
+          <span>주목시키기</span>
+        </section>
         <SpotRouteTitleBtn onClick={onClcikResult}>작성 완료</SpotRouteTitleBtn>
       </SpotRouteTitle>
       <SpotRouteSection>
@@ -148,6 +150,9 @@ const SpotRouteTitle = styled.section`
   width: 100%;
   margin-top: 34px;
   border-bottom: 1px solid #c1c7cd;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 `;
 
 const SpotRouteTitleDay = styled.span`
@@ -161,8 +166,8 @@ const SpotRouteTitleDay = styled.span`
 `;
 
 const SpotRouteTitleBtn = styled.button`
-  right: 40px;
-  position: absolute;
+  white-space: nowrap;
+  margin-right: 25px;
   background-color: #ff8a3d;
   border: 0;
   border-radius: 4px;

@@ -3,61 +3,189 @@ var router = express.Router();
 const puppeteer = require("puppeteer");
 // var Client = require("mongodb").MongoClient;
 const { Travel } = require(__base + "models/Travel");
+const request = require("request");
 
 /* GET home page. */
-router.get("/:id", async function (req, res, next) {
+router.post("/find/:id", async function (req, res, next) {
+  // console.log(req.body);
   let id = req.params.id;
   let data = await Travel.findOne({ place_id: id });
   if (data) {
-    return res.status(200).send(
+    console.log("데이터 있다");
+    return res.send(
       JSON.stringify({
+        status: 200,
         message: "success",
         data: data,
       })
     );
-  }
-  res.status(404).send(
-    JSON.stringify({
-      message: "fail",
-    })
-  );
-});
+  } else {
+    try {
+      let place = await GetGoogleID(req.body);
+      let insertForm;
+      if (place[0] && place[0].place_id) {
+        detail = await GetGooglePlace(place[0].place_id, req.body);
+        console.log("!!!!!!!!");
 
-router.post("/:id", async function (req, res, next) {
-  // let query = req.query;
-  let body = req.body;
-  let insertForm = {
-    provider: body.provider,
-    place_id: body.place_id,
-    place_name: body.place_name,
-    road_address_name: body.road_address_name,
-    category_group_name: body.category_group_name,
-    phone: body.phone,
-    place_url: body.place_url,
-    photos: body.photos,
-    rating: body.rating,
-    reviews: body.reviews,
-    user_ratings_total: body.user_ratings_total,
-    opening_hours: body.opening_hours,
-  };
+        insertForm = {
+          provider: detail.provider,
+          place_id: detail.place_id,
+          place_name: detail.place_name,
+          road_address_name: detail.road_address_name,
+          category_group_name: detail.category_group_name,
+          phone: detail.phone,
+          place_url: detail.place_url,
+          photos: detail.photos,
+          rating: detail.rating,
+          reviews: detail.reviews,
+          user_ratings_total: detail.user_ratings_total,
+          opening_hours: detail.opening_hours,
+        };
+      } else {
+        // detail = await getCrawl(id)
+        const props = req.body;
+        insertForm = {
+          provider: 2,
+          place_id: props.place_id,
+          place_name: props.place_name,
+          road_address_name: props.road_address_name,
+          category_group_name: props.category_group_name,
+          phone: props.phone,
+          place_url: props.place_url,
+          photo: null,
+          rating: 0,
+          reviews: null,
+          user_ratings_total: null,
+          opening_hours: null,
+        };
+      }
 
-  const travel = new Travel(insertForm);
-  travel
-    .save()
-    .then(() => {
-      return res.status(200).send(
-        JSON.stringify({
-          message: "success",
+      // console.log("안녕" + insertForm);
+      const travel = new Travel(insertForm);
+      await travel
+        .save()
+        .then(() => {
+          console.log("구글 저장완");
+          return res.send(
+            JSON.stringify({
+              status: 206,
+              message: "success",
+              data: insertForm,
+            })
+          );
         })
-      );
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).send({
-        message: "fail",
-      });
-    });
+        .catch((err) => {
+          console.log(err);
+          res.send({
+            status: 500,
+            message: "fail",
+          });
+        });
+    } catch (err) {
+      console.log("에러", err);
+    }
+  }
 });
+
+function GetGoogleID(props) {
+  let url =
+    "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?";
+  const api_key = "AIzaSyAFeyVrH7cjDHGVVLqhifBI-DFlTUwEn8E";
+  url =
+    url +
+    "input=" +
+    encodeURI(props.input) +
+    "&inputtype=textquery" +
+    "&key=" +
+    api_key;
+  console.log(url, "durl?");
+  // console.log(url);
+  return new Promise((resolve, reject) => {
+    request(url, (error, response, body) => {
+      // console.log("body: ", response.response);
+      if (error) {
+        reject(error);
+      }
+      const place = JSON.parse(body).candidates;
+      resolve(place);
+    });
+  });
+}
+
+function GetGooglePlace(id, props) {
+  const api_key = "AIzaSyAFeyVrH7cjDHGVVLqhifBI-DFlTUwEn8E";
+  let url =
+    "https://maps.googleapis.com/maps/api/place/details/json?fields=name,rating,formatted_phone_number,photo,type,opening_hours,price_level,review,user_ratings_total&language=kr&place_id=";
+  url = url + id + "&key=" + api_key;
+  return new Promise((resolve, reject) => {
+    request(url, (error, response, body) => {
+      console.log("!!!!!!!!!!!!");
+      if (error) {
+        reject(error);
+      }
+      // console.log(body);
+      // resolve(body);
+      const googlePlace = JSON.parse(body).result;
+
+      const travel = {
+        provider: 1,
+        place_id: props.place_id,
+        place_name: props.place_name,
+        road_address_name: props.road_address_name,
+        category_group_name: props.category_group_name,
+        phone: props.phone,
+        place_url: props.place_url,
+        photos: googlePlace.photos ? googlePlace.photos : null,
+        rating: googlePlace.rating ? googlePlace.rating : null,
+        reviews: googlePlace.reviews ? googlePlace.reviews : null,
+        user_ratings_total: googlePlace.user_ratings_total
+          ? googlePlace.user_ratings_total
+          : null,
+        opening_hours: googlePlace.opening_hours
+          ? googlePlace.opening_hours
+          : null,
+      };
+      // console.log(travel);
+      resolve(travel);
+    });
+  });
+}
+
+// router.post("/:id", async function (req, res, next) {
+//   // let query = req.query;
+//   let body = req.body;
+//   let insertForm = {
+//     provider: body.provider,
+//     place_id: body.place_id,
+//     place_name: body.place_name,
+//     road_address_name: body.road_address_name,
+//     category_group_name: body.category_group_name,
+//     phone: body.phone,
+//     place_url: body.place_url,
+//     photos: body.photos,
+//     rating: body.rating,
+//     reviews: body.reviews,
+//     user_ratings_total: body.user_ratings_total,
+//     opening_hours: body.opening_hours,
+//   };
+
+//   const travel = new Travel(insertForm);
+//   travel
+//     .save()
+//     .then(() => {
+//       return res.status(200).send(
+//         JSON.stringify({
+//           message: "success",
+//         })
+//       );
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//       res.status(500).send({
+//         message: "fail",
+//       });
+//     });
+// });
 
 const getCrawl = async (id) => {
   try {
@@ -125,21 +253,5 @@ const getCrawl = async (id) => {
     return null;
   }
 };
-
-router.post("/place", async (req, res) => {
-  // console.log(req.body.data);
-  data = await getCrawl(req.body.data);
-  if (data === null) {
-    return res.status(400).json({
-      success: false,
-      message: "후기없다..",
-    });
-  }
-  // console.log(data);
-  return res.status(200).send({
-    success: true,
-    data: data,
-  });
-});
 
 module.exports = router;

@@ -1,7 +1,7 @@
 import React from "react";
 import SignUp from "./pages/sign/SignUp";
 import SignIn from "./pages/sign/SignIn";
-import Test from "./pages/Test";
+import Result from "./pages/Result";
 import KakaoSignIn from "./components/sign/KakaoSignIn";
 import VoiceTalk from "./components/voiceTalk/voiceTalk";
 import {
@@ -12,6 +12,7 @@ import {
 } from "react-router-dom";
 import CreateProject from "./components/CreateProject";
 import styled from "styled-components";
+// import TextEditor from "./components/shareMemo/test";
 
 import "./App.css";
 import "./reset.css";
@@ -79,7 +80,7 @@ function App() {
               />
               <Route path="project/:projectId" element={<ProjectPage />} />
               <Route path="Calendar/*" element={<CalendarTest />} />
-              <Route path="result/*" element={<Test />} />
+              <Route path="project/:projectId/result" element={<Result />} />
               {/* <Route
                 path="project/:projectId/:tripDate"
                 element={<ProjectPage />}
@@ -97,7 +98,7 @@ function App() {
                 }
               /> */}
               <Route path="*" element={<Navigate to="/" replace />} />
-              {/* <Route path="test" element={<MemoTestRtc />} /> */}
+              {/* <Route path="test/:projectId" element={<TextEditor />} /> */}
             </Routes>
           </BodyDiv>
         </Router>
