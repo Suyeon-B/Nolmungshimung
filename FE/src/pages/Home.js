@@ -23,7 +23,15 @@ function Home() {
       <Main />
       <Section>
         {auth.user ? (
-          <ButtonGo name="나만의 계획 만들기" onClickGo={goProject} />
+          <>
+            <ButtonGo name="나만의 계획 만들기" onClickGo={goProject} />
+            <div
+              draggable="true"
+              onDragStart={() => {
+                console.log("~~~");
+              }}
+            ></div>
+          </>
         ) : (
           <ButtonGo name="로그인" onClickGo={goSignIn} />
         )}

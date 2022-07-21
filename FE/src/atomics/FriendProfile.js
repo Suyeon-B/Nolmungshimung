@@ -5,8 +5,9 @@ function FriendProfile(props) {
   const onClickMute = () => {
     console.log("음소거");
   };
+
   return (
-    <FriendProfileContainer>
+    <FriendProfileContainer color={props.color}>
       <FriendNameText>{props.nickName.slice(-2)}</FriendNameText>
     </FriendProfileContainer>
   );
@@ -21,6 +22,7 @@ const FriendProfileContainer = styled.div`
   justify-content: center;
   align-items: center;
   background: #ff8a3d;
+  background: ${(props) => props.color};
   border-radius: 50%;
   border: 1.5px solid #e7e7e7;
 `;

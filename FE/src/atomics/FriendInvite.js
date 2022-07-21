@@ -29,13 +29,16 @@ function FriendInvite() {
   };
 
   useEffect(() => {
-    fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/friends/${projectId}`, {
-      method: "get",
-      headers: {
-        "content-type": "application/json",
-      },
-      credentials: "include",
-    })
+    fetch(
+      `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/friends/${projectId}`,
+      {
+        method: "get",
+        headers: {
+          "content-type": "application/json",
+        },
+        credentials: "include",
+      }
+    )
       .then((res) => res.json())
       .then((res) => {
         setFriends(res.map((el) => el[2]));
@@ -45,21 +48,24 @@ function FriendInvite() {
 
   const onClickPlus = () => {
     let data = { email };
-    console.log("friends:", friends);
-    fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/friends/${projectId}`, {
-      method: "post",
-      headers: {
-        "content-type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify(data),
-    })
+    // console.log("friends:", friends);
+    fetch(
+      `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/friends/${projectId}`,
+      {
+        method: "post",
+        headers: {
+          "content-type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(data),
+      }
+    )
       .then((res) => res.json())
       .then((res) => {
         // console.log("res : ", res);
         if (res.success === true) {
-          console.log("-====--0=--=-=");
-          console.log(res);
+          // console.log("-====--0=--=-=");
+          // console.log(res);
           setFriends([...friends, email]);
           success();
           // console.log("추가 완료");
@@ -90,8 +96,16 @@ function FriendInvite() {
       <InviteForm>
         <InviteEmailText>Email</InviteEmailText>
         {/* 텍스트 -> 이메일로 고쳐야함 */}
-        <InviteEmailInput type="text" value={email} onChange={onChangeEmail} onKeyPress={handleOnKeyPress} />
-        <UsergroupAddOutlined style={{ fontSize: "25px", color: "white" }} onClick={onClickPlus} />
+        <InviteEmailInput
+          type="text"
+          value={email}
+          onChange={onChangeEmail}
+          onKeyPress={handleOnKeyPress}
+        />
+        <UsergroupAddOutlined
+          style={{ fontSize: "25px", color: "white" }}
+          onClick={onClickPlus}
+        />
       </InviteForm>
       {friends.map((el, i) => (
         <p key={i}>{el}</p>
@@ -100,7 +114,12 @@ function FriendInvite() {
   );
 
   return (
-    <Popover placement="rightBottom" title={text} content={content} trigger="click">
+    <Popover
+      placement="rightBottom"
+      title={text}
+      content={content}
+      trigger="click"
+    >
       <UsergroupAddOutlined style={{ fontSize: "28px" }} />
     </Popover>
   );

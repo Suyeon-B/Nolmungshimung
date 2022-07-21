@@ -5,6 +5,7 @@ import { overEvent, clickEvent, outEvent } from "../../pages/search/Search";
 import SearchDetail from "./SearchDetail";
 import "../../App.css";
 import { useEffect } from "react";
+import { PlusCircleTwoTone } from "@ant-design/icons";
 
 const fetchAddTravelRoute = async (id, route) => {
   try {
@@ -47,6 +48,10 @@ const SearchListRoute = ({
     const uRoute = { ...route };
     uRoute["uid"] = uuidV4();
     fetchAddTravelRoute(projectId, uRoute);
+    // console.log(uRoute);
+    uRoute.lock = "white"; // 색들어감 (락기능)
+    uRoute.user_name = null; // 잡고있는 유저의 닉네임이 들어갈것임 (락 푸는 기능)
+    console.log(uRoute);
     itemRoutes[event.target.dataset.idx].push(uRoute);
     setItemRoutes([...itemRoutes]);
     setIsAddDel(true);
@@ -129,7 +134,11 @@ const SearchListRoute = ({
       <StyledRouteDiv>
         <StyledTile>{route.place_name}</StyledTile>
         <StyledDropDown>
-          <img className="hanlabong" src="\statics\images\hanlabong.png" />
+          {/* <img className="hanlabong" src="\statics\images\hanlabong.png" /> */}
+          <PlusCircleTwoTone
+            style={{ fontSize: "30px" }}
+            twoToneColor="#FF8A3D"
+          />
           <div className={"dropDownMenu"}>
             {itemRoutes.map((el, idx) => {
               return (

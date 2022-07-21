@@ -16,34 +16,6 @@ const reorder = (list, startIndex, endIndex) => {
   return result;
 };
 
-const DATA = {
-  a: {
-    color: "#FF8A3D",
-    id: "a",
-    user: { id: 1, name: "a", selectedIndex: 0 },
-  },
-  b: {
-    color: "#8DD664",
-    id: "b",
-    user: { id: 2, name: "b", selectedIndex: 1 },
-  },
-  c: {
-    color: "#FF6169",
-    id: "c",
-    user: { id: 3, name: "c", selectedIndex: 2 },
-  },
-  d: {
-    color: "#975FFE",
-    id: "d",
-    user: { id: 4, name: "d", selectedIndex: 1 },
-  },
-  e: {
-    color: "#0072BC",
-    id: "e",
-    user: { id: 5, name: "e", selectedIndex: 0 },
-  },
-};
-
 /**
  * Moves an item from one list to another list.
  */
@@ -62,7 +34,7 @@ const move = (source, destination, droppableSource, droppableDestination) => {
 };
 const grid = 8;
 
-const getItemStyle = (isDragging, draggableStyle) => ({
+const getItemStyle = (isDragging, draggableStyle, color, userName) => ({
   // some basic styles to make the items look a bit nicer
 
   userSelect: "none",
@@ -70,6 +42,13 @@ const getItemStyle = (isDragging, draggableStyle) => ({
   // change background colour if dragging
   background: isDragging ? "#EBEBEB" : "none",
 
+  // border: userName === undefined ? null : `3px solid ${color}`,
+  border: `3px solid ${color}`,
+
+  // transitionProperty: "backgroundColor ,none",
+  // transitionDuration: "2s",
+  // transition: "background ease 2s 0s",
+  // background: ,
   // styles we need to apply on draggables
   ...draggableStyle,
 });
@@ -79,6 +58,7 @@ const getListStyle = (isDraggingOver) => ({
   padding: grid,
   // width: 250,
   width: "100%",
+  borderBottom: "3px solid #ebebeb",
 });
 
 const culTripTermData = (startDate, day) => {
@@ -96,6 +76,8 @@ function PlanList({
   isFirstPage,
   setIsDrage,
   setIsAddDel,
+  attentionIndex,
+  setAttentionIndex,
 }) {
   const droppableRef = useRef([]);
   const [selectedDay, setSelectedDay] = useState(0);
@@ -105,7 +87,41 @@ function PlanList({
     return <div>Loading...</div>;
   }
 
+  function onDragStart(result) {
+    // console.log("drag start");
+    // console.log("사용자 색 : ", connectUser[userName].color);
+    // socket.emit("grabSpot", [projectId, userName, result.source.index]);
+    // console.log(result.source.droppableId);
+    // console.log(result.source.index);
+    const newState = [...[...routes]];
+    const { source, destination } = result;
+    // console.log(newState);
+    // console.log(newState[result.source.droppableId][result.source.index].lock);
+    // if
+    // console.log(source);
+    // console.log(newState[source.droppableId][source.index]);
+    const lockAcquire = newState[source.droppableId][source.index].userName;
+    // console.log(lockAcquire);
+    if (
+      lockAcquire === null ||
+      lockAcquire === userName ||
+      lockAcquire === undefined
+    ) {
+      // console.log(newState[source.droppableId][source.index].lock);
+      newState[source.droppableId][source.index].lock =
+        connectUser[userName].color;
+      newState[source.droppableId][source.index].user_name = userName;
+    } else {
+      alert("다른 친구가 옮기고 있습니다 ! 잠시 기다려 주세요!");
+    }
+    setRoutes(newState);
+    // console.log(newState);
+    setIsDrage(true);
+    // console.log(newState[result]);
+  }
+
   function onDragEnd(result) {
+    // console.log(result);
     const { source, destination } = result;
 
     // dropped outside the list
@@ -120,6 +136,9 @@ function PlanList({
       const newState = [...[...routes]];
       newState[sInd] = items;
 
+      newState[sInd][result.destination.index].user_name = null;
+      newState[sInd][result.destination.index].lock = "white";
+
       setRoutes(newState);
     } else {
       const result = move(
@@ -131,7 +150,10 @@ function PlanList({
       const newState = [...[...routes]];
       newState[sInd] = result[sInd];
       newState[dInd] = result[dInd];
-
+      // console.log(newState[dInd][destination.index]);
+      newState[dInd][destination.index].user_name = null;
+      newState[dInd][destination.index].lock = "white"; // 수정예쩡
+      // console.log(newState[dInd][destination.droppableId].user_name);
       setRoutes(newState);
     }
     // console.log(`selectIdx: ${selectIdx}`);
@@ -149,12 +171,15 @@ function PlanList({
     setSelectedIndex(selectIdx);
     setSelectedDay(selectIdx);
     isFirstPage && toggleIsPage();
+    if (selectIdx === attentionIndex) {
+      setAttentionIndex(-1);
+    }
   };
 
   return (
     <div>
       <SidePlanListDiv>
-        <StyledDragDropContext onDragEnd={onDragEnd}>
+        <StyledDragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
           {[...routes].map((el, ind) => (
             <div key={ind} ref={(el) => (droppableRef.current[+ind] = el)}>
               <Droppable key={ind} droppableId={`${ind}`}>
@@ -168,6 +193,7 @@ function PlanList({
                       data-idx={ind}
                       onClick={onClick}
                       selected={selectedDay}
+                      attention={attentionIndex}
                     >
                       <DateDetailBtn data-idx={ind} onClick={onClick}>
                         {culTripTermData(startDate, ind)}
@@ -214,17 +240,24 @@ function PlanList({
                         index={index}
                       >
                         {(provided, snapshot) => (
-                          <div
+                          <PlanItemDiv
+                            userColor={item.lock}
+                            // <StyleRouteDiv
+
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
                             style={getItemStyle(
                               snapshot.isDragging,
-                              provided.draggableProps.style
+                              provided.draggableProps.style,
+                              item.lock,
+                              item.user_name
                             )}
                           >
                             <ItemInnerDiv>
-                              {item.place_name}
+                              {item.place_name.length > 11
+                                ? item.place_name.slice(0, 12) + " ..."
+                                : item.place_name}
                               <div
                                 type="button"
                                 onClick={() => {
@@ -234,6 +267,19 @@ function PlanList({
                                   setIsAddDel(true);
                                 }}
                               >
+                                {item.user_name && (
+                                  <div
+                                    style={{
+                                      position: "absolute",
+                                      marginTop: "20px",
+                                      backgroundColor: `${item.lock}`,
+                                      color: "white",
+                                      padding: "2px",
+                                    }}
+                                  >
+                                    {item.user_name}
+                                  </div>
+                                )}
                                 <svg
                                   className="planListTrashCan"
                                   fill="#7C8289"
@@ -245,7 +291,8 @@ function PlanList({
                                 </svg>
                               </div>
                             </ItemInnerDiv>
-                          </div>
+                          </PlanItemDiv>
+                          // </StyleRouteDiv>
                         )}
                       </Draggable>
                     ))}
@@ -261,6 +308,31 @@ function PlanList({
   );
 }
 
+const StyleRouteDiv = styled.div`
+  @keyframes color {
+    0% {
+      background: #2bb8ff;
+    }
+    20% {
+      background: #59c7ff;
+    }
+    40% {
+      background: #60caff;
+    }
+    60% {
+      background: #89d7ff;
+    }
+    80% {
+      background: #a3e0ff;
+    }
+    100% {
+      background: none;
+    }
+  }
+  border-radius: 5px;
+  animation: color 2s linear;
+`;
+
 const SidePlanListDiv = styled.div`
   height: 75vh;
   overflow: scroll;
@@ -274,10 +346,16 @@ const DateDetailBtnDiv = styled.div`
   height: 30px;
   display: flex;
   justify-content: space-between;
+
   border-radius: 5px;
 
   background-color: ${(props) =>
     props.selected === props["data-idx"] && "#ebebeb"};
+
+  background-color: ${(props) =>
+    props.attention === props["data-idx"] && "yellow"};
+
+  /* transition: all ease 2s 0s; */
 
   &:hover {
     background-color: #ebebeb;
@@ -325,6 +403,25 @@ const ItemInnerDiv = styled.div`
   .planListTrashCan {
     margin-right: 17px;
   }
+`;
+
+const PlanItemDiv = styled.div`
+  @keyframes color {
+    0% {
+      border: ${(props) => `4px solid ${props.userColor}`};
+    }
+    33% {
+      border: ${(props) => `4px solid ${props.userColor}`};
+    }
+    66% {
+      border: ${(props) => `4px solid ${props.userColor}`};
+    }
+    100% {
+      border: none;
+    }
+  }
+
+  animation: color 1s linear;
 `;
 
 export default PlanList;

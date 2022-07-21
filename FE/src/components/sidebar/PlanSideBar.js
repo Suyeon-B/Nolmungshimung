@@ -12,6 +12,8 @@ const PlanSideBar = ({
   setSelectedIndex,
   setIsDrage,
   setIsAddDel,
+  attentionIndex,
+  setAttentionIndex,
 }) => {
   return (
     <SideBar>
@@ -68,6 +70,8 @@ const PlanSideBar = ({
         isFirstPage={isFirstPage}
         setIsDrage={setIsDrage}
         setIsAddDel={setIsAddDel}
+        attentionIndex={attentionIndex}
+        setAttentionIndex={setAttentionIndex}
       />
     </SideBar>
   );

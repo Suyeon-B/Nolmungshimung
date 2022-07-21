@@ -1,15 +1,15 @@
 FROM node:16.16-alpine3.16
 
-# RUN mkdir -p /usr/src/app
-WORKDIR "/usr/src/app"
+RUN mkdir -p /app
+WORKDIR "/app"
 
 COPY ./package.json ./
 
-RUN npm install -g nodemon \
- && npm install --force
+RUN npm install -g pm2 \
+ && npm install
 
 ENV HOST 0.0.0.0
-EXPOSE 8443 3001 7899 3003
+EXPOSE 8443 3000 3001 7443
 
 COPY . .
 
