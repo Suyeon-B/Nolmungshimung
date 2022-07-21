@@ -5,7 +5,7 @@ function FriendProfile(props) {
   const onClickMute = () => {
     console.log("음소거");
   };
-  console.log(props);
+
   return (
     <FriendProfileContainer color={props.color}>
       <FriendNameText>{props.nickName.slice(-2)}</FriendNameText>

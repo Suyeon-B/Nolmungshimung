@@ -14,6 +14,7 @@ const SearchBar = (props) => {
     e.preventDefault();
     props.changePlace(InputText);
     setInputText("");
+    props.handleSelect(null);
   };
   return (
     <form
