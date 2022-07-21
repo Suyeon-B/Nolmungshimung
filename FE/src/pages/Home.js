@@ -30,9 +30,7 @@ function Home() {
               onDragStart={() => {
                 console.log("~~~");
               }}
-            >
-              TEST
-            </div>
+            ></div>
           </>
         ) : (
           <ButtonGo name="로그인" onClickGo={goSignIn} />

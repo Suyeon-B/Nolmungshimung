@@ -11,6 +11,7 @@ function Footer(props) {
   const users = props.users;
   const [mic, setMic] = useState(true); // 자신의 초기값 설정 ?
   const [profiles, setProfiles] = useState(null);
+  const { connectUser, setConnectUser } = useContext(ConnectuserContext);
   const [friends, setFriends] = useState([
     // "남윤혁",
     // "강동원영",
@@ -18,27 +19,29 @@ function Footer(props) {
     // "구준규",
     // "금잔디연",
   ]);
-  const { connectUser, setConnectUser } = useContext(ConnectuserContext);
   // ! 빈배열이어야함 나중에 지울건데 예씨임
+  console.log("Footer");
+  console.log(connectUser);
+
   useEffect(() => {
     // 이거아님 보이스톡 들온 사람이 출력돼야함
     if (projectId === null) return;
-    console.log("!!!!!!!!!!!!", props.users);
+    // console.log("!!!!!!!!!!!!", props.users);
     if (!users.length) {
-      console.log("비어있다.");
+      // console.log("비어있다.");
       setFriends([]);
     } else setFriends([...friends, ...users.map((el) => el.nickName)]);
     // setFriends([users.user_name])
   }, [props.users]);
 
   useEffect(() => {
-    console.log("friends 바뀜", friends);
+    // console.log("friends 바뀜", friends);
     setProfiles(
       <>
         <FriendProfile key={1} nickName={props.myNickName} color="#ff8a3d" />
         {Object.keys(connectUser).map((userName, idx) => {
           if (props.myNickName === userName) return;
-          console.log(connectUser, userName);
+          // console.log(connectUser, userName);
           return (
             <FriendProfile
               key={idx + 1}
@@ -49,7 +52,7 @@ function Footer(props) {
         })}
       </>
     );
-  }, [friends]);
+  }, [connectUser]);
 
   const onClickMic = () => {
     // 누르면 마이크 음소거 OR 소거
