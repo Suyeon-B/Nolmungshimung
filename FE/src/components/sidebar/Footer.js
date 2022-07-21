@@ -35,7 +35,7 @@ function Footer(props) {
   useEffect(() => {
     // console.log("friends 바뀜", friends);
     setProfiles(
-      <>
+      <FooterFriendsDiv>
         <FriendProfile key={1} nickName={props.myNickName} color="#ff8a3d" />
         {Object.keys(connectUser).map((userName, idx) => {
           if (props.myNickName === userName) return;
@@ -48,7 +48,7 @@ function Footer(props) {
             />
           );
         })}
-      </>
+      </FooterFriendsDiv>
     );
   }, [connectUser]);
 
@@ -61,7 +61,7 @@ function Footer(props) {
   return (
     <FooterContainer>
       {mic ? (
-        <AudioFilled style={{ fontSize: "35px" }} onClick={onClickMic} />
+        <AudioFilled style={{ fontSize: "30px" }} onClick={onClickMic} />
       ) : (
         <AudioMutedOutlined style={{ fontSize: "35px" }} onClick={onClickMic} />
       )}
@@ -80,36 +80,36 @@ const FooterContainer = styled.div`
   background: #e7e7e7;
   border-radius: 50px;
   display: flex;
-  /* margin-left: 8.5%; */
   align-items: center;
   padding: 5px 15px 5px 15px;
-  overflow: auto;
+  overflow: hidden;
   white-space: nowrap;
   justify-content: space-between;
   position: fixed;
   bottom: 20px;
   min-width: 200px;
   width: 280px;
-  /* width: auto; */
   height: 60px;
   white-space: nowrap;
-  left: 0.5vw;
+  margin-left: 10px;
 
   ::-webkit-scrollbar {
     /* width: 0px;
     height: 7px; */
     display: none;
   }
+`;
 
-  //::-webkit-scrollbar-thumb {
-  //height: 1%; /* 스크롤바의 길이 */
-  //background: #ff8a3d; /* 스크롤바의 색상 */
-  //border-radius: 10px;
-  //}
-
-  //::-webkit-scrollbar-track {
-  //background: rgba(33, 122, 244, 0.1); /*스크롤바 뒷 배경 색상*/
-  //}
+const FooterFriendsDiv = styled.div`
+  overflow: auto;
+  display: flex;
+  width: 212px;
+  flex-direction: row;
+  ::-webkit-scrollbar {
+    /* width: 0px;
+    height: 7px; */
+    display: none;
+  }
 `;
 
 export default Footer;
