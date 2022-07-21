@@ -89,7 +89,7 @@ function PlanList({
 
   function onDragStart(result) {
     // console.log("drag start");
-    console.log("사용자 색 : ", connectUser[userName].color);
+    // console.log("사용자 색 : ", connectUser[userName].color);
     // socket.emit("grabSpot", [projectId, userName, result.source.index]);
     // console.log(result.source.droppableId);
     // console.log(result.source.index);
@@ -120,7 +120,6 @@ function PlanList({
     // console.log(newState[result]);
   }
 
-  console.log(`attentionIndex: ${attentionIndex}`);
   function onDragEnd(result) {
     // console.log(result);
     const { source, destination } = result;

@@ -19,11 +19,9 @@ const TOOLBAR_OPTIONS = [
 ];
 
 const MemoTestRtc = ({ project_Id }) => {
-  // const editorRef = useRef();
   let quillRef = null;
   let reactQuillRef = null;
   Quill.register("modules/cursors", QuillCursors);
-  // const [aware, setAwareness] = useState(null);
   const [projectID, setProjectId] = useState(project_Id);
   const { connectUser, setConnectUser } = useContext(ConnectuserContext);
 
@@ -43,10 +41,19 @@ const MemoTestRtc = ({ project_Id }) => {
       color: connectUser[userName].color,
     });
 
+    // const template = "8ab..";
+    // const myDoc = new Y.Doc();
+    // const provider = new WebrtcProvider(`${projectID}`, myDoc);
+    // provider.awareness.setLocalStateField("user", {
+    //   name: userName,
+    //   color: connectUser[userName].color,
+    // });
+    // Y.applyUpdate(myDoc, fromBase64(template));
     const binding = new QuillBinding(ytext, quillRef, provider.awareness);
-    // return () => {
-    //   WebrtcProvider.destroy();
-    // };
+
+    return () => {
+      provider.destroy();
+    };
   }, []);
 
   const attachQuillRefs = () => {
@@ -56,7 +63,10 @@ const MemoTestRtc = ({ project_Id }) => {
 
   const modulesRef = {
     toolbar: TOOLBAR_OPTIONS,
-    cursors: true,
+    cursors: {
+      transformOnTextChange: true,
+      toggleFlag: true,
+    },
     history: {
       // Local undo shouldn't undo changes
       // from remote users
