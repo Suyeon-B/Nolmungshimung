@@ -1,6 +1,7 @@
-import React, { useEffect, useState, useRef, useContext } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
+import { IndexeddbPersistence } from "y-indexeddb";
 import { QuillBinding } from "y-quill";
 import Quill from "quill";
 import QuillCursors from "quill-cursors";
@@ -18,14 +19,14 @@ const TOOLBAR_OPTIONS = [
   ["link", "blockquote"],
 ];
 
-const MemoTestRtc = ({ project_Id }) => {
+const MemoRtc = ({ project_Id }) => {
   let quillRef = null;
   let reactQuillRef = null;
-  Quill.register("modules/cursors", QuillCursors);
   const [projectID, setProjectId] = useState(project_Id);
   const { connectUser, setConnectUser } = useContext(ConnectuserContext);
-
   const userName = sessionStorage.getItem("myNickname");
+
+  Quill.register("modules/cursors", QuillCursors);
   useEffect(() => {
     setProjectId(project_Id);
   }, [project_Id]);
@@ -35,20 +36,18 @@ const MemoTestRtc = ({ project_Id }) => {
 
     const ydoc = new Y.Doc();
     const provider = new WebrtcProvider(`${projectID}`, ydoc);
+    const indexeddbProvider = new IndexeddbPersistence(`${projectID}`, ydoc);
     const ytext = ydoc.getText(`${projectID}`);
-    provider.awareness.setLocalStateField("user", {
-      name: userName,
-      color: connectUser[userName].color,
-    });
-
-    // const template = "8ab..";
-    // const myDoc = new Y.Doc();
-    // const provider = new WebrtcProvider(`${projectID}`, myDoc);
-    // provider.awareness.setLocalStateField("user", {
-    //   name: userName,
-    //   color: connectUser[userName].color,
-    // });
-    // Y.applyUpdate(myDoc, fromBase64(template));
+    try {
+      provider.awareness.setLocalStateField("user", {
+        name: userName,
+        color: connectUser[userName].color,
+      });
+    } catch (err) {
+      return () => {
+        provider.destroy();
+      };
+    }
     const binding = new QuillBinding(ytext, quillRef, provider.awareness);
 
     return () => {
@@ -123,4 +122,4 @@ const EditorContainer = styled.div`
   }
 `;
 
-export default MemoTestRtc;
+export default MemoRtc;

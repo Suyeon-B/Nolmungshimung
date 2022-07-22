@@ -89,10 +89,11 @@ const FooterContainer = styled.div`
   position: fixed;
   bottom: 20px;
   min-width: 200px;
-  width: 280px;
+  width: 15%;
+  min-width: 250px;
   height: 60px;
   white-space: nowrap;
-  margin-left: 10px;
+  margin-left: max(2%, 10px);
 
   ::-webkit-scrollbar {
     /* width: 0px;
@@ -104,7 +105,7 @@ const FooterContainer = styled.div`
 const FooterFriendsDiv = styled.div`
   overflow: auto;
   display: flex;
-  width: 212px;
+  width: calc(100% - 68px);
   flex-direction: row;
   ::-webkit-scrollbar {
     /* width: 0px;

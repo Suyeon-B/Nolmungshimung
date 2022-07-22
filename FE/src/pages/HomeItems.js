@@ -22,7 +22,7 @@ const StyledBtnContainer = styled.div`
 const StyledBtn = styled.button`
   outline: 0;
   border: none;
-
+  cursor: pointer;
   font-weight: 700;
   font-size: 25px;
   background: rgba(255, 122, 0, 0.6);
@@ -40,6 +40,7 @@ const StyledWhiteBtn = styled(StyledBtn)`
   background: rgba(255, 255, 255, 0.42);
   border-radius: 10px;
   color: #ff7a00;
+  cursor: pointer;
 `;
 
 const StyledTitle = styled.h1`

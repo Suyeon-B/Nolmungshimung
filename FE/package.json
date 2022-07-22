@@ -46,6 +46,7 @@
     "styled-components": "^5.3.5",
     "uuid": "^8.0.0",
     "web-vitals": "^2.1.4",
+    "y-indexeddb": "^9.0.9",
     "y-quill": "^0.1.5",
     "y-webrtc": "^10.2.3",
     "yjs": "^13.5.39"
