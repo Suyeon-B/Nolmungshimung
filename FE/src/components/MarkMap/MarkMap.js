@@ -38,6 +38,13 @@ function MarkMap(props) {
   if (!props) {
     return <div>Loding...</div>;
   }
+  const container = document.getElementById("myMap");
+  const options = {
+    center: new kakao.maps.LatLng(33.450701, 126.570667),
+    draggable: false,
+    level: 3,
+  };
+  const map = new kakao.maps.Map(container, options);
   useEffect(() => {
     const linePath = props.map(function (place, idx) {
       //test를 props으로
@@ -57,13 +64,6 @@ function MarkMap(props) {
       strokeOpacity: 0.7, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
       strokeStyle: "solid", // 선의 스타일입니다s
     });
-    const container = document.getElementById("myMap");
-    const options = {
-      center: new kakao.maps.LatLng(33.450701, 126.570667),
-      draggable: false,
-      level: 3,
-    };
-    const map = new kakao.maps.Map(container, options);
 
     let bounds = new kakao.maps.LatLngBounds();
 
@@ -115,7 +115,7 @@ function MarkMap(props) {
     if (linePath.length > 0) {
       setBounds(map, bounds);
     }
-    polyline.setMap(map);
+    polyline.setMap(map); //
   }, [[...props]]);
 
   // return (
