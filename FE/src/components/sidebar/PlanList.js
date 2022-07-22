@@ -410,14 +410,14 @@ const ItemInnerDiv = styled.div`
 `;
 
 const PlanItemDiv = styled.div`
-  height: 41px;
+  height: 38px;
   box-sizing: inherit;
   @keyframes color {
     0% {
       border: ${(props) => `3px solid ${props.userColor}`};
     }
     33% {
-      border: ${(props) => `3px solid ${props.userColor}`};
+      border: ${(props) => `3px solid ${props.userColor - 33}`};
     }
     66% {
       border: ${(props) => `3px solid ${props.userColor}`};
@@ -427,7 +427,7 @@ const PlanItemDiv = styled.div`
     }
   }
 
-  animation: color 2s linear;
+  animation: color 1.5s linear;
 `;
 
 export default PlanList;

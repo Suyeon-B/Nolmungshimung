@@ -110,8 +110,8 @@ export default function SpotList({
     // some basic styles to make the items look a bit nicer
 
     userSelect: "none",
-    height: "41px",
-    // margin: `0 0 ${grid}px 0`,
+    // height: "41px",
+    margin: `0 0 ${grid}px 0`,
     // change background colour if dragging
     background: isDragging ? "#EBEBEB" : "none",
     boxSizing: "border-box",
@@ -364,7 +364,7 @@ const SpotListItemDiv = styled.div`
       border: ${(props) => `inset 0px 0px 0px 3px ${props.userColor}`};
     }
     33% {
-      border: ${(props) => `inset 0px 0px 0px 3px ${props.userColor}`};
+      border: ${(props) => `inset 0px 0px 0px 3px ${props.userColor - 33}`};
     }
     66% {
       border: ${(props) => `inset 0px 0px 0px 3px ${props.userColor}`};
@@ -374,5 +374,5 @@ const SpotListItemDiv = styled.div`
     }
   }
 
-  animation: color 2s linear;
+  animation: color 1.5s linear;
 `;
