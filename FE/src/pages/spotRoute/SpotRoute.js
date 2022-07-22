@@ -10,7 +10,16 @@ import { AlertFilled } from "@ant-design/icons";
 import socket from "../../socket";
 import { useNavigate } from "react-router-dom";
 
-function SpotRoute({ startDate, item, setItemRoute, itemId, selectedIndex, setIsDrage, setIsAddDel, projectId }) {
+function SpotRoute({
+  startDate,
+  item,
+  setItemRoute,
+  itemId,
+  selectedIndex,
+  setIsDrage,
+  setIsAddDel,
+  projectId,
+}) {
   const [notifyFlag, setNotifyFlag] = useState(false);
   const [visible, setVisible] = useState(false);
   const [contents, setContents] = useState(null);
@@ -49,7 +58,13 @@ function SpotRoute({ startDate, item, setItemRoute, itemId, selectedIndex, setIs
   useEffect(() => {
     if (notifyFlag === false) return;
     // console.log(notifyFlag);
-    socket.emit("attention", culTripTermData(startDate, selectedIndex), selectedIndex, projectId, userName);
+    socket.emit(
+      "attention",
+      culTripTermData(startDate, selectedIndex),
+      selectedIndex,
+      projectId,
+      userName
+    );
     setNotifyFlag(false);
     // console.log("attention");
   }, [notifyFlag]);
@@ -72,8 +87,13 @@ function SpotRoute({ startDate, item, setItemRoute, itemId, selectedIndex, setIs
     <SpotRouteContainer>
       <SpotRouteTitle>
         <section>
-          <SpotRouteTitleDay>{culTripTermData(startDate, selectedIndex)}</SpotRouteTitleDay>
-          <AlertFilled style={{ color: "#ff8a3d", fontSize: "34px", marginLeft: "15px" }} onClick={callFriends} />
+          <SpotRouteTitleDay>
+            {culTripTermData(startDate, selectedIndex)}
+          </SpotRouteTitleDay>
+          <AlertFilled
+            style={{ color: "#ff8a3d", fontSize: "34px", marginLeft: "15px" }}
+            onClick={callFriends}
+          />
           <span>주목시키기</span>
         </section>
         <SpotRouteTitleBtn onClick={onClcikResult}>작성 완료</SpotRouteTitleBtn>
@@ -92,7 +112,9 @@ function SpotRoute({ startDate, item, setItemRoute, itemId, selectedIndex, setIs
       </SpotRouteSection>
       <Cursor project_Id={itemId} selectedIndex={selectedIndex} />
       <MemoRtc project_Id={itemId} />
-      {contents !== null && <SearchDetail onClose={onClose} visible={visible} contents={contents} />}
+      {contents !== null && (
+        <SearchDetail onClose={onClose} visible={visible} contents={contents} />
+      )}
     </SpotRouteContainer>
   );
 }

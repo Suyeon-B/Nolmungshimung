@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import "./TextEditor.css";
 import cloneDeep from "lodash/cloneDeep";
 import "quill/dist/quill.snow.css";
 import TextEditorUsers from "./TextEditorUsers";
 import styled from "styled-components";
 import socket from "../../socket";
+import { ConnectuserContext } from "../../context/ConnectUserContext";
 
 const EditorBox = styled.div`
   /* display: flex;
@@ -17,7 +18,8 @@ const EditorBox = styled.div`
 function Cursor({ project_Id, selectedIndex }) {
   const [presences, setPresences] = useState({});
   const userName = sessionStorage.getItem("myNickname");
-
+  const { connectUser, setConnectUser } = useContext(ConnectuserContext);
+  // console.log(connectUser);
   let cursor;
   // 마우스 mousemove에 대한 이벤트 처리
   // 움직일때 socket 이벤트를 발생하여 다른 유저에게 나의 위치를 전달한다.
@@ -67,6 +69,12 @@ function Cursor({ project_Id, selectedIndex }) {
   // 다른 유저의 마우스 커서 정보를 받아 온다.
   useEffect(() => {
     socket.on("mouse_update", (mouseInfo) => {
+      const user = Object.keys(mouseInfo)[0];
+
+      if (mouseInfo[user].color === undefined) {
+        mouseInfo[user].color = connectUser[user].color;
+      }
+
       setPresences((prev) => {
         const newState = { ...prev, ...mouseInfo };
         return newState;
