@@ -182,6 +182,12 @@ const ProjectPage = (props) => {
   const toggleIsPage = () => {
     setIsFirstPage(!isFirstPage);
   };
+  const goSearchPage = () => {
+    setIsFirstPage(true);
+  };
+  const goDetailPage = () => {
+    setIsFirstPage(false);
+  };
 
   // const triggerNotif = () => {
   //   useNotification("놀멍쉬멍", {
@@ -194,6 +200,8 @@ const ProjectPage = (props) => {
       {/* {data ? <div>is data</div> : <div>not data</div>} */}
       <PlanSideBar
         item={items}
+        goSearchPage={goSearchPage}
+        goDetailPage={goDetailPage}
         isFirstPage={isFirstPage}
         toggleIsPage={toggleIsPage}
         itemRoutes={itemsRoute}

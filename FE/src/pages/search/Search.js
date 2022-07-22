@@ -153,6 +153,8 @@ const Search = ({
           el.onclick = (function (i) {
             return function () {
               pagination.gotoPage(i);
+              setClick(null);
+              document.getElementById("searchBar").scrollTop = 0;
             };
           })(i);
         }
@@ -196,7 +198,7 @@ const Search = ({
   return (
     <Wapper>
       <SearchListDiv id="searchBar">
-        <SearchBar changePlace={setSearchPlace} />
+        <SearchBar changePlace={setSearchPlace} handleSelect={handleSelect} />
         <ul>
           {Places &&
             Places.map((item, i) => (
@@ -231,7 +233,7 @@ const Wapper = styled.div`
 
 const SearchListDiv = styled.div`
   padding-top: 27.5px;
-  width: 330px;
+  width: 340px;
   height: 100vh;
   overflow: scroll;
   ::-webkit-scrollbar {
@@ -243,7 +245,7 @@ const SearchListDiv = styled.div`
 
 const StyledMapDiv = styled.div`
   height: 100vh;
-  min-width: calc(100% - 330px);
+  min-width: calc(100% - 340px);
   position: relative;
 `;
 
