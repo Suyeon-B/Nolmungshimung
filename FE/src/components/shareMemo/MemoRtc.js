@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useContext } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
 import { QuillBinding } from "y-quill";
@@ -7,6 +7,7 @@ import QuillCursors from "quill-cursors";
 import ReactQuill from "react-quill";
 import styled from "styled-components";
 import { ConnectuserContext } from "../../context/ConnectUserContext";
+import socket from "../../socket";
 
 const TOOLBAR_OPTIONS = [
   [{ align: [] }],
@@ -18,14 +19,14 @@ const TOOLBAR_OPTIONS = [
   ["link", "blockquote"],
 ];
 
-const MemoTestRtc = ({ project_Id }) => {
+const MemoRtc = ({ project_Id }) => {
   let quillRef = null;
   let reactQuillRef = null;
   Quill.register("modules/cursors", QuillCursors);
   const [projectID, setProjectId] = useState(project_Id);
   const { connectUser, setConnectUser } = useContext(ConnectuserContext);
-
   const userName = sessionStorage.getItem("myNickname");
+
   useEffect(() => {
     setProjectId(project_Id);
   }, [project_Id]);
@@ -36,22 +37,53 @@ const MemoTestRtc = ({ project_Id }) => {
     const ydoc = new Y.Doc();
     const provider = new WebrtcProvider(`${projectID}`, ydoc);
     const ytext = ydoc.getText(`${projectID}`);
-    provider.awareness.setLocalStateField("user", {
-      name: userName,
-      color: connectUser[userName].color,
-    });
+    try {
+      provider.awareness.setLocalStateField("user", {
+        name: userName,
+        color: connectUser[userName].color,
+      });
+    } catch (err) {
+      return () => {
+        // socket.emit("save_memo", [projectID, savedYtext]);
+        provider.destroy();
+      };
+    }
 
-    // const template = "8ab..";
-    // const myDoc = new Y.Doc();
-    // const provider = new WebrtcProvider(`${projectID}`, myDoc);
-    // provider.awareness.setLocalStateField("user", {
-    //   name: userName,
-    //   color: connectUser[userName].color,
-    // });
-    // Y.applyUpdate(myDoc, fromBase64(template));
+    fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/memo/${projectID}`, {
+      method: "get",
+      headers: {
+        "content-type": "application/json",
+      },
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        console.log("===== fetch 결과 =====");
+        console.log(res);
+        ytext.insert(0, res);
+        // quillRef = res;
+        // quillRef.editor = res;
+      });
+    // socket.on("set_memo", setText);
+
+    // console.log(ytext.toJSON());
+    // ytext.insert(0, "나와라 좀");
+
     const binding = new QuillBinding(ytext, quillRef, provider.awareness);
 
+    const savedYtext = ytext.toJSON();
+    console.log("===== quillRef =====");
+    // console.log(`savedYtext: ${savedYtext}`);
+    console.log("quillRef");
+    console.log(quillRef);
+    console.log(quillRef.editor);
+    // console.log(quillRef.editor.delta);
+
+    // console.log(quillRef.editor.delta.ops[0]);
+
     return () => {
+      // socket.emit("save_memo", [projectID, quillRef.editor]);
+      socket.emit("save_memo", [projectID, savedYtext]);
       provider.destroy();
     };
   }, []);
@@ -123,4 +155,4 @@ const EditorContainer = styled.div`
   }
 `;
 
-export default MemoTestRtc;
+export default MemoRtc;
