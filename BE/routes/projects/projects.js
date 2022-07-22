@@ -21,11 +21,7 @@ router.post("/", async (req, res) => {
   const project = new Project(req.body[1]);
 
   // project["people"].push(user_date._id.toString());
-  project["people"].push([
-    user_date._id.toString(),
-    user_date.user_name,
-    user_date.user_email,
-  ]);
+  project["people"].push([user_date._id.toString(), user_date.user_name, user_date.user_email]);
 
   // 여행지 경로에 배열 추가하기
   for (let i = 0; i <= project["term"]; i++) {
@@ -160,21 +156,18 @@ router.post("/friends/:id", async (req, res, next) => {
     // console.log([userInfo._id, userInfo.user_name, userInfo.user_email, id]);
     // 중복체크 ,....
     const projectInuser = await Project.findOne({
-      _id : id
+      _id: id,
       // people: [userInfo._id, userInfo.user_name, userInfo.user_email],
-    })
+    });
     // console.log(projectInuser)
-    if (projectInuser.people){
-      for (let n=0; n<(projectInuser.people).length; n++){
-        if (projectInuser.people[n][2] == userInfo.user_email){
-          res
-          .status(404)
-          .send({ success: false, message: "이미 초대된 친구입니다." });
+    if (projectInuser.people) {
+      for (let n = 0; n < projectInuser.people.length; n++) {
+        if (projectInuser.people[n][2] == userInfo.user_email) {
+          res.status(404).send({ success: false, message: "이미 초대된 친구입니다." });
           return;
         }
       }
     }
-    
 
     try {
       await Project.findOneAndUpdate(
@@ -186,16 +179,18 @@ router.post("/friends/:id", async (req, res, next) => {
         },
         { new: true }
       );
-      await User.findOneAndUpdate({ user_email: userInfo.user_email},
+      await User.findOneAndUpdate(
+        { user_email: userInfo.user_email },
         {
           $push: {
-            user_projects: id.toString()
-          }
-        });
+            user_projects: id.toString(),
+          },
+        }
+      );
 
       res.status(200).send({ success: true });
     } catch (error) {
-      console.log(error)
+      console.log(error);
       // 이메일 존재하지만 추가 못함
       res.status(404).send({
         success: false,
@@ -203,7 +198,7 @@ router.post("/friends/:id", async (req, res, next) => {
       });
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
     // 회원가입하지 않은 유저 -> 유저에게 이메일 전송
     // console.log(`plz send email`);
     res.status(404).send({

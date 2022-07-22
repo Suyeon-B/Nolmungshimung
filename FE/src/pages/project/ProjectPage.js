@@ -35,6 +35,17 @@ const ProjectPage = (props) => {
   const [connectUser, setConnectUser] = useState({});
   const [attentionIndex, setAttentionIndex] = useState(-1);
   const userName = sessionStorage.getItem("myNickname");
+  const colors = {
+    // "#FF8A3D": false,
+    "#8DD664": false,
+    "#FF6169": false,
+    "#975FFE": false,
+    "#0072BC": false,
+    "#F6282B": false,
+    "#FAD700": false,
+    "#05FFCC": false,
+    "#4A4A4A": false,
+  };
 
   useEffect(() => {
     if (projectId === null) return;
@@ -64,10 +75,51 @@ const ProjectPage = (props) => {
     };
   }, [projectId]);
 
+  const getColor = () => {
+    for (let color in colors) {
+      if (!colors[color]) {
+        colors[color] = true;
+        return color;
+      }
+    }
+  };
+
   useEffect(() => {
     socket.on("connectUser", (connectUserInfo) => {
       console.log("connectUser", connectUserInfo);
-      setConnectUser(connectUserInfo);
+      console.log(colors);
+      setConnectUser((prev) => {
+        let newUser = { ...prev };
+        const newUserArr = Object.keys(newUser);
+        const currentArr = Object.keys(connectUserInfo);
+
+        let diff;
+        //유저가 나간 경유
+        if (newUserArr.length > currentArr.length) {
+          diff = newUserArr.filter((el) => !currentArr.includes(el));
+          colors[newUser[diff[0]].color] = false;
+          delete newUser[diff[0]];
+          return newUser;
+        } else if (newUserArr.length === currentArr.length) {
+          for (let user in newUser) {
+            newUser[user].selectedIndex = connectUserInfo[user].selectedIndex;
+          }
+        }
+        // 기존 정보가 아닌 다른 정보
+        diff = currentArr.filter((el) => !newUserArr.includes(el));
+        for (let user of diff) {
+          console.log(connectUserInfo[user]);
+          newUser = {
+            ...newUser,
+            [user]: {
+              color: getColor(),
+              selectedIndex: connectUserInfo[user].selectedIndex,
+            },
+          };
+        }
+        console.log(newUser);
+        return newUser;
+      });
     });
   }, []);
 
@@ -97,7 +149,7 @@ const ProjectPage = (props) => {
 
     async function UpdateInfo() {
       try {
-        const response = await fetch(
+        await fetch(
           `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${projectId}`,
           {
             method: "PATCH",
@@ -108,11 +160,9 @@ const ProjectPage = (props) => {
             body: JSON.stringify(itemsRoute),
           }
         ).then((res) => res.json());
-        // console.log(response);
       } catch (err) {
         console.log(err);
       }
-      // console.log("UpdateInfo");
     }
     UpdateInfo();
 
@@ -123,7 +173,6 @@ const ProjectPage = (props) => {
 
   useEffect(() => {
     socket.on("updateRoute", (itemsRoute) => {
-      // console.log("updateRoute");
       setItemsRoute(itemsRoute);
     });
   }, []);
@@ -182,6 +231,12 @@ const ProjectPage = (props) => {
   const toggleIsPage = () => {
     setIsFirstPage(!isFirstPage);
   };
+  const goSearchPage = () => {
+    setIsFirstPage(true);
+  };
+  const goDetailPage = () => {
+    setIsFirstPage(false);
+  };
 
   // const triggerNotif = () => {
   //   useNotification("놀멍쉬멍", {
@@ -191,9 +246,10 @@ const ProjectPage = (props) => {
 
   return (
     <ConnectuserContext.Provider value={{ connectUser, setConnectUser }}>
-      {/* {data ? <div>is data</div> : <div>not data</div>} */}
       <PlanSideBar
         item={items}
+        goSearchPage={goSearchPage}
+        goDetailPage={goDetailPage}
         isFirstPage={isFirstPage}
         toggleIsPage={toggleIsPage}
         itemRoutes={itemsRoute}
@@ -228,7 +284,6 @@ const ProjectPage = (props) => {
         )}
       </PlanSection>
       <Voicetalk projectId={projectId} />
-      {/* <button onClick={triggerNotif}>ㅇㅇ </button> */}
     </ConnectuserContext.Provider>
   );
 };

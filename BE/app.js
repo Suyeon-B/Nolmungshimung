@@ -12,10 +12,12 @@ var projectsRouter = require("./routes/projects/projects");
 var travelRouter = require("./routes/travel/travel");
 var commonRouter = require("./routes/common/common");
 var voiceRouter = require("./routes/voicetalk/voicetalk");
+// var memoRouter = require("./routes/sharememo/shareMemo");
 var mongodb = require("dotenv").config();
 var fs = require("fs");
 
 voiceRouter;
+// memoRouter;
 
 var app = express();
 // [원영] 소켓 서버 추가
@@ -40,19 +42,21 @@ server.listen(3001, function () {
   console.log("Socket IO server listening on port 3001");
 });
 
-const colors = [
-  "#FF8A3D",
-  "#8DD664",
-  "#FF6169",
-  "#975FFE",
-  "#0072BC",
-  "#F6282B",
-  "#FAD700",
-  "#05FFCC",
-  "#4A4A4A",
-];
-
 const projectSocketRoom = {};
+const projectSchema = require("./models/Project");
+
+// mongoose
+var mongoose = require("mongoose");
+var db = mongoose.connection;
+db.on("error", console.error);
+db.once("open", function () {
+  console.log("Connected");
+});
+
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => console.log("MongoDB Connected..."))
+  .catch((err) => console.log(`connect err : ${err}`));
 
 io.on("connection", (socket) => {
   //connection
@@ -80,8 +84,6 @@ io.on("connection", (socket) => {
           selectedIndex,
         },
       };
-      projectSocketRoom[projectId][userName].color =
-        colors[Object.keys(projectSocketRoom[projectId]).length];
       socket.join(projectId);
       io.to(projectId).emit("connectUser", projectSocketRoom[projectId]);
     } catch (error) {
@@ -98,11 +100,7 @@ io.on("connection", (socket) => {
   try {
     // console.log("========attention==========");
     socket.on("attention", (date, selectedIndex, projectId, userName) => {
-      // console.log("==================");
-      // console.log(`date : ${date}`);
       console.log("attention", projectId);
-      // console.log(`user_name:${userName}`);
-      // socket.emit("attentionPlease", [date, userName]);
       try {
         // console.log("ooooo");
         socket.broadcast
@@ -119,8 +117,12 @@ io.on("connection", (socket) => {
   socket.on("projectLeave", ([projectId, userName]) => {
     try {
       console.log("projectLeave", projectId);
-      socket.leave(projectId);
+      // 유저 정보 삭제
+
       delete projectSocketRoom[projectId][userName];
+      // 나간 유저 정보 모든 유저에게 알리기
+      io.to(projectId).emit("connectUser", projectSocketRoom[projectId]);
+      socket.leave(projectId);
       console.log(projectSocketRoom[projectId]);
     } catch (error) {
       console.log(error);
@@ -152,7 +154,6 @@ io.on("connection", (socket) => {
   socket.on("mouse_move", ([projectId, mouseInfo, selectedIndex, userName]) => {
     // console.log(projectId, mouseInfo, selectedIndex, userName);
     try {
-      mouseInfo[userName].color = projectSocketRoom[projectId][userName].color;
       socket.broadcast
         .to(projectId + selectedIndex)
         .emit("mouse_update", mouseInfo);
@@ -176,25 +177,12 @@ io.on("connection", (socket) => {
   // socket.on("grabSpot", ([projectId, userName, selectedIndex])=>{});
 });
 
-// mongoose
-var mongoose = require("mongoose");
-var db = mongoose.connection;
-db.on("error", console.error);
-db.once("open", function () {
-  console.log("Connected");
-});
-
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
-
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB Connected..."))
-  .catch((err) => console.log(`connect err : ${err}`));
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -211,53 +199,5 @@ app.use("/projects", projectsRouter);
 app.use("/travel", travelRouter);
 app.use("/common", commonRouter);
 // app.use("/voicetalk", voiceRouter);
-
-// [수연] share-memo with collaborative cursors
-// create and start server on 7899 port by default
-// var OkdbServer = require("okdb-server");
-// var options = {
-//   cors: {
-//     enabled: true,
-//     allowedOrigins: `https://${process.env.REACT_APP_SERVER_IP}:3000`,
-//   },
-// };
-// var okdb = new OkdbServer(options);
-
-// // sample authentication, e.g. should validate your own auth token
-// let nameIdx = 0;
-// try {
-//   okdb.handlers().auth(({ myNickname, selectedIndex }) => {
-//     if (myNickname) {
-//       console.log("auth attempt for ", myNickname, " success");
-//       const userName = myNickname;
-//       const userId = "1" + nameIdx;
-//       nameIdx = (nameIdx + 1) % 10;
-//       return { id: userId, name: userName, selectedIndex: selectedIndex };
-//     }
-//     console.log("auth attempt for ", myNickname, " failed");
-//     return null;
-//   });
-// } catch (err) {
-//   console.log(err);
-// }
-
-// // Handling Ctrl-C (workaround for Windows)
-// if (process.platform === "win32") {
-//   var rl = require("readline").createInterface({
-//     input: process.stdin,
-//     output: process.stdout,
-//   });
-
-//   rl.on("SIGINT", function () {
-//     process.emit("SIGINT");
-//   });
-// }
-// //graceful shutdown on Ctrl-C (all other platforms)
-// process.on("SIGINT", function () {
-//   okdb.stop(() => {
-//     console.log("server stopped");
-//     process.exit();
-//   });
-// });
 
 module.exports = app;
