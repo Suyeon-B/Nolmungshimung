@@ -47,7 +47,7 @@ const SearchListRoute = ({
   const onClickAddRoute = (event) => {
     const uRoute = { ...route };
     uRoute["uid"] = uuidV4();
-    fetchAddTravelRoute(projectId, uRoute);
+    // fetchAddTravelRoute(projectId, uRoute);
     // console.log(uRoute);
     uRoute.lock = "white"; // 색들어감 (락기능)
     uRoute.user_name = null; // 잡고있는 유저의 닉네임이 들어갈것임 (락 푸는 기능)

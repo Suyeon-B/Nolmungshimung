@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import SpotList from "../../components/spot/SpotList";
 import MarkMap from "../../components/MarkMap/MarkMap";
-import MemoTestRtc from "../../components/shareMemo/MemoRtc";
+import MemoRtc from "../../components/shareMemo/MemoRtc";
 // import TextEditor from "../shareMemo/TextEditor";
 import Cursor from "../shareMemo/Cursor";
 import SearchDetail from "../../components/searchMap/SearchDetail";
@@ -137,7 +137,7 @@ function SpotRoute({
         <SpotRouteMap id="myMap" />
       </SpotRouteSection>
       <Cursor project_Id={itemId} selectedIndex={selectedIndex} />
-      <MemoTestRtc project_Id={itemId} />
+      <MemoRtc project_Id={itemId} />
       {contents !== null && (
         <SearchDetail onClose={onClose} visible={visible} contents={contents} />
       )}

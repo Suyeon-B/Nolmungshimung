@@ -34,12 +34,13 @@ function Footer(props) {
 
   useEffect(() => {
     // console.log("friends 바뀜", friends);
+    console.log("Footer 변화", connectUser);
     setProfiles(
       <FooterFriendsDiv>
         <FriendProfile key={1} nickName={props.myNickName} color="#ff8a3d" />
         {Object.keys(connectUser).map((userName, idx) => {
           if (props.myNickName === userName) return;
-          // console.log(connectUser, userName);
+
           return (
             <FriendProfile
               key={idx + 1}

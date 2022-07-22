@@ -8,10 +8,11 @@ const projectSchema = mongoose.Schema({
   project_title: { type: String, required: true },
   people: { type: Array },
   routes: { type: Array },
-  memo: { type: Object },
+  savedYtext: { type: String },
+  // quillRefEditor: { type: Object },
   log: { type: Array },
   upload_flag: { type: Array },
-  trip_date: {type: Array}
+  trip_date: { type: Array },
 });
 
 module.exports = mongoose.model("Project", projectSchema);

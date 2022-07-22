@@ -56,8 +56,8 @@ const ProjectList = () => {
       <StyledTitle>내 프로젝트 목록</StyledTitle>
       <StyledLine></StyledLine>
       <StyledUl>
-        {items.map((el) => {
-          return <ProjectItem el={el} />;
+        {items.map((el, i) => {
+          return <ProjectItem key={i} el={el} />;
         })}
       </StyledUl>
     </StyleProjectList>
