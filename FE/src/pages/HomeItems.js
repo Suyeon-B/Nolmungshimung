@@ -43,19 +43,16 @@ const StyledWhiteBtn = styled(StyledBtn)`
 `;
 
 const StyledTitle = styled.h1`
-  /* font-family: 'Rounded Mplus 1c Bold'; */
   font-style: normal;
   font-weight: 900;
   font-size: 50px;
   margin-bottom: 24px;
-  /* line-height: 89px; */
   text-align: center;
 
   color: #000000;
 `;
 
 const StyledHomeItems = styled.div`
-  /* background-color: red; */
   display: flex;
   flex-direction: column;
   align-items: center;

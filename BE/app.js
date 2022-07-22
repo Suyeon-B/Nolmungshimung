@@ -42,18 +42,6 @@ server.listen(3001, function () {
   console.log("Socket IO server listening on port 3001");
 });
 
-const colors = {
-  "#FF8A3D": [],
-  "#8DD664": [],
-  "#FF6169": [],
-  "#975FFE": [],
-  "#0072BC": [],
-  "#F6282B": [],
-  "#FAD700": [],
-  "#05FFCC": [],
-  "#4A4A4A": [],
-};
-
 const projectSocketRoom = {};
 
 io.on("connection", (socket) => {
@@ -82,20 +70,7 @@ io.on("connection", (socket) => {
           selectedIndex,
         },
       };
-      let colorIndex = 0;
-
-      for (let color in colors) {
-        if (!colors[color].includes(projectId)) {
-          projectSocketRoom[projectId][userName].color = color;
-          colors[color].push(projectId);
-          break;
-        }
-      }
-      console.log(colors);
-
-      // projectSocketRoom[projectId][userName].color =
-      //   colors[Object.keys(projectSocketRoom[projectId]).length];
-
+      console.log(projectSocketRoom[projectId]);
       socket.join(projectId);
       io.to(projectId).emit("connectUser", projectSocketRoom[projectId]);
     } catch (error) {
@@ -112,11 +87,7 @@ io.on("connection", (socket) => {
   try {
     // console.log("========attention==========");
     socket.on("attention", (date, selectedIndex, projectId, userName) => {
-      // console.log("==================");
-      // console.log(`date : ${date}`);
       console.log("attention", projectId);
-      // console.log(`user_name:${userName}`);
-      // socket.emit("attentionPlease", [date, userName]);
       try {
         // console.log("ooooo");
         socket.broadcast
@@ -133,12 +104,13 @@ io.on("connection", (socket) => {
   socket.on("projectLeave", ([projectId, userName]) => {
     try {
       console.log("projectLeave", projectId);
-      socket.leave(projectId);
-      const userColor = projectSocketRoom[projectId][userName].color;
-      colors[userColor] = colors[userColor].filter((id) => {
-        return id !== projectId;
-      });
+      // 유저 정보 삭제
+
       delete projectSocketRoom[projectId][userName];
+      console.log(projectSocketRoom);
+      // 나간 유저 정보 모든 유저에게 알리기
+      io.to(projectId).emit("connectUser", projectSocketRoom[projectId]);
+      socket.leave(projectId);
       console.log(projectSocketRoom[projectId]);
     } catch (error) {
       console.log(error);
@@ -170,7 +142,6 @@ io.on("connection", (socket) => {
   socket.on("mouse_move", ([projectId, mouseInfo, selectedIndex, userName]) => {
     // console.log(projectId, mouseInfo, selectedIndex, userName);
     try {
-      mouseInfo[userName].color = projectSocketRoom[projectId][userName].color;
       socket.broadcast
         .to(projectId + selectedIndex)
         .emit("mouse_update", mouseInfo);
