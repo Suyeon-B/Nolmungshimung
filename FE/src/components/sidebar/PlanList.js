@@ -71,6 +71,7 @@ const culTripTermData = (startDate, day) => {
 
 function PlanList({
   toggleIsPage,
+  goDetailPage,
   startDate,
   routes,
   setRoutes,
@@ -172,7 +173,8 @@ function PlanList({
 
     setSelectedIndex(selectIdx);
     setSelectedDay(selectIdx);
-    isFirstPage && toggleIsPage();
+    // isFirstPage && toggleIsPage();
+    isFirstPage && goDetailPage();
     if (selectIdx === attentionIndex) {
       setAttentionIndex(-1);
     }
@@ -409,23 +411,23 @@ const ItemInnerDiv = styled.div`
 
 const PlanItemDiv = styled.div`
   height: 41px;
-  box-sizing: border-box;
+  box-sizing: inherit;
   @keyframes color {
     0% {
-      border: ${(props) => `4px solid ${props.userColor}`};
+      border: ${(props) => `3px solid ${props.userColor}`};
     }
     33% {
-      border: ${(props) => `4px solid ${props.userColor}`};
+      border: ${(props) => `3px solid ${props.userColor}`};
     }
     66% {
-      border: ${(props) => `4px solid ${props.userColor}`};
+      border: ${(props) => `3px solid ${props.userColor}`};
     }
     100% {
-      border: none;
+      border: 3px solid white;
     }
   }
 
-  animation: color 1s linear;
+  animation: color 2s linear;
 `;
 
 export default PlanList;

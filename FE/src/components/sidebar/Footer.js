@@ -91,7 +91,7 @@ const FooterContainer = styled.div`
   width: 280px;
   height: 60px;
   white-space: nowrap;
-  margin-left: 10px;
+  margin-left: max(2%, 10px);
 
   ::-webkit-scrollbar {
     /* width: 0px;
