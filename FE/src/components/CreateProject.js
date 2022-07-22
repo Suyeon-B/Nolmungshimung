@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import "react-calendar/dist/Calendar.css"; // css import
 import CalendarTest from "./CalendarTest";
+import { useNavigate } from "react-router-dom";
 
 const setDay = (value) => {
   return [
@@ -14,6 +15,7 @@ const setDay = (value) => {
 };
 
 const CreateProject = () => {
+  let navigate = useNavigate();
   const [projectTitle, setProjectTitle] = useState("");
   const [showCalendar, setShowCalendar] = useState(false);
   const [startDate, setStartDate] = useState(null);
@@ -66,9 +68,13 @@ const CreateProject = () => {
       .catch((err) => console.log(err));
   };
 
+  const goHome = () => {
+    navigate("/", { replace: false });
+  };
+
   return (
     <PageContainer>
-      <CreateHomeImg src="\statics\images\main_logo.png" />
+      <CreateHomeImg src="\statics\images\main_logo.png" onClick={goHome} />
       <CalenderForm onSubmit={onSubmit}>
         <TitleInput
           placeholder="여행 제목을 입력해주세요"
@@ -205,6 +211,7 @@ const CreateHomeImg = styled.img`
   left: 25px;
   top: 15px;
   z-index: 2;
+  cursor: pointer;
 `;
 
 export default CreateProject;
