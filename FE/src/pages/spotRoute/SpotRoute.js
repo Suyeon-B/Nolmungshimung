@@ -194,6 +194,7 @@ const SpotRouteTitleDay = styled.span`
 const SpotRouteTitleBtn = styled.button`
   white-space: nowrap;
   margin-right: 25px;
+  margin-bottom: 10px;
   background-color: #ff8a3d;
   border: 0;
   border-radius: 4px;
