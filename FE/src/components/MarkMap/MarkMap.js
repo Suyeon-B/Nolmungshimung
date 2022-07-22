@@ -1,8 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 const { kakao } = window;
-
+var map;
+var bounds;
+var polyline;
+var markers = [];
 function MarkMap(props) {
+  const [position, setPosition] = useState([]);
+  const [line, setLine] = useState([]);
   //루트 리스트 넘겨받기
   var imageSrc =
     "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNzUycHQiIGhlaWdodD0iNzUycHQiIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDc1MiA3NTIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiA8cGF0aCBkPSJtNDMxLjc1IDM2NC40NGMxMC4yNTQgNS45NjQ4IDEwLjI1NCAxNy4xNTIgMCAyMi45MzRsLTExOS4xNCA2NC41MTJ2LTE1MS43N3ptLTU1Ljc1LTE2OC4zNmM0Ny45MTggMCA5My41OTggMTguNDU3IDEyNy4zNCA1Mi43NjYgMzIuMDcgMzIuNDQxIDUyLjU3OCA3Ny4xOTEgNTIuNTc4IDEyNy4xNiAwIDQ5LjQxLTIwLjUwOCA5NC4xNTYtNTIuNTc4IDEyNi43OS0zMi42MjkgMzMuMTg4LTc3LjkzOCA1My4xMzctMTI3LjM0IDUzLjEzNy00OS40MSAwLTk0LjcxNS0xOS45NDktMTI3LjM0LTUzLjEzNy0zMi42MjktMzIuNjI5LTUyLjU3OC03Ny4zNzUtNTIuNTc4LTEyNi43OSAwLTQ5Ljk2OSAxOS45NDktOTQuNzE1IDUyLjU3OC0xMjcuMTYgMzMuNzQ2LTM0LjMwOSA3OS40MjYtNTIuNzY2IDEyNy4zNC01Mi43NjZ6IiBmaWxsPSIjZmZmIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiLz4KPC9zdmc+Cg==";
@@ -11,22 +16,9 @@ function MarkMap(props) {
     { map_x: 33.452671, map_y: 126.574792 },
     { map_x: 33.451744, map_y: 126.572441 },
   ];
-  function setBounds(map, bounds) {
-    map.setBounds(bounds);
-  }
-  // 인포윈도우를 표시하는 클로저를 만드는 함수입니다
-  function makeOverListener(map, marker, infowindow) {
-    return function () {
-      infowindow.open(map, marker);
-    };
-  }
-
-  // 인포윈도우를 닫는 클로저를 만드는 함수입니다
-  function makeOutListener(infowindow) {
-    return function () {
-      infowindow.close();
-    };
-  }
+  // function setBounds(map, bounds) {
+  //   map.setBounds(bounds);
+  // }
 
   let color = {
     FD6: "#975FFE",
@@ -35,48 +27,68 @@ function MarkMap(props) {
     AD5: "#8DD664", // 숙박
     "": "#CFCFCF",
   };
-  if (!props) {
-    return <div>Loding...</div>;
-  }
-  const container = document.getElementById("myMap");
-  const options = {
-    center: new kakao.maps.LatLng(33.450701, 126.570667),
-    draggable: false,
-    level: 3,
-  };
-  const map = new kakao.maps.Map(container, options);
+  // if (!props) {
+  //   return <div>Loding...</div>;
+  // }
+
   useEffect(() => {
-    const linePath = props.map(function (place, idx) {
-      //test를 props으로
-      return {
-        title: `<div key =${idx}>${place.place_name}</div>`,
-        latlng: new kakao.maps.LatLng(place.y, place.x),
-        category: place.category_group_code,
+    var mapContainer = document.getElementById("myMap"), // 지도를 표시할 div
+      mapOption = {
+        center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+        draggable: false,
+        level: 3, // 지도의 확대 레벨
       };
-    });
-    const latlngs = linePath.map(function (place) {
-      return place.latlng;
-    });
-    const polyline = new kakao.maps.Polyline({
-      path: latlngs, // 선을 구성하는 좌표배열 입니다
+    console.log("렌더링ㄴ");
+    map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+    bounds = new kakao.maps.LatLngBounds();
+    polyline = new kakao.maps.Polyline({
+      // path: line, // 선을 구성하는 좌표배열 입니다
       strokeWeight: 5, // 선의 두께 입니다
       strokeColor: "black", // 선의 색깔입니다
       strokeOpacity: 0.7, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
       strokeStyle: "solid", // 선의 스타일입니다s
     });
+  }, []);
 
-    let bounds = new kakao.maps.LatLngBounds();
+  useEffect(() => {
+    // console.log(props);
+    for (var j = 0; j < markers.length; j++) {
+      markers[j].setMap(null);
+    }
+    // setMarker([]);
+    markers = [];
+    let linePath = props.map(function (place, idx) {
+      //test를 props으로
+      return {
+        // title: `<div key =${idx}>${place.place_name}</div>`,
+        latlng: new kakao.maps.LatLng(place.y, place.x),
+        category: place.category_group_code,
+      };
+    });
 
-    for (let i = 0; i < linePath.length; i++) {
-      var imageSize = new kakao.maps.Size(24, 35);
-      var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+    let latlngs = linePath.map(function (place) {
+      return place.latlng;
+    });
 
+    setPosition(linePath);
+    setLine(latlngs);
+  }, [props]);
+
+  useEffect(() => {
+    // for (let i = 0; i < markers.length; i++) {
+    //   console.log(markers);
+    //   markers[i].setMap(null);
+    // }
+
+    console.log("안녕");
+    console.log(position);
+    for (var i = 0; i < position.length; i++) {
       var content =
         `<div style="
           width: 27px;
           height: 27px;
           border-radius: 50%;
-          background-color: ${color[linePath[i].category]};
+          background-color: ${color[position[i].category]};
           border: 2px solid white;
           display: flex;
           justify-content: center;
@@ -86,37 +98,28 @@ function MarkMap(props) {
         "</div>";
       var marker = new kakao.maps.CustomOverlay({
         map: map,
-        position: linePath[i].latlng,
+        position: position[i].latlng,
         content: content,
         yAnchor: 1,
       });
 
-      var marker = new kakao.maps.Marker({
-        position: linePath[i].latlng,
-        image: markerImage,
-      });
-      marker.setMap(map);
-      bounds.extend(linePath[i].latlng);
+      markers.push(marker);
 
-      var infowindow = new kakao.maps.InfoWindow({
-        content: linePath[i].title, // 인포윈도우에 표시할 내용
-      });
-      kakao.maps.event.addListener(
-        marker,
-        "mouseover",
-        makeOverListener(map, marker, infowindow)
-      );
-      kakao.maps.event.addListener(
-        marker,
-        "mouseout",
-        makeOutListener(infowindow)
-      );
+      // marker = new kakao.maps.Marker({
+      //   map: map,
+      //   // position: linePath[i].latlng,
+      //   // image: markerImage,
+      // });
+
+      // marker.setPosition(position[i].latlng);
+      bounds.extend(position[i].latlng);
+
+      // markers.push(marker);
     }
-    if (linePath.length > 0) {
-      setBounds(map, bounds);
-    }
-    polyline.setMap(map); //
-  }, [[...props]]);
+    map.setBounds(bounds);
+    polyline.setPath(line);
+    polyline.setMap(map);
+  }, [position]);
 
   // return (
   // <div
