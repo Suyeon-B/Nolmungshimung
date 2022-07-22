@@ -76,6 +76,7 @@ const PlanSideBar = ({
       </SideBarBtnDIv>
 
       <PlanList
+        goDetailPage={onClickDetail}
         toggleIsPage={toggleIsPage}
         startDate={item.start_date}
         term={item.term}
