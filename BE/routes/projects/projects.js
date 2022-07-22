@@ -193,34 +193,6 @@ router.get("/friends/:id", async (req, res, next) => {
   }
 });
 
-// [수연] share-memo 관련
-router.get("/memo/:id", async (req, res, next) => {
-  const { id } = req.params;
-  try {
-    const projectInfo = await Project.findById({ _id: id });
-    console.log("@@@@@@@@@@@@@@@@@");
-    console.log(projectInfo.savedYtext);
-    console.log(projectInfo);
-    return res.json(projectInfo.savedYtext);
-  } catch (error) {
-    console.log(`project find id: ${error}`);
-    res.status(404).send({ error: "project not found" });
-  }
-});
-// router.get("/memo/:id", async (req, res, next) => {
-//   const { id } = req.params;
-//   try {
-//     const projectInfo = await Project.findById({ _id: id });
-//     console.log("@@@@@@@@@@@@@@@@@");
-//     console.log(projectInfo.quillRefEditor);
-//     console.log(projectInfo);
-//     return res.json(projectInfo.quillRefEditor);
-//   } catch (error) {
-//     console.log(`project find id: ${error}`);
-//     res.status(404).send({ error: "project not found" });
-//   }
-// });
-
 // User.findOne({ user_email: "a" }).then((data) => {
 //   console.log(data);
 // });

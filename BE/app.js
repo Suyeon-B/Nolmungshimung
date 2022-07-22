@@ -198,36 +198,7 @@ io.on("connection", (socket) => {
 
   // [Hyeok] Grab Routes
   // socket.on("grabSpot", ([projectId, userName, selectedIndex])=>{});
-
-  // [수연] share-memo 관련
-  socket.on("save_memo", async ([projectId, savedYtext]) => {
-    console.log("@@@@@ save-memo @@@@@");
-    console.log(projectId, savedYtext);
-    const project = await findProjectById(projectId);
-    if (project) {
-      await projectSchema.findByIdAndUpdate(projectId, { savedYtext });
-    }
-  });
-  // socket.on("save_memo", async ([projectId, quillRefEditor]) => {
-  //   console.log("@@@@@ save-memo @@@@@");
-  //   console.log(projectId, quillRefEditor);
-  //   const project = await findProjectById(projectId);
-  //   if (project) {
-  //     await projectSchema.findByIdAndUpdate(projectId, { quillRefEditor });
-  //   }
-  // });
 });
-
-// [수연] share-memo 관련
-async function findProjectById(id) {
-  try {
-    if (id == null) return;
-    const project = await projectSchema.findById(id);
-    if (project) return project;
-  } catch (err) {
-    console.log(err);
-  }
-}
 
 app.use(logger("dev"));
 app.use(express.json());
