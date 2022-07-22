@@ -111,7 +111,7 @@ export default function SpotList({
 
     userSelect: "none",
     // height: "41px",
-    margin: `0 0 ${grid}px 0`,
+    margin: `0 0 ${grid / 2}px 0`,
     // change background colour if dragging
     background: isDragging ? "#EBEBEB" : "none",
     boxSizing: "border-box",
@@ -361,13 +361,13 @@ const SpotListItemDiv = styled.div`
   box-sizing: inherit;
   @keyframes color {
     0% {
-      border: ${(props) => `inset 0px 0px 0px 3px ${props.userColor}`};
+      border: ${(props) => `inset 0px 0px 0px 3px ${props.userColor - 33}`};
     }
     33% {
       border: ${(props) => `inset 0px 0px 0px 3px ${props.userColor - 33}`};
     }
     66% {
-      border: ${(props) => `inset 0px 0px 0px 3px ${props.userColor}`};
+      border: ${(props) => `inset 0px 0px 0px 3px ${props.userColor - 33}`};
     }
     100% {
       border: 3px solid white;

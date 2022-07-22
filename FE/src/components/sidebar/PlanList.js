@@ -414,7 +414,7 @@ const PlanItemDiv = styled.div`
   box-sizing: inherit;
   @keyframes color {
     0% {
-      border: ${(props) => `3px solid ${props.userColor}`};
+      border: ${(props) => `3px solid ${props.userColor - 33}`};
     }
     33% {
       border: ${(props) => `3px solid ${props.userColor - 33}`};
