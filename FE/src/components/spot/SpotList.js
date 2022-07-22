@@ -358,21 +358,21 @@ const SpotCategory = styled.span`
 // box-shadow: inset 0px 0px 0px 10px #f00;
 const SpotListItemDiv = styled.div`
   height: 41px;
-  box-sizing: border-box;
+  box-sizing: inherit;
   @keyframes color {
     0% {
-      boxshadow: ${(props) => `inset 0px 0px 0px 3px ${props.userColor}`};
+      border: ${(props) => `inset 0px 0px 0px 3px ${props.userColor}`};
     }
     33% {
-      boxshadow: ${(props) => `inset 0px 0px 0px 3px ${props.userColor}`};
+      border: ${(props) => `inset 0px 0px 0px 3px ${props.userColor}`};
     }
     66% {
-      boxshadow: ${(props) => `inset 0px 0px 0px 3px ${props.userColor}`};
+      border: ${(props) => `inset 0px 0px 0px 3px ${props.userColor}`};
     }
     100% {
-      boxshadow: none;
+      border: 3px solid white;
     }
   }
 
-  animation: color 1s linear;
+  animation: color 2s linear;
 `;

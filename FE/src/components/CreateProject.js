@@ -68,6 +68,7 @@ const CreateProject = () => {
 
   return (
     <PageContainer>
+      <CreateHomeImg src="\statics\images\main_logo.png" />
       <CalenderForm onSubmit={onSubmit}>
         <TitleInput
           placeholder="여행 제목을 입력해주세요"
@@ -197,6 +198,13 @@ const CreateBtns = styled.div`
   align-items: center;
   width: 810px;
   justify-content: space-between;
+`;
+
+const CreateHomeImg = styled.img`
+  position: absolute;
+  left: 25px;
+  top: 15px;
+  z-index: 2;
 `;
 
 export default CreateProject;
