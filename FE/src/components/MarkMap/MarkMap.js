@@ -47,7 +47,7 @@ function MarkMap(item, selectedIndex) {
       strokeStyle: "dash", // 선의 스타일입니다s
     });
     map.setMaxLevel(10);
-  }, [item[selectedIndex]]);
+  }, []);
 
   useEffect(() => {
     // console.log(props);
