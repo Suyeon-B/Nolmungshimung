@@ -5,7 +5,9 @@ WORKDIR "/app"
 
 COPY ./BE .
 
-RUN npm install && npm build
+RUN npm install
+
+COPY . .
 
 ENV MONGO_URI mongodb://localhost:27017/nolshimung
 ENV NODE_TLS_REJECT_UNAUTHORIZED 0
