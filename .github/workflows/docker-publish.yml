@@ -45,7 +45,7 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: wnsrb003/api-server-nolshimung:latest
-  cd-pipeline:
+  Deploy:
     needs: build
     name: continuos deploy
     runs-on: ubuntu-latest
@@ -59,8 +59,9 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ubuntu
           script: |
-            cd Nolmungshimung
-            git pull origin develop
+            echo "Hello" &&
+            cd Nolmungshimung &&
+            git pull origin develop &&
             sudo docker-compose pull && sudo docker-compose up -d
             
 #       - uses: actions/checkout@master
