@@ -7,10 +7,8 @@ name: Docker
 
 on:
   push:
-    branches: [ "develop" ]
+    branches: [ "master" ]
     # Publish semver tags as releases.
-  pull_request:
-    branches: ["develop"]
 jobs:
   build:
     runs-on: ubuntu-latest
