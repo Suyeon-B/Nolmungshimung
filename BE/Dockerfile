@@ -5,7 +5,7 @@ WORKDIR "/app"
 
 COPY ./BE/. ./
 
-RUN npm install -g pm2 && npm install && npm run build
+RUN npm install -g pm2 && npm install
 
 ENV MONGO_URI "mongodb://localhost:27017/nolshimung"
 ENV NODE_TLS_REJECT_UNAUTHORIZED "0"
