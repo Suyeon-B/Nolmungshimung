@@ -291,6 +291,7 @@ const ProjectPage = (props) => {
             itemId={items._id}
             setIsDrage={setIsDrage}
             setIsAddDel={setIsAddDel}
+            userName={userName}
           />
         )}
       </PlanSection>
