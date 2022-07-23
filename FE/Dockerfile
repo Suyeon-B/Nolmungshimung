@@ -8,7 +8,7 @@ WORKDIR "/usr/src/app"
 # npm install을 캐싱하기 위해 package.json만 따로 카피
 # COPY package.json ./
 # COPY yarn.lock ./
-COPY . .
+COPY ./FE/. .
 
 RUN npm install --force
 # RUN yarn

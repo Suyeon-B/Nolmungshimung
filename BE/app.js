@@ -86,11 +86,19 @@ io.on("connection", (socket) => {
       };
       socket.join(projectId);
       io.to(projectId).emit("connectUser", projectSocketRoom[projectId]);
+
+      io.of("/").adapter.on("create-room", (room) => {
+        console.log(`room ${room} was created`);
+      });
+
+      io.of("/").adapter.on("join-room", (room, id) => {
+        console.log(`socket ${id} has joined room ${room}`);
+      });
+      // console.log(socket);
     } catch (error) {
       console.log(error);
     }
     try {
-      // console.log("==================");
       socket.broadcast.to(projectId).emit("notify", userName);
     } catch (error) {
       console.log(error);
@@ -98,7 +106,6 @@ io.on("connection", (socket) => {
   });
 
   try {
-    // console.log("========attention==========");
     socket.on("attention", (date, selectedIndex, projectId, userName) => {
       console.log("attention", projectId);
       try {
@@ -178,8 +185,12 @@ io.on("connection", (socket) => {
 });
 
 app.use(logger("dev"));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(
+  express.json({
+    limit: "50mb",
+  })
+);
+app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
