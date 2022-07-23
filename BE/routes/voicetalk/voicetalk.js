@@ -30,11 +30,11 @@ server.listen(3003, function () {
 
 // Socket
 io.on("connection", (socket) => {
-  console.log(`New User connected: ${socket.id}`);
+  // console.log(`New User connected: ${socket.id}`);
 
   socket.on("disconnect", () => {
     socket.disconnect();
-    console.log("User disconnected!");
+    // console.log("User disconnected!");
   });
 
   socket.on("BE-check-user", async ({ roomId, userName }) => {
@@ -99,9 +99,9 @@ io.on("connection", (socket) => {
   });
 
   socket.on("BE-leave-room", ({ roomId, leaver }) => {
-    console.log(`퇴장전 : ${JSON.stringify(socketList)}`);
+    // console.log(`퇴장전 : ${JSON.stringify(socketList)}`);
     delete socketList[socket.id];
-    console.log(`퇴장후 : ${JSON.stringify(socketList)}`);
+    // console.log(`퇴장후 : ${JSON.stringify(socketList)}`);
     socket.broadcast
       .to(roomId)
       .emit("FE-user-leave", { userId: socket.id, userName: leaver });
