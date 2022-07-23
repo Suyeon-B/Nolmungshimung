@@ -42,18 +42,6 @@ server.listen(3001, function () {
   console.log("Socket IO server listening on port 3001");
 });
 
-const colors = {
-  "#FF8A3D": [],
-  "#8DD664": [],
-  "#FF6169": [],
-  "#975FFE": [],
-  "#0072BC": [],
-  "#F6282B": [],
-  "#FAD700": [],
-  "#05FFCC": [],
-  "#4A4A4A": [],
-};
-
 const projectSocketRoom = {};
 const projectSchema = require("./models/Project");
 
@@ -98,13 +86,13 @@ io.on("connection", (socket) => {
       };
       let colorIndex = 0;
 
-      for (let color in colors) {
-        if (!colors[color].includes(projectId)) {
-          projectSocketRoom[projectId][userName].color = color;
-          colors[color].push(projectId);
-          break;
-        }
-      }
+      // for (let color in colors) {
+      //   if (!colors[color].includes(projectId)) {
+      //     projectSocketRoom[projectId][userName].color = color;
+      //     colors[color].push(projectId);
+      //     break;
+      //   }
+      // }
       // console.log(colors);
 
       // projectSocketRoom[projectId][userName].color =
@@ -112,11 +100,19 @@ io.on("connection", (socket) => {
 
       socket.join(projectId);
       io.to(projectId).emit("connectUser", projectSocketRoom[projectId]);
+
+      io.of("/").adapter.on("create-room", (room) => {
+        console.log(`room ${room} was created`);
+      });
+
+      io.of("/").adapter.on("join-room", (room, id) => {
+        console.log(`socket ${id} has joined room ${room}`);
+      });
+      // console.log(socket);
     } catch (error) {
       console.log(error);
     }
     try {
-      // console.log("==================");
       socket.broadcast.to(projectId).emit("notify", userName);
     } catch (error) {
       console.log(error);
@@ -124,7 +120,6 @@ io.on("connection", (socket) => {
   });
 
   try {
-    // console.log("========attention==========");
     socket.on("attention", (date, selectedIndex, projectId, userName) => {
       // console.log("==================");
       // console.log(`date : ${date}`);
@@ -230,8 +225,12 @@ async function findProjectById(id) {
 }
 
 app.use(logger("dev"));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(
+  express.json({
+    limit: "50mb",
+  })
+);
+app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));

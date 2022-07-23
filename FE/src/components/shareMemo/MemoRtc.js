@@ -33,16 +33,6 @@ const MemoRtc = ({ project_Id }) => {
   }, [project_Id]);
 
   useEffect(() => {
-    socket.on("projectConnectUser", (projectConnectUser) => {
-      console.log("projectConnectUser: ", projectConnectUser);
-      // setConnectUser((prev) => {
-      //   const test = { ...prev };
-      //   console.log("######## ", test);
-      // });
-    });
-  }, []);
-
-  useEffect(() => {
     attachQuillRefs();
 
     const ydoc = new Y.Doc();
@@ -59,8 +49,10 @@ const MemoRtc = ({ project_Id }) => {
     }
 
     // console.log(" ==== socket 접속자 수 : ", socket._callbacks.$deleteCurser.length);
-    const connectUsers = socket._callbacks.$deleteCurser.length;
+    // const connectUsers = socket._callbacks.$deleteCurser.length;
 
+    const connectUsers = Object.keys(connectUser).length;
+    console.log(" @#@#@#@#@# connectuser : ", connectUsers);
     if (connectUsers < 2) {
       fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/memo/${projectID}`, {
         method: "get",

@@ -15,9 +15,7 @@ import { notification } from "antd";
 import socket from "../../socket";
 
 async function fetchProjectById(_id) {
-  const response = await fetch(
-    `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`
-  );
+  const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`);
   return response.json();
 }
 
@@ -121,20 +119,17 @@ const ProjectPage = (props) => {
         return newUser;
       });
     });
+    return () => {
+      socket.removeAllListeners("connectUser");
+    };
   }, []);
 
   useEffect(() => {
     // 접속한 유저에 대한 정보 저장하기
-    if (
-      auth === null ||
-      auth === undefined ||
-      auth.user === undefined ||
-      auth.user === null
-    )
-      return;
+    if (auth === null || auth === undefined || auth.user === undefined || auth.user === null) return;
     console.log("projectJoin");
     socket.emit("projectJoin", [projectId, auth.user.user_name]);
-
+    console.log(socket);
     return () => {
       socket.emit("projectLeave", [projectId, userName]);
       socket.off("connect");
@@ -149,17 +144,14 @@ const ProjectPage = (props) => {
 
     async function UpdateInfo() {
       try {
-        await fetch(
-          `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${projectId}`,
-          {
-            method: "PATCH",
-            headers: {
-              "content-type": "application/json",
-            },
-            credentials: "include",
-            body: JSON.stringify(itemsRoute),
-          }
-        ).then((res) => res.json());
+        await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${projectId}`, {
+          method: "PATCH",
+          headers: {
+            "content-type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(itemsRoute),
+        }).then((res) => res.json());
       } catch (err) {
         console.log(err);
       }
@@ -172,9 +164,12 @@ const ProjectPage = (props) => {
   }, [isDrage, isAddDel]);
 
   useEffect(() => {
-    socket.on("updateRoute", (itemsRoute) => {
-      setItemsRoute(itemsRoute);
+    socket.on("updateRoute", (resItemsRoute) => {
+      setItemsRoute(resItemsRoute);
     });
+    return () => {
+      socket.removeAllListeners("updateRoute");
+    };
   }, []);
 
   useEffect(() => {
@@ -201,6 +196,9 @@ const ProjectPage = (props) => {
       // triggerNotif();
       // console.log("입장");
     });
+    return () => {
+      socket.removeAllListeners("notify");
+    };
   }, []);
   useEffect(() => {
     socket.on("attentionPlease", ([date, user_name], attentionIdx) => {
@@ -219,6 +217,9 @@ const ProjectPage = (props) => {
       // triggerNotif();
       console.log("ddd");
     });
+    return () => {
+      socket.removeAllListeners("attentionPlease");
+    };
   }, []);
 
   if (isLoading) {
@@ -228,9 +229,6 @@ const ProjectPage = (props) => {
     return <div>isLoading....</div>;
   }
 
-  const toggleIsPage = () => {
-    setIsFirstPage(!isFirstPage);
-  };
   const goSearchPage = () => {
     setIsFirstPage(true);
   };
@@ -251,7 +249,6 @@ const ProjectPage = (props) => {
         goSearchPage={goSearchPage}
         goDetailPage={goDetailPage}
         isFirstPage={isFirstPage}
-        toggleIsPage={toggleIsPage}
         itemRoutes={itemsRoute}
         setItemRoutes={setItemsRoute}
         setSelectedIndex={setSelectedIndex}

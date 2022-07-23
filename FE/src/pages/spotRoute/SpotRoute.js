@@ -25,11 +25,8 @@ function SpotRoute({
   const [contents, setContents] = useState(null);
   let navigate = useNavigate();
 
-  // const [routes, setRoutes] = useState(item.routes);
-  // console.log("=================");
-  // console.log(item[0]);
-  // console.log("=================");
-  // useEffect(() => {
+  console.log(socket);
+
   const handleVisible = (value) => {
     setVisible(value);
   };
@@ -74,7 +71,12 @@ function SpotRoute({
     // console.log(value.id);
     // setContents(value);
   };
-  MarkMap(item[selectedIndex]);
+  MarkMap(item, selectedIndex);
+
+  useEffect(() => {
+    console.log("item selected Index is Change");
+  }, [item]);
+
   // }, [...item[0]]);
   const onClose = () => {
     setVisible(false);

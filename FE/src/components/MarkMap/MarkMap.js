@@ -5,12 +5,11 @@ var map;
 var bounds;
 var polyline;
 var markers = [];
-function MarkMap(props) {
+function MarkMap(item, selectedIndex) {
   const [position, setPosition] = useState([]);
   const [line, setLine] = useState([]);
   //루트 리스트 넘겨받기
-  var imageSrc =
-    "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNzUycHQiIGhlaWdodD0iNzUycHQiIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDc1MiA3NTIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiA8cGF0aCBkPSJtNDMxLjc1IDM2NC40NGMxMC4yNTQgNS45NjQ4IDEwLjI1NCAxNy4xNTIgMCAyMi45MzRsLTExOS4xNCA2NC41MTJ2LTE1MS43N3ptLTU1Ljc1LTE2OC4zNmM0Ny45MTggMCA5My41OTggMTguNDU3IDEyNy4zNCA1Mi43NjYgMzIuMDcgMzIuNDQxIDUyLjU3OCA3Ny4xOTEgNTIuNTc4IDEyNy4xNiAwIDQ5LjQxLTIwLjUwOCA5NC4xNTYtNTIuNTc4IDEyNi43OS0zMi42MjkgMzMuMTg4LTc3LjkzOCA1My4xMzctMTI3LjM0IDUzLjEzNy00OS40MSAwLTk0LjcxNS0xOS45NDktMTI3LjM0LTUzLjEzNy0zMi42MjktMzIuNjI5LTUyLjU3OC03Ny4zNzUtNTIuNTc4LTEyNi43OSAwLTQ5Ljk2OSAxOS45NDktOTQuNzE1IDUyLjU3OC0xMjcuMTYgMzMuNzQ2LTM0LjMwOSA3OS40MjYtNTIuNzY2IDEyNy4zNC01Mi43NjZ6IiBmaWxsPSIjZmZmIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiLz4KPC9zdmc+Cg==";
+
   let test = [
     { map_x: 33.452278, map_y: 126.567803 },
     { map_x: 33.452671, map_y: 126.574792 },
@@ -27,7 +26,7 @@ function MarkMap(props) {
     AD5: "#8DD664", // 숙박
     "": "#CFCFCF",
   };
-  if (!props) {
+  if (!item[selectedIndex]) {
     return <div>Loding...</div>;
   }
 
@@ -42,12 +41,13 @@ function MarkMap(props) {
     map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
     polyline = new kakao.maps.Polyline({
       // path: line, // 선을 구성하는 좌표배열 입니다
-      strokeWeight: 5, // 선의 두께 입니다
-      strokeColor: "black", // 선의 색깔입니다
+      strokeWeight: 2.4, // 선의 두께 입니다
+      strokeColor: "#123444", // 선의 색깔입니다
       strokeOpacity: 0.7, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
-      strokeStyle: "solid", // 선의 스타일입니다s
+      strokeStyle: "dash", // 선의 스타일입니다s
     });
-  }, []);
+    map.setMaxLevel(10);
+  }, [item[selectedIndex]]);
 
   useEffect(() => {
     // console.log(props);
@@ -57,7 +57,7 @@ function MarkMap(props) {
     }
     // setMarker([]);
     markers = [];
-    let linePath = props.map(function (place, idx) {
+    let linePath = item[selectedIndex].map(function (place, idx) {
       //test를 props으로
       return {
         // title: `<div key =${idx}>${place.place_name}</div>`,
@@ -72,7 +72,8 @@ function MarkMap(props) {
 
     setPosition(linePath);
     setLine(latlngs);
-  }, [props]);
+    // console.log("props : ", props);
+  }, [item, selectedIndex]);
 
   useEffect(() => {
     // for (let i = 0; i < markers.length; i++) {
@@ -81,6 +82,7 @@ function MarkMap(props) {
     // }
     bounds = new kakao.maps.LatLngBounds();
     console.log("안녕");
+
     console.log(position);
     for (var i = 0; i < position.length; i++) {
       var content =
