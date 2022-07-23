@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "devStart": "nodemon ./bin/www"
+    "svrStart": "pm2 start ./bin/www",
+    "devStart": "nodemon bin/www"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -23,6 +24,7 @@
     "okdb-server": "^1.2.1",
     "openvidu-node-client": "^2.22.0",
     "puppeteer": "^15.4.0",
+    "redis": "^4.2.0",
     "request": "^2.88.2",
     "request-ip": "^3.3.0",
     "socket.io": "^4.5.1"
