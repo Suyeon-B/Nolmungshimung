@@ -172,8 +172,8 @@ const ProjectPage = (props) => {
   }, [isDrage, isAddDel]);
 
   useEffect(() => {
-    socket.on("updateRoute", (itemsRoute) => {
-      setItemsRoute(itemsRoute);
+    socket.on("updateRoute", (resItemsRoute) => {
+      setItemsRoute(resItemsRoute);
     });
   }, []);
 

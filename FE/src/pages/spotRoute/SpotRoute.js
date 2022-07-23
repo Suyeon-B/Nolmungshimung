@@ -74,7 +74,12 @@ function SpotRoute({
     // console.log(value.id);
     // setContents(value);
   };
-  MarkMap(item[selectedIndex]);
+  MarkMap(item, selectedIndex);
+
+  useEffect(() => {
+    console.log("item selected Index is Change");
+  }, [item]);
+
   // }, [...item[0]]);
   const onClose = () => {
     setVisible(false);
