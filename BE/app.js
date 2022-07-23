@@ -65,12 +65,15 @@ io.on("connection", (socket) => {
   socket.on("connected", (cookie) => {
     socket.emit("entrance-message", `Say hello! to ${user_id.id}`);
   });
-  socket.on("disconnect", () => {
+
+  socket.on("disconnect", (e) => {
+    console.log(e);
     console.log("UserDisconnected");
   });
   socket.on("chat-message", (msg) => {
     console.log("message:", msg);
   });
+
   ////프로젝트 관련 소켓
   /* 프로젝트에 입장시 입장한 유저 projectSocketRoom에 저장
     프로젝트에 접속한 모든 유저에게 socket 이벤트 전송
@@ -87,13 +90,13 @@ io.on("connection", (socket) => {
       socket.join(projectId);
       io.to(projectId).emit("connectUser", projectSocketRoom[projectId]);
 
-      io.of("/").adapter.on("create-room", (room) => {
-        console.log(`room ${room} was created`);
-      });
+      // io.of("/").adapter.on("create-room", (room) => {
+      //   console.log(`room ${room} was created`);
+      // });
 
-      io.of("/").adapter.on("join-room", (room, id) => {
-        console.log(`socket ${id} has joined room ${room}`);
-      });
+      // io.of("/").adapter.on("join-room", (room, id) => {
+      //   console.log(`socket ${id} has joined room ${room}`);
+      // });
       // console.log(socket);
     } catch (error) {
       console.log(error);
