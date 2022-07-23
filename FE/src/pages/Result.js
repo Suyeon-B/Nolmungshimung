@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Button, Drawer, Radio, Space } from "antd";
 import { useParams } from "react-router-dom";
+import ResultMap from "../components/MarkMap/resultMap";
 
 function Result() {
   const { projectId } = useParams();
@@ -22,6 +23,7 @@ function Result() {
     async function fetchInfo() {
       const data = await fetchProjectById(projectId);
       setRoutes(data.routes);
+      // console.log(data.routes);
       setTitle(data.project_title);
       setStartDate(data.start_date.join(".").slice(0, -2));
       // console.log(JSON.stringify(data));
@@ -104,12 +106,13 @@ function Result() {
             })}
         </div>
       </Drawer>
-      <ResultImage src="/statics/images/signUpBackground.png" />;
+      {/* <ResultImage src="/statics/images/signUpBackground.png" />; */}
+      <ResultMap routes={routes} />
     </div>
   );
 }
 
-const ResultImage = styled.img`
+const ResultImage = styled.div`
   position: absolute;
   left: 0;
   top: 0;
