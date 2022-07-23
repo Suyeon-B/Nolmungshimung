@@ -1,14 +1,9 @@
 var express = require("express");
-const { default: mongoose } = require("mongoose");
 const { restart } = require("nodemon");
 
 var router = express.Router();
 const Project = require(__base + "models/Project");
 const { User } = require(__base + "models/User");
-
-//redis
-const Redis = require('../util/redis').publisher
-
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
@@ -80,30 +75,12 @@ router.post("/title", async (req, res) => {
 
 router.post("/routes/:id", async (req, res) => {
   const body = req.body;
-  return res.send(null)
-  // return res.send(body)
-  // const redisData = await Redis.get(`routes/${req.params.id}`)
-  // console.log(`redist: ${redisData}`)
-  // try{
-  //   if (redisData) {
-  //     let sendData = JSON.parse(redisData)[0].push(body)
-  //     res.send(sendData);
-  //     await Redis.set(`routes/${req.params.id}`, JSON.stringify(sendData))
-  //     const project = new Project(redisData);
-  //     project.save();
-  //     return;
-  //   }
-  // }catch (error){
-  //   console.log(`redis - project route find id: ${error}`);
-  // }
-
   try {
     const projectInfo = await Project.findById(req.params.id);
-    
     projectInfo.routes[0].push(body);
     const project = new Project(projectInfo);
     await project.save();
-    
+
     res.send(projectInfo);
   } catch (error) {
     console.log(`project route find id: ${error}`);
@@ -112,35 +89,29 @@ router.post("/routes/:id", async (req, res) => {
 });
 
 router.patch("/routes/:id", async (req, res) => {
-  try{
-    await Redis.setEx(`routes/${req.params.id}`,10, '')
-    await Redis.set(`${req.params.id}`, JSON.stringify(req.body))
-    res.status(200).send({ success: true });
-  }catch(e){
-    console.log(`redis Error : ${e}`)
-  }
+  // console.log("I'm in routes/:id");
+  // console.log("REQ PARAMS : ", req.params.id);
+  // console.log("========body=====");
+  console.log("patch routes");
 
-  // try {
-  //   const updateProject = await Project.findOneAndUpdate(
-  //     { _id: req.params.id },
-  //     { $set: { routes: req.body } },
-  //     { new: true }
-  //   );
-  //   res.status(200).send({ success: true });
-  // } catch (error) {
-  //   console.log(`project update error: ${error}`);
-  //   res.status(404).send({ error: "routes update error!" });
-  // }
+  try {
+    const updateProject = await Project.findOneAndUpdate(
+      { _id: req.params.id },
+      { $set: { routes: req.body } },
+      { new: true }
+    );
+    res.status(200).send({ success: true });
+  } catch (error) {
+    console.log(`project update error: ${error}`);
+    res.status(404).send({ error: "routes update error!" });
+  }
 });
 
 router.get("/:id", async (req, res, next) => {
   const { id } = req.params;
+
   try {
     const projectInfo = await Project.findById({ _id: id });
-    let routes = await Redis.get(`${req.params.id}`)
-    if (routes){
-      projectInfo.routes = JSON.parse(routes)
-    }
     return res.json(projectInfo);
   } catch (error) {
     console.log(`project find id: ${error}`);
@@ -216,6 +187,34 @@ router.get("/friends/:id", async (req, res, next) => {
   try {
     const projectInfo = await Project.findById({ _id: id });
     return res.json(projectInfo.people);
+  } catch (error) {
+    console.log(`project find id: ${error}`);
+    res.status(404).send({ error: "project not found" });
+  }
+});
+
+// [수연] share-memo 관련
+// router.get("/memo/:id", async (req, res, next) => {
+//   const { id } = req.params;
+//   try {
+//     const projectInfo = await Project.findById({ _id: id });
+//     console.log("@@@@@@@@@@@@@@@@@");
+//     console.log(projectInfo.savedYtext);
+//     console.log(projectInfo);
+//     return res.json(projectInfo.savedYtext);
+//   } catch (error) {
+//     console.log(`project find id: ${error}`);
+//     res.status(404).send({ error: "project not found" });
+//   }
+// });
+router.get("/memo/:id", async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const projectInfo = await Project.findById({ _id: id });
+    // console.log("@@@@@@@@@@@@@@@@@");
+    // console.log(projectInfo.quillRefEditor);
+    // console.log(projectInfo);
+    return res.json(projectInfo.quillRefEditor);
   } catch (error) {
     console.log(`project find id: ${error}`);
     res.status(404).send({ error: "project not found" });

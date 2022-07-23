@@ -199,7 +199,7 @@ const Search = ({
     <Wapper>
       <SearchListDiv id="searchBar">
         <SearchBar changePlace={setSearchPlace} handleSelect={handleSelect} />
-        <ul>
+        <SearchUl>
           {Places &&
             Places.map((item, i) => (
               <SearchListRoute
@@ -220,7 +220,7 @@ const Search = ({
             id="pagination"
             style={{ position: "relative", zIndex: 2 }}
           ></div>
-        </ul>
+        </SearchUl>
       </SearchListDiv>
       <StyledMapDiv id="searchMap"></StyledMapDiv>
     </Wapper>
@@ -235,11 +235,15 @@ const SearchListDiv = styled.div`
   padding-top: 27.5px;
   width: 340px;
   height: 100vh;
+`;
+
+const SearchUl = styled.ul`
+  height: 93%;
   overflow: scroll;
   ::-webkit-scrollbar {
     display: none;
   }
-  /* background-color: red; */
+
   scroll-behavior: smooth;
 `;
 

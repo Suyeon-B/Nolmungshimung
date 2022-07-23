@@ -77,6 +77,7 @@ const CreateProject = () => {
       <CreateHomeImg src="\statics\images\main_logo.png" onClick={goHome} />
       <CalenderForm onSubmit={onSubmit}>
         <TitleInput
+          maxLength="10"
           placeholder="여행 제목을 입력해주세요"
           value={projectTitle}
           onChange={onChangeProjectTitle}

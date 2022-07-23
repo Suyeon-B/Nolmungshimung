@@ -24,6 +24,8 @@ const SearchBar = (props) => {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        boxShadow: "3px 3px 3px 0px lightgray",
+        paddingBottom: "18px",
       }}
     >
       <StyledFieldset>
@@ -63,13 +65,13 @@ const StyledFieldset = styled.fieldset`
   padding: 8px;
 `;
 const StyledInput = styled.input`
-  height: 20px; */
+  height: 20px;
   border-radius: 5px;
   padding-left: 15px;
   font-style: normal;
   font-weight: 700;
   font-size: 18px;
-  outline : none;
+  outline: none;
   border: 0;
 `;
 export default SearchBar;

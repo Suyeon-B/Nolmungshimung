@@ -47,9 +47,9 @@ function App() {
               <Route
                 path="signin/*"
                 element={
-                  // <NotRequireAuth>
-                  <SignIn />
-                  // </NotRequireAuth>
+                  <NotRequireAuth>
+                    <SignIn />
+                  </NotRequireAuth>
                 }
               />
               <Route
@@ -63,24 +63,32 @@ function App() {
               <Route path="voicetalk/*" element={<VoiceTalk />} />
               <Route path="testmap/" element={<TestMap />} />
               <Route path="/" element={<HomeNew />} />
-              <Route
-                path="/kakao/signin"
-                element={
-                  // <NotRequireAuth>
-                  <KakaoSignIn />
-                  // </NotRequireAuth>
-                }
-              />
+              <Route path="/kakao/signin" element={<KakaoSignIn />} />
               <Route
                 path="project/*"
                 element={
-                  // <RequireAuth>
-                  <CreateProject />
+                  <RequireAuth>
+                    <CreateProject />
+                  </RequireAuth>
                 }
               />
-              <Route path="project/:projectId" element={<ProjectPage />} />
+              <Route
+                path="project/:projectId"
+                element={
+                  <RequireAuth>
+                    <ProjectPage />
+                  </RequireAuth>
+                }
+              />
               <Route path="Calendar/*" element={<CalendarTest />} />
-              <Route path="project/:projectId/result" element={<Result />} />
+              <Route
+                path="project/:projectId/result"
+                element={
+                  <RequireAuth>
+                    <Result />
+                  </RequireAuth>
+                }
+              />
               {/* <Route
                 path="project/:projectId/:tripDate"
                 element={<ProjectPage />}
