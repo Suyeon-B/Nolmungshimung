@@ -2,7 +2,7 @@
 version: "3"
 services: 
     react-app-nolshimung:
-        image: wnsrb003/react-app-nolshimung
+        image: wnsrb003/react-app-nolshimung:latest
         # build: ./FE
         stdin_open: true
         ports: 
@@ -11,7 +11,7 @@ services:
         # networks: 
         #     - mern-app
     api-server-nolshimung:
-        image: wnsrb003/api-server-nolshimung
+        image: wnsrb003/api-server-nolshimung:latest
         # build: ./BE
         ports:
             - "8443:8443"
