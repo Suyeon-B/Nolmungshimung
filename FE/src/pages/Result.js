@@ -46,7 +46,7 @@ function Result() {
           <CloseOutlined
             style={{ color: "red", fontWeight: "900", fontSize: "30px" }}
             onClick={() => {
-              window.location.replace(`/project/${projectId}`);
+              window.history.back();
             }}
           />
           <ResultXTitle> &nbsp;&nbsp;&nbsp;전체 여행 경로</ResultXTitle>
