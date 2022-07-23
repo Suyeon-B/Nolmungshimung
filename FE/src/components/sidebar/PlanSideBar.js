@@ -17,6 +17,7 @@ const PlanSideBar = ({
   setIsAddDel,
   attentionIndex,
   setAttentionIndex,
+  userName,
 }) => {
   const [detailColor, setDetailColor] = useState("white");
   const [searchColor, setSearchColor] = useState("#ebebeb");
@@ -81,6 +82,7 @@ const PlanSideBar = ({
         setIsAddDel={setIsAddDel}
         attentionIndex={attentionIndex}
         setAttentionIndex={setAttentionIndex}
+        userName={userName}
       />
     </SideBar>
   );
