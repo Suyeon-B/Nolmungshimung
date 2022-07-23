@@ -14,4 +14,4 @@ EXPOSE 8443 3000 3001 7443
 
 COPY . .
 
-CMD ["npm","run","svrStart"]
+CMD ["npm","run","start"]
