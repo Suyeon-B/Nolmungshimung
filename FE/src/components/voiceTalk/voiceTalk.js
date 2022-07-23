@@ -8,8 +8,11 @@ import NewAudio from "./NewAudio";
 import Footer from "../sidebar/Footer";
 
 const Room = (props) => {
-  const currentUser = sessionStorage.getItem("user_email");
-  const currentNick = sessionStorage.getItem("myNickname");
+  // const currentUser = sessionStorage.getItem("user_email");
+  // const currentNick = sessionStorage.getItem("myNickname");
+  const currentUser = props.auth.user_email;
+  const currentNick = props.auth.user_name;
+
   console.log(props.auth);
   if (!props.auth) {
     window.location.replace("/signin");
