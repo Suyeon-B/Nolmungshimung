@@ -13,10 +13,6 @@ const Room = (props) => {
   const currentUser = props.auth.user_email;
   const currentNick = props.auth.user_name;
 
-  console.log(props.auth);
-  if (!props.auth) {
-    window.location.replace("/signin");
-  }
   // if (!currentUser) {
   //   alert("로그인하세요");
   // }
