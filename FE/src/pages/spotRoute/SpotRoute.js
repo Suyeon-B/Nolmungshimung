@@ -25,13 +25,10 @@ function SpotRoute({
   const [contents, setContents] = useState(null);
   let navigate = useNavigate();
 
-  console.log(socket);
-
   const handleVisible = (value) => {
     setVisible(value);
   };
   const handleContents = (value) => {
-    console.log(value);
     const data = {
       input: value.road_address_name + "" + value.place_name,
       place_id: value.id,
