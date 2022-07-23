@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useCallback } from "react";
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
 import { QuillBinding } from "y-quill";
@@ -27,6 +27,7 @@ const MemoRtc = ({ project_Id }) => {
   const { connectUser, setConnectUser } = useContext(ConnectuserContext);
   const userName = sessionStorage.getItem("myNickname");
 
+  // console.log(socket);
   useEffect(() => {
     setProjectId(project_Id);
   }, [project_Id]);
@@ -46,23 +47,27 @@ const MemoRtc = ({ project_Id }) => {
       console.log("로그인을 해주세요");
     }
 
-    fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/memo/${projectID}`, {
-      method: "get",
-      headers: {
-        "content-type": "application/json",
-      },
-      credentials: "include",
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        console.log("===== fetch 결과 =====");
-        console.log(res);
-        console.log(res[0].insert);
-        const len = quillRef.editor.delta.ops.length;
-        for (var i = 0; i < len; i++) {
-          ytext.insert(i, res[i].insert.slice(0, -1));
-        }
-      });
+    // console.log(" ==== socket 접속자 수 : ", socket._callbacks.$deleteCurser.length);
+    const connectUsers = socket._callbacks.$deleteCurser.length;
+    if (connectUsers < 2) {
+      fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/memo/${projectID}`, {
+        method: "get",
+        headers: {
+          "content-type": "application/json",
+        },
+        credentials: "include",
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          console.log("===== fetch 결과 =====");
+          console.log(res);
+          console.log(res[0].insert);
+          const len = quillRef.editor.delta.ops.length;
+          for (var i = 0; i < len; i++) {
+            ytext.insert(i, res[i].insert.slice(0, -1));
+          }
+        });
+    }
 
     const binding = new QuillBinding(ytext, quillRef, provider.awareness);
 

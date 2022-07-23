@@ -209,8 +209,8 @@ io.on("connection", (socket) => {
   //   }
   // });
   socket.on("save_memo", async ([projectId, quillRefEditor]) => {
-    console.log("@@@@@ save-memo @@@@@");
-    console.log(projectId, quillRefEditor);
+    // console.log("@@@@@ save-memo @@@@@");
+    // console.log(projectId, quillRefEditor);
     const project = await findProjectById(projectId);
     if (project) {
       await projectSchema.findByIdAndUpdate(projectId, { quillRefEditor });
