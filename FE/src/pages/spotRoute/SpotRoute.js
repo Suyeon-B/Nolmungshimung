@@ -25,11 +25,8 @@ function SpotRoute({
   const [contents, setContents] = useState(null);
   let navigate = useNavigate();
 
-  // const [routes, setRoutes] = useState(item.routes);
-  // console.log("=================");
-  // console.log(item[0]);
-  // console.log("=================");
-  // useEffect(() => {
+  console.log(socket);
+
   const handleVisible = (value) => {
     setVisible(value);
   };

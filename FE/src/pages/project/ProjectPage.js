@@ -121,6 +121,9 @@ const ProjectPage = (props) => {
         return newUser;
       });
     });
+    return () => {
+      socket.removeAllListeners("connectUser");
+    };
   }, []);
 
   useEffect(() => {
@@ -134,7 +137,7 @@ const ProjectPage = (props) => {
       return;
     console.log("projectJoin");
     socket.emit("projectJoin", [projectId, auth.user.user_name]);
-
+    console.log(socket);
     return () => {
       socket.emit("projectLeave", [projectId, userName]);
       socket.off("connect");
@@ -175,6 +178,9 @@ const ProjectPage = (props) => {
     socket.on("updateRoute", (itemsRoute) => {
       setItemsRoute(itemsRoute);
     });
+    return () => {
+      socket.removeAllListeners("updateRoute");
+    };
   }, []);
 
   useEffect(() => {
@@ -201,6 +207,9 @@ const ProjectPage = (props) => {
       // triggerNotif();
       // console.log("입장");
     });
+    return () => {
+      socket.removeAllListeners("notify");
+    };
   }, []);
   useEffect(() => {
     socket.on("attentionPlease", ([date, user_name], attentionIdx) => {
@@ -219,6 +228,9 @@ const ProjectPage = (props) => {
       // triggerNotif();
       console.log("ddd");
     });
+    return () => {
+      socket.removeAllListeners("attentionPlease");
+    };
   }, []);
 
   if (isLoading) {
@@ -228,9 +240,6 @@ const ProjectPage = (props) => {
     return <div>isLoading....</div>;
   }
 
-  const toggleIsPage = () => {
-    setIsFirstPage(!isFirstPage);
-  };
   const goSearchPage = () => {
     setIsFirstPage(true);
   };
@@ -251,7 +260,6 @@ const ProjectPage = (props) => {
         goSearchPage={goSearchPage}
         goDetailPage={goDetailPage}
         isFirstPage={isFirstPage}
-        toggleIsPage={toggleIsPage}
         itemRoutes={itemsRoute}
         setItemRoutes={setItemsRoute}
         setSelectedIndex={setSelectedIndex}
