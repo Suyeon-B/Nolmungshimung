@@ -81,7 +81,7 @@ function SignIn() {
 
   return (
     <Container>
-      <Title src="/statics/images/loginTitle.png" />
+      <Title src="/statics/images/signUpTitle.png" />
       <Box>
         <Btns>
           <LogInBtn>Log in</LogInBtn>

@@ -16,9 +16,9 @@ function KakaoSignIn(props) {
   let query = params.get("code");
 
   React.useEffect(() => {
-    // console.log(query);
+    console.log(params);
     if (query) {
-      // console.log("핸들");
+      console.log("핸들");
       getKakaoTokenHandler(query.toString());
     }
   }, []);
@@ -38,6 +38,7 @@ function KakaoSignIn(props) {
     })
       .then((res) => res.json())
       .then((data) => {
+        console.log(data);
         sendKakaoTokenToServer(data.access_token);
       });
   };

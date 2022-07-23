@@ -211,9 +211,9 @@ router.get("/memo/:id", async (req, res, next) => {
   const { id } = req.params;
   try {
     const projectInfo = await Project.findById({ _id: id });
-    console.log("@@@@@@@@@@@@@@@@@");
-    console.log(projectInfo.quillRefEditor);
-    console.log(projectInfo);
+    // console.log("@@@@@@@@@@@@@@@@@");
+    // console.log(projectInfo.quillRefEditor);
+    // console.log(projectInfo);
     return res.json(projectInfo.quillRefEditor);
   } catch (error) {
     console.log(`project find id: ${error}`);

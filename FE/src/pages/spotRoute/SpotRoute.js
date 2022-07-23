@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useParams } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import SpotList from "../../components/spot/SpotList";
 import MarkMap from "../../components/MarkMap/MarkMap";
@@ -6,15 +6,24 @@ import MemoRtc from "../../components/shareMemo/MemoRtc";
 // import TextEditor from "../shareMemo/TextEditor";
 import Cursor from "../shareMemo/Cursor";
 import SearchDetail from "../../components/searchMap/SearchDetail";
-import useNotification from "../../atomics/Notification";
 import { AlertFilled } from "@ant-design/icons";
 import socket from "../../socket";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-function SpotRoute({ startDate, item, setItemRoute, itemId, selectedIndex, setIsDrage, setIsAddDel, projectId }) {
+function SpotRoute({
+  startDate,
+  item,
+  setItemRoute,
+  itemId,
+  selectedIndex,
+  setIsDrage,
+  setIsAddDel,
+  projectId,
+}) {
   const [notifyFlag, setNotifyFlag] = useState(false);
   const [visible, setVisible] = useState(false);
   const [contents, setContents] = useState(null);
+  let navigate = useNavigate();
 
   // const [routes, setRoutes] = useState(item.routes);
   // console.log("=================");
@@ -25,14 +34,40 @@ function SpotRoute({ startDate, item, setItemRoute, itemId, selectedIndex, setIs
     setVisible(value);
   };
   const handleContents = (value) => {
-    fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/travel/` + value.id) //get
+    console.log(value);
+    const data = {
+      input: value.road_address_name + "" + value.place_name,
+      place_id: value.id,
+      place_name: value.place_name,
+      road_address_name: value.road_address_name
+        ? value.road_address_name
+        : value.address_name,
+      category_group_name: value.category_group_name,
+      phone: value.phone,
+      place_url: value.place_url,
+    };
+
+    fetch(
+      `https://${process.env.REACT_APP_SERVER_IP}:8443/travel/find/` + value.id,
+      {
+        method: "POST", // 또는 'PUT'
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    ) //get
       .then((response) => response.json())
       .then((data) => {
-        if (data.message === "success") {
+        if (data.status === 200) {
+          console.log(data);
           console.log("db에 있습니다");
           setContents(data.data);
-        } else {
+        } else if (data.status === 206) {
           console.log("디비에 없음");
+          setContents(data.data);
+        } else {
+          console.log(data.message);
         }
       })
       .catch((error) => console.log(error));
@@ -49,7 +84,13 @@ function SpotRoute({ startDate, item, setItemRoute, itemId, selectedIndex, setIs
   useEffect(() => {
     if (notifyFlag === false) return;
     // console.log(notifyFlag);
-    socket.emit("attention", culTripTermData(startDate, selectedIndex), selectedIndex, projectId, userName);
+    socket.emit(
+      "attention",
+      culTripTermData(startDate, selectedIndex),
+      selectedIndex,
+      projectId,
+      userName
+    );
     setNotifyFlag(false);
     // console.log("attention");
   }, [notifyFlag]);
@@ -66,14 +107,21 @@ function SpotRoute({ startDate, item, setItemRoute, itemId, selectedIndex, setIs
   };
 
   const onClcikResult = () => {
-    window.location.replace("/result");
+    navigate(`/project/${projectId}/result`, { replace: false });
   };
   return (
     <SpotRouteContainer>
       <SpotRouteTitle>
-        <SpotRouteTitleDay>{culTripTermData(startDate, selectedIndex)}</SpotRouteTitleDay>
-        <AlertFilled style={{ color: "#ff8a3d", fontSize: "34px", marginLeft: "15px" }} onClick={callFriends} />
-        <span>주목시키기</span>
+        <section>
+          <SpotRouteTitleDay>
+            {culTripTermData(startDate, selectedIndex)}
+          </SpotRouteTitleDay>
+          <AlertFilled
+            style={{ color: "#ff8a3d", fontSize: "34px", marginLeft: "15px" }}
+            onClick={callFriends}
+          />
+          <span>주목시키기</span>
+        </section>
         <SpotRouteTitleBtn onClick={onClcikResult}>작성 완료</SpotRouteTitleBtn>
       </SpotRouteTitle>
       <SpotRouteSection>
@@ -90,7 +138,9 @@ function SpotRoute({ startDate, item, setItemRoute, itemId, selectedIndex, setIs
       </SpotRouteSection>
       <Cursor project_Id={itemId} selectedIndex={selectedIndex} />
       <MemoRtc project_Id={itemId} />
-      {contents !== null && <SearchDetail onClose={onClose} visible={visible} contents={contents} />}
+      {contents !== null && (
+        <SearchDetail onClose={onClose} visible={visible} contents={contents} />
+      )}
     </SpotRouteContainer>
   );
 }
@@ -124,8 +174,11 @@ const SpotRouteSection = styled.section`
 
 const SpotRouteTitle = styled.section`
   width: 100%;
-  margin-top: 34px;
+  margin-top: 29px;
   border-bottom: 1px solid #c1c7cd;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 `;
 
 const SpotRouteTitleDay = styled.span`
@@ -139,8 +192,9 @@ const SpotRouteTitleDay = styled.span`
 `;
 
 const SpotRouteTitleBtn = styled.button`
-  right: 40px;
-  position: absolute;
+  white-space: nowrap;
+  margin-right: 25px;
+  margin-bottom: 10px;
   background-color: #ff8a3d;
   border: 0;
   border-radius: 4px;

@@ -6975,7 +6975,7 @@ levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
-lib0@^0.2.42, lib0@^0.2.49:
+lib0@^0.2.35, lib0@^0.2.42, lib0@^0.2.49:
   version "0.2.51"
   resolved "https://registry.npmjs.org/lib0/-/lib0-0.2.51.tgz"
   integrity sha512-05Erb3465CxJa38LQlMz4EbetNvRna1S3BzqEjC0/pmp5cQuQSfNNmeS0722Wev1dRlMUp2Cql0gQ55krSXf2Q==
@@ -11025,6 +11025,13 @@ xtend@^4.0.2:
   version "4.0.2"
   resolved "https://registry.npmjs.org/xtend/-/xtend-4.0.2.tgz"
   integrity sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==
+
+y-indexeddb@^9.0.9:
+  version "9.0.9"
+  resolved "https://registry.npmjs.org/y-indexeddb/-/y-indexeddb-9.0.9.tgz"
+  integrity sha512-GcJbiJa2eD5hankj46Hea9z4hbDnDjvh1fT62E5SpZRsv8GcEemw34l1hwI2eknGcv5Ih9JfusT37JLx9q3LFg==
+  dependencies:
+    lib0 "^0.2.35"
 
 y-protocols@^1.0.5:
   version "1.0.5"

@@ -43,7 +43,9 @@ const getItemStyle = (isDragging, draggableStyle, color, userName) => ({
   background: isDragging ? "#EBEBEB" : "none",
 
   // border: userName === undefined ? null : `3px solid ${color}`,
-  border: `3px solid ${color}`,
+  // border: `3px solid ${color}`,
+  boxShadow: `inset 0px 0px 0px 3px ${color}`,
+  boxSizing: "border-box",
 
   // transitionProperty: "backgroundColor ,none",
   // transitionDuration: "2s",
@@ -69,6 +71,7 @@ const culTripTermData = (startDate, day) => {
 
 function PlanList({
   toggleIsPage,
+  goDetailPage,
   startDate,
   routes,
   setRoutes,
@@ -170,7 +173,8 @@ function PlanList({
 
     setSelectedIndex(selectIdx);
     setSelectedDay(selectIdx);
-    isFirstPage && toggleIsPage();
+    // isFirstPage && toggleIsPage();
+    isFirstPage && goDetailPage();
     if (selectIdx === attentionIndex) {
       setAttentionIndex(-1);
     }
@@ -408,20 +412,21 @@ const ItemInnerDiv = styled.div`
 const PlanItemDiv = styled.div`
   @keyframes color {
     0% {
-      border: ${(props) => `4px solid ${props.userColor}`};
+      border: ${(props) => `3px solid ${props.userColor - 33}`};
     }
     33% {
-      border: ${(props) => `4px solid ${props.userColor}`};
+      border: ${(props) => `3px solid ${props.userColor - 33}`};
     }
     66% {
-      border: ${(props) => `4px solid ${props.userColor}`};
+      border: ${(props) => `3px solid ${props.userColor}`};
     }
     100% {
-      border: none;
+      border: 3px solid white;
     }
   }
-
-  animation: color 1s linear;
+  height: 38px;
+  box-sizing: inherit;
+  animation: color 1.5s linear;
 `;
 
 export default PlanList;
