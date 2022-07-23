@@ -5,7 +5,7 @@ var map;
 var bounds;
 var polyline;
 var markers = [];
-function MarkMap(props) {
+function MarkMap(item, selectedIndex) {
   const [position, setPosition] = useState([]);
   const [line, setLine] = useState([]);
   //루트 리스트 넘겨받기
@@ -27,7 +27,7 @@ function MarkMap(props) {
     AD5: "#8DD664", // 숙박
     "": "#CFCFCF",
   };
-  if (!props) {
+  if (!item[selectedIndex]) {
     return <div>Loding...</div>;
   }
 
@@ -42,12 +42,12 @@ function MarkMap(props) {
     map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
     polyline = new kakao.maps.Polyline({
       // path: line, // 선을 구성하는 좌표배열 입니다
-      strokeWeight: 5, // 선의 두께 입니다
-      strokeColor: "black", // 선의 색깔입니다
+      strokeWeight: 2.4, // 선의 두께 입니다
+      strokeColor: "#123444", // 선의 색깔입니다
       strokeOpacity: 0.7, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
-      strokeStyle: "solid", // 선의 스타일입니다s
+      strokeStyle: "dash", // 선의 스타일입니다s
     });
-  }, []);
+  }, [item[selectedIndex]]);
 
   useEffect(() => {
     // console.log(props);
@@ -57,7 +57,7 @@ function MarkMap(props) {
     }
     // setMarker([]);
     markers = [];
-    let linePath = props.map(function (place, idx) {
+    let linePath = item[selectedIndex].map(function (place, idx) {
       //test를 props으로
       return {
         // title: `<div key =${idx}>${place.place_name}</div>`,
@@ -72,7 +72,8 @@ function MarkMap(props) {
 
     setPosition(linePath);
     setLine(latlngs);
-  }, [props]);
+    // console.log("props : ", props);
+  }, [item, selectedIndex]);
 
   useEffect(() => {
     // for (let i = 0; i < markers.length; i++) {
@@ -81,6 +82,7 @@ function MarkMap(props) {
     // }
     bounds = new kakao.maps.LatLngBounds();
     console.log("안녕");
+
     console.log(position);
     for (var i = 0; i < position.length; i++) {
       var content =
