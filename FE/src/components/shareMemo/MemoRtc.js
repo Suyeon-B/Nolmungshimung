@@ -33,6 +33,16 @@ const MemoRtc = ({ project_Id }) => {
   }, [project_Id]);
 
   useEffect(() => {
+    socket.on("projectConnectUser", (projectConnectUser) => {
+      console.log("projectConnectUser: ", projectConnectUser);
+      // setConnectUser((prev) => {
+      //   const test = { ...prev };
+      //   console.log("######## ", test);
+      // });
+    });
+  }, []);
+
+  useEffect(() => {
     attachQuillRefs();
 
     const ydoc = new Y.Doc();
@@ -44,11 +54,13 @@ const MemoRtc = ({ project_Id }) => {
         color: connectUser[userName].color,
       });
     } catch (err) {
-      console.log("로그인을 해주세요");
+      alert("로그인을 해주세요.");
+      window.location.href("/signup");
     }
 
     // console.log(" ==== socket 접속자 수 : ", socket._callbacks.$deleteCurser.length);
     const connectUsers = socket._callbacks.$deleteCurser.length;
+
     if (connectUsers < 2) {
       fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/memo/${projectID}`, {
         method: "get",
@@ -60,7 +72,7 @@ const MemoRtc = ({ project_Id }) => {
         .then((res) => res.json())
         .then((res) => {
           console.log("===== fetch 결과 =====");
-          console.log(res);
+          // console.log(res);
           console.log(res[0].insert);
           const len = quillRef.editor.delta.ops.length;
           for (var i = 0; i < len; i++) {
