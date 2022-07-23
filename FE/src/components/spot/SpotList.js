@@ -101,11 +101,12 @@ export default function SpotList({
   selectedIndex,
   setIsDrage,
   setIsAddDel,
+  userName,
 }) {
   // const [state, setState] = useState([testItem, testItem2]);
   const { projectId } = useParams();
   const { connectUser, setConnectUser } = useContext(ConnectuserContext);
-  const userName = sessionStorage.getItem("myNickname");
+  // const userName = sessionStorage.getItem("myNickname");
   const getItemStyle = (isDragging, draggableStyle, color, userName) => ({
     // some basic styles to make the items look a bit nicer
 
@@ -218,96 +219,177 @@ export default function SpotList({
                 style={getListStyle(snapshot.isDragging)}
                 {...provided.droppableProps}
               >
-                {el.map((item, index) => (
-                  <Draggable
-                    key={item.uid}
-                    draggableId={item.uid}
-                    index={index}
-                    // projectUserName={item.user_name}
-                    // projectLock={item.lock}
-                    // isDragDisabled={true} // Drag 불가능
-                  >
-                    {(provided, snapshot) => (
-                      <SpotListItemDiv
-                        user_color={item.lock}
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        style={getItemStyle(
-                          snapshot.isDragging,
-                          provided.draggableProps.style,
-                          item.lock,
-                          item.user_name
-                        )}
-                        // draggable
-                        // onDragStart={() => {
-                        //   console.log("DRAGINGNG");
-                        // }}
-                      >
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-evenly",
-                            // padding: "5px",
-                          }}
+                {el.map((item, index) =>
+                  item.user_name === null ? (
+                    <Draggable
+                      key={item.uid}
+                      draggableId={item.uid}
+                      index={index}
+                      projectUserName={item.user_name}
+                      projectLock={item.lock}
+                      // isDragDisabled={true} // Drag 불가능
+                    >
+                      {(provided, snapshot) => (
+                        <SpotListItemDiv
+                          user_color={item.lock}
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          style={getItemStyle(
+                            snapshot.isDragging,
+                            provided.draggableProps.style,
+                            item.lock,
+                            item.user_name
+                          )}
                         >
-                          <SpotItemDiv>
-                            <SpotTitle
-                              className="spotTitle"
-                              onClick={() => {
-                                handleVisible(true), handleContents(item);
-                              }}
-                            >
-                              <SpotItemIndex
-                                style={{
-                                  background: color[item.category_group_code],
-                                  width: "25px",
-                                  fontSize: "13px",
-                                }}
-                              >
-                                {index + 1}
-                              </SpotItemIndex>
-                              {item.place_name.length > 10
-                                ? item.place_name.slice(0, 11) + " ..."
-                                : item.place_name}
-                              {/* {item.place_name} */}
-                            </SpotTitle>
-                            <SpotCategory>
-                              {item.category_group_name
-                                ? item.category_group_name
-                                : "-"}
-                            </SpotCategory>
-                            {item.user_name && (
-                              <div
-                                style={{
-                                  position: "absolute",
-                                  marginTop: "63px",
-                                  marginLeft: "270px",
-                                  backgroundColor: `${item.lock}`,
-                                  color: "white",
-                                  padding: "2px",
-                                }}
-                              >
-                                {item.user_name}
-                              </div>
-                            )}
-                          </SpotItemDiv>
-                          <DeleteOutlined
-                            style={{ fontSize: "25px" }}
-                            onClick={() => {
-                              const newDayItem = [...dayItem];
-                              const newState = [...[dayItem[selectedIndex]]];
-                              newState[ind].splice(index, 1);
-                              newDayItem[selectedIndex] = [...newState[0]];
-                              setItemRoute(newDayItem);
-                              setIsAddDel(true);
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-evenly",
                             }}
-                          />
-                        </div>
-                      </SpotListItemDiv>
-                    )}
-                  </Draggable>
-                ))}
+                          >
+                            <SpotItemDiv>
+                              <SpotTitle
+                                className="spotTitle"
+                                onClick={() => {
+                                  handleVisible(true), handleContents(item);
+                                }}
+                              >
+                                <SpotItemIndex
+                                  style={{
+                                    background: color[item.category_group_code],
+                                    width: "25px",
+                                    fontSize: "13px",
+                                  }}
+                                >
+                                  {index + 1}
+                                </SpotItemIndex>
+                                {item.place_name.length > 10
+                                  ? item.place_name.slice(0, 11) + " ..."
+                                  : item.place_name}
+                                {/* {item.place_name} */}
+                              </SpotTitle>
+                              <SpotCategory>
+                                {item.category_group_name
+                                  ? item.category_group_name
+                                  : "-"}
+                              </SpotCategory>
+                              {item.user_name && (
+                                <div
+                                  style={{
+                                    position: "absolute",
+                                    marginTop: "63px",
+                                    marginLeft: "270px",
+                                    backgroundColor: `${item.lock}`,
+                                    color: "white",
+                                    padding: "2px",
+                                  }}
+                                >
+                                  {item.user_name}
+                                </div>
+                              )}
+                            </SpotItemDiv>
+                            <DeleteOutlined
+                              style={{ fontSize: "25px" }}
+                              onClick={() => {
+                                const newDayItem = [...dayItem];
+                                const newState = [...[dayItem[selectedIndex]]];
+                                newState[ind].splice(index, 1);
+                                newDayItem[selectedIndex] = [...newState[0]];
+                                setItemRoute(newDayItem);
+                                setIsAddDel(true);
+                              }}
+                            />
+                          </div>
+                        </SpotListItemDiv>
+                      )}
+                    </Draggable>
+                  ) : (
+                    <Draggable
+                      key={item.uid}
+                      draggableId={item.uid}
+                      index={index}
+                      projectUserName={item.user_name}
+                      projectLock={item.lock}
+                      isDragDisabled={true} // Drag 불가능
+                    >
+                      {(provided, snapshot) => (
+                        <SpotListItemDiv
+                          user_color={item.lock}
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          style={getItemStyle(
+                            snapshot.isDragging,
+                            provided.draggableProps.style,
+                            item.lock,
+                            item.user_name
+                          )}
+                        >
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-evenly",
+                            }}
+                          >
+                            <SpotItemDiv>
+                              <SpotTitle
+                                className="spotTitle"
+                                onClick={() => {
+                                  handleVisible(true), handleContents(item);
+                                }}
+                              >
+                                <SpotItemIndex
+                                  style={{
+                                    background: color[item.category_group_code],
+                                    width: "25px",
+                                    fontSize: "13px",
+                                  }}
+                                >
+                                  {index + 1}
+                                </SpotItemIndex>
+                                {item.place_name.length > 10
+                                  ? item.place_name.slice(0, 11) + " ..."
+                                  : item.place_name}
+                                {/* {item.place_name} */}
+                              </SpotTitle>
+                              <SpotCategory>
+                                {item.category_group_name
+                                  ? item.category_group_name
+                                  : "-"}
+                              </SpotCategory>
+                              {item.user_name && (
+                                <div
+                                  style={{
+                                    position: "absolute",
+                                    marginTop: "63px",
+                                    marginLeft: "270px",
+                                    backgroundColor: `${item.lock}`,
+                                    color: "white",
+                                    padding: "2px",
+                                  }}
+                                >
+                                  {item.user_name}
+                                </div>
+                              )}
+                            </SpotItemDiv>
+                            <DeleteOutlined
+                              style={{ fontSize: "25px" }}
+                              onClick={() => {
+                                const newDayItem = [...dayItem];
+                                const newState = [...[dayItem[selectedIndex]]];
+                                newState[ind].splice(index, 1);
+                                newDayItem[selectedIndex] = [...newState[0]];
+                                setItemRoute(newDayItem);
+                                setIsAddDel(true);
+                              }}
+                            />
+                          </div>
+                        </SpotListItemDiv>
+                      )}
+                    </Draggable>
+                  )
+                )}
                 {provided.placeholder}
               </div>
             )}
@@ -359,20 +441,20 @@ const SpotCategory = styled.span`
 const SpotListItemDiv = styled.div`
   height: 41px;
   box-sizing: inherit;
-  @keyframes color {
-    0% {
-      border: ${(props) => `inset 0px 0px 0px 3px ${props.userColor - 33}`};
-    }
-    33% {
-      border: ${(props) => `inset 0px 0px 0px 3px ${props.userColor - 33}`};
-    }
-    66% {
-      border: ${(props) => `inset 0px 0px 0px 3px ${props.userColor - 33}`};
-    }
-    100% {
-      border: 3px solid white;
-    }
-  }
-
-  animation: color 1.5s linear;
 `;
+// @keyframes color {
+//   0% {
+//     border: ${(props) => `inset 0px 0px 0px 3px ${props.user_color}`};
+//   }
+//   33% {
+//     border: ${(props) => `inset 0px 0px 0px 3px ${props.user_color}`};
+//   }
+//   66% {
+//     border: ${(props) => `inset 0px 0px 0px 3px ${props.user_color}`};
+//   }
+//   100% {
+//     border: 3px solid white;
+//   }
+// }
+
+// animation: ${(props) => props.user_color && `color 1.5s linear`};

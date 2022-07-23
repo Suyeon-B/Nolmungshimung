@@ -12,12 +12,10 @@ var projectsRouter = require("./routes/projects/projects");
 var travelRouter = require("./routes/travel/travel");
 var commonRouter = require("./routes/common/common");
 var voiceRouter = require("./routes/voicetalk/voicetalk");
-// var memoRouter = require("./routes/sharememo/shareMemo");
 var mongodb = require("dotenv").config();
 var fs = require("fs");
 
 voiceRouter;
-// memoRouter;
 
 var app = express();
 // [원영] 소켓 서버 추가
@@ -113,9 +111,7 @@ io.on("connection", (socket) => {
       console.log("attention", projectId);
       try {
         // console.log("ooooo");
-        socket.broadcast
-          .to(projectId)
-          .emit("attentionPlease", [date, userName], selectedIndex);
+        socket.broadcast.to(projectId).emit("attentionPlease", [date, userName], selectedIndex);
       } catch (error) {
         console.log(error);
       }
@@ -150,9 +146,7 @@ io.on("connection", (socket) => {
   });
   socket.on("detail_date_leave", ([project_Id, userName, selectedIndex]) => {
     console.log("detail_date_leave", selectedIndex);
-    socket.broadcast
-      .to(project_Id + selectedIndex)
-      .emit("deleteCurser", userName);
+    socket.broadcast.to(project_Id + selectedIndex).emit("deleteCurser", userName);
 
     socket.leave(project_Id + selectedIndex);
   });
@@ -164,9 +158,7 @@ io.on("connection", (socket) => {
   socket.on("mouse_move", ([projectId, mouseInfo, selectedIndex, userName]) => {
     // console.log(projectId, mouseInfo, selectedIndex, userName);
     try {
-      socket.broadcast
-        .to(projectId + selectedIndex)
-        .emit("mouse_update", mouseInfo);
+      socket.broadcast.to(projectId + selectedIndex).emit("mouse_update", mouseInfo);
     } catch (error) {
       // console.log(error);
     }
@@ -175,9 +167,7 @@ io.on("connection", (socket) => {
   socket.on("updateUserIndex", ([projectId, userName, selectedIndex]) => {
     try {
       projectSocketRoom[projectId][userName].selectedIndex = selectedIndex;
-      socket.broadcast
-        .to(projectId)
-        .emit("connectUser", projectSocketRoom[projectId]);
+      socket.broadcast.to(projectId).emit("connectUser", projectSocketRoom[projectId]);
     } catch (error) {
       // console.log(error);
     }
@@ -185,7 +175,26 @@ io.on("connection", (socket) => {
 
   // [Hyeok] Grab Routes
   // socket.on("grabSpot", ([projectId, userName, selectedIndex])=>{});
+
+  // [수연] share-memo
+  socket.on("save_memo", async ([projectId, quillRefEditor]) => {
+    const project = await findProjectById(projectId);
+    if (project) {
+      await projectSchema.findByIdAndUpdate(projectId, { quillRefEditor });
+    }
+  });
 });
+
+// [수연] share-memo
+async function findProjectById(id) {
+  try {
+    if (id == null) return;
+    const project = await projectSchema.findById(id);
+    if (project) return project;
+  } catch (err) {
+    console.log(err);
+  }
+}
 
 app.use(logger("dev"));
 app.use(

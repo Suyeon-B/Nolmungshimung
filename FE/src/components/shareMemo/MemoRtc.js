@@ -1,13 +1,14 @@
 import React, { useEffect, useState, useContext } from "react";
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
-import { IndexeddbPersistence } from "y-indexeddb";
 import { QuillBinding } from "y-quill";
 import Quill from "quill";
 import QuillCursors from "quill-cursors";
 import ReactQuill from "react-quill";
 import styled from "styled-components";
 import { ConnectuserContext } from "../../context/ConnectUserContext";
+import socket from "../../socket";
+import { useAuth } from "../auth/Auth";
 
 const TOOLBAR_OPTIONS = [
   [{ align: [] }],
@@ -20,13 +21,15 @@ const TOOLBAR_OPTIONS = [
 ];
 
 const MemoRtc = ({ project_Id }) => {
+  const auth = useAuth();
   let quillRef = null;
   let reactQuillRef = null;
+  Quill.register("modules/cursors", QuillCursors);
   const [projectID, setProjectId] = useState(project_Id);
   const { connectUser, setConnectUser } = useContext(ConnectuserContext);
-  const userName = sessionStorage.getItem("myNickname");
+  // const userName = sessionStorage.getItem("myNickname");
+  const userName = auth.user.user_name;
 
-  Quill.register("modules/cursors", QuillCursors);
   useEffect(() => {
     setProjectId(project_Id);
   }, [project_Id]);
@@ -36,7 +39,6 @@ const MemoRtc = ({ project_Id }) => {
 
     const ydoc = new Y.Doc();
     const provider = new WebrtcProvider(`${projectID}`, ydoc);
-    const indexeddbProvider = new IndexeddbPersistence(`${projectID}`, ydoc);
     const ytext = ydoc.getText(`${projectID}`);
     try {
       provider.awareness.setLocalStateField("user", {
@@ -44,13 +46,41 @@ const MemoRtc = ({ project_Id }) => {
         color: connectUser[userName].color,
       });
     } catch (err) {
-      return () => {
-        provider.destroy();
-      };
+      alert("로그인을 해주세요.");
+      window.location.href = "/";
     }
+
+    // console.log(" ==== socket 접속자 수 : ", socket._callbacks.$deleteCurser.length);
+    // const connectUsers = socket._callbacks.$deleteCurser.length;
+
+    const connectUsers = Object.keys(connectUser).length;
+    // console.log(" @#@#@#@#@# connectuser : ", connectUsers);
+    if (connectUsers < 2) {
+      fetch(
+        `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/memo/${projectID}`,
+        {
+          method: "get",
+          headers: {
+            "content-type": "application/json",
+          },
+          credentials: "include",
+        }
+      )
+        .then((res) => res.json())
+        .then((res) => {
+          // console.log("===== fetch 결과 =====");
+          // console.log(res[0].insert);
+          const len = quillRef.editor.delta.ops.length;
+          for (var i = 0; i < len; i++) {
+            ytext.insert(i, res[i].insert.slice(0, -1));
+          }
+        });
+    }
+
     const binding = new QuillBinding(ytext, quillRef, provider.awareness);
 
     return () => {
+      socket.emit("save_memo", [projectID, quillRef.editor.delta.ops]);
       provider.destroy();
     };
   }, []);
