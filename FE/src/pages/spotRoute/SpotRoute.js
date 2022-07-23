@@ -3,7 +3,6 @@ import styled from "styled-components";
 import SpotList from "../../components/spot/SpotList";
 import MarkMap from "../../components/MarkMap/MarkMap";
 import MemoRtc from "../../components/shareMemo/MemoRtc";
-// import TextEditor from "../shareMemo/TextEditor";
 import Cursor from "../shareMemo/Cursor";
 import SearchDetail from "../../components/searchMap/SearchDetail";
 import { AlertFilled } from "@ant-design/icons";

@@ -3,21 +3,45 @@ import styled from "styled-components";
 import { useAuth } from "../components/auth/Auth";
 import { useNavigate, Link } from "react-router-dom";
 
-const ProjectItem = ({ el }) => {
-  console.log("ProjectItem");
-  return (
-    <StyledLi>
-      <Link to={`project/${el._id}`}>
-        <h1 style={{ fontSize: "25px" }}> {el.project_title}</h1>
-      </Link>
-    </StyledLi>
-  );
-};
-
 const ProjectList = () => {
   const [items, setItems] = useState([]);
   const auth = useAuth();
   let projectsInfo = null;
+
+  const onDelete = async (event) => {
+    if (confirm("프로젝트를 삭제하시겠어요??")) {
+      const projectId = event.target.dataset.id;
+      const data = {
+        _id: auth.user._id,
+      };
+
+      const response = await fetch(
+        `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${projectId}`,
+        {
+          method: "post",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+      location.reload();
+    }
+  };
+
+  const ProjectItem = ({ el }) => {
+    console.log("ProjectItem");
+    return (
+      <StyledLi>
+        <Link to={`project/${el._id}`}>
+          <h1 style={{ fontSize: "25px" }}> {el.project_title}</h1>
+        </Link>
+        <button data-id={el._id} onClick={onDelete}>
+          삭제하기
+        </button>
+      </StyledLi>
+    );
+  };
 
   useEffect(() => {
     if (auth.user === undefined || auth.user === null) return;
