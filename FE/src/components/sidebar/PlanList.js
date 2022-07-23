@@ -70,7 +70,6 @@ const culTripTermData = (startDate, day) => {
 };
 
 function PlanList({
-  toggleIsPage,
   goDetailPage,
   startDate,
   routes,
@@ -173,7 +172,7 @@ function PlanList({
 
     setSelectedIndex(selectIdx);
     setSelectedDay(selectIdx);
-    // isFirstPage && toggleIsPage();
+
     isFirstPage && goDetailPage();
     if (selectIdx === attentionIndex) {
       setAttentionIndex(-1);
