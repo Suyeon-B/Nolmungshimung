@@ -61,8 +61,9 @@ jobs:
           username: ubuntu
           script: |
             echo "Hello" &&
-            cd Nolmungshimung &&
-            git pull origin develop &&
+            rm -rf Nolmungshimung &&
+            git clone https://github.com/Suyeon-B/Nolmungshimung.git &&
+            cd Nolmunshimung &&
             sudo docker-compose down && sudo docker-compose pull && sudo docker-compose up -d
             
 #       - uses: actions/checkout@master
