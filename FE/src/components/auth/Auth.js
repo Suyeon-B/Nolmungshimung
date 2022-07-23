@@ -37,20 +37,13 @@ export const AuthProvider = ({ children }) => {
         }
       });
   }, []);
-  // }, [user]);
 
-  console.log("AuthProvider");
-  console.log(user);
-  // console.log("ss", userProjects);
-
-  // sessionStorage.setItem("information", userProjects);
   const login = async (user) => {
     await setUser(user);
   };
 
   const logout = async () => {
     // cookie 삭제
-    // console.log("auth logout");
     deleteCookie("w_access");
     deleteCookie("w_refresh");
     await setUser(null);
@@ -73,19 +66,15 @@ export const RequireAuth = ({ children }) => {
   const auth = useAuth();
   // console.log(`auth in Auth: ${JSON.stringify(auth)}`);
 
-  if (!auth?.user) {
-    // console.log(`auth in Auth : ${JSON.stringify(auth)}`);
-    // console.log(`auth.user in Auth: ${JSON.stringify(auth.user)}`);
-
+  if (auth?.user) {
+    return children;
     // return children;
-    return <Navigate to="/signin" />;
   }
-  return children;
+  return <Navigate to="/signin" />;
 };
 
 export const NotRequireAuth = ({ children }) => {
   const auth = useAuth();
-  // console.log(`auth in Auth: ${JSON.stringify(auth)}`);
 
   if (auth?.user) {
     // console.log(`auth in Auth : ${JSON.stringify(auth)}`);
