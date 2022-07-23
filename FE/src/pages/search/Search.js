@@ -99,7 +99,7 @@ const Search = ({
     const map = new kakao.maps.Map(container, options);
     currentMap = map;
     const ps = new kakao.maps.services.Places();
-
+    map.setMaxLevel(10);
     ps.keywordSearch(
       searchPlace ? searchPlace : "제주도",
       placesSearchCB,
