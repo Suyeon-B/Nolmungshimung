@@ -135,9 +135,12 @@ router.patch("/routes/:id", async (req, res) => {
 
 router.get("/:id", async (req, res, next) => {
   const { id } = req.params;
-
   try {
     const projectInfo = await Project.findById({ _id: id });
+    let routes = await Redis.get(`${req.params.id}`)
+    if (routes){
+      projectInfo.routes = JSON.parse(routes)
+    }
     return res.json(projectInfo);
   } catch (error) {
     console.log(`project find id: ${error}`);

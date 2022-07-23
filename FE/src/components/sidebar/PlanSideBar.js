@@ -126,6 +126,8 @@ const SideBarBtnDIv = styled.div`
   background-color: white;
   justify-content: center;
   align-items: center;
+  border-top: 2px solid #ebebeb;
+  border-bottom: 2px solid #ebebeb;
 `;
 const NoneStyleBtn = styled.button`
   outline: 0;
@@ -159,8 +161,9 @@ const Fonts = styled.div`
 
 const PlanHome = styled(HomeFilled)`
   color: #ff8a3d;
-  font-size: 40px;
+  font-size: 30px;
   margin-bottom: 7px;
+  /* width: 10px' */
 `;
 
 export default PlanSideBar;

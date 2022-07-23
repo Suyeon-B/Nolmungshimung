@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
+import ResultMap from "../components/MarkMap/resultMap";
 
 function Result() {
   const { projectId } = useParams();
@@ -21,6 +22,7 @@ function Result() {
     async function fetchInfo() {
       const data = await fetchProjectById(projectId);
       setRoutes(data.routes);
+      // console.log(data.routes);
       setTitle(data.project_title);
       setStartDate(data.start_date.join(".").slice(0, -2));
     }
@@ -74,7 +76,7 @@ function Result() {
             );
           })}
       </ResultContainer>
-      <ResultImage src="/statics/images/signUpBackground.png" />
+      <ResultMap routes={routes} />
     </ResultWhole>
   );
 }
