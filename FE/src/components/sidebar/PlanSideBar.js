@@ -9,7 +9,6 @@ const PlanSideBar = ({
   item,
   goSearchPage,
   goDetailPage,
-  toggleIsPage,
   isFirstPage,
   itemRoutes,
   setItemRoutes,
@@ -35,11 +34,6 @@ const PlanSideBar = ({
   return (
     <SideBar>
       <PlanTitleWrap>
-        {/* <NoneStyleBtn
-          onClick={() => {
-            navigate("/");
-          }}
-        > */}
         <PlanHome
           onClick={() => {
             navigate("/");
@@ -77,7 +71,6 @@ const PlanSideBar = ({
 
       <PlanList
         goDetailPage={onClickDetail}
-        toggleIsPage={toggleIsPage}
         startDate={item.start_date}
         term={item.term}
         routes={itemRoutes}

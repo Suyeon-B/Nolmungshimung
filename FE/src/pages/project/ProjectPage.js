@@ -48,6 +48,12 @@ const ProjectPage = (props) => {
   };
 
   useEffect(() => {
+    window.addEventListener("beforeunload", (event) => {
+      socket.emit("projectLeave", [projectId, auth.user.user_name]);
+    });
+  }, []);
+
+  useEffect(() => {
     if (projectId === null) return;
     async function fetchInfo() {
       const data = await fetchProjectById(projectId);
@@ -108,7 +114,6 @@ const ProjectPage = (props) => {
         // 기존 정보가 아닌 다른 정보
         diff = currentArr.filter((el) => !newUserArr.includes(el));
         for (let user of diff) {
-          console.log(connectUserInfo[user]);
           newUser = {
             ...newUser,
             [user]: {
@@ -117,10 +122,12 @@ const ProjectPage = (props) => {
             },
           };
         }
-        console.log(newUser);
         return newUser;
       });
     });
+    return () => {
+      socket.removeAllListeners("connectUser");
+    };
   }, []);
 
   useEffect(() => {
@@ -134,7 +141,6 @@ const ProjectPage = (props) => {
       return;
     console.log("projectJoin");
     socket.emit("projectJoin", [projectId, auth.user.user_name]);
-
     return () => {
       socket.emit("projectLeave", [projectId, userName]);
       socket.off("connect");
@@ -175,6 +181,9 @@ const ProjectPage = (props) => {
     socket.on("updateRoute", (resItemsRoute) => {
       setItemsRoute(resItemsRoute);
     });
+    return () => {
+      socket.removeAllListeners("updateRoute");
+    };
   }, []);
 
   useEffect(() => {
@@ -201,10 +210,13 @@ const ProjectPage = (props) => {
       // triggerNotif();
       // console.log("입장");
     });
+    return () => {
+      socket.removeAllListeners("notify");
+    };
   }, []);
+
   useEffect(() => {
     socket.on("attentionPlease", ([date, user_name], attentionIdx) => {
-      console.log(date, attentionIdx);
       setAttentionIndex(attentionIdx);
       const openNotificationWithIcon = (type) => {
         notification[type]({
@@ -217,8 +229,10 @@ const ProjectPage = (props) => {
       //   body: `${user_name}님이 ${date} 페이지로 당신을 부르고 있어요!`,
       // });
       // triggerNotif();
-      console.log("ddd");
     });
+    return () => {
+      socket.removeAllListeners("attentionPlease");
+    };
   }, []);
 
   if (isLoading) {
@@ -228,9 +242,6 @@ const ProjectPage = (props) => {
     return <div>isLoading....</div>;
   }
 
-  const toggleIsPage = () => {
-    setIsFirstPage(!isFirstPage);
-  };
   const goSearchPage = () => {
     setIsFirstPage(true);
   };
@@ -251,7 +262,6 @@ const ProjectPage = (props) => {
         goSearchPage={goSearchPage}
         goDetailPage={goDetailPage}
         isFirstPage={isFirstPage}
-        toggleIsPage={toggleIsPage}
         itemRoutes={itemsRoute}
         setItemRoutes={setItemsRoute}
         setSelectedIndex={setSelectedIndex}
