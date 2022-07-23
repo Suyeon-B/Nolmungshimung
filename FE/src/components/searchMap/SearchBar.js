@@ -24,7 +24,7 @@ const SearchBar = (props) => {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        boxShadow: "3px 3px 0px 0px lightgray",
+        boxShadow: "3px 3px 3px 0px lightgray",
         paddingBottom: "18px",
       }}
     >
