@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { Button, Drawer, Radio, Space } from "antd";
 import { useParams } from "react-router-dom";
 import ResultMap from "../components/MarkMap/resultMap";
 
@@ -26,27 +25,10 @@ function Result() {
       // console.log(data.routes);
       setTitle(data.project_title);
       setStartDate(data.start_date.join(".").slice(0, -2));
-      // console.log(JSON.stringify(data));
-      // console.log(`routes : ${JSON.stringify(data.routes)}`);
-      // for (let i = 0; i < data.routes.length; i++) {
-      //   console.log(data.routes[i]);
-      //   test.push(data.routes[i]);
-      // }
-      // console.log(routes);
-      // console.log(`test : ${test[0].map((el) => el.place_name)}`);
     }
     fetchInfo();
     return () => {};
   }, [projectId]);
-
-  const showDrawer = () => {
-    setVisible(true);
-    console.log(routes);
-  };
-
-  const onClose = () => {
-    setVisible(false);
-  };
 
   const culTripTermData = (startDate, day) => {
     const sDate = new Date(startDate);
@@ -57,68 +39,61 @@ function Result() {
   };
 
   return (
-    <div>
-      <button
-        onClick={showDrawer}
-        style={{ position: "absolute", zIndex: "10" }}
-      >
-        OPNE
-      </button>
-      <Drawer
-        title="전체 여행 경로"
-        placement="left"
-        width={500}
-        onClose={onClose}
-        visible={visible}
-      >
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <ResultProjectTitle>{title}</ResultProjectTitle>
-          {/* <ResultLine /> */}
-          {routes &&
-            routes.map((route, idx) => {
-              return route.length !== 0 ? (
-                <div key={idx + 1}>
-                  <ResultLine />
-                  <ResultTitle>
-                    DAY {idx + 1} | {culTripTermData(startDate, idx)}
-                    <br />
-                  </ResultTitle>{" "}
-                  {route.map((el, index) => (
-                    <ResultRoute key={el.uid}>
-                      {el.place_name}
-                      <br />
-                    </ResultRoute>
-                  ))}
-                </div>
-              ) : (
-                <div key={idx + 1}>
-                  <ResultLine />
-                  <ResultTitle>
-                    DAY {idx + 1} | {culTripTermData(startDate, idx)}
-                    <br />
-                  </ResultTitle>
-                  <ResultRoute key={idx + 991}>
-                    채워주세요
+    <ResultWhole>
+      <ResultContainer>
+        <span>전체 여행 경로</span>
+        <br />
+        <br />
+        <ResultProjectTitle>{title}</ResultProjectTitle>
+        {routes &&
+          routes.map((route, idx) => {
+            return route.length !== 0 ? (
+              <div key={idx + 1}>
+                <ResultLine />
+                <ResultTitle>
+                  DAY {idx + 1} | {culTripTermData(startDate, idx)}
+                  <br />
+                </ResultTitle>{" "}
+                {route.map((el, index) => (
+                  <ResultRoute key={el.uid}>
+                    {el.place_name}
                     <br />
                   </ResultRoute>
-                </div>
-              );
-            })}
-        </div>
-      </Drawer>
-      {/* <ResultImage src="/statics/images/signUpBackground.png" />; */}
+                ))}
+              </div>
+            ) : (
+              <div key={idx + 1}>
+                <ResultLine />
+                <ResultTitle>
+                  DAY {idx + 1} | {culTripTermData(startDate, idx)}
+                  <br />
+                </ResultTitle>
+                <ResultRoute key={idx + 991}>
+                  쉬는 날
+                  <br />
+                </ResultRoute>
+              </div>
+            );
+          })}
+      </ResultContainer>
       <ResultMap routes={routes} />
-    </div>
+    </ResultWhole>
   );
 }
 
-const ResultImage = styled.div`
-  position: absolute;
-  left: 0;
-  top: 0;
+const ResultWhole = styled.div`
+  display: flex;
   width: 100vw;
   height: 100vh;
-  background-size: cover;
+`;
+
+const ResultImage = styled.img`
+  right: 0;
+  top: 0;
+  width: calc(100vw-400px);
+  height: 100vh;
+  resize: cover;
+
   background-repeat: no-repeat;
 `;
 
@@ -153,6 +128,21 @@ const ResultRoute = styled.li`
   font-size: 17px;
   line-height: 29px;
   marign-bottom: 9px;
+`;
+
+const ResultContainer = styled.div`
+  display: flex;
+  width: 400px;
+  min-width: 400px;
+  padding: 25px;
+  height: 100vh;
+  box-shadow: 5px 5px 5px 15px lightgray;
+  flex-direction: column;
+  overflow: auto;
+  ::-webkit-scrollbar {
+    display: none;
+    width: 0;
+  }
 `;
 
 export default Result;

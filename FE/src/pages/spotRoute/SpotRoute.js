@@ -81,7 +81,7 @@ function SpotRoute({
   };
 
   const onClcikResult = () => {
-    navigate(`/project/${projectId}/result`, { replace: true });
+    navigate(`/project/${projectId}/result`, { replace: false });
   };
   return (
     <SpotRouteContainer>

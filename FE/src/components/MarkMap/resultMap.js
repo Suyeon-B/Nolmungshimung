@@ -80,10 +80,10 @@ function ResultMap(props) {
       }
       const polyline = new kakao.maps.Polyline({
         path: lines[i], // 선을 구성하는 좌표배열 입니다
-        strokeWeight: 5, // 선의 두께 입니다
-        strokeColor: "black", // 선의 색깔입니다
+        strokeWeight: 2.4, // 선의 두께 입니다
+        strokeColor: "#123444", // 선의 색깔입니다
         strokeOpacity: 0.7, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
-        strokeStyle: "solid", // 선의 스타일입니다s
+        strokeStyle: "dash", // 선의 스타일입니다s
         // strokeStyle: "dashed",
       });
       polyline.setMap(map); //
@@ -93,8 +93,7 @@ function ResultMap(props) {
     <div
       id="map"
       style={{
-        position: "absolute",
-        width: "100vw",
+        width: "80vw",
         height: "100vh",
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat ",
