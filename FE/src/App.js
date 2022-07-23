@@ -8,6 +8,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import CreateProject from "./components/CreateProject";
 import styled from "styled-components";
 // import TextEditor from "./components/shareMemo/test";
+import TestMap from "./components/MarkMap/testMap";
 
 import "./App.css";
 import "./reset.css";
@@ -52,7 +53,7 @@ function App() {
                 }
               />
               <Route path="voicetalk/*" element={<VoiceTalk />} />
-              {/* <Route path="/" element={<Home />} /> */}
+              <Route path="testmap/" element={<TestMap />} />
               <Route path="/" element={<HomeNew />} />
               <Route
                 path="/kakao/signin"
