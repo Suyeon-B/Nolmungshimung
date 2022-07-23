@@ -7,14 +7,6 @@ import styled from "styled-components";
 import socket from "../../socket";
 import { ConnectuserContext } from "../../context/ConnectUserContext";
 
-const EditorBox = styled.div`
-  /* display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding-top: 20px;
-  width: 100%; */
-`;
-
 function Cursor({ project_Id, selectedIndex }) {
   const [presences, setPresences] = useState({});
   const userName = sessionStorage.getItem("myNickname");
@@ -60,7 +52,9 @@ function Cursor({ project_Id, selectedIndex }) {
     return () => {
       console.log(selectedIndex, "  공유 편집 나가기");
       // selectedIndex로 공유 편집 나가기 구현하기
+      socket.removeAllListeners("deleteCurser");
       socket.emit("exitSharedEditing", [project_Id, selectedIndex, userName]);
+
       setPresences({});
       window.removeEventListener("mousemove", mouseFunc);
     };
@@ -70,7 +64,6 @@ function Cursor({ project_Id, selectedIndex }) {
   useEffect(() => {
     socket.on("mouse_update", (mouseInfo) => {
       const user = Object.keys(mouseInfo)[0];
-
       if (mouseInfo[user].color === undefined) {
         mouseInfo[user].color = connectUser[user].color;
       }
@@ -80,14 +73,17 @@ function Cursor({ project_Id, selectedIndex }) {
         return newState;
       });
     });
+    return () => {
+      socket.removeAllListeners("mouse_update");
+    };
   }, []);
 
   return (
-    <EditorBox>
+    <>
       <div id="editor-container"></div>
       <div id="cursor_item"></div>
       <TextEditorUsers presences={presences} selectedIndex={selectedIndex} />
-    </EditorBox>
+    </>
   );
 }
 
