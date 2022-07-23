@@ -55,7 +55,8 @@ jobs:
       - name: Run scripts in server
         uses: appleboy/ssh-action@master
         with:
-          key: ${{ secrets.PRIVATE_KEY }}
+#           key: ${{ secrets.PRIVATE_KEY }}
+          password: admin
           host: ${{ secrets.HOST }}
           username: ubuntu
           script: |
