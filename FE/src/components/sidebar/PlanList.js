@@ -410,8 +410,6 @@ const ItemInnerDiv = styled.div`
 `;
 
 const PlanItemDiv = styled.div`
-  height: 38px;
-  box-sizing: inherit;
   @keyframes color {
     0% {
       border: ${(props) => `3px solid ${props.userColor - 33}`};
@@ -426,7 +424,8 @@ const PlanItemDiv = styled.div`
       border: 3px solid white;
     }
   }
-
+  height: 38px;
+  box-sizing: inherit;
   animation: color 1.5s linear;
 `;
 
