@@ -148,7 +148,7 @@ const SpotRouteSection = styled.section`
 
 const SpotRouteTitle = styled.section`
   width: 100%;
-  margin-top: 34px;
+  margin-top: 29px;
   border-bottom: 1px solid #c1c7cd;
   display: flex;
   align-items: center;
