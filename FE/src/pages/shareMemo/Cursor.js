@@ -3,7 +3,6 @@ import "./TextEditor.css";
 import cloneDeep from "lodash/cloneDeep";
 import "quill/dist/quill.snow.css";
 import TextEditorUsers from "./TextEditorUsers";
-import styled from "styled-components";
 import socket from "../../socket";
 import { ConnectuserContext } from "../../context/ConnectUserContext";
 
