@@ -8,6 +8,7 @@ import ReactQuill from "react-quill";
 import styled from "styled-components";
 import { ConnectuserContext } from "../../context/ConnectUserContext";
 import socket from "../../socket";
+import { useAuth } from "../auth/Auth";
 
 const TOOLBAR_OPTIONS = [
   [{ align: [] }],
@@ -20,12 +21,14 @@ const TOOLBAR_OPTIONS = [
 ];
 
 const MemoRtc = ({ project_Id }) => {
+  const auth = useAuth();
   let quillRef = null;
   let reactQuillRef = null;
   Quill.register("modules/cursors", QuillCursors);
   const [projectID, setProjectId] = useState(project_Id);
   const { connectUser, setConnectUser } = useContext(ConnectuserContext);
-  const userName = sessionStorage.getItem("myNickname");
+  // const userName = sessionStorage.getItem("myNickname");
+  const userName = auth.user.user_name;
 
   useEffect(() => {
     setProjectId(project_Id);
@@ -53,13 +56,16 @@ const MemoRtc = ({ project_Id }) => {
     const connectUsers = Object.keys(connectUser).length;
     // console.log(" @#@#@#@#@# connectuser : ", connectUsers);
     if (connectUsers < 2) {
-      fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/memo/${projectID}`, {
-        method: "get",
-        headers: {
-          "content-type": "application/json",
-        },
-        credentials: "include",
-      })
+      fetch(
+        `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/memo/${projectID}`,
+        {
+          method: "get",
+          headers: {
+            "content-type": "application/json",
+          },
+          credentials: "include",
+        }
+      )
         .then((res) => res.json())
         .then((res) => {
           // console.log("===== fetch 결과 =====");
