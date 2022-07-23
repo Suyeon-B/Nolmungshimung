@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
 import ResultMap from "../components/MarkMap/resultMap";
+import { CloseOutlined } from "@ant-design/icons";
 
 function Result() {
   const { projectId } = useParams();
@@ -41,7 +42,15 @@ function Result() {
   return (
     <ResultWhole>
       <ResultContainer>
-        <span>전체 여행 경로</span>
+        <div>
+          <CloseOutlined
+            style={{ color: "red", fontWeight: "900", fontSize: "30px" }}
+            onClick={() => {
+              window.location.replace(`/project/${projectId}`);
+            }}
+          />
+          <ResultXTitle> &nbsp;&nbsp;&nbsp;전체 여행 경로</ResultXTitle>
+        </div>
         <br />
         <br />
         <ResultProjectTitle>{title}</ResultProjectTitle>
@@ -104,6 +113,13 @@ const ResultProjectTitle = styled.span`
   font-size: 35px;
   line-height: 36px;
   color: #ff8a3d;
+`;
+
+const ResultXTitle = styled.span`
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
 `;
 
 const ResultTitle = styled.section`
