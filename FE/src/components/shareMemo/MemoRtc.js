@@ -27,7 +27,6 @@ const MemoRtc = ({ project_Id }) => {
   const { connectUser, setConnectUser } = useContext(ConnectuserContext);
   const userName = sessionStorage.getItem("myNickname");
 
-  // console.log(socket);
   useEffect(() => {
     setProjectId(project_Id);
   }, [project_Id]);
@@ -45,14 +44,14 @@ const MemoRtc = ({ project_Id }) => {
       });
     } catch (err) {
       alert("로그인을 해주세요.");
-      window.location.href("/signup");
+      window.location.href = "/";
     }
 
     // console.log(" ==== socket 접속자 수 : ", socket._callbacks.$deleteCurser.length);
     // const connectUsers = socket._callbacks.$deleteCurser.length;
 
     const connectUsers = Object.keys(connectUser).length;
-    console.log(" @#@#@#@#@# connectuser : ", connectUsers);
+    // console.log(" @#@#@#@#@# connectuser : ", connectUsers);
     if (connectUsers < 2) {
       fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/memo/${projectID}`, {
         method: "get",
@@ -63,9 +62,8 @@ const MemoRtc = ({ project_Id }) => {
       })
         .then((res) => res.json())
         .then((res) => {
-          console.log("===== fetch 결과 =====");
-          // console.log(res);
-          console.log(res[0].insert);
+          // console.log("===== fetch 결과 =====");
+          // console.log(res[0].insert);
           const len = quillRef.editor.delta.ops.length;
           for (var i = 0; i < len; i++) {
             ytext.insert(i, res[i].insert.slice(0, -1));

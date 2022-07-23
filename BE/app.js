@@ -12,12 +12,10 @@ var projectsRouter = require("./routes/projects/projects");
 var travelRouter = require("./routes/travel/travel");
 var commonRouter = require("./routes/common/common");
 var voiceRouter = require("./routes/voicetalk/voicetalk");
-// var memoRouter = require("./routes/sharememo/shareMemo");
 var mongodb = require("dotenv").config();
 var fs = require("fs");
 
 voiceRouter;
-// memoRouter;
 
 var app = express();
 // [원영] 소켓 서버 추가
@@ -87,20 +85,6 @@ io.on("connection", (socket) => {
           selectedIndex,
         },
       };
-      let colorIndex = 0;
-
-      // for (let color in colors) {
-      //   if (!colors[color].includes(projectId)) {
-      //     projectSocketRoom[projectId][userName].color = color;
-      //     colors[color].push(projectId);
-      //     break;
-      //   }
-      // }
-      // console.log(colors);
-
-      // projectSocketRoom[projectId][userName].color =
-      //   colors[Object.keys(projectSocketRoom[projectId]).length];
-
       socket.join(projectId);
       io.to(projectId).emit("connectUser", projectSocketRoom[projectId]);
 
@@ -124,11 +108,7 @@ io.on("connection", (socket) => {
 
   try {
     socket.on("attention", (date, selectedIndex, projectId, userName) => {
-      // console.log("==================");
-      // console.log(`date : ${date}`);
       console.log("attention", projectId);
-      // console.log(`user_name:${userName}`);
-      // socket.emit("attentionPlease", [date, userName]);
       try {
         // console.log("ooooo");
         socket.broadcast.to(projectId).emit("attentionPlease", [date, userName], selectedIndex);
@@ -143,12 +123,12 @@ io.on("connection", (socket) => {
   socket.on("projectLeave", ([projectId, userName]) => {
     try {
       console.log("projectLeave", projectId);
-      socket.leave(projectId);
-      const userColor = projectSocketRoom[projectId][userName].color;
-      colors[userColor] = colors[userColor].filter((id) => {
-        return id !== projectId;
-      });
+      // 유저 정보 삭제
+
       delete projectSocketRoom[projectId][userName];
+      // 나간 유저 정보 모든 유저에게 알리기
+      io.to(projectId).emit("connectUser", projectSocketRoom[projectId]);
+      socket.leave(projectId);
       console.log(projectSocketRoom[projectId]);
     } catch (error) {
       console.log(error);
@@ -178,7 +158,6 @@ io.on("connection", (socket) => {
   socket.on("mouse_move", ([projectId, mouseInfo, selectedIndex, userName]) => {
     // console.log(projectId, mouseInfo, selectedIndex, userName);
     try {
-      mouseInfo[userName].color = projectSocketRoom[projectId][userName].color;
       socket.broadcast.to(projectId + selectedIndex).emit("mouse_update", mouseInfo);
     } catch (error) {
       // console.log(error);
@@ -197,26 +176,16 @@ io.on("connection", (socket) => {
   // [Hyeok] Grab Routes
   // socket.on("grabSpot", ([projectId, userName, selectedIndex])=>{});
 
+  // [수연] share-memo
   socket.on("save_memo", async ([projectId, quillRefEditor]) => {
-    // console.log("@@@@@ save-memo @@@@@");
-    // console.log(projectId, quillRefEditor);
-
     const project = await findProjectById(projectId);
     if (project) {
       await projectSchema.findByIdAndUpdate(projectId, { quillRefEditor });
     }
-
-    // console.log("@@@@@ projectConnectUser @@@@@");
-    // console.log(projectConnectUser);
-    // console.log(socket.adapter.rooms);
-    const socketRooms = socket.adapter.rooms;
-    const projectConnectUser = socketRooms.get(projectId)?.size;
-    console.log(projectConnectUser);
-    socket.broadcast.to(projectId).emit("projectConnectUser", projectConnectUser);
   });
 });
 
-// [수연] share-memo 관련
+// [수연] share-memo
 async function findProjectById(id) {
   try {
     if (id == null) return;
