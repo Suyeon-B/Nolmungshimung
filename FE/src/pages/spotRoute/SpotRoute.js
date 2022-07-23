@@ -3,7 +3,6 @@ import styled from "styled-components";
 import SpotList from "../../components/spot/SpotList";
 import MarkMap from "../../components/MarkMap/MarkMap";
 import MemoRtc from "../../components/shareMemo/MemoRtc";
-// import TextEditor from "../shareMemo/TextEditor";
 import Cursor from "../shareMemo/Cursor";
 import SearchDetail from "../../components/searchMap/SearchDetail";
 import { AlertFilled } from "@ant-design/icons";
@@ -19,19 +18,17 @@ function SpotRoute({
   setIsDrage,
   setIsAddDel,
   projectId,
+  userName,
 }) {
   const [notifyFlag, setNotifyFlag] = useState(false);
   const [visible, setVisible] = useState(false);
   const [contents, setContents] = useState(null);
   let navigate = useNavigate();
 
-  console.log(socket);
-
   const handleVisible = (value) => {
     setVisible(value);
   };
   const handleContents = (value) => {
-    console.log(value);
     const data = {
       input: value.road_address_name + "" + value.place_name,
       place_id: value.id,
@@ -82,7 +79,7 @@ function SpotRoute({
     setVisible(false);
     setContents(null);
   };
-  const userName = sessionStorage.getItem("myNickname");
+  // const userName = sessionStorage.getItem("myNickname");
   useEffect(() => {
     if (notifyFlag === false) return;
     // console.log(notifyFlag);
@@ -135,6 +132,7 @@ function SpotRoute({
           setIsAddDel={setIsAddDel}
           handleVisible={handleVisible}
           handleContents={handleContents}
+          userName={userName}
         />
         <SpotRouteMap id="myMap" />
       </SpotRouteSection>

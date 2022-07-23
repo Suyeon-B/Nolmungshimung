@@ -17,6 +17,7 @@ const PlanSideBar = ({
   setIsAddDel,
   attentionIndex,
   setAttentionIndex,
+  userName,
 }) => {
   const [detailColor, setDetailColor] = useState("white");
   const [searchColor, setSearchColor] = useState("#ebebeb");
@@ -81,6 +82,7 @@ const PlanSideBar = ({
         setIsAddDel={setIsAddDel}
         attentionIndex={attentionIndex}
         setAttentionIndex={setAttentionIndex}
+        userName={userName}
       />
     </SideBar>
   );
@@ -106,7 +108,7 @@ const PlanTitle = styled.h1`
   display: inline-flex;
   font-style: normal;
   font-weight: 700;
-  font-size: 28px;
+  font-size: 1.6vw;
   line-height: 48px;
   color: #ff8a3d;
   margin-left: 10px;
@@ -155,7 +157,7 @@ const Fonts = styled.div`
 const PlanHome = styled(HomeFilled)`
   color: #ff8a3d;
   font-size: 30px;
-  margin-bottom: 7px;
+  margin-bottom: 12px;
   /* width: 10px' */
 `;
 

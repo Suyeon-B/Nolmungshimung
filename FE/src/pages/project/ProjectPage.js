@@ -34,7 +34,8 @@ const ProjectPage = (props) => {
   const [isAddDel, setIsAddDel] = useState(false);
   const [connectUser, setConnectUser] = useState({});
   const [attentionIndex, setAttentionIndex] = useState(-1);
-  const userName = sessionStorage.getItem("myNickname");
+  // const userName = sessionStorage.getItem("myNickname");
+  const userName = auth.user.user_name;
   const colors = {
     // "#FF8A3D": false,
     "#8DD664": false,
@@ -92,8 +93,8 @@ const ProjectPage = (props) => {
 
   useEffect(() => {
     socket.on("connectUser", (connectUserInfo) => {
-      console.log("connectUser", connectUserInfo);
-      console.log(colors);
+      // console.log("connectUser", connectUserInfo);
+      // console.log(colors);
       setConnectUser((prev) => {
         let newUser = { ...prev };
         const newUserArr = Object.keys(newUser);
@@ -269,6 +270,7 @@ const ProjectPage = (props) => {
         setIsAddDel={setIsAddDel}
         attentionIndex={attentionIndex}
         setAttentionIndex={setAttentionIndex}
+        userName={userName}
       />
       <PlanSection>
         {isFirstPage && (
@@ -290,6 +292,7 @@ const ProjectPage = (props) => {
             itemId={items._id}
             setIsDrage={setIsDrage}
             setIsAddDel={setIsAddDel}
+            userName={userName}
           />
         )}
       </PlanSection>

@@ -3,7 +3,6 @@ import SearchListRoute from "../../components/searchMap/SearchListRoute";
 import SearchBar from "../../components/searchMap/SearchBar";
 import styled from "styled-components";
 // import NomalMarker from "../../../public/statics/images/location-dot-solid.svg";
-import { throttle } from "lodash";
 import { Button } from "antd";
 import { RedoOutlined } from "@ant-design/icons";
 
@@ -242,7 +241,7 @@ const Search = ({
           sumit={setSumit}
           current={sumit}
         />
-        <ul>
+        <SearchUl>
           {Places &&
             Places.map((item, i) => (
               <SearchListRoute
@@ -263,7 +262,7 @@ const Search = ({
             id="pagination"
             style={{ position: "relative", zIndex: 2 }}
           ></div>
-        </ul>
+        </SearchUl>
       </SearchListDiv>
       <StyledMapDiv id="searchMap">
         <Button
@@ -293,11 +292,15 @@ const SearchListDiv = styled.div`
   padding-top: 27.5px;
   width: 340px;
   height: 100vh;
+`;
+
+const SearchUl = styled.ul`
+  height: 93%;
   overflow: scroll;
   ::-webkit-scrollbar {
     display: none;
   }
-  /* background-color: red; */
+
   scroll-behavior: smooth;
 `;
 

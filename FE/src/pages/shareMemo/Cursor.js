@@ -5,10 +5,13 @@ import "quill/dist/quill.snow.css";
 import TextEditorUsers from "./TextEditorUsers";
 import socket from "../../socket";
 import { ConnectuserContext } from "../../context/ConnectUserContext";
+import { useAuth } from "../../components/auth/Auth";
 
 function Cursor({ project_Id, selectedIndex }) {
+  const auth = useAuth();
   const [presences, setPresences] = useState({});
-  const userName = sessionStorage.getItem("myNickname");
+  // const userName = sessionStorage.getItem("myNickname");
+  const userName = auth.user.user_name;
   const { connectUser, setConnectUser } = useContext(ConnectuserContext);
   // console.log(connectUser);
   let cursor;
