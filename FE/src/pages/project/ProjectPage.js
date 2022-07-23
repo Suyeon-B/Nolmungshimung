@@ -175,8 +175,8 @@ const ProjectPage = (props) => {
   }, [isDrage, isAddDel]);
 
   useEffect(() => {
-    socket.on("updateRoute", (itemsRoute) => {
-      setItemsRoute(itemsRoute);
+    socket.on("updateRoute", (resItemsRoute) => {
+      setItemsRoute(resItemsRoute);
     });
     return () => {
       socket.removeAllListeners("updateRoute");
@@ -291,7 +291,7 @@ const ProjectPage = (props) => {
           />
         )}
       </PlanSection>
-      <Voicetalk projectId={projectId} />
+      {auth.user && <Voicetalk projectId={projectId} auth={auth.user} />}
     </ConnectuserContext.Provider>
   );
 };
