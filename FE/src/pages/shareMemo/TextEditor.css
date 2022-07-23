@@ -1,0 +1,33 @@
+.task-row:not(:last-child) {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+.task-done {
+  text-decoration: line-through;
+}
+
+.cursor-block {
+  position: absolute;
+}
+.cursor-name-container {
+  position: relative;
+}
+.cursor-name {
+  position: absolute;
+  left: 16px;
+  top: -10px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 12px;
+  padding: 2px 8px;
+}
+.online-panel h4 {
+  margin-bottom: 5px !important;
+}
+.online-item {
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+.online-item > svg {
+  margin-right: 5px;
+  margin-left: 10px;
+}

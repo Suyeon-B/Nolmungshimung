@@ -7,6 +7,15 @@
 var app = require("../app");
 var debug = require("debug")("be:server");
 var http = require("http");
+var https = require("https");
+var fs = require("fs");
+
+// JG - https start
+process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
+var options = {
+  key: fs.readFileSync("nolshimung-key.pem"),
+  cert: fs.readFileSync("nolshimung.pem"),
+};
 
 /**
  * Get port from environment and store in Express.
@@ -19,7 +28,8 @@ app.set("port", port);
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+var server = https.createServer(options, app);
+// var server = http.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.
