@@ -6,8 +6,8 @@ FROM node:16.16-alpine3.16
 WORKDIR "/usr/src/app"
 
 # npm install을 캐싱하기 위해 package.json만 따로 카피
-COPY ./package.json ./
-COPY ./yarn.lock ./
+COPY package.json ./
+COPY yarn.lock ./
 
 RUN npm install --force
 RUN yarn
