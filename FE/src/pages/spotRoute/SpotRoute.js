@@ -19,6 +19,7 @@ function SpotRoute({
   setIsDrage,
   setIsAddDel,
   projectId,
+  userName,
 }) {
   const [notifyFlag, setNotifyFlag] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -79,7 +80,7 @@ function SpotRoute({
     setVisible(false);
     setContents(null);
   };
-  const userName = sessionStorage.getItem("myNickname");
+  // const userName = sessionStorage.getItem("myNickname");
   useEffect(() => {
     if (notifyFlag === false) return;
     // console.log(notifyFlag);
@@ -132,6 +133,7 @@ function SpotRoute({
           setIsAddDel={setIsAddDel}
           handleVisible={handleVisible}
           handleContents={handleContents}
+          userName={userName}
         />
         <SpotRouteMap id="myMap" />
       </SpotRouteSection>

@@ -15,7 +15,9 @@ import { notification } from "antd";
 import socket from "../../socket";
 
 async function fetchProjectById(_id) {
-  const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`);
+  const response = await fetch(
+    `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`
+  );
   return response.json();
 }
 
@@ -32,7 +34,8 @@ const ProjectPage = (props) => {
   const [isAddDel, setIsAddDel] = useState(false);
   const [connectUser, setConnectUser] = useState({});
   const [attentionIndex, setAttentionIndex] = useState(-1);
-  const userName = sessionStorage.getItem("myNickname");
+  // const userName = sessionStorage.getItem("myNickname");
+  const userName = auth.user.user_name;
   const colors = {
     // "#FF8A3D": false,
     "#8DD664": false,
@@ -90,8 +93,8 @@ const ProjectPage = (props) => {
 
   useEffect(() => {
     socket.on("connectUser", (connectUserInfo) => {
-      console.log("connectUser", connectUserInfo);
-      console.log(colors);
+      // console.log("connectUser", connectUserInfo);
+      // console.log(colors);
       setConnectUser((prev) => {
         let newUser = { ...prev };
         const newUserArr = Object.keys(newUser);
@@ -130,7 +133,13 @@ const ProjectPage = (props) => {
 
   useEffect(() => {
     // 접속한 유저에 대한 정보 저장하기
-    if (auth === null || auth === undefined || auth.user === undefined || auth.user === null) return;
+    if (
+      auth === null ||
+      auth === undefined ||
+      auth.user === undefined ||
+      auth.user === null
+    )
+      return;
     console.log("projectJoin");
     socket.emit("projectJoin", [projectId, auth.user.user_name]);
     return () => {
@@ -147,14 +156,17 @@ const ProjectPage = (props) => {
 
     async function UpdateInfo() {
       try {
-        await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${projectId}`, {
-          method: "PATCH",
-          headers: {
-            "content-type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify(itemsRoute),
-        }).then((res) => res.json());
+        await fetch(
+          `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${projectId}`,
+          {
+            method: "PATCH",
+            headers: {
+              "content-type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify(itemsRoute),
+          }
+        ).then((res) => res.json());
       } catch (err) {
         console.log(err);
       }
@@ -279,6 +291,7 @@ const ProjectPage = (props) => {
             itemId={items._id}
             setIsDrage={setIsDrage}
             setIsAddDel={setIsAddDel}
+            userName={userName}
           />
         )}
       </PlanSection>

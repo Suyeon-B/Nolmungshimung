@@ -101,11 +101,12 @@ export default function SpotList({
   selectedIndex,
   setIsDrage,
   setIsAddDel,
+  userName,
 }) {
   // const [state, setState] = useState([testItem, testItem2]);
   const { projectId } = useParams();
   const { connectUser, setConnectUser } = useContext(ConnectuserContext);
-  const userName = sessionStorage.getItem("myNickname");
+  // const userName = sessionStorage.getItem("myNickname");
   const getItemStyle = (isDragging, draggableStyle, color, userName) => ({
     // some basic styles to make the items look a bit nicer
 

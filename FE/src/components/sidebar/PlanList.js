@@ -5,6 +5,7 @@ import "../../App.css";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useEffect, useContext } from "react";
 import { ConnectuserContext } from "../../context/ConnectUserContext";
+import { useAuth } from "../auth/Auth";
 
 const StyledDragDropContext = styled(DragDropContext)``;
 
@@ -81,10 +82,12 @@ function PlanList({
   attentionIndex,
   setAttentionIndex,
 }) {
+  const auth = useAuth();
   const droppableRef = useRef([]);
   const [selectedDay, setSelectedDay] = useState(0);
   const { connectUser, setConnectUser } = useContext(ConnectuserContext);
-  const userName = sessionStorage.getItem("myNickname");
+  // const userName = sessionStorage.getItem("myNickname");
+  const userName = auth.user.user_name;
   if (!routes) {
     return <div>Loading...</div>;
   }
