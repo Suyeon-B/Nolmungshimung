@@ -61,7 +61,7 @@ jobs:
           script: |
             cd Nolmungshimung
             git pull origin develop
-            docker-compose pull && docker-compose up -d
+            sudo docker-compose pull && sudo docker-compose up -d
             
 #       - uses: actions/checkout@master
 #       - name: copy file via ssh password
