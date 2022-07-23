@@ -44,7 +44,14 @@ function App() {
           <BodyDiv>
             {/* <ProjectSide /> */}
             <Routes>
-              <Route path="signin/*" element={<SignIn />} />
+              <Route
+                path="signin/*"
+                element={
+                  <NotRequireAuth>
+                    <SignIn />
+                  </NotRequireAuth>
+                }
+              />
               <Route
                 path="signup/*"
                 element={
@@ -57,10 +64,31 @@ function App() {
               <Route path="testmap/" element={<TestMap />} />
               <Route path="/" element={<HomeNew />} />
               <Route path="/kakao/signin" element={<KakaoSignIn />} />
-              <Route path="project/*" element={<CreateProject />} />
-              <Route path="project/:projectId" element={<ProjectPage />} />
+              <Route
+                path="project/*"
+                element={
+                  <RequireAuth>
+                    <CreateProject />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="project/:projectId"
+                element={
+                  <RequireAuth>
+                    <ProjectPage />
+                  </RequireAuth>
+                }
+              />
               <Route path="Calendar/*" element={<CalendarTest />} />
-              <Route path="project/:projectId/result" element={<Result />} />
+              <Route
+                path="project/:projectId/result"
+                element={
+                  <RequireAuth>
+                    <Result />
+                  </RequireAuth>
+                }
+              />
               {/* <Route
                 path="project/:projectId/:tripDate"
                 element={<ProjectPage />}

@@ -90,7 +90,6 @@ export const NotRequireAuth = ({ children }) => {
   if (auth?.user) {
     // console.log(`auth in Auth : ${JSON.stringify(auth)}`);
     // console.log(`auth.user in Auth: ${JSON.stringify(auth.user)}`);
-
     // return children;
     return <Navigate to="/" />;
   }
