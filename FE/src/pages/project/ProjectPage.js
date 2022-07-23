@@ -283,7 +283,7 @@ const ProjectPage = (props) => {
           />
         )}
       </PlanSection>
-      <Voicetalk projectId={projectId} />
+      <Voicetalk projectId={projectId} auth={auth?.user} />
     </ConnectuserContext.Provider>
   );
 };

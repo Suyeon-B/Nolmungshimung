@@ -34,7 +34,7 @@ function Footer(props) {
 
   useEffect(() => {
     // console.log("friends 바뀜", friends);
-    console.log("Footer 변화", connectUser);
+    // console.log("Footer 변화", connectUser);
     setProfiles(
       <FooterFriendsDiv>
         <FriendProfile key={1} nickName={props.myNickName} color="#ff8a3d" />
