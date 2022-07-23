@@ -27,16 +27,15 @@ jobs:
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
       
-      -
-        name: react Build and push
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          file: ./FE/Dockerfile 
-          platforms: linux/amd64
-          push: true
-          tags: wnsrb003/react-app-nolshimung:latest
-          
+#       -
+#         name: react Build and push
+#         uses: docker/build-push-action@v2
+#         with:
+#           context: .
+#           file: ./FE/Dockerfile 
+#           platforms: linux/amd64
+#           push: true
+#           tags: wnsrb003/react-app-nolshimung:latest
       -
         name: api-server Build and push
         uses: docker/build-push-action@v2
@@ -68,4 +67,6 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ubuntu
           script: |
-            sudo docker-compose down && sudo docker-compose pull && sudo docker-compose up -d
+            sudo docker-compose down && 
+            sudo docker-compose pull && 
+            sudo docker-compose up -d
