@@ -16,9 +16,9 @@ function MarkMap(props) {
     { map_x: 33.452671, map_y: 126.574792 },
     { map_x: 33.451744, map_y: 126.572441 },
   ];
-  // function setBounds(map, bounds) {
-  //   map.setBounds(bounds);
-  // }
+  function setBounds(map, bounds) {
+    map.setBounds(bounds);
+  }
 
   let color = {
     FD6: "#975FFE",
@@ -27,9 +27,9 @@ function MarkMap(props) {
     AD5: "#8DD664", // 숙박
     "": "#CFCFCF",
   };
-  // if (!props) {
-  //   return <div>Loding...</div>;
-  // }
+  if (!props) {
+    return <div>Loding...</div>;
+  }
 
   useEffect(() => {
     var mapContainer = document.getElementById("myMap"), // 지도를 표시할 div
@@ -40,7 +40,6 @@ function MarkMap(props) {
       };
     console.log("렌더링ㄴ");
     map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
-    bounds = new kakao.maps.LatLngBounds();
     polyline = new kakao.maps.Polyline({
       // path: line, // 선을 구성하는 좌표배열 입니다
       strokeWeight: 5, // 선의 두께 입니다
@@ -52,6 +51,7 @@ function MarkMap(props) {
 
   useEffect(() => {
     // console.log(props);
+
     for (var j = 0; j < markers.length; j++) {
       markers[j].setMap(null);
     }
@@ -79,7 +79,7 @@ function MarkMap(props) {
     //   console.log(markers);
     //   markers[i].setMap(null);
     // }
-
+    bounds = new kakao.maps.LatLngBounds();
     console.log("안녕");
     console.log(position);
     for (var i = 0; i < position.length; i++) {
@@ -116,7 +116,9 @@ function MarkMap(props) {
 
       // markers.push(marker);
     }
-    map.setBounds(bounds);
+    if (position.length > 0) {
+      setBounds(map, bounds);
+    }
     polyline.setPath(line);
     polyline.setMap(map);
   }, [position]);
