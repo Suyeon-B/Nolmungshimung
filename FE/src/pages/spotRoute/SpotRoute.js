@@ -34,14 +34,40 @@ function SpotRoute({
     setVisible(value);
   };
   const handleContents = (value) => {
-    fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/travel/` + value.id) //get
+    console.log(value);
+    const data = {
+      input: value.road_address_name + "" + value.place_name,
+      place_id: value.id,
+      place_name: value.place_name,
+      road_address_name: value.road_address_name
+        ? value.road_address_name
+        : value.address_name,
+      category_group_name: value.category_group_name,
+      phone: value.phone,
+      place_url: value.place_url,
+    };
+
+    fetch(
+      `https://${process.env.REACT_APP_SERVER_IP}:8443/travel/find/` + value.id,
+      {
+        method: "POST", // 또는 'PUT'
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    ) //get
       .then((response) => response.json())
       .then((data) => {
-        if (data.message === "success") {
+        if (data.status === 200) {
+          console.log(data);
           console.log("db에 있습니다");
           setContents(data.data);
-        } else {
+        } else if (data.status === 206) {
           console.log("디비에 없음");
+          setContents(data.data);
+        } else {
+          console.log(data.message);
         }
       })
       .catch((error) => console.log(error));
