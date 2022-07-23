@@ -13,6 +13,10 @@ const Room = (props) => {
   const currentUser = props.auth.user_email;
   const currentNick = props.auth.user_name;
 
+  // console.log(props.auth);
+  if (!props.auth) {
+    window.location.replace("/signin");
+  }
   // if (!currentUser) {
   //   alert("로그인하세요");
   // }
@@ -69,7 +73,7 @@ const Room = (props) => {
         });
 
         socket.on("FE-user-join", (users) => {
-          console.log(`FE-user-join ${users}`);
+          // console.log(`FE-user-join ${users}`);
 
           // all users
           const peers = [];
@@ -132,7 +136,7 @@ const Room = (props) => {
         });
 
         socket.on("FE-user-leave", ({ userId, userName }) => {
-          console.log("FE-usr-leave ok", JSON.stringify(userName));
+          // console.log("FE-usr-leave ok", JSON.stringify(userName));
           const peerIdx = findPeer(userId);
           peerIdx.peer.destroy();
           setPeers((users) => {
@@ -232,7 +236,6 @@ const Room = (props) => {
 
   return (
     <>
-      {console.log("보이스톡에서 : ", peers)}
       <MyVideo ref={userAudioRef} muted></MyVideo>
       {peers &&
         peers.map((peer, index, arr) => createUserVideo(peer, index, arr))}
