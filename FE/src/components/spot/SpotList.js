@@ -9,7 +9,6 @@ import { ConnectuserContext } from "../../context/ConnectUserContext";
 
 const SidePlanListDiv = styled.div`
   height: 100%;
-  .div
 `;
 const StyledDragDropContext = styled(DragDropContext)``;
 
