@@ -69,7 +69,7 @@ function Result() {
                   <br />
                 </ResultTitle>
                 <ResultRoute key={idx + 991}>
-                  쉬는 날
+                  쉬는 날 🌱
                   <br />
                 </ResultRoute>
               </div>
