@@ -200,22 +200,22 @@ io.on("connection", (socket) => {
   // socket.on("grabSpot", ([projectId, userName, selectedIndex])=>{});
 
   // [수연] share-memo 관련
-  socket.on("save_memo", async ([projectId, savedYtext]) => {
-    console.log("@@@@@ save-memo @@@@@");
-    console.log(projectId, savedYtext);
-    const project = await findProjectById(projectId);
-    if (project) {
-      await projectSchema.findByIdAndUpdate(projectId, { savedYtext });
-    }
-  });
-  // socket.on("save_memo", async ([projectId, quillRefEditor]) => {
+  // socket.on("save_memo", async ([projectId, savedYtext]) => {
   //   console.log("@@@@@ save-memo @@@@@");
-  //   console.log(projectId, quillRefEditor);
+  //   console.log(projectId, savedYtext);
   //   const project = await findProjectById(projectId);
   //   if (project) {
-  //     await projectSchema.findByIdAndUpdate(projectId, { quillRefEditor });
+  //     await projectSchema.findByIdAndUpdate(projectId, { savedYtext });
   //   }
   // });
+  socket.on("save_memo", async ([projectId, quillRefEditor]) => {
+    console.log("@@@@@ save-memo @@@@@");
+    console.log(projectId, quillRefEditor);
+    const project = await findProjectById(projectId);
+    if (project) {
+      await projectSchema.findByIdAndUpdate(projectId, { quillRefEditor });
+    }
+  });
 });
 
 // [수연] share-memo 관련
