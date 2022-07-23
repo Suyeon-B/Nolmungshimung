@@ -12,9 +12,7 @@ function Result() {
   const [routes, setRoutes] = useState(null); // routes -> [[route],[route],[route]...]
   // route -> [{spotInfo},{spotInfo},{spotInfo}...]
   async function fetchProjectById(_id) {
-    const response = await fetch(
-      `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`
-    );
+    const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`);
     return response.json();
   }
 
@@ -34,9 +32,7 @@ function Result() {
   const culTripTermData = (startDate, day) => {
     const sDate = new Date(startDate);
     sDate.setDate(sDate.getDate() + day);
-    return `${sDate.getFullYear()}. ${
-      sDate.getMonth() + 1
-    }. ${sDate.getDate()}`;
+    return `${sDate.getFullYear()}. ${sDate.getMonth() + 1}. ${sDate.getDate()}`;
   };
 
   return (
@@ -46,7 +42,7 @@ function Result() {
           <CloseOutlined
             style={{ color: "red", fontWeight: "900", fontSize: "30px" }}
             onClick={() => {
-              window.location.replace(`/project/${projectId}`);
+              window.history.back();
             }}
           />
           <ResultXTitle> &nbsp;&nbsp;&nbsp;전체 여행 경로</ResultXTitle>

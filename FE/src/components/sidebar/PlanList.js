@@ -81,13 +81,14 @@ function PlanList({
   setIsAddDel,
   attentionIndex,
   setAttentionIndex,
+  userName,
 }) {
   const auth = useAuth();
   const droppableRef = useRef([]);
   const [selectedDay, setSelectedDay] = useState(0);
   const { connectUser, setConnectUser } = useContext(ConnectuserContext);
   // const userName = sessionStorage.getItem("myNickname");
-  const userName = auth.user.user_name;
+  // const userName = auth.user.user_name;
   if (!routes) {
     return <div>Loading...</div>;
   }
@@ -166,10 +167,6 @@ function PlanList({
     setIsDrage(true);
   }
 
-  // useEffect(() => {
-  //   setSelectedDay(0);
-  // }, [routes]);
-
   const onClick = (event) => {
     const selectIdx = +event.target.dataset.idx;
 
@@ -240,7 +237,7 @@ function PlanList({
                       </DateDetailBtn>
                     </DateDetailBtnDiv>
                     {el.map((item, index) =>
-                      item.user_name === null ? (
+                      item.user_name === null || item.user_name === userName ? (
                         <Draggable
                           key={item.uid}
                           draggableId={item.uid}

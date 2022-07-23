@@ -9,7 +9,6 @@ import { ConnectuserContext } from "../../context/ConnectUserContext";
 
 const SidePlanListDiv = styled.div`
   height: 100%;
-  .div
 `;
 const StyledDragDropContext = styled(DragDropContext)``;
 
@@ -220,7 +219,7 @@ export default function SpotList({
                 {...provided.droppableProps}
               >
                 {el.map((item, index) =>
-                  item.user_name === null ? (
+                  item.user_name === null || item.user_name === userName ? (
                     <Draggable
                       key={item.uid}
                       draggableId={item.uid}

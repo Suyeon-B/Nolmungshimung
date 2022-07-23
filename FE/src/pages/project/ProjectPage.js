@@ -270,6 +270,7 @@ const ProjectPage = (props) => {
         setIsAddDel={setIsAddDel}
         attentionIndex={attentionIndex}
         setAttentionIndex={setAttentionIndex}
+        userName={userName}
       />
       <PlanSection>
         {isFirstPage && (

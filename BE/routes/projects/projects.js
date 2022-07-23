@@ -16,7 +16,11 @@ router.post("/", async (req, res) => {
   const project = new Project(req.body[1]);
 
   // project["people"].push(user_date._id.toString());
-  project["people"].push([user_date._id.toString(), user_date.user_name, user_date.user_email]);
+  project["people"].push([
+    user_date._id.toString(),
+    user_date.user_name,
+    user_date.user_email,
+  ]);
 
   // 여행지 경로에 배열 추가하기
   for (let i = 0; i <= project["term"]; i++) {
@@ -119,6 +123,38 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
+router.post("/:id", async (req, res, next) => {
+  const { id } = req.params;
+  const body = req.body;
+  console.log(body);
+
+  try {
+    const projectInfo = await Project.findById({ _id: id });
+    const userInfo = await User.findById({ _id: body._id });
+
+    // console.log(projectInfo);
+
+    for (let i = 0; i < projectInfo.people.length; i++) {
+      if (projectInfo.people[i][0] === body._id) {
+        projectInfo.people.splice(i, 1);
+      }
+    }
+
+    await projectInfo.save();
+
+    userInfo.user_projects = userInfo.user_projects.filter(
+      (projectId) => projectId !== id
+    );
+
+    await userInfo.save();
+
+    return res.status(200).send({ success: "deleteSuccess" });
+  } catch (error) {
+    console.log(`project find id: ${error}`);
+    res.status(404).send({ error: "project not found" });
+  }
+});
+
 router.post("/friends/:id", async (req, res, next) => {
   const { id } = req.params;
   // console.log(req.body.email);
@@ -137,7 +173,9 @@ router.post("/friends/:id", async (req, res, next) => {
     if (projectInuser.people) {
       for (let n = 0; n < projectInuser.people.length; n++) {
         if (projectInuser.people[n][2] == userInfo.user_email) {
-          res.status(404).send({ success: false, message: "이미 초대된 친구입니다." });
+          res
+            .status(404)
+            .send({ success: false, message: "이미 초대된 친구입니다." });
           return;
         }
       }
