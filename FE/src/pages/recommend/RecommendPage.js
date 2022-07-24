@@ -9,8 +9,8 @@ const ProjectItem = ({ el }) => {
   return (
     <Link to={`project/${el._id}`}>
       <RecommendItems>
-        <div class="recommend_project_title"> {el.project_title}</div>
-        <div class="recommend_project_hashtag"> #{el.hashTags}</div>
+        <div className="recommend_project_title"> {el.project_title}</div>
+        <div className="recommend_project_hashtag"> #{el.hashTags}</div>
       </RecommendItems>
     </Link>
   );
@@ -107,6 +107,7 @@ const RecommendItems = styled.div`
   border-radius: 10px;
   background-color: white;
   margin-right: 20px;
+  cursor: pointer;
   .recommend_project_title {
     font-size: 25px;
     color: black;

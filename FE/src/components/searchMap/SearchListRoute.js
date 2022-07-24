@@ -231,6 +231,7 @@ const StyledBtn = styled.button`
   width: 100%;
   font-weight: 700;
   background-color: rgb(204, 204, 204, 0);
+  cursor: pointer;
   &:hover {
     background-color: rgb(96, 96, 96);
   }
