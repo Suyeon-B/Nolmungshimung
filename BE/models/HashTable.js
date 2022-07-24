@@ -1,8 +1,11 @@
 const mongoose = require("mongoose");
 
 const hashSchema = mongoose.Schema({
-  hashTagNames: {
-    type: Object,
+  hash_tag_name: {
+    type: String,
+  },
+  project_id: {
+    type: Array,
   },
 });
 
