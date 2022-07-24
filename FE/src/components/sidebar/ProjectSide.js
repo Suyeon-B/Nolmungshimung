@@ -167,6 +167,7 @@ const ProfileDetailBtn = styled.span`
   padding: 5px;
   border-bottom: 1px solid white;
   text-align: center;
+  cursor: pointer;
 `;
 const ProfileDetailXBtn = styled.span`
   border: 0px;
@@ -174,6 +175,7 @@ const ProfileDetailXBtn = styled.span`
   padding: 5px;
   border-bottom: 1px solid white;
   text-align: right;
+  cursor: pointer;
 `;
 
 export default ProjectSide;
