@@ -40,7 +40,7 @@ router.post("/alldate", async (req, res, next) => {
 
     const response = await newProject.save();
 
-    user["user_projects"].push(response._id);
+    user["user_projects"].push(response._id.toString());
     await user.save();
 
     res
@@ -52,7 +52,57 @@ router.post("/alldate", async (req, res, next) => {
   }
 });
 
-router.post("/selectdate", async (req, res, next) => {});
+router.post("/selectdate", async (req, res, next) => {
+  try {
+    console.log(req.body);
+    const {
+      projectId,
+      userId,
+      startDate,
+      projectTitle,
+      userName,
+      userEmail,
+      selectDate,
+    } = req.body;
+
+    const getProject = await UploadProject.findById(projectId);
+    const user = await User.findById(userId);
+
+    getProject["people"] = [[userId, userName, userEmail]];
+    getProject["start_date"] = startDate;
+    getProject["project_title"] = projectTitle;
+    // console.log(getProject["routes"][0]);
+    const newRoutes = [];
+    for (let idx of selectDate) {
+      if (idx !== null) {
+        newRoutes.push(getProject["routes"][idx]);
+      } else {
+        newRoutes.push([]);
+      }
+    }
+
+    const newProject = new Project({
+      people: [[userId, userName, userEmail]],
+      start_date: getProject["start_date"],
+      project_title: getProject["project_title"],
+      routes: newRoutes,
+      term: selectDate.length,
+    });
+    console.log(newProject);
+
+    const response = await newProject.save();
+
+    user["user_projects"].push(response._id.toString());
+    await user.save();
+
+    res
+      .status(200)
+      .send({ success: "프로젝트 가져오기 성공!", projectId: response._id });
+  } catch (error) {
+    console.log(error);
+    res.status(404).send({ error: "프로젝트 가져오기 실패!" });
+  }
+});
 
 router.get("/projects/:id", async (req, res, next) => {
   const { id } = req.params;

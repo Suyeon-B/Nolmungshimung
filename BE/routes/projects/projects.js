@@ -123,11 +123,10 @@ router.get("/:id", async (req, res, next) => {
     res.status(404).send({ error: "project not found" });
   }
 });
-
+// 프로젝트 삭제
 router.post("/:id", async (req, res, next) => {
   const { id } = req.params;
   const body = req.body;
-  console.log("222222222222222222");
 
   try {
     const projectInfo = await Project.findById({ _id: id });

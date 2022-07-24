@@ -50,7 +50,7 @@ const RecommendPageDetail = () => {
             }}
           />
           <ResultXTitle> &nbsp;&nbsp;&nbsp;전체 여행 경로</ResultXTitle>
-          <GetProjectModal />
+          <GetProjectModal routes={routes} />
         </div>
         <br />
         <br />

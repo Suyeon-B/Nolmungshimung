@@ -7,32 +7,36 @@ import React, { useState } from "react";
 import { addDays } from "date-fns";
 import styled from "styled-components";
 
-const ModalCalendarRange = ({ settedDate }) => {
+const ModalCalendarRange = ({ setStartDate, setSelectDate }) => {
   const [state, setState] = useState([
     {
       startDate: new Date(),
-      endDate: addDays(new Date(), 1),
+      endDate: null,
       key: "selection",
     },
   ]);
+
   const today = moment().add(0, "d").toDate();
 
   const onChange = (item) => {
+    const term =
+      (item.selection.endDate - item.selection.startDate) /
+      (1000 * 60 * 60 * 24);
     setState([item.selection]);
-    settedDate(item.selection.startDate, item.selection.endDate);
+    setStartDate(item.selection.startDate);
+    const dateArr = new Array(term + 1).fill(null);
+    setSelectDate(dateArr);
   };
 
   return (
-    <StyleDateRange
+    <DateRange
       locale={ko}
       minDate={today}
-      onChange={onChange}
       showSelectionPreview={true}
+      // editableDateInputs={true}
+      onChange={onChange}
       moveRangeOnFirstSelection={false}
-      months={2}
       ranges={state}
-      direction="horizontal"
-      rangeColors={["#41C0FF"]}
       showDateDisplay={false}
     />
   );
