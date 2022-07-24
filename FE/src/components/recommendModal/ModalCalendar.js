@@ -18,6 +18,8 @@ const ModalCalendar = ({ startDate, setStartDate }) => {
       date={startDate}
       months={1}
       showDateDisplay={false}
+      rangeColors={["#41C0FF"]}
+      color="#41C0FF"
     />
   );
 };

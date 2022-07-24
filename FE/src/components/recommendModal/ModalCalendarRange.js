@@ -11,7 +11,7 @@ const ModalCalendarRange = ({ setStartDate, setSelectDate }) => {
   const [state, setState] = useState([
     {
       startDate: new Date(),
-      endDate: null,
+      endDate: addDays(new Date(), 1),
       key: "selection",
     },
   ]);
@@ -38,6 +38,7 @@ const ModalCalendarRange = ({ setStartDate, setSelectDate }) => {
       moveRangeOnFirstSelection={false}
       ranges={state}
       showDateDisplay={false}
+      rangeColors={["#41C0FF"]}
     />
   );
 };

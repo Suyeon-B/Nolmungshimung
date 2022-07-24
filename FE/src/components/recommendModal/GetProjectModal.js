@@ -89,8 +89,7 @@ const GetProjectModal = ({ routes }) => {
 
   const handleOk = (event) => {
     // 달력 날짜 입력, 프로젝트 제목 입력 예외 처리 추가
-    console.log(auth);
-    console.log(toggleBtn);
+
     event.preventDefault();
     const data = {
       projectId,
@@ -121,7 +120,7 @@ const GetProjectModal = ({ routes }) => {
       <Button type="primary" onClick={showModal}>
         내 프로젝트로 가져오기
       </Button>
-      <Modal
+      <StyledModal
         title="내 프로젝트로 가져오기"
         visible={visible}
         onOk={handleOk}
@@ -130,6 +129,15 @@ const GetProjectModal = ({ routes }) => {
         okText="프로젝트에 추가하기"
         cancelText="취소"
       >
+        {/* <form type="submit"> */}
+        <StyledTitleInput
+          type="text"
+          name=""
+          id=""
+          placeholder="여행 제목을 입력해주세요"
+          value={projectTitle}
+          onChange={onChange}
+        />
         <StyledBtnDiv>
           <StyledAllBtn
             toggleBtn={toggleBtn}
@@ -146,30 +154,14 @@ const GetProjectModal = ({ routes }) => {
         </StyledBtnDiv>
 
         {toggleBtn && (
-          <form type="submit">
-            <input
-              type="text"
-              name=""
-              id=""
-              placeholder="여행 제목을 입력해주세요"
-              value={projectTitle}
-              onChange={onChange}
-            />
-            <p>여행 시작 날짜 선택</p>
+          <>
+            <StyledP>여행 시작 날짜 선택</StyledP>
             <ModalCalender startDate={startDate} setStartDate={setStartDate} />
-          </form>
+          </>
         )}
         {!toggleBtn && (
-          <form type="submit">
-            <input
-              type="text"
-              name=""
-              id=""
-              placeholder="여행 제목을 입력해주세요"
-              value={projectTitle}
-              onChange={onChange}
-            />
-            <p>여행 기간 선택하기</p>
+          <>
+            <StyledP>여행 기간 선택하기</StyledP>
             <ModalCalendarRange
               setSelectDate={setSelectDate}
               setStartDate={setStartDate}
@@ -180,7 +172,7 @@ const GetProjectModal = ({ routes }) => {
                 <p>
                   {culTripTermData(startDate, index)}{" "}
                   <DropDown
-                    // key={index}
+                    key={index}
                     index={index}
                     setSelectDate={setSelectDate}
                     routes={routes}
@@ -188,12 +180,51 @@ const GetProjectModal = ({ routes }) => {
                 </p>
               );
             })}
-          </form>
+          </>
         )}
-      </Modal>
+        {/* </form> */}
+      </StyledModal>
     </>
   );
 };
+
+const StyledP = styled.p`
+  font-size: 22px;
+  font-weight: 700;
+  margin-top: 20px;
+  border-bottom: 1px solid #d8d8d8;
+`;
+
+const StyledTitleInput = styled.input`
+  width: 100%;
+  font-size: 24px;
+  text-align: center;
+  margin-bottom: 15px;
+  border: 3px solid #ff8a3d;
+  border-radius: 5px;
+  padding: 8px;
+  /* filter: drop-shadow(0px 3px 2px rgba(0, 0, 0, 0.25)); */
+`;
+
+const StyledModal = styled(Modal)`
+  .ant-modal-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #ff8a3d;
+  }
+  .ant-modal-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .ant-btn-primary {
+    background-color: #ff8a3d;
+    border-color: #ff8a3d;
+  }
+  .ant-btn {
+    border-radius: 5px;
+  }
+`;
 
 const StyledAllBtn = styled.button`
   outline: 0;
