@@ -5,6 +5,41 @@ var router = express.Router();
 const Project = require(__base + "models/Project");
 const { User } = require(__base + "models/User");
 
+router.post("/testapi", async (req, res, next) => {
+  try {
+    const projectId = req.body.projectId;
+    const userId = req.body.userId;
+    const startDate = req.body.startDate;
+    const projectTitle = req.body.projectTitle;
+
+    const getProject = await Project.findById(projectId);
+    const user = await User.findById(userId);
+
+    getProject["people"] = [[userId, user.user_name, user.user_email]];
+    getProject["start_date"] = startDate;
+    getProject["project_title"] = projectTitle;
+
+    const newProject = new Project({
+      people: [[userId, user.user_name, user.user_email]],
+      start_date: getProject["start_date"],
+      project_title: getProject["project_title"],
+      routes: getProject["routes"],
+      term: getProject["term"],
+    });
+
+    const response = await newProject.save();
+
+    user["user_projects"].push(response._id);
+    await user.save();
+
+    console.log(response);
+    res.status(200).send({ success: "프로젝트 가져오기 성공!" });
+  } catch (error) {
+    console.log(error);
+    res.status(404).send({ error: "프로젝트 가져오기 실패!" });
+  }
+});
+
 /* GET home page. */
 router.get("/", function (req, res, next) {
   res.json({ id: "123" });
