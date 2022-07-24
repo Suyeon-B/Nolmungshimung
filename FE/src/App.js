@@ -31,7 +31,6 @@ import RecommendPageDetail from "./pages/recommend/RecommendPageDetail";
 
 // react query devtool
 import { ReactQueryDevtools } from "react-query/devtools";
-import CalendarTest from "./components/CalendarTest";
 import HomeNew from "./pages/HomeNew";
 
 const queryClient = new QueryClient(); // 인스턴스 생성
@@ -92,7 +91,7 @@ function App() {
                   </RequireAuth>
                 }
               />
-              <Route path="Calendar/*" element={<CalendarTest />} />
+
               <Route
                 path="project/:projectId/result"
                 element={

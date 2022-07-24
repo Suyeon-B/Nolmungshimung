@@ -7,7 +7,7 @@ import React, { useState } from "react";
 import { addDays } from "date-fns";
 import styled from "styled-components";
 
-const CalendarTest = ({ settedDate }) => {
+const CalendarTwo = ({ settedDate }) => {
   const [state, setState] = useState([
     {
       startDate: new Date(),
@@ -45,4 +45,4 @@ const StyleDateRange = styled(DateRange)`
   filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
 `;
 
-export default CalendarTest;
+export default CalendarTwo;
