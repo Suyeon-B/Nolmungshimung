@@ -6,12 +6,7 @@ import CalendarTest from "./CalendarTest";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../components/auth/Auth";
 const setDay = (value) => {
-  return [
-    value.getFullYear(),
-    value.getMonth() + 1,
-    value.getDate(),
-    value.getDay(),
-  ];
+  return [value.getFullYear(), value.getMonth() + 1, value.getDate(), value.getDay()];
 };
 
 const CreateProject = () => {
@@ -87,35 +82,19 @@ const CreateProject = () => {
         <CreateBtns>
           <CalendarBtnContainer>
             <CalendarBtn onClick={() => setShowCalendar(!showCalendar)}>
-              <img
-                width={"50px"}
-                alt=""
-                src="/statics/images/calender_start.png"
-              />
-              <CalendarBtnDay>
-                {startDate
-                  ? `${startDate[1]}월 ${startDate[2]}일`
-                  : "여행 시작 날짜"}
-              </CalendarBtnDay>
+              <img width={"50px"} alt="" src="/statics/images/calender_start.png" />
+              <CalendarBtnDay>{startDate ? `${startDate[1]}월 ${startDate[2]}일` : "여행 시작 날짜"}</CalendarBtnDay>
             </CalendarBtn>
             <CalendarBtn onClick={() => setShowCalendar(!showCalendar)}>
-              <img
-                width={"50px"}
-                alt=""
-                src="/statics/images/calender_end.png"
-              />
-              <CalendarBtnDay>
-                {endDate ? `${endDate[1]}월 ${endDate[2]}일` : "여행 종료 날짜"}
-              </CalendarBtnDay>
+              <img width={"50px"} alt="" src="/statics/images/calender_end.png" />
+              <CalendarBtnDay>{endDate ? `${endDate[1]}월 ${endDate[2]}일` : "여행 종료 날짜"}</CalendarBtnDay>
             </CalendarBtn>
           </CalendarBtnContainer>
           <CreateProjectSubmit type="submit">
             프로젝트<br></br> 생성
           </CreateProjectSubmit>
         </CreateBtns>
-        <CalendarContainer>
-          {showCalendar && <CalendarTest settedDate={settedDate} />}
-        </CalendarContainer>
+        <CalendarContainer>{showCalendar && <CalendarTest settedDate={settedDate} />}</CalendarContainer>
       </CalenderForm>
     </PageContainer>
   );
@@ -163,12 +142,14 @@ const CalendarBtnContainer = styled.div`
   background: #ffffff;
   filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
   border-radius: 10px;
+  cursor: pointer;
 `;
 const CalendarBtn = styled.div`
   display: flex;
   background: #ffffff;
   border: 0px;
   align-items: center;
+  cursor: pointer;
 `;
 const CalendarBtnDay = styled.span`
   margin-left: 20px;
@@ -178,6 +159,7 @@ const CalendarBtnDay = styled.span`
   line-height: 48px;
   /* identical to box height */
   color: #7d7a7a;
+  cursor: pointer;
 `;
 const CalendarContainer = styled.div`
   display: flex;
@@ -207,6 +189,7 @@ const CreateBtns = styled.div`
   align-items: center;
   width: 810px;
   justify-content: space-between;
+  cursor: pointer;
 `;
 
 const CreateHomeImg = styled.img`
