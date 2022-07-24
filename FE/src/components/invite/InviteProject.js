@@ -46,6 +46,7 @@ function InviteProject(props) {
   }, []);
   return (
     <>
+      .
       <ResultImage src="/statics/images/signUpBackground.png" />
     </>
   );

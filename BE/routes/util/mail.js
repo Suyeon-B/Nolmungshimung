@@ -21,6 +21,7 @@ exports.signupMail = function (certificationNumber, receive) {
 };
 
 exports.inviteMail = function (email, inviteToken) {
+  // console.log(email, inviteToken);
   return new Promise(async (resolve, reject) => {
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -37,7 +38,7 @@ exports.inviteMail = function (email, inviteToken) {
     const url = `https://${process.env.REACT_APP_SERVER_IP}:3000/invite/?token=${inviteToken}`;
 
     const message = {
-      from: "nolmong@gmail.com", //process.env.NODEMAILER_USER, // sender address
+      from: process.env.NODEMAILER_USER, // sender address
       to: `${email}`, // list of receivers
       subject: "놀멍쉬멍 프로젝트 초대 메일입니다.", // Subject line
       html:

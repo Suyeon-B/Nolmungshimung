@@ -112,7 +112,10 @@ function App() {
                 }
               /> */}
               <Route path="recommend/*" element={<RecommendPage />} />
-              <Route path="recommend/project/:projectId" element={<RecommendPageDetail />} />
+              <Route
+                path="recommend/project/:projectId"
+                element={<RecommendPageDetail />}
+              />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </BodyDiv>

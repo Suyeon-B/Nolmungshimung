@@ -15,9 +15,16 @@ function FriendInvite() {
     // "suyeon1111@gmail.com",
   ]);
 
+  const isEmail = (email) => {
+    const emailRegex =
+      /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
+
+    return emailRegex.test(email);
+  };
+
   const success = () => {
     Modal.success({
-      content: "친구 초대완료",
+      content: "그룹 초대 메일이 발송되었습니다.",
     });
   };
 
@@ -46,64 +53,48 @@ function FriendInvite() {
       .catch((err) => console.log(`err: ${err}`));
   }, []);
 
-  // const onClickPlus = () => {
-  //   let data = { email };
-  //   // console.log("friends:", friends);
-
-  //   fetch(
-  //     `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/friends/${projectId}`,
-  //     {
-  //       method: "post",
-  //       headers: {
-  //         "content-type": "application/json",
-  //       },
-  //       credentials: "include",
-  //       body: JSON.stringify(data),
-  //     }
-  //   )
-  //     .then((res) => res.json())
-  //     .then((res) => {
-  //       // console.log("res : ", res);
-  //       if (res.success === true) {
-  //         // console.log("-====--0=--=-=");
-  //         // console.log(res);
-  //         setFriends([...friends, email]);
-  //         success();
-  //         // console.log("추가 완료");
-  //       } else {
-  //         error(res.message);
-  //         // console.log(res.message);
-  //       }
-  //       setEmail("");
-  //     })
-  //     .catch((err) => console.log(`err: ${err}`));
-  // };
-
   const sendInviteEmail = () => {
-    let data = { email: email, projectId: projectId };
-    fetch(
-      `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/invite/mail`,
-      {
-        method: "post",
-        headers: {
-          "content-type": "application/json",
-        },
-        // credentials: "include",
-        body: JSON.stringify(data),
-      }
-        .then((res) => res.json())
-        .then((res) => {
-          if (res.success === true) {
-            console.log(res);
-            setFriends([...friends, email]);
-            success();
-          } else {
-            error(res.message);
-          }
+    if (friends.length > 1) {
+      for (let i = 0; i < friends.length; i++) {
+        if (friends[i] === email) {
+          Modal.error({
+            content: "이미 초대된 친구입니다.",
+          });
           setEmail("");
-        })
-        .catch((err) => console.log(`err: ${err}`))
-    );
+          return;
+        }
+      }
+    }
+    if (!isEmail(email)) {
+      Modal.error({
+        content: "지대로된 이메일 넣어라",
+      });
+      setEmail("");
+      return;
+    }
+    let data = { email: email, projectId: projectId };
+    console.log(data);
+    fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/invite/mail`, {
+      method: "post",
+      headers: {
+        "content-type": "application/json",
+      },
+      // credentials: "include",
+      body: JSON.stringify(data),
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res);
+        if (res.success === true) {
+          console.log(res);
+          setFriends([...friends, email]);
+          success();
+        } else {
+          error(res.message);
+        }
+        setEmail("");
+      })
+      .catch((err) => console.log(`err: ${err}`));
   };
   const onChangeEmail = (event) => {
     setEmail(event.target.value);

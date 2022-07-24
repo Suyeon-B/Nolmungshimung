@@ -57,7 +57,7 @@ router.get("/:token/:user", async (req, res, next) => {
   if (data.userEmail === user) {
     return res.status(200).json({
       success: true,
-      message: "프로젝트 초대가 완료되었습니다.",
+      message: "프로젝트에 참가되었습니다.",
       project: data.projectId,
     });
   } else {

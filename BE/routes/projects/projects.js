@@ -8,7 +8,7 @@ const HashTable = require(__base + "models/HashTable");
 const HashTags = require(__base + "models/HashTags");
 const { User } = require(__base + "models/User");
 //redis
-const Redis = require(__base + 'routes/util/redis').publisher
+const Redis = require(__base + "routes/util/redis").publisher;
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
@@ -174,12 +174,12 @@ router.post("/routes/:id", async (req, res) => {
 });
 
 router.patch("/routes/:id", async (req, res) => {
-  try{
-    await Redis.setEx(`routes/${req.params.id}`,10, '')
-    await Redis.set(`${req.params.id}`, JSON.stringify(req.body))
+  try {
+    await Redis.setEx(`routes/${req.params.id}`, 10, "");
+    await Redis.set(`${req.params.id}`, JSON.stringify(req.body));
     res.status(200).send({ success: true });
-  }catch(e){
-    console.log(`redis Error : ${e}`)
+  } catch (e) {
+    console.log(`redis Error : ${e}`);
   }
 
   // try {
@@ -202,9 +202,9 @@ router.get("/:id", async (req, res, next) => {
 
   try {
     const projectInfo = await Project.findById({ _id: id });
-    let routes = await Redis.get(`${req.params.id}`)
-    if (routes){
-      projectInfo.routes = JSON.parse(routes)
+    let routes = await Redis.get(`${req.params.id}`);
+    if (routes) {
+      projectInfo.routes = JSON.parse(routes);
     }
     return res.json(projectInfo);
   } catch (error) {
@@ -296,7 +296,7 @@ router.post("/friends/:id", async (req, res, next) => {
       // 이메일 존재하지만 추가 못함
       res.status(404).send({
         success: false,
-        message: "알 수 없는 이유로 친구추가를 실패했습니다.",
+        message: "알 수 없는 이유로 프로젝트 추가를 실패했습니다.",
       });
     }
   } catch (error) {
