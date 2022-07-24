@@ -5,28 +5,18 @@ import { Select } from "antd";
 
 const { Option } = Select;
 
-
 import styled from "styled-components";
-
-const ProjectItem = ({ el }) => {
-  // console.log("ProjectItem");
-  return (
-    <Link to={`project/${el._id}`}>
-      <RecommendItems>
-        <div className="recommend_project_title"> {el.project_title}</div>
-        <div className="recommend_project_hashtag"> #{el.hashTags}</div>
-      </RecommendItems>
-    </Link>
-  );
-};
-
 
 const RecommendPage = () => {
   const navigate = useNavigate();
   const [items, setItems] = useState([]);
   const [hashtags, setHashTags] = useState([]);
   const mainText = "마음에 드는 여행 프로젝트를\n 내 프로젝트로! 😆";
-  
+
+  // infinite scroll
+  const [uploadProjectInfo, setUploadProjectInfo] = useState([]);
+  const [skip, setSkip] = useState(0);
+
   let uploadedProjectsInfo = null;
 
   const children = [];
@@ -39,45 +29,64 @@ const RecommendPage = () => {
   for (let i = 0; i < hashTag.length; i++) {
     children.push(<Option key={i + 1}>{hashTag[i]}</Option>);
   }
-  async function searchHashtags(){
-    console.log(hashtags)
-    const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/hashtag?taglist=${JSON.stringify(hashtags)}`, {
-      method: "get",
-        headers: {
-          "content-type": "application/json",
-        },
-        credentials: "include",
-    })
-    .then((res) => res.json())
-    .then((res) => {
-      console.log(res)
-      setItems(res);
-    })
-  }
-  // 업로드된 프로젝트를 가져온다.
-  useEffect(() => {
-    async function fetchUploadedProjects() {
-      const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/recommend`, {
+  async function searchHashtags() {
+    console.log(hashtags);
+    const response = await fetch(
+      `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/hashtag?taglist=${JSON.stringify(hashtags)}`,
+      {
         method: "get",
         headers: {
           "content-type": "application/json",
         },
         credentials: "include",
-      })
-        .then((res) => res.json())
-        .then((res) => {
-          // console.log("===== fetch 결과 =====");
-          // console.log(res);
-          setItems(res);
-          // console.log(items);
-        });
-      // setItems(response);
-      // console.log(response.json());
-      // return response.json();
+      }
+    )
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res);
+        setItems(res);
+      });
+  }
+  // // 업로드된 프로젝트를 가져온다.
+  // useEffect(() => {
+  //   async function fetchUploadedProjects() {
+  //     const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/recommend`, {
+  //       method: "get",
+  //       headers: {
+  //         "content-type": "application/json",
+  //       },
+  //       credentials: "include",
+  //     })
+  //       .then((res) => res.json())
+  //       .then((res) => {
+  //         setItems(res);
+  //       });
+  //   }
+  //   fetchUploadedProjects();
+  // }, []);
+
+  // infinite scroll
+  useEffect(() => {
+    const fetchUploadProjectInfo = async () => {
+      try {
+        const request = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/recommend?skip=${skip}`);
+        const uploadProjectInfoJson = await request.json();
+        setUploadProjectInfo([...uploadProjectInfo, ...uploadProjectInfoJson]);
+        console.log(uploadProjectInfoJson);
+      } catch (e) {
+        console.log("말도 안돼 ㅜ_ㅜ");
+      }
+    };
+    fetchUploadProjectInfo();
+  }, [skip]);
+
+  const handleScroll = (e) => {
+    const { offsetHeight, scrollTop, scrollHeight } = e.target;
+
+    if (offsetHeight + scrollTop === scrollHeight) {
+      setSkip(uploadProjectInfo.length);
     }
-    fetchUploadedProjects();
-    // console.log(items);
-  }, []);
+  };
 
   return (
     <RecommendWrapper>
@@ -88,21 +97,26 @@ const RecommendPage = () => {
           }}
         />
       </SearchBlock>
-      
+
       <SelectModal
-          mode="tags"
-          placeholder="최대 다섯개의 해쉬태그를 입력해주세요. ex) 우도, 맛집탐방"
-          onChange={handleChange}
-        >
-      </SelectModal>
-      <SelectIcon
-        onClick={searchHashtags}/>
+        mode="tags"
+        placeholder="최대 다섯개의 해시태그를 입력해주세요. ex) 우도, 맛집탐방"
+        onChange={handleChange}
+      ></SelectModal>
+      <SelectIcon onClick={searchHashtags} />
 
       <RecommendBlock>
         {mainText}
-        <RecommendContents>
-          {items.map((el, i) => {
-            return <ProjectItem key={i} el={el} />;
+        <RecommendContents onWheel={handleScroll}>
+          {uploadProjectInfo.map((uploadProjectInfo) => {
+            return (
+              <Link to={`project/${uploadProjectInfo._id}`}>
+                <RecommendItems>
+                  <div className="uploadProjectInfo-title">{uploadProjectInfo.project_title}</div>
+                  <div className="uploadProjectInfo-hashTags">#{uploadProjectInfo.hashTags}</div>
+                </RecommendItems>
+              </Link>
+            );
           })}
         </RecommendContents>
       </RecommendBlock>
@@ -136,6 +150,7 @@ const RecommendContents = styled.div`
   display: flex;
   margin-top: 100px;
   overflow-y: hidden;
+  height: 206px;
   ::-webkit-scrollbar {
     /* width: 0px;
     height: 7px; */
@@ -150,13 +165,14 @@ const RecommendItems = styled.div`
   background-color: white;
   margin-right: 20px;
   cursor: pointer;
-  .recommend_project_title {
+  box-shadow: 4px 4px 4px rgb(0 0 0 / 25%);
+  .uploadProjectInfo-title {
     font-size: 25px;
     color: black;
     text-align: center;
     padding: 30px;
   }
-  .recommend_project_hashtag {
+  .uploadProjectInfo-hashTags {
     font-size: 15px;
     color: black;
     text-align: center;

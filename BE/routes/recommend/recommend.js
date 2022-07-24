@@ -4,16 +4,28 @@ var router = express.Router();
 const UploadProject = require(__base + "models/UploadProject");
 const HashTable = require(__base + "models/HashTable");
 //redis
-const Redis = require(__base + 'routes/util/redis').publisher
+const Redis = require(__base + "routes/util/redis").publisher;
 
+// router.get("/", async (req, res, next) => {
+//   try {
+//     const uploadProjectInfo = await UploadProject.find();
+//     return res.json(uploadProjectInfo);
+//     // console.log(uploadProjectInfo);
+//   } catch (error) {
+//     console.log(`uploaded project find: ${error}`);
+//     res.status(404).send({ error: "project not found" });
+//   }
+// });
+
+// infinite scroll
 router.get("/", async (req, res, next) => {
   try {
-    const uploadProjectInfo = await UploadProject.find();
-    return res.json(uploadProjectInfo);
-    // console.log(uploadProjectInfo);
-  } catch (error) {
-    console.log(`uploaded project find: ${error}`);
-    res.status(404).send({ error: "project not found" });
+    const skip = req.query.skip && /^\d+$/.test(req.query.skip) ? Number(req.query.skip) : 0;
+    // 한 번에 7개의 프로젝트 정보만 load합니다.
+    const uploadProjectInfo = await UploadProject.find({}, undefined, { skip, limit: 7 });
+    res.send(uploadProjectInfo);
+  } catch (e) {
+    res.status(500).send();
   }
 });
 
@@ -32,25 +44,27 @@ router.get("/projects/:id", async (req, res, next) => {
 router.get("/hashtag", async (req, res, next) => {
   let hashtag = JSON.parse(req.query.taglist);
   let responseData = [];
-  try{
-    for (const tagName of hashtag){
-      let recommendProjectList = await HashTable.findOne({"hash_tag_name": tagName}, {_id:false, project_id:true}).lean();
-      if (recommendProjectList?.project_id){
+  try {
+    for (const tagName of hashtag) {
+      let recommendProjectList = await HashTable.findOne(
+        { hash_tag_name: tagName },
+        { _id: false, project_id: true }
+      ).lean();
+      if (recommendProjectList?.project_id) {
         console.log(recommendProjectList.project_id);
-        for (const projectId of recommendProjectList.project_id){
+        for (const projectId of recommendProjectList.project_id) {
           // let project = await Redis.get(`recommend/project/${projectId}`);
           // console.log(projectId);
           let project = await UploadProject.findById(projectId);
           if (project) responseData.push(project);
         }
       }
-    };
+    }
     console.log(responseData);
-    return res.status(200).send(responseData)
-  }catch(e){
-    console.log(`err: ${e}`)
-    return res.status(404).send({status: 404, msg : e})
+    return res.status(200).send(responseData);
+  } catch (e) {
+    console.log(`err: ${e}`);
+    return res.status(404).send({ status: 404, msg: e });
   }
-  
-})
+});
 module.exports = router;
