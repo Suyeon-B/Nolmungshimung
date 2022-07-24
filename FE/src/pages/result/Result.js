@@ -5,6 +5,7 @@ import ResultMap from "../../components/MarkMap/resultMap";
 import { CloseOutlined } from "@ant-design/icons";
 import { Button, Modal } from "antd";
 import ResultModal from "./ResultModal";
+import GetProjectModal from "../../components/GetPorjectModal";
 
 function Result() {
   const { projectId } = useParams();
@@ -49,7 +50,9 @@ function Result() {
     setVisible(false);
   };
   async function fetchProjectById(_id) {
-    const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`);
+    const response = await fetch(
+      `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`
+    );
     return response.json();
   }
 
@@ -69,7 +72,9 @@ function Result() {
   const culTripTermData = (startDate, day) => {
     const sDate = new Date(startDate);
     sDate.setDate(sDate.getDate() + day);
-    return `${sDate.getFullYear()}. ${sDate.getMonth() + 1}. ${sDate.getDate()}`;
+    return `${sDate.getFullYear()}. ${
+      sDate.getMonth() + 1
+    }. ${sDate.getDate()}`;
   };
 
   return (
@@ -100,6 +105,7 @@ function Result() {
           >
             업로드하기
           </button>
+          <GetProjectModal />
           <ResultModal
             visible={visible}
             onOk={handleOk}

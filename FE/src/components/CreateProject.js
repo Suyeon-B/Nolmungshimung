@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import styled from "styled-components";
 import "react-calendar/dist/Calendar.css"; // css import
-import CalendarTest from "./CalendarTest";
+import CalendarTwo from "./CalendarTwo";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../components/auth/Auth";
 const setDay = (value) => {
@@ -114,7 +114,7 @@ const CreateProject = () => {
           </CreateProjectSubmit>
         </CreateBtns>
         <CalendarContainer>
-          {showCalendar && <CalendarTest settedDate={settedDate} />}
+          {showCalendar && <CalendarTwo settedDate={settedDate} />}
         </CalendarContainer>
       </CalenderForm>
     </PageContainer>

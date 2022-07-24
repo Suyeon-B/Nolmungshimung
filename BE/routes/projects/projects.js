@@ -7,41 +7,6 @@ const UploadProject = require(__base + "models/UploadProject");
 const HashTable = require(__base + "models/HashTable");
 const { User } = require(__base + "models/User");
 
-router.post("/testapi", async (req, res, next) => {
-  try {
-    const projectId = req.body.projectId;
-    const userId = req.body.userId;
-    const startDate = req.body.startDate;
-    const projectTitle = req.body.projectTitle;
-
-    const getProject = await Project.findById(projectId);
-    const user = await User.findById(userId);
-
-    getProject["people"] = [[userId, user.user_name, user.user_email]];
-    getProject["start_date"] = startDate;
-    getProject["project_title"] = projectTitle;
-
-    const newProject = new Project({
-      people: [[userId, user.user_name, user.user_email]],
-      start_date: getProject["start_date"],
-      project_title: getProject["project_title"],
-      routes: getProject["routes"],
-      term: getProject["term"],
-    });
-
-    const response = await newProject.save();
-
-    user["user_projects"].push(response._id);
-    await user.save();
-
-    console.log(response);
-    res.status(200).send({ success: "프로젝트 가져오기 성공!" });
-  } catch (error) {
-    console.log(error);
-    res.status(404).send({ error: "프로젝트 가져오기 실패!" });
-  }
-});
-
 /* GET home page. */
 router.get("/", function (req, res, next) {
   res.json({ id: "123" });
@@ -53,7 +18,11 @@ router.post("/", async (req, res) => {
   const project = new Project(req.body[1]);
 
   // project["people"].push(user_date._id.toString());
-  project["people"].push([user_date._id.toString(), user_date.user_name, user_date.user_email]);
+  project["people"].push([
+    user_date._id.toString(),
+    user_date.user_name,
+    user_date.user_email,
+  ]);
 
   // 여행지 경로에 배열 추가하기
   for (let i = 0; i <= project["term"]; i++) {
@@ -172,10 +141,12 @@ router.post("/:id", async (req, res, next) => {
         projectInfo.people.splice(i, 1);
       }
     }
+    console.log(projectInfo);
 
-    await projectInfo.save();
-
-    userInfo.user_projects = userInfo.user_projects.filter((projectId) => projectId !== id);
+    userInfo.user_projects = userInfo.user_projects.filter(
+      (projectId) => projectId !== id
+    );
+    console.log(userInfo);
 
     await userInfo.save();
 
@@ -204,7 +175,9 @@ router.post("/friends/:id", async (req, res, next) => {
     if (projectInuser.people) {
       for (let n = 0; n < projectInuser.people.length; n++) {
         if (projectInuser.people[n][2] == userInfo.user_email) {
-          res.status(404).send({ success: false, message: "이미 초대된 친구입니다." });
+          res
+            .status(404)
+            .send({ success: false, message: "이미 초대된 친구입니다." });
           return;
         }
       }

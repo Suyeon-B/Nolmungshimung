@@ -10,11 +10,15 @@ const ProjectList = () => {
 
   const onDelete = async (event) => {
     if (confirm("프로젝트를 삭제하시겠어요??")) {
-      const projectId = event.target.dataset.id;
+      const projectId = event.target.dataset.id
+        ? event.target.dataset.id
+        : event.target.parentNode.dataset.id;
+
+      console.log(projectId);
       const data = {
         _id: auth.user._id,
       };
-
+      console.log(event.target);
       const response = await fetch(
         `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${projectId}`,
         {

@@ -4,7 +4,12 @@ import SignIn from "./pages/sign/SignIn";
 import Result from "./pages/result/Result";
 import KakaoSignIn from "./components/sign/KakaoSignIn";
 import VoiceTalk from "./components/voiceTalk/voiceTalk";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import CreateProject from "./components/CreateProject";
 import styled from "styled-components";
 // import TextEditor from "./components/shareMemo/test";
@@ -14,13 +19,16 @@ import "./App.css";
 import "./reset.css";
 import { QueryClient, QueryClientProvider } from "react-query";
 import ProjectPage from "./pages/project/ProjectPage";
-import { AuthProvider, RequireAuth, NotRequireAuth } from "./components/auth/Auth";
+import {
+  AuthProvider,
+  RequireAuth,
+  NotRequireAuth,
+} from "./components/auth/Auth";
 
 import RecommendPage from "./pages/recommend/RecommendPage";
 
 // react query devtool
 import { ReactQueryDevtools } from "react-query/devtools";
-import CalendarTest from "./components/CalendarTest";
 import HomeNew from "./pages/HomeNew";
 
 const queryClient = new QueryClient(); // 인스턴스 생성
@@ -73,7 +81,6 @@ function App() {
                   </RequireAuth>
                 }
               />
-              <Route path="Calendar/*" element={<CalendarTest />} />
               <Route
                 path="project/:projectId/result"
                 element={
