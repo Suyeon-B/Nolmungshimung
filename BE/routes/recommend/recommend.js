@@ -14,4 +14,16 @@ router.get("/", async (req, res, next) => {
   }
 });
 
+router.get("/projects/:id", async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    const projectInfo = await UploadProject.findById({ _id: id });
+    return res.json(projectInfo);
+  } catch (error) {
+    console.log(`project find id: ${error}`);
+    res.status(404).send({ error: "project not found" });
+  }
+});
+
 module.exports = router;
