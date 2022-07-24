@@ -1,0 +1,10 @@
+{
+  "service": "gmail",
+  "host":"smtp.ethereal.email",
+  "port":587,
+  "secure":false,
+  "auth": {
+    "user" : "tonguek8@gmail.com",
+    "pass" : "fegkgqkjkyqxmpyu"
+  }
+}

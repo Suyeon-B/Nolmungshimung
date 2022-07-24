@@ -3,7 +3,7 @@ const router = express.Router();
 const request = require("request");
 const { User } = require(__base + "models/User");
 const { authMain } = require("../../middleware/auth");
-const { signupMail } = require(__base + "utils/mail");
+const { signupMail } = require(__base + "routes/utils/mail");
 const middlewares = require("../../middleware");
 
 //=================================
