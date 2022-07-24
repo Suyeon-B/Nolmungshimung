@@ -18,11 +18,7 @@ router.post("/", async (req, res) => {
   const project = new Project(req.body[1]);
 
   // project["people"].push(user_date._id.toString());
-  project["people"].push([
-    user_date._id.toString(),
-    user_date.user_name,
-    user_date.user_email,
-  ]);
+  project["people"].push([user_date._id.toString(), user_date.user_name, user_date.user_email]);
 
   // 여행지 경로에 배열 추가하기
   for (let i = 0; i <= project["term"]; i++) {
@@ -144,9 +140,7 @@ router.post("/:id", async (req, res, next) => {
 
     await projectInfo.save();
 
-    userInfo.user_projects = userInfo.user_projects.filter(
-      (projectId) => projectId !== id
-    );
+    userInfo.user_projects = userInfo.user_projects.filter((projectId) => projectId !== id);
 
     await userInfo.save();
 
@@ -175,9 +169,7 @@ router.post("/friends/:id", async (req, res, next) => {
     if (projectInuser.people) {
       for (let n = 0; n < projectInuser.people.length; n++) {
         if (projectInuser.people[n][2] == userInfo.user_email) {
-          res
-            .status(404)
-            .send({ success: false, message: "이미 초대된 친구입니다." });
+          res.status(404).send({ success: false, message: "이미 초대된 친구입니다." });
           return;
         }
       }
@@ -311,44 +303,6 @@ router.post("/upload", async (req, res) => {
     console.log(`Project Upload ERROR: ${error}`);
     res.send(404).send({ error: "project Upload Fail" });
   }
-});
-// [수연] recommend page
-router.post("/recommend", async (req, res) => {
-  const ids = req.body;
-  console.log("@@@@@ ids가 머꼬 @@@@@", ids);
-  Project.find(
-    {
-      _id: {
-        $in: ids,
-      },
-    },
-    function (err, data) {
-      if (err) {
-        return res.status(400).json({
-          success: false,
-          message: "프로젝트를 불러오는데 실패했습니다.",
-        });
-      }
-      if (Object.keys(data).length === 0) {
-        res.status(200).json({
-          success: false,
-          message: "프로젝트가 없다 냥.",
-        });
-      } else {
-        let projectInfo = [];
-        data.forEach((el) => {
-          // let tmpObj = { _id: el._id, project_title: el.project_title, hashTags: el.hashTags}; // 혁오빠 합쳐지면 이 버전으로
-          let tmpObj = { _id: el._id, project_title: el.project_title }; // 혁오빠 합쳐지면 이 버전으로
-          projectInfo.push(tmpObj);
-        });
-        res.status(200).json({
-          success: true,
-          projectInfo: projectInfo,
-          message: "업로드 프로젝트를 성공적으로 불러왔습니다.",
-        });
-      }
-    }
-  );
 });
 
 // User.findOne({ user_email: "a" }).then((data) => {
