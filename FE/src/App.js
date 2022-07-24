@@ -1,7 +1,7 @@
 import React from "react";
 import SignUp from "./pages/sign/SignUp";
 import SignIn from "./pages/sign/SignIn";
-import Result from "./pages/Result";
+import Result from "./pages/result/Result";
 import KakaoSignIn from "./components/sign/KakaoSignIn";
 import VoiceTalk from "./components/voiceTalk/voiceTalk";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";

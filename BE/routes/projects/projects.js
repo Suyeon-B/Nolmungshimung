@@ -3,6 +3,8 @@ const { restart } = require("nodemon");
 
 var router = express.Router();
 const Project = require(__base + "models/Project");
+const UploadProject = require(__base + "models/UploadProject");
+const HashTable = require(__base + "models/HashTable");
 const { User } = require(__base + "models/User");
 
 /* GET home page. */
@@ -242,6 +244,74 @@ router.get("/memo/:id", async (req, res, next) => {
   }
 });
 
+router.post("/upload", async (req, res) => {
+  console.log("projects upload");
+  console.log(req.body);
+  const info = req.body;
+
+  // console.log("INFO", info);
+  delete info._id;
+  console.log(info.hashTags);
+  const ProjectId = req.body._id;
+  const hashTags = info.hashTags;
+  console.log("hashtags", hashTags);
+  const uploadProject = new UploadProject(info);
+  try {
+    console.log("try");
+    await uploadProject.save(async (error, date) => {
+      if (error) {
+        console.log(`Upload FAIL ${error}`);
+        return res.status(403).json({
+          success: false,
+          message: "알 수 없는 이유로 업로드 실패",
+        });
+      } else {
+        try {
+          // T_T
+          // await HashTable.find({}).then(async (doc) => {
+          //   const hashObject = doc.hashTagNames;
+          //   console.log("for before");
+          //   // for (let i = 0; i < hashTags.length; i++) {
+          //   //   console.log("in for loop");
+          //   //   console.log(hashTags);
+          //   //   console.log(hashTags[i]);
+          //   //   console.log(req.body._id); // undefined
+          //   //   try {
+          //   //     hashObject = {tag : [projectId]} <- tag변수가 안들어감
+          //   //     hashObject.hashTags[i] = [Projereq.body._idctId];
+          //   //     console.log("here 11");
+          //   //   } catch (error) {
+          //   //     hashObject = { tag: [req.body._id] };
+          //   //     console.log(hashObject);
+          //   //     console.log("here 222");
+          //   //     hashObject.hashTags[i] = [
+          //   //       ...hashObject.hashTags[i],
+          //   //       req.body._id,
+          //   //     ];
+          //   //   }
+          //   // }
+          //   const hashTable = new HashTable(doc);
+          //   await HashTable.findOneAndUpdate(
+          //     { _id: doc._id },
+          //     { $set: { hashTagNames: hashObject } },
+          //     { new: true }
+          //   );
+          // });
+          return res.status(200).json({
+            success: true,
+            message: "업로드 및 해시태그 저장 성공",
+          });
+        } catch (error) {
+          console.log(`HashTags Upload ERROR: ${error}`);
+          res.send(404).send({ error: "HashTags Upload Fail" });
+        }
+      }
+    });
+  } catch (error) {
+    console.log(`Project Upload ERROR: ${error}`);
+    res.send(404).send({ error: "project Upload Fail" });
+  }
+});
 // [수연] recommend page
 router.post("/recommend", async (req, res) => {
   const ids = req.body;

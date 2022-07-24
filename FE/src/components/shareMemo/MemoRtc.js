@@ -28,7 +28,6 @@ const MemoRtc = ({ project_Id }) => {
   const [projectID, setProjectId] = useState(project_Id);
   const { connectUser, setConnectUser } = useContext(ConnectuserContext);
   // const userName = sessionStorage.getItem("myNickname");
-  const userName = auth.user.user_name;
 
   useEffect(() => {
     setProjectId(project_Id);
