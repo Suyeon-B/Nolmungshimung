@@ -1,15 +1,17 @@
 import { Button, Modal } from "antd";
 import React, { useState } from "react";
 import ModalCalender from "./ModalCalendar";
-import { useAuth } from "./auth/Auth";
+import { useAuth } from "../auth/Auth";
 import { useParams, useNavigate } from "react-router-dom";
+import styled from "styled-components";
 
-const App = () => {
+const GetProjectModal = () => {
   const [visible, setVisible] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [modalText, setModalText] = useState("Content of the modal");
   const [projectTitle, setProjectTitle] = useState("");
   const [startDate, setStartDate] = useState(null);
+  const [toggleBtn, setToggleBtn] = useState(true);
   const auth = useAuth();
   const { projectId } = useParams();
   const navigate = useNavigate();
@@ -90,7 +92,24 @@ const App = () => {
         onOk={handleOk}
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
+        okText="프로젝트에 추가하기"
+        cancelText="취소"
       >
+        <StyledBtnDiv>
+          <StyledAllBtn
+            toggleBtn={toggleBtn}
+            onClick={() => setToggleBtn(false)}
+          >
+            전체 가져오기
+          </StyledAllBtn>
+          <StyledSelectBtn
+            toggleBtn={toggleBtn}
+            onClick={() => setToggleBtn(true)}
+          >
+            날짜 선택해서 가져오기
+          </StyledSelectBtn>
+        </StyledBtnDiv>
+
         <form type="submit">
           <input
             type="text"
@@ -107,5 +126,40 @@ const App = () => {
     </>
   );
 };
+
+const StyledAllBtn = styled.button`
+  outline: 0;
+  border: none;
+  background-color: white;
+  cursor: pointer;
+  width: 50%;
+  height: 100%;
+
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 42px;
+  color: #7c8289;
+  background-color: ${(props) => (props.toggleBtn ? "#ebebeb" : "white")};
+  text-align: left;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const StyledSelectBtn = styled(StyledAllBtn)`
+  background-color: ${(props) => (props.toggleBtn ? "white" : "#ebebeb")};
+`;
+
+const StyledBtnDiv = styled.div`
+  display: flex;
+  width: 100%;
+  height: 60px;
+  background-color: white;
+  justify-content: center;
+  align-items: center;
+  border-top: 2px solid #ebebeb;
+  border-bottom: 2px solid #ebebeb;
+`;
 
 export default App;

@@ -5,7 +5,6 @@ import ResultMap from "../../components/MarkMap/resultMap";
 import { CloseOutlined } from "@ant-design/icons";
 import { Button, Modal } from "antd";
 import ResultModal from "./ResultModal";
-import GetProjectModal from "../../components/GetPorjectModal";
 
 function Result() {
   const { projectId } = useParams();
@@ -105,7 +104,6 @@ function Result() {
           >
             업로드하기
           </button>
-          <GetProjectModal />
           <ResultModal
             visible={visible}
             onOk={handleOk}
