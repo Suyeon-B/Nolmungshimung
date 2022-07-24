@@ -2,11 +2,16 @@ import React, { useState } from "react";
 
 import styled from "styled-components";
 import "react-calendar/dist/Calendar.css"; // css import
-import CalendarTest from "./CalendarTest";
+import CalendarTwo from "./CalendarTwo";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../components/auth/Auth";
 const setDay = (value) => {
-  return [value.getFullYear(), value.getMonth() + 1, value.getDate(), value.getDay()];
+  return [
+    value.getFullYear(),
+    value.getMonth() + 1,
+    value.getDate(),
+    value.getDay(),
+  ];
 };
 
 const CreateProject = () => {
@@ -82,19 +87,35 @@ const CreateProject = () => {
         <CreateBtns>
           <CalendarBtnContainer>
             <CalendarBtn onClick={() => setShowCalendar(!showCalendar)}>
-              <img width={"50px"} alt="" src="/statics/images/calender_start.png" />
-              <CalendarBtnDay>{startDate ? `${startDate[1]}월 ${startDate[2]}일` : "여행 시작 날짜"}</CalendarBtnDay>
+              <img
+                width={"50px"}
+                alt=""
+                src="/statics/images/calender_start.png"
+              />
+              <CalendarBtnDay>
+                {startDate
+                  ? `${startDate[1]}월 ${startDate[2]}일`
+                  : "여행 시작 날짜"}
+              </CalendarBtnDay>
             </CalendarBtn>
             <CalendarBtn onClick={() => setShowCalendar(!showCalendar)}>
-              <img width={"50px"} alt="" src="/statics/images/calender_end.png" />
-              <CalendarBtnDay>{endDate ? `${endDate[1]}월 ${endDate[2]}일` : "여행 종료 날짜"}</CalendarBtnDay>
+              <img
+                width={"50px"}
+                alt=""
+                src="/statics/images/calender_end.png"
+              />
+              <CalendarBtnDay>
+                {endDate ? `${endDate[1]}월 ${endDate[2]}일` : "여행 종료 날짜"}
+              </CalendarBtnDay>
             </CalendarBtn>
           </CalendarBtnContainer>
           <CreateProjectSubmit type="submit">
             프로젝트<br></br> 생성
           </CreateProjectSubmit>
         </CreateBtns>
-        <CalendarContainer>{showCalendar && <CalendarTest settedDate={settedDate} />}</CalendarContainer>
+        <CalendarContainer>
+          {showCalendar && <CalendarTwo settedDate={settedDate} />}
+        </CalendarContainer>
       </CalenderForm>
     </PageContainer>
   );

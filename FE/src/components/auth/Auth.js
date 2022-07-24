@@ -55,10 +55,14 @@ export const AuthProvider = ({ children }) => {
       const data = await fetchCallAuth();
       setUser(data.user_name);
       console.log(data.user_name);
-      setLoading(true);
       // if(data.user)
     }
-    callAuth();
+    try {
+      setLoading(true);
+      callAuth();
+    } catch {
+      setLoading(true);
+    }
     console.log(user);
     // setUser(userAuth);
   }, []);

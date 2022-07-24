@@ -89,7 +89,7 @@ const Search = ({
 
     setSwLatlng([swLatlng["Ma"], swLatlng["La"]]);
     setNeLatlng([neLatlng["Ma"], neLatlng["La"]]);
-    console.log(swLatlng, neLatlng);
+    // console.log(swLatlng, neLatlng);
 
     setSumit(!sumit);
   }
@@ -167,6 +167,7 @@ const Search = ({
 
     paginationEl.appendChild(fragment);
   }
+
   useEffect(() => {
     const container = document.getElementById("searchMap");
     const options = {
@@ -240,6 +241,8 @@ const Search = ({
           handleSelect={handleSelect}
           sumit={setSumit}
           current={sumit}
+          setSwLatlng={setSwLatlng}
+          setNeLatlng={setNeLatlng}
         />
         <SearchUl id="searchBar">
           {Places &&
@@ -274,7 +277,10 @@ const Search = ({
           style={{
             backgroundColor: "#ff8a3d",
             borderColor: "#ff8a3d",
-            zIndex: 100,
+            zIndex: 2,
+            position: "fixed",
+            bottom: "70px",
+            left: "1070px",
           }}
         >
           현지도에서 검색
