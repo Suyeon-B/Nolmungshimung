@@ -113,7 +113,14 @@ const RecommendPage = () => {
               <Link to={`project/${uploadProjectInfo._id}`}>
                 <RecommendItems>
                   <div className="uploadProjectInfo-title">{uploadProjectInfo.project_title}</div>
-                  <div className="uploadProjectInfo-hashTags">#{uploadProjectInfo.hashTags}</div>
+                  <div className="uploadProjectInfo-hashTags">
+                    {uploadProjectInfo.hashTags.map((hashTag, index) => (
+                      <span key={index}>
+                        {"#"}
+                        {hashTag}{" "}
+                      </span>
+                    ))}
+                  </div>
                 </RecommendItems>
               </Link>
             );
@@ -174,7 +181,7 @@ const RecommendItems = styled.div`
   }
   .uploadProjectInfo-hashTags {
     font-size: 15px;
-    color: black;
+    color: #7c8289;
     text-align: center;
   }
 `;
