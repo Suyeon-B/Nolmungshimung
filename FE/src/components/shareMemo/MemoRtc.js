@@ -55,16 +55,13 @@ const MemoRtc = ({ project_Id }) => {
     const connectUsers = Object.keys(connectUser).length;
     // console.log(" @#@#@#@#@# connectuser : ", connectUsers);
     if (connectUsers < 2) {
-      fetch(
-        `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/memo/${projectID}`,
-        {
-          method: "get",
-          headers: {
-            "content-type": "application/json",
-          },
-          credentials: "include",
-        }
-      )
+      fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/memo/${projectID}`, {
+        method: "get",
+        headers: {
+          "content-type": "application/json",
+        },
+        credentials: "include",
+      })
         .then((res) => res.json())
         .then((res) => {
           // console.log("===== fetch 결과 =====");

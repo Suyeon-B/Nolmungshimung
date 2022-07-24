@@ -49,9 +49,7 @@ function Result() {
     setVisible(false);
   };
   async function fetchProjectById(_id) {
-    const response = await fetch(
-      `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`
-    );
+    const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`);
     return response.json();
   }
 
@@ -71,9 +69,7 @@ function Result() {
   const culTripTermData = (startDate, day) => {
     const sDate = new Date(startDate);
     sDate.setDate(sDate.getDate() + day);
-    return `${sDate.getFullYear()}. ${
-      sDate.getMonth() + 1
-    }. ${sDate.getDate()}`;
+    return `${sDate.getFullYear()}. ${sDate.getMonth() + 1}. ${sDate.getDate()}`;
   };
 
   return (

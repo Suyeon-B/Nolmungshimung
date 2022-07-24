@@ -167,10 +167,6 @@ function PlanList({
     setIsDrage(true);
   }
 
-  // useEffect(() => {
-  //   setSelectedDay(0);
-  // }, [routes]);
-
   const onClick = (event) => {
     const selectIdx = +event.target.dataset.idx;
 

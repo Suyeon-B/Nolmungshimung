@@ -125,6 +125,38 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
+router.post("/:id", async (req, res, next) => {
+  const { id } = req.params;
+  const body = req.body;
+  console.log(body);
+
+  try {
+    const projectInfo = await Project.findById({ _id: id });
+    const userInfo = await User.findById({ _id: body._id });
+
+    // console.log(projectInfo);
+
+    for (let i = 0; i < projectInfo.people.length; i++) {
+      if (projectInfo.people[i][0] === body._id) {
+        projectInfo.people.splice(i, 1);
+      }
+    }
+
+    await projectInfo.save();
+
+    userInfo.user_projects = userInfo.user_projects.filter(
+      (projectId) => projectId !== id
+    );
+
+    await userInfo.save();
+
+    return res.status(200).send({ success: "deleteSuccess" });
+  } catch (error) {
+    console.log(`project find id: ${error}`);
+    res.status(404).send({ error: "project not found" });
+  }
+});
+
 router.post("/friends/:id", async (req, res, next) => {
   const { id } = req.params;
   // console.log(req.body.email);
@@ -201,27 +233,10 @@ router.get("/friends/:id", async (req, res, next) => {
   }
 });
 
-// [수연] share-memo 관련
-// router.get("/memo/:id", async (req, res, next) => {
-//   const { id } = req.params;
-//   try {
-//     const projectInfo = await Project.findById({ _id: id });
-//     console.log("@@@@@@@@@@@@@@@@@");
-//     console.log(projectInfo.savedYtext);
-//     console.log(projectInfo);
-//     return res.json(projectInfo.savedYtext);
-//   } catch (error) {
-//     console.log(`project find id: ${error}`);
-//     res.status(404).send({ error: "project not found" });
-//   }
-// });
 router.get("/memo/:id", async (req, res, next) => {
   const { id } = req.params;
   try {
     const projectInfo = await Project.findById({ _id: id });
-    // console.log("@@@@@@@@@@@@@@@@@");
-    // console.log(projectInfo.quillRefEditor);
-    // console.log(projectInfo);
     return res.json(projectInfo.quillRefEditor);
   } catch (error) {
     console.log(`project find id: ${error}`);
@@ -296,6 +311,44 @@ router.post("/upload", async (req, res) => {
     console.log(`Project Upload ERROR: ${error}`);
     res.send(404).send({ error: "project Upload Fail" });
   }
+});
+// [수연] recommend page
+router.post("/recommend", async (req, res) => {
+  const ids = req.body;
+  console.log("@@@@@ ids가 머꼬 @@@@@", ids);
+  Project.find(
+    {
+      _id: {
+        $in: ids,
+      },
+    },
+    function (err, data) {
+      if (err) {
+        return res.status(400).json({
+          success: false,
+          message: "프로젝트를 불러오는데 실패했습니다.",
+        });
+      }
+      if (Object.keys(data).length === 0) {
+        res.status(200).json({
+          success: false,
+          message: "프로젝트가 없다 냥.",
+        });
+      } else {
+        let projectInfo = [];
+        data.forEach((el) => {
+          // let tmpObj = { _id: el._id, project_title: el.project_title, hashTags: el.hashTags}; // 혁오빠 합쳐지면 이 버전으로
+          let tmpObj = { _id: el._id, project_title: el.project_title }; // 혁오빠 합쳐지면 이 버전으로
+          projectInfo.push(tmpObj);
+        });
+        res.status(200).json({
+          success: true,
+          projectInfo: projectInfo,
+          message: "업로드 프로젝트를 성공적으로 불러왔습니다.",
+        });
+      }
+    }
+  );
 });
 
 // User.findOne({ user_email: "a" }).then((data) => {
