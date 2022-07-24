@@ -20,6 +20,16 @@ const ProjectItem = ({ el }) => {
   );
 };
 
+let hashTag = [];
+fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/hashtags`, {
+  method: "get",
+    headers: {
+      "content-type": "application/json",
+    },
+    credentials: "include",
+  })
+  .then((res) => res.json())
+  .then((res) => hashTag = res)
 
 const RecommendPage = () => {
   const navigate = useNavigate();
@@ -30,18 +40,20 @@ const RecommendPage = () => {
   let uploadedProjectsInfo = null;
 
   const children = [];
-  const hashTag = [];
-  const handleChange = (value) => {
-    console.log(`selected ${value}`);
-    setHashTags(value);
-    console.log(value.length);
-  };
   for (let i = 0; i < hashTag.length; i++) {
-    children.push(<Option key={i + 1}>{hashTag[i]}</Option>);
+    children.push(<Option key={hashTag[i]+i}>{hashTag[i]}</Option>);
   }
+
+  const handleChange = (value) => {
+    setHashTags(String(value).replace(/[0-9]/g, ""));
+  };
+
   async function searchHashtags(){
-    console.log(hashtags)
-    const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/hashtag?taglist=${JSON.stringify(hashtags)}`, {
+    let url = `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/hashtag?taglist=${JSON.stringify(hashtags)}`
+    if (!hashtags.length){
+      url = `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend`
+    }
+    const response = await fetch(url, {
       method: "get",
         headers: {
           "content-type": "application/json",
@@ -50,7 +62,6 @@ const RecommendPage = () => {
     })
     .then((res) => res.json())
     .then((res) => {
-      console.log(res)
       setItems(res);
     })
   }
@@ -90,10 +101,13 @@ const RecommendPage = () => {
       </SearchBlock>
       
       <SelectModal
-          mode="tags"
+          mode="multiple"
           placeholder="최대 다섯개의 해쉬태그를 입력해주세요. ex) 우도, 맛집탐방"
           onChange={handleChange}
-        >
+          // onSearch={inputChange}
+      >
+        {children}
+        {/* {autotexts} */}
       </SelectModal>
       <SelectIcon
         onClick={searchHashtags}/>
