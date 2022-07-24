@@ -7,27 +7,10 @@ const { User } = require(__base + "models/User");
 const Project = require(__base + "models/Project");
 
 router.get("/", async (req, res, next) => {
-  // const body = req.body;
-  // console.log(body);
-  //   console.log(UploadProject.find());
-
   try {
     const uploadProjectInfo = await UploadProject.find();
-    console.log(uploadProjectInfo);
-
-    // for (let i = 0; i < uploadProjectInfo.people.length; i++) {
-    //   if (projectInfo.people[i][0] === body._id) {
-    //     projectInfo.people.splice(i, 1);
-    //   }
-    // }
-
-    // await uploadProjectInfo.save();
-
-    // userInfo.user_projects = userInfo.user_projects.filter((projectId) => projectId !== id);
-
-    // await userInfo.save();
-
-    // return res.status(200).send({ success: "deleteSuccess" });
+    return res.json(uploadProjectInfo);
+    // console.log(uploadProjectInfo);
   } catch (error) {
     console.log(`uploaded project find: ${error}`);
     res.status(404).send({ error: "project not found" });

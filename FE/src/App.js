@@ -26,6 +26,7 @@ import {
 } from "./components/auth/Auth";
 
 import RecommendPage from "./pages/recommend/RecommendPage";
+import RecommendPageDetail from "./pages/recommend/RecommendPageDetail";
 
 // react query devtool
 import { ReactQueryDevtools } from "react-query/devtools";
@@ -100,6 +101,7 @@ function App() {
                 }
               /> */}
               <Route path="recommend/*" element={<RecommendPage />} />
+              <Route path="recommend/project/:projectId" element={<RecommendPageDetail />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </BodyDiv>
