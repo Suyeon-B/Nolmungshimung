@@ -4,6 +4,7 @@ import SignIn from "./pages/sign/SignIn";
 import Result from "./pages/result/Result";
 import KakaoSignIn from "./components/sign/KakaoSignIn";
 import VoiceTalk from "./components/voiceTalk/voiceTalk";
+import InviteProject from "./components/invite/InviteProject";
 import {
   BrowserRouter as Router,
   Routes,
@@ -83,6 +84,15 @@ function App() {
                 }
               />
               <Route
+                path="invite/"
+                element={
+                  <RequireAuth>
+                    <InviteProject />
+                  </RequireAuth>
+                }
+              />
+
+              <Route
                 path="project/:projectId/result"
                 element={
                   <RequireAuth>
@@ -101,7 +111,10 @@ function App() {
                 }
               /> */}
               <Route path="recommend/*" element={<RecommendPage />} />
-              <Route path="recommend/project/:projectId" element={<RecommendPageDetail />} />
+              <Route
+                path="recommend/project/:projectId"
+                element={<RecommendPageDetail />}
+              />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </BodyDiv>

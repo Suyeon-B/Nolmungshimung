@@ -243,14 +243,13 @@ router.post("/:id", async (req, res, next) => {
 
 router.post("/friends/:id", async (req, res, next) => {
   const { id } = req.params;
+  // console.log("프로젝트", id);
   // console.log(req.body.email);
-  // console.log(id);
+
   // const test = await Project.findById(id);
   // console.log(test);
   try {
     const userInfo = await User.findOne({ user_email: req.body.email });
-    // console.log([userInfo._id, userInfo.user_name, userInfo.user_email, id]);
-    // 중복체크 ,....
     const projectInuser = await Project.findOne({
       _id: id,
       // people: [userInfo._id, userInfo.user_name, userInfo.user_email],
@@ -259,9 +258,10 @@ router.post("/friends/:id", async (req, res, next) => {
     if (projectInuser.people) {
       for (let n = 0; n < projectInuser.people.length; n++) {
         if (projectInuser.people[n][2] == userInfo.user_email) {
-          res
-            .status(404)
-            .send({ success: false, message: "이미 초대된 친구입니다." });
+          res.status(200).send({
+            success: true,
+            message: "이미 초대에 응한 프로젝트입니다.",
+          });
           return;
         }
       }
@@ -286,23 +286,17 @@ router.post("/friends/:id", async (req, res, next) => {
         }
       );
 
-      res.status(200).send({ success: true });
+      res.status(200).send({ success: true, message: "수락완!" });
     } catch (error) {
       console.log(error);
       // 이메일 존재하지만 추가 못함
       res.status(404).send({
         success: false,
-        message: "알 수 없는 이유로 친구추가를 실패했습니다.",
+        message: "알 수 없는 이유로 프로젝트 추가를 실패했습니다.",
       });
     }
   } catch (error) {
     console.log(error);
-    // 회원가입하지 않은 유저 -> 유저에게 이메일 전송
-    // console.log(`plz send email`);
-    res.status(404).send({
-      success: false,
-      message: "회원가입하지 않은 유저입니다. 이메일 전송을 구현해주세요.",
-    });
   }
 });
 
