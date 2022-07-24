@@ -21,25 +21,10 @@ const RecommendPage = () => {
   // 업로드된 프로젝트를 가져온다.
   useEffect(() => {
     async function fetchUploadedProjects() {
-      await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/recommend`, {
-        method: "post",
-        headers: {
-          "content-type": "application/json",
-        },
-        // credentials: "include",
-        body: JSON.stringify(projects),
-      })
-        .then((res) => res.json())
-        .then((res) => {
-          if (res.success === true) {
-            projectsInfo = res.projectInfo;
-            setItems(projectsInfo);
-          }
-        })
-        .catch((err) => console.log(`err: ${err}`));
+      const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/recommend`);
+      return response.json();
     }
     fetchUploadedProjects();
-    console.log(items);
   }, []);
 
   return (
