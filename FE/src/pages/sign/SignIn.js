@@ -35,17 +35,14 @@ function SignIn() {
   });
 
   async function singInUser(data) {
-    await fetch(
-      `https://${process.env.REACT_APP_SERVER_IP}:8443/users/signin`,
-      {
-        method: "post",
-        headers: {
-          "content-type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify(data),
-      }
-    )
+    await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/users/signin`, {
+      method: "post",
+      headers: {
+        "content-type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(data),
+    })
       .then((res) => res.json())
       .then(async (res) => {
         console.log("res : ", res);
@@ -88,20 +85,8 @@ function SignIn() {
           <SignUpBtn onClick={onClickSignUp}>Sign Up</SignUpBtn>
         </Btns>
         <Form onSubmit={onSubmitSignUp}>
-          <Input
-            placeholder="jeju@island.com"
-            type="text"
-            value={id}
-            onChange={onchangeId}
-            required
-          />
-          <Input
-            placeholder="password"
-            type="password"
-            value={password}
-            onChange={onchangePassword}
-            required
-          />
+          <Input placeholder="jeju@island.com" type="text" value={id} onChange={onchangeId} required />
+          <Input placeholder="password" type="password" value={password} onChange={onchangePassword} required />
           <SubmitInput value="로그인" type="submit" />
           <br />
           <a href={kauthUrl}>
@@ -169,6 +154,7 @@ const LogInBtn = styled.button`
   font-size: 20px;
   line-height: 45px;
   color: white;
+  cursor: pointer;
 `;
 
 const SignUpBtn = styled.button`
@@ -183,6 +169,7 @@ const SignUpBtn = styled.button`
   font-size: 20px;
   line-height: 45px;
   color: #4a4a4a;
+  cursor: pointer;
 `;
 
 const Form = styled.form`
@@ -216,5 +203,6 @@ const SubmitInput = styled.input`
   line-height: 45px;
   color: white;
   margin-top: 15px;
+  cursor: pointer;
 `;
 export default SignIn;

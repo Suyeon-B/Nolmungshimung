@@ -110,6 +110,7 @@ const RecommendItems = styled.div`
   border-radius: 10px;
   background-color: white;
   margin-right: 20px;
+  cursor: pointer;
   .recommend_project_title {
     font-size: 25px;
     color: black;

@@ -1,11 +1,14 @@
 import React from "react";
 import styled from "styled-components";
 
-const HomeMain = ({ goSignIn }) => {
+const HomeMain = ({ goRecommend, goSignIn }) => {
   return (
     <StyledHomeMain>
       <StyledTitle>어디로 떠나보시겠어요?</StyledTitle>
-      <StyledBtn onClick={goSignIn}>프로젝트 만들기</StyledBtn>
+      <btnWrapper>
+        <StyledWhiteBtn onClick={goSignIn}>프로젝트 만들기</StyledWhiteBtn>
+        <StyledBtn onClick={goRecommend}>추천계획 둘러보기</StyledBtn>
+      </btnWrapper>
     </StyledHomeMain>
   );
 };
@@ -23,8 +26,16 @@ const StyledBtn = styled.button`
   /* identical to box height */
 
   text-align: center;
-
+  margin: 10px;
   color: #ffffff;
+  cursor: pointer;
+`;
+
+const StyledWhiteBtn = styled(StyledBtn)`
+  background: rgba(255, 255, 255, 0.42);
+  border-radius: 10px;
+  color: #ff7a00;
+  cursor: pointer;
 `;
 
 const StyledTitle = styled.h1`
@@ -48,9 +59,13 @@ const StyledHomeMain = styled.div`
 
   position: relative;
   z-index: 2;
-  top: -30vh;
+  top: -25vh;
   left: 30vw;
   height: 60%;
+`;
+
+const btnWrapper = styled.div`
+  display: flex;
 `;
 
 export default HomeMain;

@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useAuth } from "../components/auth/Auth";
 import { useNavigate, Link } from "react-router-dom";
+import { PlusCircleTwoTone } from "@ant-design/icons";
 
-const ProjectList = () => {
+const ProjectList = ({ goProject }) => {
   const [items, setItems] = useState([]);
   const auth = useAuth();
   let projectsInfo = null;
@@ -89,7 +90,15 @@ const ProjectList = () => {
 
   return (
     <StyleProjectList>
-      <StyledTitle>내 프로젝트 목록</StyledTitle>
+      <TitleWrapper>
+        <StyledTitle>내 프로젝트 목록</StyledTitle>
+        <PlusCircleTwoTone
+          onClick={goProject}
+          style={{ fontSize: "30px" }}
+          twoToneColor="#FF8A3D"
+        />
+      </TitleWrapper>
+
       <StyledLine></StyledLine>
       <StyledUl>
         {items.map((el, i) => {
@@ -104,6 +113,7 @@ const StyledBtn = styled.button`
   outline: 0;
   border: none;
   background-color: rgba(0, 0, 0, 0);
+  cursor: pointer;
 `;
 
 const StyledUl = styled.ul`
@@ -120,6 +130,12 @@ const StyledLi = styled.li`
   margin-bottom: 10px;
 
   color: #000000;
+`;
+
+const TitleWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 `;
 
 const StyledTitle = styled.h1`

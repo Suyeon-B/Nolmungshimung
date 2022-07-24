@@ -163,12 +163,14 @@ const CalendarBtnContainer = styled.div`
   background: #ffffff;
   filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
   border-radius: 10px;
+  cursor: pointer;
 `;
 const CalendarBtn = styled.div`
   display: flex;
   background: #ffffff;
   border: 0px;
   align-items: center;
+  cursor: pointer;
 `;
 const CalendarBtnDay = styled.span`
   margin-left: 20px;
@@ -178,6 +180,7 @@ const CalendarBtnDay = styled.span`
   line-height: 48px;
   /* identical to box height */
   color: #7d7a7a;
+  cursor: pointer;
 `;
 const CalendarContainer = styled.div`
   display: flex;
@@ -207,6 +210,7 @@ const CreateBtns = styled.div`
   align-items: center;
   width: 810px;
   justify-content: space-between;
+  cursor: pointer;
 `;
 
 const CreateHomeImg = styled.img`
