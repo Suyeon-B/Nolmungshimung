@@ -234,14 +234,14 @@ const Search = ({
 
   return (
     <Wapper>
-      <SearchListDiv id="searchBar">
+      <SearchListDiv>
         <SearchBar
           changePlace={setSearchPlace}
           handleSelect={handleSelect}
           sumit={setSumit}
           current={sumit}
         />
-        <SearchUl>
+        <SearchUl id="searchBar">
           {Places &&
             Places.map((item, i) => (
               <SearchListRoute
