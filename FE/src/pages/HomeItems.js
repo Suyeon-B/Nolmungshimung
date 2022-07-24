@@ -1,13 +1,13 @@
 import React from "react";
 import styled from "styled-components";
 
-const HomeItems = ({ goProject, onClickLogOut }) => {
+const HomeItems = ({ onClickLogOut, goRecommend }) => {
   return (
     <StyledHomeItems>
       <StyledTitle>어디로 떠나보시겠어요?</StyledTitle>
       <StyledBtnContainer>
-        <StyledBtn onClick={onClickLogOut}>로그아웃</StyledBtn>
-        <StyledWhiteBtn onClick={goProject}>프로젝트 만들기</StyledWhiteBtn>
+        <StyledWhiteBtn onClick={onClickLogOut}>로그아웃</StyledWhiteBtn>
+        <StyledBtn onClick={goRecommend}>추천계획 둘러보기</StyledBtn>
       </StyledBtnContainer>
     </StyledHomeItems>
   );
@@ -17,13 +17,14 @@ const StyledBtnContainer = styled.div`
   display: flex;
   width: 100%;
   justify-content: space-evenly;
+  cursor: pointer;
 `;
 
 const StyledBtn = styled.button`
   outline: 0;
   border: none;
-  cursor: pointer;
   font-weight: 700;
+  cursor: pointer;
   font-size: 25px;
   background: rgba(255, 122, 0, 0.6);
   border-radius: 10px;
