@@ -3,6 +3,8 @@ const { restart } = require("nodemon");
 
 var router = express.Router();
 const Project = require(__base + "models/Project");
+const UploadProject = require(__base + "models/UploadProject");
+const HashTable = require(__base + "models/HashTable");
 const { User } = require(__base + "models/User");
 
 router.post("/testapi", async (req, res, next) => {
@@ -51,11 +53,7 @@ router.post("/", async (req, res) => {
   const project = new Project(req.body[1]);
 
   // project["people"].push(user_date._id.toString());
-  project["people"].push([
-    user_date._id.toString(),
-    user_date.user_name,
-    user_date.user_email,
-  ]);
+  project["people"].push([user_date._id.toString(), user_date.user_name, user_date.user_email]);
 
   // 여행지 경로에 배열 추가하기
   for (let i = 0; i <= project["term"]; i++) {
@@ -177,9 +175,7 @@ router.post("/:id", async (req, res, next) => {
 
     await projectInfo.save();
 
-    userInfo.user_projects = userInfo.user_projects.filter(
-      (projectId) => projectId !== id
-    );
+    userInfo.user_projects = userInfo.user_projects.filter((projectId) => projectId !== id);
 
     await userInfo.save();
 
@@ -208,9 +204,7 @@ router.post("/friends/:id", async (req, res, next) => {
     if (projectInuser.people) {
       for (let n = 0; n < projectInuser.people.length; n++) {
         if (projectInuser.people[n][2] == userInfo.user_email) {
-          res
-            .status(404)
-            .send({ success: false, message: "이미 초대된 친구입니다." });
+          res.status(404).send({ success: false, message: "이미 초대된 친구입니다." });
           return;
         }
       }
@@ -266,31 +260,83 @@ router.get("/friends/:id", async (req, res, next) => {
   }
 });
 
-// [수연] share-memo 관련
-// router.get("/memo/:id", async (req, res, next) => {
-//   const { id } = req.params;
-//   try {
-//     const projectInfo = await Project.findById({ _id: id });
-//     console.log("@@@@@@@@@@@@@@@@@");
-//     console.log(projectInfo.savedYtext);
-//     console.log(projectInfo);
-//     return res.json(projectInfo.savedYtext);
-//   } catch (error) {
-//     console.log(`project find id: ${error}`);
-//     res.status(404).send({ error: "project not found" });
-//   }
-// });
 router.get("/memo/:id", async (req, res, next) => {
   const { id } = req.params;
   try {
     const projectInfo = await Project.findById({ _id: id });
-    // console.log("@@@@@@@@@@@@@@@@@");
-    // console.log(projectInfo.quillRefEditor);
-    // console.log(projectInfo);
     return res.json(projectInfo.quillRefEditor);
   } catch (error) {
     console.log(`project find id: ${error}`);
     res.status(404).send({ error: "project not found" });
+  }
+});
+
+router.post("/upload", async (req, res) => {
+  console.log("projects upload");
+  console.log(req.body);
+  const info = req.body;
+
+  // console.log("INFO", info);
+  delete info._id;
+  console.log(info.hashTags);
+  const ProjectId = req.body._id;
+  const hashTags = info.hashTags;
+  console.log("hashtags", hashTags);
+  const uploadProject = new UploadProject(info);
+  try {
+    console.log("try");
+    await uploadProject.save(async (error, date) => {
+      if (error) {
+        console.log(`Upload FAIL ${error}`);
+        return res.status(403).json({
+          success: false,
+          message: "알 수 없는 이유로 업로드 실패",
+        });
+      } else {
+        try {
+          // T_T
+          // await HashTable.find({}).then(async (doc) => {
+          //   const hashObject = doc.hashTagNames;
+          //   console.log("for before");
+          //   // for (let i = 0; i < hashTags.length; i++) {
+          //   //   console.log("in for loop");
+          //   //   console.log(hashTags);
+          //   //   console.log(hashTags[i]);
+          //   //   console.log(req.body._id); // undefined
+          //   //   try {
+          //   //     hashObject = {tag : [projectId]} <- tag변수가 안들어감
+          //   //     hashObject.hashTags[i] = [Projereq.body._idctId];
+          //   //     console.log("here 11");
+          //   //   } catch (error) {
+          //   //     hashObject = { tag: [req.body._id] };
+          //   //     console.log(hashObject);
+          //   //     console.log("here 222");
+          //   //     hashObject.hashTags[i] = [
+          //   //       ...hashObject.hashTags[i],
+          //   //       req.body._id,
+          //   //     ];
+          //   //   }
+          //   // }
+          //   const hashTable = new HashTable(doc);
+          //   await HashTable.findOneAndUpdate(
+          //     { _id: doc._id },
+          //     { $set: { hashTagNames: hashObject } },
+          //     { new: true }
+          //   );
+          // });
+          return res.status(200).json({
+            success: true,
+            message: "업로드 및 해시태그 저장 성공",
+          });
+        } catch (error) {
+          console.log(`HashTags Upload ERROR: ${error}`);
+          res.send(404).send({ error: "HashTags Upload Fail" });
+        }
+      }
+    });
+  } catch (error) {
+    console.log(`Project Upload ERROR: ${error}`);
+    res.send(404).send({ error: "project Upload Fail" });
   }
 });
 

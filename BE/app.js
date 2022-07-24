@@ -12,6 +12,7 @@ var projectsRouter = require("./routes/projects/projects");
 var travelRouter = require("./routes/travel/travel");
 var commonRouter = require("./routes/common/common");
 var voiceRouter = require("./routes/voicetalk/voicetalk");
+var recommendRouter = require("./routes/recommend/recommend");
 var mongodb = require("dotenv").config();
 var fs = require("fs");
 
@@ -221,6 +222,7 @@ app.use("/users", usersRouter);
 app.use("/projects", projectsRouter);
 app.use("/travel", travelRouter);
 app.use("/common", commonRouter);
+app.use("/recommend", recommendRouter);
 // app.use("/voicetalk", voiceRouter);
 
 module.exports = app;

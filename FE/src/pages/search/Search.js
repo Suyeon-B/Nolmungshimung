@@ -3,6 +3,8 @@ import SearchListRoute from "../../components/searchMap/SearchListRoute";
 import SearchBar from "../../components/searchMap/SearchBar";
 import styled from "styled-components";
 // import NomalMarker from "../../../public/statics/images/location-dot-solid.svg";
+import { Button } from "antd";
+import { RedoOutlined } from "@ant-design/icons";
 
 const { kakao } = window;
 
@@ -22,7 +24,8 @@ var normalImage = createMarkerImage(markerSize, NOMAL_MARKER_URL),
   overImage = createMarkerImage(overMarkerSize, NOMAL_MARKER_URL),
   clickImage = createMarkerImage(markerSize, CLICK_MARKER_URL);
 
-var currentMap;
+var map;
+var ps;
 var markers = [];
 var selectedMarker = null;
 var infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
@@ -30,7 +33,7 @@ var infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
 function displayInfowindow(marker, title) {
   var content = '<div style="padding:5px;">' + title + "</div>";
   infowindow.setContent(content);
-  infowindow.open(currentMap, marker);
+  infowindow.open(map, marker);
 }
 export function overEvent(index) {
   if (!selectedMarker || selectedMarker !== markers[index][0]) {
@@ -71,16 +74,28 @@ const Search = ({
   // 검색결과 배열에 담아줌
   const [Places, setPlaces] = useState([]);
   const [click, setClick] = useState(null);
+  const [swLatlng, setSwLatlng] = useState([
+    33.592161526546604, 126.04650255976554,
+  ]);
+  const [neLatlng, setNeLatlng] = useState([
+    33.14572269165777, 127.07480227781775,
+  ]);
+  const [sumit, setSumit] = useState(false);
+
+  function onClick(event) {
+    var bounds = map.getBounds();
+    var swLatlng = bounds.getSouthWest();
+    var neLatlng = bounds.getNorthEast();
+
+    setSwLatlng([swLatlng["Ma"], swLatlng["La"]]);
+    setNeLatlng([neLatlng["Ma"], neLatlng["La"]]);
+    console.log(swLatlng, neLatlng);
+
+    setSumit(!sumit);
+  }
 
   const handleSelect = (value) => {
     setClick(value);
-  };
-
-  var sw = new kakao.maps.LatLng(33.592161526546604, 126.04650255976554),
-    ne = new kakao.maps.LatLng(33.14572269165777, 127.07480227781775);
-  const searchOption = {
-    bounds: new kakao.maps.LatLngBounds(sw, ne),
-    size: 15,
   };
 
   function removeMarker() {
@@ -90,16 +105,92 @@ const Search = ({
     markers = [];
   }
 
+  function displayMarker(place, i) {
+    let marker = new kakao.maps.Marker({
+      map: map,
+      position: new kakao.maps.LatLng(place.y, place.x),
+      image: normalImage,
+    });
+    // itemEl = getListItem(i, place); // 검색 결과 항목 Element를 생성합니다
+    markers.push([marker, place.place_name]);
+    kakao.maps.event.addListener(marker, "mouseover", function () {
+      overEvent(i);
+      // console.log(place);
+    });
+
+    kakao.maps.event.addListener(marker, "mouseout", function () {
+      outEvent(i);
+    });
+    kakao.maps.event.addListener(marker, "click", function () {
+      clickEvent(i);
+      setClick(i);
+
+      let sec = document.querySelector(`#list${i}`);
+      let positionEle = sec.getBoundingClientRect().top;
+      if (positionEle <= 0 || positionEle >= window.innerHeight - 100) {
+        document.getElementById("searchBar").scrollTop = sec.offsetTop - 200;
+      }
+
+      // place.id 보내서 크롤링하기
+    });
+  }
+
+  // 검색결과 목록 하단에 페이지 번호 표시
+  function displayPagination(pagination) {
+    var paginationEl = document.getElementById("pagination"),
+      fragment = document.createDocumentFragment(),
+      i;
+
+    // 기존에 추가된 페이지 번호 삭제
+    while (paginationEl.hasChildNodes()) {
+      paginationEl.removeChild(paginationEl.lastChild);
+    }
+
+    for (i = 1; i <= pagination.last; i++) {
+      var el = document.createElement("a");
+      el.href = "#";
+      el.innerHTML = " " + i;
+
+      if (i === pagination.current) {
+        el.className = "on";
+      } else {
+        el.onclick = (function (i) {
+          return function () {
+            pagination.gotoPage(i);
+            setClick(null);
+            document.getElementById("searchBar").scrollTop = 0;
+          };
+        })(i);
+      }
+      fragment.appendChild(el);
+    }
+
+    paginationEl.appendChild(fragment);
+  }
   useEffect(() => {
     const container = document.getElementById("searchMap");
     const options = {
       center: new kakao.maps.LatLng(33.50723387768472, 126.49273150835002),
       level: 6,
     };
-    const map = new kakao.maps.Map(container, options);
-    currentMap = map;
-    const ps = new kakao.maps.services.Places();
+    map = new kakao.maps.Map(container, options);
     map.setMaxLevel(10);
+
+    ps = new kakao.maps.services.Places();
+
+    var zoomControl = new kakao.maps.ZoomControl();
+    map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+    map.setMaxLevel(10);
+  }, []);
+
+  useEffect(() => {
+    var sw = new kakao.maps.LatLng(swLatlng[0], swLatlng[1]),
+      ne = new kakao.maps.LatLng(neLatlng[0], neLatlng[1]);
+    const searchOption = {
+      bounds: new kakao.maps.LatLngBounds(sw, ne),
+      size: 15,
+    };
+
     ps.keywordSearch(
       searchPlace ? searchPlace : "제주도",
       placesSearchCB,
@@ -108,6 +199,7 @@ const Search = ({
 
     // 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
     function placesSearchCB(data, status, pagination) {
+      // console.log(swLatlng, neLatlng);
       setPlaces([]);
       if (status === kakao.maps.services.Status.OK) {
         //정상 검색되면
@@ -121,85 +213,35 @@ const Search = ({
         displayPagination(pagination); //데이터 목록 표시
         setPlaces(data);
       } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+        removeMarker();
         displayPagination(pagination);
         alert("검색 결과가 존재하지 않습니다.");
+
         return;
       } else if (status === kakao.maps.services.Status.ERROR) {
+        removeMarker();
         displayPagination(pagination);
         alert("검색 결과 중 오류가 발생했습니다.");
+
         return;
       }
     }
 
-    // 검색결과 목록 하단에 페이지 번호 표시
-    function displayPagination(pagination) {
-      var paginationEl = document.getElementById("pagination"),
-        fragment = document.createDocumentFragment(),
-        i;
-
-      // 기존에 추가된 페이지 번호 삭제
-      while (paginationEl.hasChildNodes()) {
-        paginationEl.removeChild(paginationEl.lastChild);
-      }
-
-      for (i = 1; i <= pagination.last; i++) {
-        var el = document.createElement("a");
-        el.href = "#";
-        el.innerHTML = " " + i;
-
-        if (i === pagination.current) {
-          el.className = "on";
-        } else {
-          el.onclick = (function (i) {
-            return function () {
-              pagination.gotoPage(i);
-              setClick(null);
-              document.getElementById("searchBar").scrollTop = 0;
-            };
-          })(i);
-        }
-        fragment.appendChild(el);
-      }
-
-      paginationEl.appendChild(fragment);
-    }
-
-    function displayMarker(place, i) {
-      let marker = new kakao.maps.Marker({
-        map: map,
-        position: new kakao.maps.LatLng(place.y, place.x),
-        image: normalImage,
-      });
-      // itemEl = getListItem(i, place); // 검색 결과 항목 Element를 생성합니다
-      markers.push([marker, place.place_name]);
-      kakao.maps.event.addListener(marker, "mouseover", function () {
-        overEvent(i);
-        // console.log(place);
-      });
-
-      kakao.maps.event.addListener(marker, "mouseout", function () {
-        outEvent(i);
-      });
-      kakao.maps.event.addListener(marker, "click", function () {
-        clickEvent(i);
-        setClick(i);
-
-        let sec = document.querySelector(`#list${i}`);
-        let positionEle = sec.getBoundingClientRect().top;
-        if (positionEle <= 0 || positionEle >= window.innerHeight - 100) {
-          document.getElementById("searchBar").scrollTop = sec.offsetTop - 200;
-        }
-
-        // place.id 보내서 크롤링하기
-      });
-    }
-  }, [searchPlace]);
+    kakao.maps.event.addListener(map, "bounds_changed", function () {
+      //
+    });
+  }, [sumit]);
 
   return (
     <Wapper>
-      <SearchListDiv id="searchBar">
-        <SearchBar changePlace={setSearchPlace} handleSelect={handleSelect} />
-        <SearchUl>
+      <SearchListDiv>
+        <SearchBar
+          changePlace={setSearchPlace}
+          handleSelect={handleSelect}
+          sumit={setSumit}
+          current={sumit}
+        />
+        <SearchUl id="searchBar">
           {Places &&
             Places.map((item, i) => (
               <SearchListRoute
@@ -222,7 +264,22 @@ const Search = ({
           ></div>
         </SearchUl>
       </SearchListDiv>
-      <StyledMapDiv id="searchMap"></StyledMapDiv>
+      <StyledMapDiv id="searchMap">
+        <Button
+          onClick={onClick}
+          type="primary"
+          shape="round"
+          icon={<RedoOutlined />}
+          size={"large"}
+          style={{
+            backgroundColor: "#ff8a3d",
+            borderColor: "#ff8a3d",
+            zIndex: 100,
+          }}
+        >
+          현지도에서 검색
+        </Button>
+      </StyledMapDiv>
     </Wapper>
   );
 };

@@ -4,7 +4,7 @@ import styled from "styled-components";
 import "react-calendar/dist/Calendar.css"; // css import
 import CalendarTest from "./CalendarTest";
 import { useNavigate } from "react-router-dom";
-
+import { useAuth } from "../components/auth/Auth";
 const setDay = (value) => {
   return [
     value.getFullYear(),
@@ -15,6 +15,7 @@ const setDay = (value) => {
 };
 
 const CreateProject = () => {
+  const auth = useAuth();
   let navigate = useNavigate();
   const [projectTitle, setProjectTitle] = useState("");
   const [showCalendar, setShowCalendar] = useState(false);
@@ -44,7 +45,8 @@ const CreateProject = () => {
 
     const term = parseInt((eDate - sDate) / (1000 * 60 * 60 * 24));
     const project = [
-      sessionStorage.getItem("user_email"),
+      // sessionStorage.getItem("user_email"),
+      auth.user.user_email,
       {
         project_title: projectTitle,
         start_date: startDate,

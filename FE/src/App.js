@@ -1,15 +1,10 @@
 import React from "react";
 import SignUp from "./pages/sign/SignUp";
 import SignIn from "./pages/sign/SignIn";
-import Result from "./pages/Result";
+import Result from "./pages/result/Result";
 import KakaoSignIn from "./components/sign/KakaoSignIn";
 import VoiceTalk from "./components/voiceTalk/voiceTalk";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import CreateProject from "./components/CreateProject";
 import styled from "styled-components";
 // import TextEditor from "./components/shareMemo/test";
@@ -19,11 +14,9 @@ import "./App.css";
 import "./reset.css";
 import { QueryClient, QueryClientProvider } from "react-query";
 import ProjectPage from "./pages/project/ProjectPage";
-import {
-  AuthProvider,
-  RequireAuth,
-  NotRequireAuth,
-} from "./components/auth/Auth";
+import { AuthProvider, RequireAuth, NotRequireAuth } from "./components/auth/Auth";
+
+import RecommendPage from "./pages/recommend/RecommendPage";
 
 // react query devtool
 import { ReactQueryDevtools } from "react-query/devtools";
@@ -89,12 +82,6 @@ function App() {
                   </RequireAuth>
                 }
               />
-              {/* <Route
-                path="project/:projectId/:tripDate"
-                element={<ProjectPage />}
-              />
-              <Route path="test/:tripDate" element={<TextEditor />} /> */}
-
               {/* 로그인안했을시 로그인 페이지로 이동 */}
 
               {/* <Route
@@ -105,8 +92,8 @@ function App() {
                   // </RequireAuth>
                 }
               /> */}
+              <Route path="recommend/*" element={<RecommendPage />} />
               <Route path="*" element={<Navigate to="/" replace />} />
-              {/* <Route path="test/:projectId" element={<TextEditor />} /> */}
             </Routes>
           </BodyDiv>
         </Router>

@@ -35,7 +35,7 @@ const ProjectPage = (props) => {
   const [connectUser, setConnectUser] = useState({});
   const [attentionIndex, setAttentionIndex] = useState(-1);
   // const userName = sessionStorage.getItem("myNickname");
-  const userName = auth.user.user_name;
+
   const colors = {
     // "#FF8A3D": false,
     "#8DD664": false,
@@ -53,8 +53,10 @@ const ProjectPage = (props) => {
       socket.emit("projectLeave", [projectId, auth.user.user_name]);
     });
   }, []);
+  let userName = auth?.user?.user_name;
 
   useEffect(() => {
+    console.log(auth);
     if (projectId === null) return;
     async function fetchInfo() {
       const data = await fetchProjectById(projectId);

@@ -20,6 +20,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.4.3",
     "morgan": "~1.9.1",
+    "nodemailer": "^6.7.7",
     "okdb-client": "^1.2.3",
     "okdb-server": "^1.2.1",
     "openvidu-node-client": "^2.22.0",
