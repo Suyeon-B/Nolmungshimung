@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { HomeFilled, FileSearchOutlined } from "@ant-design/icons";
+import { HomeFilled, SearchOutlined } from "@ant-design/icons";
 import { Select } from "antd";
 
 const { Option } = Select;
@@ -46,6 +46,7 @@ const RecommendPage = () => {
 
   const handleChange = (value) => {
     setHashTags(String(value).replace(/[0-9]/g, ""));
+    console.log(value.keyCode);
   };
 
   async function searchHashtags(){
@@ -101,19 +102,23 @@ const RecommendPage = () => {
             navigate("/");
           }}
         />
-      </SearchBlock>
-      
+        <StyledDiv>
       <SelectModal
           mode="multiple"
           placeholder="최대 다섯개의 해쉬태그를 입력해주세요. ex) 우도, 맛집탐방"
           onChange={handleChange}
+          
+          // onSelect={searchHashtags}
           // onSearch={inputChange}
+          // onInputKeyDown={(event)=>{if(event.keyCode === 13){searchHashtags()}}}
       >
         {children}
-        {/* {autotexts} */}
       </SelectModal>
       <SelectIcon
         onClick={searchHashtags}/>
+        </StyledDiv>
+      </SearchBlock>
+      
 
       <RecommendBlock>
         {mainText}
@@ -126,6 +131,11 @@ const RecommendPage = () => {
     </RecommendWrapper>
   );
 };
+const StyledDiv = styled.div`
+// width:50%
+display: flex;
+justify-content: space-between;
+align-items: center;`
 
 const RecommendWrapper = styled.div`
   background-color: #ff8a3d;
@@ -136,6 +146,8 @@ const SearchBlock = styled.div`
   background-color: white;
   height: 50px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  display: flex;
+    justify-content: space-between;
 `;
 
 const RecommendBlock = styled.div`
@@ -184,21 +196,21 @@ const RecommendHome = styled(HomeFilled)`
   color: #ff8a3d;
   font-size: 30px;
   padding: 10px;
-  position: absolute;
-`;
-
-const SelectIcon = styled(FileSearchOutlined)`
-  // color: #ff8a3d;
-  font-size: 30px;
-  padding: 10px;
   // position: absolute;
 `;
 
+const SelectIcon = styled(SearchOutlined)`
+  color: #ff8a3d;
+  font-size: 30px;
+  padding: 10px;
+  // margin-right: 0;
+`;
+
 const SelectModal = styled(Select)`
-  width: 50%;
-  margin-left: auto;
-  margin-right: 0;
-  position: center;
+  // width: 50%;
+  width: 400px;
+  // margin-right: 100px;
+  // position: relative;
 `;
 
 export default RecommendPage;
