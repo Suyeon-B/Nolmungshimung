@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { HomeFilled } from "@ant-design/icons";
+import { HomeFilled, FileSearchOutlined } from "@ant-design/icons";
+import { Select } from "antd";
+
+const { Option } = Select;
+
 
 import styled from "styled-components";
 
@@ -16,12 +20,51 @@ const ProjectItem = ({ el }) => {
   );
 };
 
+let hashTag = [];
+fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/hashtags`, {
+  method: "get",
+    headers: {
+      "content-type": "application/json",
+    },
+    credentials: "include",
+  })
+  .then((res) => res.json())
+  .then((res) => hashTag = res)
+
 const RecommendPage = () => {
   const navigate = useNavigate();
   const [items, setItems] = useState([]);
+  const [hashtags, setHashTags] = useState([]);
   const mainText = "마음에 드는 여행 프로젝트를\n 내 프로젝트로! 😆";
+  
   let uploadedProjectsInfo = null;
 
+  const children = [];
+  for (let i = 0; i < hashTag.length; i++) {
+    children.push(<Option key={hashTag[i]+i}>{hashTag[i]}</Option>);
+  }
+
+  const handleChange = (value) => {
+    setHashTags(String(value).replace(/[0-9]/g, ""));
+  };
+
+  async function searchHashtags(){
+    let url = `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/hashtag?taglist=${JSON.stringify(hashtags)}`
+    if (!hashtags.length){
+      url = `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend`
+    }
+    const response = await fetch(url, {
+      method: "get",
+        headers: {
+          "content-type": "application/json",
+        },
+        credentials: "include",
+    })
+    .then((res) => res.json())
+    .then((res) => {
+      setItems(res);
+    })
+  }
   // 업로드된 프로젝트를 가져온다.
   useEffect(() => {
     async function fetchUploadedProjects() {
@@ -59,6 +102,19 @@ const RecommendPage = () => {
           }}
         />
       </SearchBlock>
+      
+      <SelectModal
+          mode="multiple"
+          placeholder="최대 다섯개의 해쉬태그를 입력해주세요. ex) 우도, 맛집탐방"
+          onChange={handleChange}
+          // onSearch={inputChange}
+      >
+        {children}
+        {/* {autotexts} */}
+      </SelectModal>
+      <SelectIcon
+        onClick={searchHashtags}/>
+
       <RecommendBlock>
         {mainText}
         <RecommendContents>
@@ -129,6 +185,20 @@ const RecommendHome = styled(HomeFilled)`
   font-size: 30px;
   padding: 10px;
   position: absolute;
+`;
+
+const SelectIcon = styled(FileSearchOutlined)`
+  // color: #ff8a3d;
+  font-size: 30px;
+  padding: 10px;
+  // position: absolute;
+`;
+
+const SelectModal = styled(Select)`
+  width: 50%;
+  margin-left: auto;
+  margin-right: 0;
+  position: center;
 `;
 
 export default RecommendPage;

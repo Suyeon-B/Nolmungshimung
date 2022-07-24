@@ -5,7 +5,10 @@ var router = express.Router();
 const Project = require(__base + "models/Project");
 const UploadProject = require(__base + "models/UploadProject");
 const HashTable = require(__base + "models/HashTable");
+const HashTags = require(__base + "models/HashTags");
 const { User } = require(__base + "models/User");
+//redis
+const Redis = require(__base + "routes/util/redis").publisher;
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
@@ -40,6 +43,81 @@ router.post("/", async (req, res) => {
       projectId: data._id.toString(),
     });
   });
+});
+
+router.post("/upload", async (req, res) => {
+  // console.log("projects upload");
+  // console.log(req.body);
+  const info = req.body;
+
+  // console.log("INFO", info);
+  // const projectId = req.body._id;
+  delete info._id;
+  // console.log("?????", info.hashTags);
+  // console.log("?!", projectId);
+  const reqHashTags = info.hashTags;
+  // console.log("hashtags", hashTags);
+  const uploadProject = new UploadProject(info);
+  let projectId;
+  try {
+    const uploadProjectInfo = await uploadProject.save();
+
+    projectId = uploadProjectInfo._id;
+  } catch (error) {
+    console.log(`Project Upload ERROR: ${error}`);
+    return res.send(404).send({ error: "project Upload Fail" });
+  }
+  try {
+    // console.log("twice TRY projectId", projectId);
+    for (let i = 0; i < reqHashTags.length; i++) {
+      let updateHashTable = await HashTable.findOne({
+        hash_tag_name: reqHashTags[i],
+      });
+      // console.log(updateHashTable);
+      if (updateHashTable) {
+        // hashTag가 이미 존재하는 경우
+        // console.log(projectId);
+        await HashTable.findOneAndUpdate(
+          {
+            hash_tag_name: reqHashTags[i],
+          },
+          { $push: { project_id: projectId } },
+          { new: true }
+        );
+      } else {
+        // hashTag가 존재하지 않는 경우
+        const hashTable = new HashTable({
+          hash_tag_name: reqHashTags[i],
+          project_id: [projectId],
+        });
+        try {
+          await hashTable.save();
+        } catch (error) {
+          console.log(`Hash table ${i}번째 error : ${error}`);
+          return res
+            .send(404)
+            .send({ error: `hash table ${i}번째 upload Fail` });
+        }
+        try {
+          // category save
+          // find -> push -> save
+          const hashTags = await HashTags.find();
+          // console.log(hashTags[0].hash_tag_names);
+          hashTags[0].hash_tag_names.push(reqHashTags[i]);
+          // console.log(hashTags[0].hash_tag_names);
+          await hashTags[0].save();
+        } catch (error) {
+          console.log(`Hash tag ${i}번째 error : ${error}`);
+          return res.send(404).send({ error: `hash tag ${i}번째 save Fail` });
+        }
+      }
+    }
+
+    return res.status(200).send({ success: true });
+  } catch (error) {
+    console.log(`Hash Table Save ERROR ${error}`);
+    return res.send(404).send({ error: "hash table upload Fail" });
+  }
 });
 
 router.post("/title", async (req, res) => {
@@ -81,6 +159,7 @@ router.post("/title", async (req, res) => {
 
 router.post("/routes/:id", async (req, res) => {
   const body = req.body;
+  return res.status(200).send(null);
   try {
     const projectInfo = await Project.findById(req.params.id);
     projectInfo.routes[0].push(body);
@@ -95,28 +174,35 @@ router.post("/routes/:id", async (req, res) => {
 });
 
 router.patch("/routes/:id", async (req, res) => {
-  // console.log("I'm in routes/:id");
-  // console.log("REQ PARAMS : ", req.params.id);
-  // console.log("========body=====");
-  console.log("patch routes");
-
   try {
-    const updateProject = await Project.findOneAndUpdate(
-      { _id: req.params.id },
-      { $set: { routes: req.body } },
-      { new: true }
-    );
+    await Redis.setEx(`routes/${req.params.id}`, 10, "");
+    await Redis.set(`${req.params.id}`, JSON.stringify(req.body));
     res.status(200).send({ success: true });
-  } catch (error) {
-    console.log(`project update error: ${error}`);
-    res.status(404).send({ error: "routes update error!" });
+  } catch (e) {
+    console.log(`redis Error : ${e}`);
   }
+
+  // try {
+  //   const updateProject = await Project.findOneAndUpdate(
+  //     { _id: req.params.id },
+  //     { $set: { routes: req.body } },
+  //     { new: true }
+  //   );
+  //   res.status(200).send({ success: true });
+  // } catch (error) {
+  //   console.log(`project update error: ${error}`);
+  //   res.status(404).send({ error: "routes update error!" });
+  // }
 });
 
 router.get("/:id", async (req, res, next) => {
   const { id } = req.params;
   try {
     const projectInfo = await Project.findById({ _id: id });
+    let routes = await Redis.get(`${req.params.id}`);
+    if (routes) {
+      projectInfo.routes = JSON.parse(routes);
+    }
     return res.json(projectInfo);
   } catch (error) {
     console.log(`project find id: ${error}`);
@@ -239,75 +325,6 @@ router.get("/memo/:id", async (req, res, next) => {
   } catch (error) {
     console.log(`project find id: ${error}`);
     res.status(404).send({ error: "project not found" });
-  }
-});
-
-router.post("/upload", async (req, res) => {
-  console.log("projects upload");
-  console.log(req.body);
-  const info = req.body;
-
-  // console.log("INFO", info);
-  delete info._id;
-  console.log(info.hashTags);
-  const ProjectId = req.body._id;
-  const hashTags = info.hashTags;
-  console.log("hashtags", hashTags);
-  const uploadProject = new UploadProject(info);
-  try {
-    console.log("try");
-    await uploadProject.save(async (error, date) => {
-      if (error) {
-        console.log(`Upload FAIL ${error}`);
-        return res.status(403).json({
-          success: false,
-          message: "알 수 없는 이유로 업로드 실패",
-        });
-      } else {
-        try {
-          // T_T
-          // await HashTable.find({}).then(async (doc) => {
-          //   const hashObject = doc.hashTagNames;
-          //   console.log("for before");
-          //   // for (let i = 0; i < hashTags.length; i++) {
-          //   //   console.log("in for loop");
-          //   //   console.log(hashTags);
-          //   //   console.log(hashTags[i]);
-          //   //   console.log(req.body._id); // undefined
-          //   //   try {
-          //   //     hashObject = {tag : [projectId]} <- tag변수가 안들어감
-          //   //     hashObject.hashTags[i] = [Projereq.body._idctId];
-          //   //     console.log("here 11");
-          //   //   } catch (error) {
-          //   //     hashObject = { tag: [req.body._id] };
-          //   //     console.log(hashObject);
-          //   //     console.log("here 222");
-          //   //     hashObject.hashTags[i] = [
-          //   //       ...hashObject.hashTags[i],
-          //   //       req.body._id,
-          //   //     ];
-          //   //   }
-          //   // }
-          //   const hashTable = new HashTable(doc);
-          //   await HashTable.findOneAndUpdate(
-          //     { _id: doc._id },
-          //     { $set: { hashTagNames: hashObject } },
-          //     { new: true }
-          //   );
-          // });
-          return res.status(200).json({
-            success: true,
-            message: "업로드 및 해시태그 저장 성공",
-          });
-        } catch (error) {
-          console.log(`HashTags Upload ERROR: ${error}`);
-          res.send(404).send({ error: "HashTags Upload Fail" });
-        }
-      }
-    });
-  } catch (error) {
-    console.log(`Project Upload ERROR: ${error}`);
-    res.send(404).send({ error: "project Upload Fail" });
   }
 });
 
