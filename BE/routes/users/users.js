@@ -3,7 +3,7 @@ const router = express.Router();
 const request = require("request");
 const { User } = require(__base + "models/User");
 const { authMain } = require("../../middleware/auth");
-const { signupMail } = require(__base + "routes/utils/mail");
+const { signupMail } = require(__base + "routes/util/mail");
 const middlewares = require("../../middleware");
 
 //=================================
@@ -203,21 +203,17 @@ router.post("/signin", (req, res) => {
 
 router.post("/signout", (req, res) => {
   // console.log('signout req.user : ' + JSON.stringify(req.user));
-  User.findOneAndUpdate(
-    { _id: req.user._id },
-    { userAccessToken: "", userRefreshToken: "" },
-    (err, doc) => {
-      if (err)
-        return res.json({
-          success: false,
-          message: "로그아웃 시, 에러 발생했습니다",
-        });
-
-      return res.status(200).send({
-        success: true,
+  User.findOneAndUpdate({ _id: req.user._id }, { userAccessToken: "", userRefreshToken: "" }, (err, doc) => {
+    if (err)
+      return res.json({
+        success: false,
+        message: "로그아웃 시, 에러 발생했습니다",
       });
-    }
-  );
+
+    return res.status(200).send({
+      success: true,
+    });
+  });
 });
 
 router.get("/auth", authMain, async (req, res) => {
@@ -272,8 +268,7 @@ router.post("/kakao", async (req, res) => {
     if (!userEmail) {
       return res.status(400).json({
         loginSuccess: false,
-        message:
-          "사용자 이메일을 제공하지않을 경우 카카오 로그인이 불가능합니다.",
+        message: "사용자 이메일을 제공하지않을 경우 카카오 로그인이 불가능합니다.",
       });
     }
 
