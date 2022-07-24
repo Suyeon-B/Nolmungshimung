@@ -20,22 +20,25 @@ function Result() {
   const showModal = () => {
     setVisible(true);
   };
-  const handleOk = () => {
+  const handleOk = async () => {
     setConfirmLoading(true);
-    console.log(hashTags.length);
+    // console.log(hashTags.length);
+    // console.log(projectInfo);
     if (hashTags.length > 5) {
-      console.log("??");
       alert("5개만 입력하랬다. ㅡㅡ");
       return;
     } else {
       projectInfo.hashTags = hashTags;
-      fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/upload`, {
-        method: "post",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify(projectInfo),
-      }).then((res) => res.json());
+      await fetch(
+        `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/upload`,
+        {
+          method: "post",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(projectInfo),
+        }
+      ).then((res) => res.json());
     }
     setTimeout(() => {
       setVisible(false);
@@ -49,12 +52,15 @@ function Result() {
     setVisible(false);
   };
   async function fetchProjectById(_id) {
-    const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`);
+    const response = await fetch(
+      `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`
+    );
     return response.json();
   }
 
   useEffect(() => {
     if (projectId === null) return;
+    // console.log(projectId);∫
     async function fetchInfo() {
       const data = await fetchProjectById(projectId);
       setRoutes(data.routes);
@@ -69,7 +75,9 @@ function Result() {
   const culTripTermData = (startDate, day) => {
     const sDate = new Date(startDate);
     sDate.setDate(sDate.getDate() + day);
-    return `${sDate.getFullYear()}. ${sDate.getMonth() + 1}. ${sDate.getDate()}`;
+    return `${sDate.getFullYear()}. ${
+      sDate.getMonth() + 1
+    }. ${sDate.getDate()}`;
   };
 
   return (
