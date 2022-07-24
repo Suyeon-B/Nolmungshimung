@@ -4,7 +4,13 @@ import SignIn from "./pages/sign/SignIn";
 import Result from "./pages/result/Result";
 import KakaoSignIn from "./components/sign/KakaoSignIn";
 import VoiceTalk from "./components/voiceTalk/voiceTalk";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import InviteProject from "./components/invite/InviteProject";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import CreateProject from "./components/CreateProject";
 import styled from "styled-components";
 // import TextEditor from "./components/shareMemo/test";
@@ -14,7 +20,11 @@ import "./App.css";
 import "./reset.css";
 import { QueryClient, QueryClientProvider } from "react-query";
 import ProjectPage from "./pages/project/ProjectPage";
-import { AuthProvider, RequireAuth, NotRequireAuth } from "./components/auth/Auth";
+import {
+  AuthProvider,
+  RequireAuth,
+  NotRequireAuth,
+} from "./components/auth/Auth";
 
 import RecommendPage from "./pages/recommend/RecommendPage";
 
@@ -70,6 +80,14 @@ function App() {
                 element={
                   <RequireAuth>
                     <ProjectPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="invite/"
+                element={
+                  <RequireAuth>
+                    <InviteProject />
                   </RequireAuth>
                 }
               />

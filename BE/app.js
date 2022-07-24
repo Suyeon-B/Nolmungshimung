@@ -9,6 +9,7 @@ var cors = require("cors");
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users/users");
 var projectsRouter = require("./routes/projects/projects");
+var inviteRouter = require("./routes/projects/invite");
 var travelRouter = require("./routes/travel/travel");
 var commonRouter = require("./routes/common/common");
 var voiceRouter = require("./routes/voicetalk/voicetalk");
@@ -111,7 +112,9 @@ io.on("connection", (socket) => {
       console.log("attention", projectId);
       try {
         // console.log("ooooo");
-        socket.broadcast.to(projectId).emit("attentionPlease", [date, userName], selectedIndex);
+        socket.broadcast
+          .to(projectId)
+          .emit("attentionPlease", [date, userName], selectedIndex);
       } catch (error) {
         console.log(error);
       }
@@ -146,7 +149,9 @@ io.on("connection", (socket) => {
   });
   socket.on("detail_date_leave", ([project_Id, userName, selectedIndex]) => {
     console.log("detail_date_leave", selectedIndex);
-    socket.broadcast.to(project_Id + selectedIndex).emit("deleteCurser", userName);
+    socket.broadcast
+      .to(project_Id + selectedIndex)
+      .emit("deleteCurser", userName);
 
     socket.leave(project_Id + selectedIndex);
   });
@@ -158,7 +163,9 @@ io.on("connection", (socket) => {
   socket.on("mouse_move", ([projectId, mouseInfo, selectedIndex, userName]) => {
     // console.log(projectId, mouseInfo, selectedIndex, userName);
     try {
-      socket.broadcast.to(projectId + selectedIndex).emit("mouse_update", mouseInfo);
+      socket.broadcast
+        .to(projectId + selectedIndex)
+        .emit("mouse_update", mouseInfo);
     } catch (error) {
       // console.log(error);
     }
@@ -167,7 +174,9 @@ io.on("connection", (socket) => {
   socket.on("updateUserIndex", ([projectId, userName, selectedIndex]) => {
     try {
       projectSocketRoom[projectId][userName].selectedIndex = selectedIndex;
-      socket.broadcast.to(projectId).emit("connectUser", projectSocketRoom[projectId]);
+      socket.broadcast
+        .to(projectId)
+        .emit("connectUser", projectSocketRoom[projectId]);
     } catch (error) {
       // console.log(error);
     }
@@ -221,6 +230,7 @@ app.use("/users", usersRouter);
 app.use("/projects", projectsRouter);
 app.use("/travel", travelRouter);
 app.use("/common", commonRouter);
+app.use("/invite", inviteRouter);
 // app.use("/voicetalk", voiceRouter);
 
 module.exports = app;

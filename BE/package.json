@@ -32,5 +32,9 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.19"
+  },
+  "browser": {
+    "crypto": false,
+    "stream": false
   }
 }

@@ -46,43 +46,71 @@ function FriendInvite() {
       .catch((err) => console.log(`err: ${err}`));
   }, []);
 
-  const onClickPlus = () => {
-    let data = { email };
-    // console.log("friends:", friends);
+  // const onClickPlus = () => {
+  //   let data = { email };
+  //   // console.log("friends:", friends);
+
+  //   fetch(
+  //     `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/friends/${projectId}`,
+  //     {
+  //       method: "post",
+  //       headers: {
+  //         "content-type": "application/json",
+  //       },
+  //       credentials: "include",
+  //       body: JSON.stringify(data),
+  //     }
+  //   )
+  //     .then((res) => res.json())
+  //     .then((res) => {
+  //       // console.log("res : ", res);
+  //       if (res.success === true) {
+  //         // console.log("-====--0=--=-=");
+  //         // console.log(res);
+  //         setFriends([...friends, email]);
+  //         success();
+  //         // console.log("추가 완료");
+  //       } else {
+  //         error(res.message);
+  //         // console.log(res.message);
+  //       }
+  //       setEmail("");
+  //     })
+  //     .catch((err) => console.log(`err: ${err}`));
+  // };
+
+  const sendInviteEmail = () => {
+    let data = { email: email, projectId: projectId };
     fetch(
-      `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/friends/${projectId}`,
+      `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/invite/mail`,
       {
         method: "post",
         headers: {
           "content-type": "application/json",
         },
-        credentials: "include",
+        // credentials: "include",
         body: JSON.stringify(data),
       }
-    )
-      .then((res) => res.json())
-      .then((res) => {
-        // console.log("res : ", res);
-        if (res.success === true) {
-          // console.log("-====--0=--=-=");
-          // console.log(res);
-          setFriends([...friends, email]);
-          success();
-          // console.log("추가 완료");
-        } else {
-          error(res.message);
-          // console.log(res.message);
-        }
-        setEmail("");
-      })
-      .catch((err) => console.log(`err: ${err}`));
+        .then((res) => res.json())
+        .then((res) => {
+          if (res.success === true) {
+            console.log(res);
+            setFriends([...friends, email]);
+            success();
+          } else {
+            error(res.message);
+          }
+          setEmail("");
+        })
+        .catch((err) => console.log(`err: ${err}`))
+    );
   };
   const onChangeEmail = (event) => {
     setEmail(event.target.value);
   };
   const handleOnKeyPress = (event) => {
     if (event.key === "Enter") {
-      onClickPlus();
+      sendInviteEmail();
     }
   };
   const text = <FriendInviteTitle>친구초대</FriendInviteTitle>;
@@ -104,7 +132,7 @@ function FriendInvite() {
         />
         <UsergroupAddOutlined
           style={{ fontSize: "25px", color: "white" }}
-          onClick={onClickPlus}
+          onClick={sendInviteEmail}
         />
       </InviteForm>
       {friends.map((el, i) => (

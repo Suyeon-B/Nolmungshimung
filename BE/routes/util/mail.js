@@ -19,3 +19,40 @@ exports.signupMail = function (certificationNumber, receive) {
     });
   });
 };
+
+exports.inviteMail = function (email, inviteToken) {
+  return new Promise(async (resolve, reject) => {
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.NODEMAILER_USER, //username
+        pass: process.env.NODEMAILER_PASS, //password
+      },
+    });
+
+    //메일에 넣을 초대링크 주소
+    const url = `https://${process.env.REACT_APP_SERVER_IP}:3000/invite/?token=${inviteToken}`;
+
+    const message = {
+      from: "nolmong@gmail.com", //process.env.NODEMAILER_USER, // sender address
+      to: `${email}`, // list of receivers
+      subject: "놀멍쉬멍 프로젝트 초대 메일입니다.", // Subject line
+      html:
+        "<p>아래 링크를 누르면 그룹으로 초대됩니다.</p>" +
+        "<a href=" +
+        url +
+        ">초대링크</a>",
+    };
+
+    // 메일 전송
+    transporter.sendMail(message, (error) => {
+      if (error) {
+        console.log(error);
+        resolve(false);
+      } else resolve(true);
+    });
+  });
+};
