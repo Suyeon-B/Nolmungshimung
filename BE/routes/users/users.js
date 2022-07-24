@@ -3,8 +3,8 @@ const router = express.Router();
 const request = require("request");
 const { User } = require(__base + "models/User");
 const { authMain } = require("../../middleware/auth");
+const { signupMail } = require(__base + "utils/mail");
 const middlewares = require("../../middleware");
-// const { signupMail } = require(__base + "utils/mail");
 
 //=================================
 //             User
@@ -54,8 +54,6 @@ function checkUserEmail(user_email) {
 router.post("/signup", async (req, res) => {
   // 이메일 인증 번호 랜덤 생성
   console.log("Enter signup");
-  var certificationNumber = Math.floor(Math.random() * (999999 - 0)) + 99999;
-  req.body.certificationNumber = certificationNumber;
 
   const user = new User(req.body);
 
@@ -96,23 +94,36 @@ router.post("/signup", async (req, res) => {
       }
     }
 
-    // 이메일 인증 번호 보내기!!
-    // if (!(await signupMail(certificationNumber, data.userEmail))) {
-    //   // 이메일 인증 보내기 실패
-    //   console.log("인증 메일 보내기 실패");
-    //   return res.status(200).json({
-    //     success: true,
-    //     message:
-    //       "인증 메일 보내기 실패했습니다! 새롭게 인증을 받기 위해서 로그인 해주세요",
-    //     type: "NOT_SEND_CERTIFICATION",
-    //   });
-    // }
-
     return res.status(200).json({
       success: true,
       message: "회원가입 인증 메일을 보냈습니다",
     });
   });
+});
+
+// router.post("/maill", signupMail);
+router.post("/mail", async (req, res) => {
+  // 이메일 중복 체크
+  if ((await checkUserEmail(req.body.userEmail)) !== null) {
+    return res.status(403).json({
+      success: false,
+      message: "이미 존재하는 이메일입니다!!",
+    });
+  }
+  console.log(req.body);
+  // 이메일 인증 번호 보내기!!
+  var certificationNumber = Math.floor(Math.random() * (999999 - 0)) + 99999;
+  try {
+    if (await signupMail(certificationNumber, req.body.userEmail)) {
+      return res.status(200).json({
+        success: true,
+        message: "인증 메일 보내기 성공했습니다! ",
+        answer: certificationNumber,
+      });
+    }
+  } catch (error) {
+    console.log(`mail ERROR : ${error}`);
+  }
 });
 
 router.post("/checkCertificationNumber", (req, res) => {
@@ -209,11 +220,11 @@ router.post("/signout", (req, res) => {
   );
 });
 
-router.get("/auth", authMain, (req, res) => {
+router.get("/auth", authMain, async (req, res) => {
   // router.get("/auth", (req, res) => {
   // console.log("req.user : " + req);
   // console.log("return auth");
-  return res.status(200).json({
+  return await res.status(200).json({
     // _id: req.user._id,
     // user_email: req.user.user_email,
     user_name: req.user,

@@ -141,7 +141,7 @@ function SpotRoute({
         <SpotRouteMap id="myMap" />
       </SpotRouteSection>
       <Cursor project_Id={itemId} selectedIndex={selectedIndex} />
-      <MemoRtc project_Id={itemId} />
+      <MemoRtc project_Id={itemId} userName={userName} />
       {contents !== null && (
         <SearchDetail onClose={onClose} visible={visible} contents={contents} />
       )}

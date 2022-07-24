@@ -4,7 +4,7 @@ import { useAuth } from "../components/auth/Auth";
 import { useNavigate, Link } from "react-router-dom";
 
 const ProjectItem = ({ el }) => {
-  console.log("ProjectItem");
+  // console.log("ProjectItem");
   return (
     <StyledLi>
       <Link to={`project/${el._id}`}>
