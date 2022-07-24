@@ -51,67 +51,72 @@ router.post("/upload", async (req, res) => {
   const info = req.body;
 
   // console.log("INFO", info);
-  const projectId = req.body._id;
+  // const projectId = req.body._id;
   delete info._id;
   // console.log("?????", info.hashTags);
   // console.log("?!", projectId);
   const reqHashTags = info.hashTags;
   // console.log("hashtags", hashTags);
   const uploadProject = new UploadProject(info);
-
+  let projectId;
   try {
-    await uploadProject.save();
-    try {
-      for (let i = 0; i < reqHashTags.length; i++) {
-        let updateHashTable = await HashTable.findOne({
-          hash_tag_name: reqHashTags[i],
-        });
-        // console.log(updateHashTable);
-        if (updateHashTable) {
-          // hashTag가 이미 존재하는 경우
-          // console.log(projectId);
-          await HashTable.findOneAndUpdate(
-            {
-              hash_tag_name: reqHashTags[i],
-            },
-            { $push: { project_id: projectId } },
-            { new: true }
-          );
-        } else {
-          // hashTag가 존재하지 않는 경우
-          const hashTable = new HashTable({
-            hash_tag_name: reqHashTags[i],
-            project_id: [projectId],
-          });
-          try {
-            await hashTable.save();
-          } catch (error) {
-            console.log(`Hash table ${i}번째 error : ${error}`);
-            res.send(404).send({ error: `hash table ${i}번째 upload Fail` });
-          }
-          try {
-            // category save
-            // find -> push -> save
-            const hashTags = await HashTags.find();
-            // console.log(hashTags[0].hash_tag_names);
-            hashTags[0].hash_tag_names.push(reqHashTags[i]);
-            // console.log(hashTags[0].hash_tag_names);
-            await hashTags[0].save();
-          } catch (error) {
-            console.log(`Hash tag ${i}번째 error : ${error}`);
-            res.send(404).send({ error: `hash tag ${i}번째 save Fail` });
-          }
-        }
-      }
+    const uploadProjectInfo = await uploadProject.save();
 
-      res.status(200).send({ success: true });
-    } catch (error) {
-      console.log(`Hash Table Save ERROR ${error}`);
-      res.send(404).send({ error: "hash table upload Fail" });
-    }
+    projectId = uploadProjectInfo._id;
   } catch (error) {
     console.log(`Project Upload ERROR: ${error}`);
-    res.send(404).send({ error: "project Upload Fail" });
+    return res.send(404).send({ error: "project Upload Fail" });
+  }
+  try {
+    // console.log("twice TRY projectId", projectId);
+    for (let i = 0; i < reqHashTags.length; i++) {
+      let updateHashTable = await HashTable.findOne({
+        hash_tag_name: reqHashTags[i],
+      });
+      // console.log(updateHashTable);
+      if (updateHashTable) {
+        // hashTag가 이미 존재하는 경우
+        // console.log(projectId);
+        await HashTable.findOneAndUpdate(
+          {
+            hash_tag_name: reqHashTags[i],
+          },
+          { $push: { project_id: projectId } },
+          { new: true }
+        );
+      } else {
+        // hashTag가 존재하지 않는 경우
+        const hashTable = new HashTable({
+          hash_tag_name: reqHashTags[i],
+          project_id: [projectId],
+        });
+        try {
+          await hashTable.save();
+        } catch (error) {
+          console.log(`Hash table ${i}번째 error : ${error}`);
+          return res
+            .send(404)
+            .send({ error: `hash table ${i}번째 upload Fail` });
+        }
+        try {
+          // category save
+          // find -> push -> save
+          const hashTags = await HashTags.find();
+          // console.log(hashTags[0].hash_tag_names);
+          hashTags[0].hash_tag_names.push(reqHashTags[i]);
+          // console.log(hashTags[0].hash_tag_names);
+          await hashTags[0].save();
+        } catch (error) {
+          console.log(`Hash tag ${i}번째 error : ${error}`);
+          return res.send(404).send({ error: `hash tag ${i}번째 save Fail` });
+        }
+      }
+    }
+
+    return res.status(200).send({ success: true });
+  } catch (error) {
+    console.log(`Hash Table Save ERROR ${error}`);
+    return res.send(404).send({ error: "hash table upload Fail" });
   }
 });
 
