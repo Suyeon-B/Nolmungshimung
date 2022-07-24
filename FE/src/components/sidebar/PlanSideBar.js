@@ -63,7 +63,6 @@ const PlanSideBar = ({
       <PlanList
         goDetailPage={onClickDetail}
         startDate={item.start_date}
-        term={item.term}
         routes={itemRoutes}
         setRoutes={setItemRoutes}
         setSelectedIndex={setSelectedIndex}

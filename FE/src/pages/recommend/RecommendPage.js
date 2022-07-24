@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { HomeFilled, FileSearchOutlined } from "@ant-design/icons";
+import { HomeFilled, SearchOutlined } from "@ant-design/icons";
 import { Select } from "antd";
 
 const { Option } = Select;
@@ -20,6 +20,16 @@ const ProjectItem = ({ el }) => {
   );
 };
 
+let hashTag = [];
+fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/hashtags`, {
+  method: "get",
+    headers: {
+      "content-type": "application/json",
+    },
+    credentials: "include",
+  })
+  .then((res) => res.json())
+  .then((res) => hashTag = res)
 
 const RecommendPage = () => {
   const navigate = useNavigate();
@@ -30,18 +40,21 @@ const RecommendPage = () => {
   let uploadedProjectsInfo = null;
 
   const children = [];
-  const hashTag = [];
-  const handleChange = (value) => {
-    console.log(`selected ${value}`);
-    setHashTags(value);
-    console.log(value.length);
-  };
   for (let i = 0; i < hashTag.length; i++) {
-    children.push(<Option key={i + 1}>{hashTag[i]}</Option>);
+    children.push(<Option key={hashTag[i]+i}>{hashTag[i]}</Option>);
   }
+
+  const handleChange = (value) => {
+    setHashTags(String(value).replace(/[0-9]/g, ""));
+    console.log(value.keyCode);
+  };
+
   async function searchHashtags(){
-    console.log(hashtags)
-    const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/hashtag?taglist=${JSON.stringify(hashtags)}`, {
+    let url = `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/hashtag?taglist=${JSON.stringify(hashtags)}`
+    if (!hashtags.length){
+      url = `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend`
+    }
+    const response = await fetch(url, {
       method: "get",
         headers: {
           "content-type": "application/json",
@@ -50,20 +63,22 @@ const RecommendPage = () => {
     })
     .then((res) => res.json())
     .then((res) => {
-      console.log(res)
       setItems(res);
     })
   }
   // 업로드된 프로젝트를 가져온다.
   useEffect(() => {
     async function fetchUploadedProjects() {
-      const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/recommend`, {
-        method: "get",
-        headers: {
-          "content-type": "application/json",
-        },
-        credentials: "include",
-      })
+      const response = await fetch(
+        `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend`,
+        {
+          method: "get",
+          headers: {
+            "content-type": "application/json",
+          },
+          credentials: "include",
+        }
+      )
         .then((res) => res.json())
         .then((res) => {
           // console.log("===== fetch 결과 =====");
@@ -87,16 +102,23 @@ const RecommendPage = () => {
             navigate("/");
           }}
         />
-      </SearchBlock>
-      
+        <StyledDiv>
       <SelectModal
-          mode="tags"
+          mode="multiple"
           placeholder="최대 다섯개의 해쉬태그를 입력해주세요. ex) 우도, 맛집탐방"
           onChange={handleChange}
-        >
+          
+          // onSelect={searchHashtags}
+          // onSearch={inputChange}
+          // onInputKeyDown={(event)=>{if(event.keyCode === 13){searchHashtags()}}}
+      >
+        {children}
       </SelectModal>
       <SelectIcon
         onClick={searchHashtags}/>
+        </StyledDiv>
+      </SearchBlock>
+      
 
       <RecommendBlock>
         {mainText}
@@ -109,6 +131,11 @@ const RecommendPage = () => {
     </RecommendWrapper>
   );
 };
+const StyledDiv = styled.div`
+// width:50%
+display: flex;
+justify-content: space-between;
+align-items: center;`
 
 const RecommendWrapper = styled.div`
   background-color: #ff8a3d;
@@ -119,6 +146,8 @@ const SearchBlock = styled.div`
   background-color: white;
   height: 50px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  display: flex;
+    justify-content: space-between;
 `;
 
 const RecommendBlock = styled.div`
@@ -167,21 +196,21 @@ const RecommendHome = styled(HomeFilled)`
   color: #ff8a3d;
   font-size: 30px;
   padding: 10px;
-  position: absolute;
-`;
-
-const SelectIcon = styled(FileSearchOutlined)`
-  // color: #ff8a3d;
-  font-size: 30px;
-  padding: 10px;
   // position: absolute;
 `;
 
+const SelectIcon = styled(SearchOutlined)`
+  color: #ff8a3d;
+  font-size: 30px;
+  padding: 10px;
+  // margin-right: 0;
+`;
+
 const SelectModal = styled(Select)`
-  width: 50%;
-  margin-left: auto;
-  margin-right: 0;
-  position: center;
+  // width: 50%;
+  width: 400px;
+  // margin-right: 100px;
+  // position: relative;
 `;
 
 export default RecommendPage;

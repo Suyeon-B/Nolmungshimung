@@ -4,7 +4,13 @@ import SignIn from "./pages/sign/SignIn";
 import Result from "./pages/result/Result";
 import KakaoSignIn from "./components/sign/KakaoSignIn";
 import VoiceTalk from "./components/voiceTalk/voiceTalk";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import InviteProject from "./components/invite/InviteProject";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import CreateProject from "./components/CreateProject";
 import styled from "styled-components";
 // import TextEditor from "./components/shareMemo/test";
@@ -14,14 +20,17 @@ import "./App.css";
 import "./reset.css";
 import { QueryClient, QueryClientProvider } from "react-query";
 import ProjectPage from "./pages/project/ProjectPage";
-import { AuthProvider, RequireAuth, NotRequireAuth } from "./components/auth/Auth";
+import {
+  AuthProvider,
+  RequireAuth,
+  NotRequireAuth,
+} from "./components/auth/Auth";
 
 import RecommendPage from "./pages/recommend/RecommendPage";
 import RecommendPageDetail from "./pages/recommend/RecommendPageDetail";
 
 // react query devtool
 import { ReactQueryDevtools } from "react-query/devtools";
-import CalendarTest from "./components/CalendarTest";
 import HomeNew from "./pages/HomeNew";
 
 const queryClient = new QueryClient(); // 인스턴스 생성
@@ -74,7 +83,15 @@ function App() {
                   </RequireAuth>
                 }
               />
-              <Route path="Calendar/*" element={<CalendarTest />} />
+              <Route
+                path="invite/"
+                element={
+                  <RequireAuth>
+                    <InviteProject />
+                  </RequireAuth>
+                }
+              />
+
               <Route
                 path="project/:projectId/result"
                 element={
@@ -94,7 +111,10 @@ function App() {
                 }
               /> */}
               <Route path="recommend/*" element={<RecommendPage />} />
-              <Route path="recommend/project/:projectId" element={<RecommendPageDetail />} />
+              <Route
+                path="recommend/project/:projectId"
+                element={<RecommendPageDetail />}
+              />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </BodyDiv>
