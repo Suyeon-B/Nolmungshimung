@@ -121,6 +121,7 @@ const StyledLi = styled.li`
 const TitleWrapper = styled.div`
   display: flex;
   justify-content: space-between;
+  width: 100%;
 `;
 
 const StyledTitle = styled.h1`
