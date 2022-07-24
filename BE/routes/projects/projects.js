@@ -7,6 +7,8 @@ const UploadProject = require(__base + "models/UploadProject");
 const HashTable = require(__base + "models/HashTable");
 const HashTags = require(__base + "models/HashTags");
 const { User } = require(__base + "models/User");
+//redis
+const Redis = require(__base + 'routes/util/redis').publisher
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
@@ -152,6 +154,7 @@ router.post("/title", async (req, res) => {
 
 router.post("/routes/:id", async (req, res) => {
   const body = req.body;
+  return res.status(200).send(null);
   try {
     const projectInfo = await Project.findById(req.params.id);
     projectInfo.routes[0].push(body);
@@ -166,22 +169,25 @@ router.post("/routes/:id", async (req, res) => {
 });
 
 router.patch("/routes/:id", async (req, res) => {
-  // console.log("I'm in routes/:id");
-  // console.log("REQ PARAMS : ", req.params.id);
-  // console.log("========body=====");
-  console.log("patch routes");
-
-  try {
-    const updateProject = await Project.findOneAndUpdate(
-      { _id: req.params.id },
-      { $set: { routes: req.body } },
-      { new: true }
-    );
+  try{
+    await Redis.setEx(`routes/${req.params.id}`,10, '')
+    await Redis.set(`${req.params.id}`, JSON.stringify(req.body))
     res.status(200).send({ success: true });
-  } catch (error) {
-    console.log(`project update error: ${error}`);
-    res.status(404).send({ error: "routes update error!" });
+  }catch(e){
+    console.log(`redis Error : ${e}`)
   }
+
+  // try {
+  //   const updateProject = await Project.findOneAndUpdate(
+  //     { _id: req.params.id },
+  //     { $set: { routes: req.body } },
+  //     { new: true }
+  //   );
+  //   res.status(200).send({ success: true });
+  // } catch (error) {
+  //   console.log(`project update error: ${error}`);
+  //   res.status(404).send({ error: "routes update error!" });
+  // }
 });
 
 router.get("/:id", async (req, res, next) => {
@@ -191,6 +197,10 @@ router.get("/:id", async (req, res, next) => {
 
   try {
     const projectInfo = await Project.findById({ _id: id });
+    let routes = await Redis.get(`${req.params.id}`)
+    if (routes){
+      projectInfo.routes = JSON.parse(routes)
+    }
     return res.json(projectInfo);
   } catch (error) {
     console.log(`project find id: ${error}`);
