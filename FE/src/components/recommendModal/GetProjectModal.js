@@ -1,6 +1,7 @@
 import { Button, Modal } from "antd";
 import React, { useState } from "react";
 import ModalCalender from "./ModalCalendar";
+import ModalCalendarRange from "./ModalCalendarRange";
 import { useAuth } from "../auth/Auth";
 import { useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -29,33 +30,28 @@ const GetProjectModal = () => {
     setVisible(true);
   };
 
-  const handleOk = async (event) => {
-    // api로 보내기
+  const fetchSelectDate = async (data) => {
+    // const response = await fetch(
+    //   `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/selectdate`,
     //   {
-    //     "projectId": "62dce3f97710afeda7945a36",
-    //     "userId": "62d266f9b7a49e5c97e980ab",
-    //     "startDate": [
-    //         2022,
-    //         7,
-    //         26,
-    //         0
-    //     ],
-    //     "projectTitle": "가져온프로젝트"
+    //     method: "post",
+    //     headers: {
+    //       "content-type": "application/json",
+    //     },
+    //     body: JSON.stringify(data),
+    //   }
+    // );
+    // if (response.ok) {
+    //   console.log("프로젝트로 이동시키기");
+    //   const resData = await response.json();
+    //   console.log(resData);
+    //   navigate(`/project/${resData.projectId}`, { replace: false });
     // }
-    console.log(auth);
-    event.preventDefault();
-    const data = {
-      projectId,
-      userId: auth.user._id,
-      userName: auth.user.user_name,
-      userEmail: auth.user.user_email,
-      startDate: setDay(startDate),
-      projectTitle,
-    };
-    console.log(data);
+  };
 
+  const fetchAllDate = async (data) => {
     const response = await fetch(
-      `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend`,
+      `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/alldate`,
       {
         method: "post",
         headers: {
@@ -69,6 +65,25 @@ const GetProjectModal = () => {
       const resData = await response.json();
       console.log(resData);
       navigate(`/project/${resData.projectId}`, { replace: false });
+    }
+  };
+
+  const handleOk = (event) => {
+    // 달력 날짜 입력, 프로젝트 제목 입력 예외 처리 추가
+    console.log(auth);
+    event.preventDefault();
+    const data = {
+      projectId,
+      userId: auth.user._id,
+      userName: auth.user.user_name,
+      userEmail: auth.user.user_email,
+      startDate: setDay(startDate),
+      projectTitle,
+    };
+
+    if (toggleBtn) {
+      fetchAllDate(data);
+    } else {
     }
   };
 
@@ -98,30 +113,49 @@ const GetProjectModal = () => {
         <StyledBtnDiv>
           <StyledAllBtn
             toggleBtn={toggleBtn}
-            onClick={() => setToggleBtn(false)}
+            onClick={() => setToggleBtn(true)}
           >
             전체 가져오기
           </StyledAllBtn>
           <StyledSelectBtn
             toggleBtn={toggleBtn}
-            onClick={() => setToggleBtn(true)}
+            onClick={() => setToggleBtn(false)}
           >
             날짜 선택해서 가져오기
           </StyledSelectBtn>
         </StyledBtnDiv>
 
-        <form type="submit">
-          <input
-            type="text"
-            name=""
-            id=""
-            placeholder="여행 제목을 입력해주세요"
-            value={projectTitle}
-            onChange={onChange}
-          />
-          <p>여행 시작 날짜 선택</p>
-          <ModalCalender startDate={startDate} setStartDate={setStartDate} />
-        </form>
+        {toggleBtn && (
+          <form type="submit">
+            <input
+              type="text"
+              name=""
+              id=""
+              placeholder="여행 제목을 입력해주세요"
+              value={projectTitle}
+              onChange={onChange}
+            />
+            <p>전체 가져오기 여행 시작 날짜 선택</p>
+            <ModalCalender startDate={startDate} setStartDate={setStartDate} />
+          </form>
+        )}
+        {!toggleBtn && (
+          <form type="submit">
+            <input
+              type="text"
+              name=""
+              id=""
+              placeholder="여행 제목을 입력해주세요"
+              value={projectTitle}
+              onChange={onChange}
+            />
+            <p>날짜 선택 여행 일정 선택하기</p>
+            <ModalCalendarRange
+              startDate={startDate}
+              setStartDate={setStartDate}
+            />
+          </form>
+        )}
       </Modal>
     </>
   );
@@ -162,4 +196,4 @@ const StyledBtnDiv = styled.div`
   border-bottom: 2px solid #ebebeb;
 `;
 
-export default App;
+export default GetProjectModal;

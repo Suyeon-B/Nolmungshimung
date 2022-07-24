@@ -115,7 +115,6 @@ router.patch("/routes/:id", async (req, res) => {
 
 router.get("/:id", async (req, res, next) => {
   const { id } = req.params;
-
   try {
     const projectInfo = await Project.findById({ _id: id });
     return res.json(projectInfo);
@@ -128,7 +127,7 @@ router.get("/:id", async (req, res, next) => {
 router.post("/:id", async (req, res, next) => {
   const { id } = req.params;
   const body = req.body;
-  console.log(body);
+  console.log("222222222222222222");
 
   try {
     const projectInfo = await Project.findById({ _id: id });

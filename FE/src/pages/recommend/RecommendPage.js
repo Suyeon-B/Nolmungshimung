@@ -9,8 +9,8 @@ const ProjectItem = ({ el }) => {
   return (
     <Link to={`project/${el._id}`}>
       <RecommendItems>
-        <div class="recommend_project_title"> {el.project_title}</div>
-        <div class="recommend_project_hashtag"> #{el.hashTags}</div>
+        <div className="recommend_project_title"> {el.project_title}</div>
+        <div className="recommend_project_hashtag"> #{el.hashTags}</div>
       </RecommendItems>
     </Link>
   );
@@ -25,13 +25,16 @@ const RecommendPage = () => {
   // 업로드된 프로젝트를 가져온다.
   useEffect(() => {
     async function fetchUploadedProjects() {
-      const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/recommend`, {
-        method: "get",
-        headers: {
-          "content-type": "application/json",
-        },
-        credentials: "include",
-      })
+      const response = await fetch(
+        `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend`,
+        {
+          method: "get",
+          headers: {
+            "content-type": "application/json",
+          },
+          credentials: "include",
+        }
+      )
         .then((res) => res.json())
         .then((res) => {
           // console.log("===== fetch 결과 =====");

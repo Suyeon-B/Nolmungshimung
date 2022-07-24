@@ -9,6 +9,7 @@ const Project = require(__base + "models/Project");
 router.get("/", async (req, res, next) => {
   try {
     const uploadProjectInfo = await UploadProject.find();
+    console.log(uploadProjectInfo);
     return res.json(uploadProjectInfo);
     // console.log(uploadProjectInfo);
   } catch (error) {
@@ -17,18 +18,13 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-router.post("/", async (req, res, next) => {
+router.post("/alldate", async (req, res, next) => {
   try {
-    const projectId = req.body.projectId;
-    const userId = req.body.userId;
-    const startDate = req.body.startDate;
-    const projectTitle = req.body.projectTitle;
-    const userName = req.body.userName;
-    const userEmail = req.body.userEmail;
+    const { projectId, userId, startDate, projectTitle, userName, userEmail } =
+      req.body;
 
-    const getProject = await Project.findById(projectId);
+    const getProject = await UploadProject.findById(projectId);
     const user = await User.findById(userId);
-    console.log(user);
 
     getProject["people"] = [[userId, userName, userEmail]];
     getProject["start_date"] = startDate;
@@ -47,7 +43,6 @@ router.post("/", async (req, res, next) => {
     user["user_projects"].push(response._id);
     await user.save();
 
-    console.log(response);
     res
       .status(200)
       .send({ success: "프로젝트 가져오기 성공!", projectId: response._id });
@@ -56,6 +51,8 @@ router.post("/", async (req, res, next) => {
     res.status(404).send({ error: "프로젝트 가져오기 실패!" });
   }
 });
+
+router.post("/selectdate", async (req, res, next) => {});
 
 router.get("/projects/:id", async (req, res, next) => {
   const { id } = req.params;
