@@ -19,6 +19,7 @@ var subscriber = redis.createClient({
   port: '6379',
 });
 
+
 subscriber.on('reconnecting', async () => {
   console.log('subscriber reconnect again');
 });
