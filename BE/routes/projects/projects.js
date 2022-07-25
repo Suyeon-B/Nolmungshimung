@@ -225,12 +225,10 @@ router.post("/:id", async (req, res, next) => {
         projectInfo.people.splice(i, 1);
       }
     }
-    console.log(projectInfo);
 
     userInfo.user_projects = userInfo.user_projects.filter(
       (projectId) => projectId !== id
     );
-    console.log(userInfo);
 
     await userInfo.save();
 
