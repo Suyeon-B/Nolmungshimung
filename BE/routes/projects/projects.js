@@ -9,7 +9,7 @@ const { Travel } = require(__base + "models/Travel");
 const HashTags = require(__base + "models/HashTags");
 const { User } = require(__base + "models/User");
 //redis
-const Redis = require(__base + "routes/util/redis").publisher;
+// const Redis = require(__base + "routes/util/redis").publisher;
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
@@ -188,6 +188,8 @@ router.post("/routes/:id", async (req, res) => {
 
 router.patch("/routes/:id", async (req, res) => {
   try {
+    //redis
+    const Redis = require(__base + "routes/util/redis").publisher;
     await Redis.setEx(`routes/${req.params.id}`, 10, "");
     await Redis.set(`${req.params.id}`, JSON.stringify(req.body));
     res.status(200).send({ success: true });
@@ -211,6 +213,8 @@ router.patch("/routes/:id", async (req, res) => {
 router.get("/:id", async (req, res, next) => {
   const { id } = req.params;
   try {
+    //redis
+    const Redis = require(__base + "routes/util/redis").publisher;
     const projectInfo = await Project.findById({ _id: id });
     let routes = await Redis.get(`${req.params.id}`);
     if (routes) {
