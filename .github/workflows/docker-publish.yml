@@ -95,5 +95,8 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ubuntu
           script: |
+            sudo docker-compose down &&
+            sudo docker container prune -f &&
+            sudo docker image prune -f &&
             sudo docker-compose -f ./docker-compose.yml pull && 
             sudo docker-compose -f ./docker-compose.yml up -d
