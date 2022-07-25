@@ -18,8 +18,8 @@ services:
             - "7889:7889"
             - "3001:3001"
             - "3003:3003"
-#     redis_boot:
-#         image: redis
+    redis_boot:
+        image: redis
 #         command: redis-server --port 6379
 #         container_name: redis_boot
 #         hostname: redis_boot
