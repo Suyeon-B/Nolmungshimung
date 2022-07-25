@@ -50,13 +50,13 @@ const RecommendPage = () => {
       const request = await fetch(url);
       const hashTagPJInfoJson = await request.json();
       setHashTagPJInfo([...hashTagPJInfoJson]);
-      console.log(hashtags);
+      // console.log(hashtags);
       if (hashtags.length === 0) {
         // console.log("해시태그 없으니까 인피니트 나오거라");
         setIsSearchResult(false);
       }
       // console.log("해시태그 검색해서 나온 결과");
-      console.log(hashTagPJInfo);
+      // console.log(hashTagPJInfo);
     } catch (e) {
       console.log("해시태그야 일해라 ..");
     }
@@ -69,8 +69,8 @@ const RecommendPage = () => {
         const request = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/infinite?skip=${skip}`);
         const uploadProjectInfoJson = await request.json();
         setUploadProjectInfo([...uploadProjectInfo, ...uploadProjectInfoJson]);
-        console.log("인피니트 스크롤 결과");
-        console.log(uploadProjectInfoJson);
+        // console.log("인피니트 스크롤 결과");
+        // console.log(uploadProjectInfoJson);
         if (uploadProjectInfoJson.length === 0) {
           setSkip(0);
         }
