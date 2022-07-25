@@ -145,11 +145,16 @@ router.get("/hashtag", async (req, res, next) => {
 });
 
 router.get("/hashtags", async (req, res, next) => {
-  let responseData = await HashTags.findOne(
-    {},
-    { _id: false, hash_tag_names: true }
-  ).lean();
-  return res.status(200).send(responseData.hash_tag_names);
+  try {
+    let responseData = await HashTags.findOne(
+      {},
+      { _id: false, hash_tag_names: true }
+    ).lean();
+    return res.status(200).send(responseData.hash_tag_names);
+  } catch (error) {
+    console.log(`HashTag가 존재하지 않아유 ~`);
+    return res.status(403).send({ status: 403, msg: error });
+  }
 });
 
 module.exports = router;
