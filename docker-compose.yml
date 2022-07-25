@@ -18,16 +18,16 @@ services:
             - "7889:7889"
             - "3001:3001"
             - "3003:3003"
-#     redis:
-#         image: redis:alpine
-#         command: redis-server --port 6379
-#         container_name: redis_boot
-#         hostname: redis_boot
-#         labels: 
-#             - "name=redis"
-#             - "mode=standalone"
-#         ports: 
-#             - 6379:6379
+    redis:
+        image: redis:alpine
+        command: redis-server --port 6379
+        container_name: redis_boot
+        hostname: redis_boot
+        labels: 
+            - "name=redis"
+            - "mode=standalone"
+        ports: 
+            - 6379:6379
         # links: 
         #     - mongo
         # depends_on: 
