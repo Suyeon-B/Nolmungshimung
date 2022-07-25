@@ -83,14 +83,7 @@ function App() {
                   </RequireAuth>
                 }
               />
-              <Route
-                path="invite/"
-                element={
-                  <RequireAuth>
-                    <InviteProject />
-                  </RequireAuth>
-                }
-              />
+              <Route path="invite/" element={<InviteProject />} />
 
               <Route
                 path="project/:projectId/result"
