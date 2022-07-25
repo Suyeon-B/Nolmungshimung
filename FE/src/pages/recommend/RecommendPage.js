@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { HomeFilled, SearchOutlined } from "@ant-design/icons";
 import { Select } from "antd";
-import HorizontalScroll from "react-scroll-horizontal";
 
 const { Option } = Select;
 
@@ -21,15 +20,14 @@ fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/hashtags`, {
 
 const RecommendPage = () => {
   const navigate = useNavigate();
-  const [items, setItems] = useState([]);
+  const [hashTagPJInfo, setHashTagPJInfo] = useState([]);
   const [hashtags, setHashTags] = useState([]);
   const mainText = "마음에 드는 여행 프로젝트를\n 내 프로젝트로! 😆";
+  const [isSearchResult, setIsSearchResult] = useState(false);
 
   // infinite scroll
   const [uploadProjectInfo, setUploadProjectInfo] = useState([]);
   const [skip, setSkip] = useState(0);
-
-  let uploadedProjectsInfo = null;
 
   const children = [];
   for (let i = 0; i < hashTag.length; i++) {
@@ -46,46 +44,35 @@ const RecommendPage = () => {
     if (!hashtags.length) {
       url = `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend`;
     }
-    const response = await fetch(url, {
-      method: "get",
-      headers: {
-        "content-type": "application/json",
-      },
-      credentials: "include",
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        setItems(res);
-      });
+    try {
+      setHashTagPJInfo([]);
+      setIsSearchResult(true);
+      const request = await fetch(url);
+      const hashTagPJInfoJson = await request.json();
+      setHashTagPJInfo([...hashTagPJInfoJson]);
+      console.log(hashtags);
+      if (hashtags.length === 0) {
+        // console.log("해시태그 없으니까 인피니트 나오거라");
+        setIsSearchResult(false);
+      }
+      // console.log("해시태그 검색해서 나온 결과");
+      console.log(hashTagPJInfo);
+    } catch (e) {
+      console.log("해시태그야 일해라 ..");
+    }
   }
-  // // 업로드된 프로젝트를 가져온다.
-  // useEffect(() => {
-  //   async function fetchUploadedProjects() {
-  //     const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/recommend`, {
-  //       method: "get",
-  //       headers: {
-  //         "content-type": "application/json",
-  //       },
-  //       credentials: "include",
-  //     })
-  //       .then((res) => res.json())
-  //       .then((res) => {
-  //         setItems(res);
-  //       });
-  //   }
-  //   fetchUploadedProjects();
-  // }, []);
 
   // infinite scroll
   useEffect(() => {
     const fetchUploadProjectInfo = async () => {
       try {
-        const request = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/recommend?skip=${skip}`);
+        const request = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/infinite?skip=${skip}`);
         const uploadProjectInfoJson = await request.json();
         setUploadProjectInfo([...uploadProjectInfo, ...uploadProjectInfoJson]);
-        console.log(uploadProjectInfoJson);
+        // console.log("인피니트 스크롤 결과");
+        // console.log(uploadProjectInfoJson);
       } catch (e) {
-        console.log("말도 안돼 ㅜ_ㅜ");
+        console.log("말도안돼 T_T");
       }
     };
     fetchUploadProjectInfo();
@@ -99,9 +86,7 @@ const RecommendPage = () => {
     }
   };
 
-  const ScrollRow = ({ i, el }) => {
-    console.log("i");
-    console.log("el");
+  const ScrollRow = ({ el }) => {
     return (
       <Link to={`project/${el._id}`}>
         <RecommendItems>
@@ -119,16 +104,27 @@ const RecommendPage = () => {
     );
   };
 
+  // const showHashtags = ({el}) => {
+  //   return (
+  //     {el.map((hashTag, index) => (
+  //       <span key={index}>
+  //         {"#"}
+  //         {hashTag}{" "}
+  //       </span>
+  //     ))}
+  //     검색결과
+  //   )
+  // }
+
   return (
     <RecommendWrapper>
       <SearchBlock>
         <Home>
-          <RecommendHome>
-            onClick=
-            {() => {
+          <RecommendHome
+            onClick={() => {
               navigate("/");
             }}
-          </RecommendHome>
+          />
           <Logo>놀멍쉬멍</Logo>
         </Home>
         <StyledDiv>
@@ -136,7 +132,6 @@ const RecommendPage = () => {
             mode="multiple"
             placeholder="최대 다섯개의 해시태그를 입력해주세요. ex) 우도, 맛집탐방"
             onChange={handleChange}
-
             // onSelect={searchHashtags}
             // onSearch={inputChange}
             // onInputKeyDown={(event)=>{if(event.keyCode === 13){searchHashtags()}}}
@@ -146,26 +141,38 @@ const RecommendPage = () => {
           <SelectIcon onClick={searchHashtags} />
         </StyledDiv>
       </SearchBlock>
+      {!isSearchResult && (
+        <RecommendBlock>
+          {mainText}
+          <div className="scrollWrapper">
+            <RecommendContents onWheel={handleScroll}>
+              {uploadProjectInfo.map((el, i) => {
+                return i % 2 === 0 ? null : <ScrollRow key={i} el={el} />;
+              })}
+            </RecommendContents>
+            <RecommendContents onWheel={handleScroll}>
+              {uploadProjectInfo.map((el, i) => {
+                return i % 2 === 0 ? <ScrollRow key={i} el={el} /> : null;
+              })}
+            </RecommendContents>
+          </div>
+        </RecommendBlock>
+      )}
+      {isSearchResult && (
+        <RecommendBlock>
+          {mainText}
+          <div className="resultTextWrapper">
+            <HashtagResult>#{hashtags}</HashtagResult>
+            <HashtagResultText>검색 결과</HashtagResultText>
+          </div>
 
-      <RecommendBlock>
-        {mainText}
-        <div className="scrollWrapper">
-          <RecommendContents onWheel={handleScroll}>
-            <HorizontalScroll reverseScroll={true}>
-              {uploadProjectInfo.map((el, i) => {
-                return <ScrollRow key={i} el={el} />;
-              })}
-            </HorizontalScroll>
+          <RecommendContents>
+            {hashTagPJInfo.map((el, i) => {
+              return <ScrollRow key={i} el={el} />;
+            })}
           </RecommendContents>
-          <RecommendContents onWheel={handleScroll}>
-            <HorizontalScroll reverseScroll={true}>
-              {uploadProjectInfo.map((el, i) => {
-                return <ScrollRow key={i} el={el} />;
-              })}
-            </HorizontalScroll>
-          </RecommendContents>
-        </div>
-      </RecommendBlock>
+        </RecommendBlock>
+      )}
     </RecommendWrapper>
   );
 };
@@ -185,6 +192,16 @@ const StyledDiv = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+`;
+
+const HashtagResult = styled.div`
+  font-size: 30px;
+  font-weight: bold;
+  color: #232a3c;
+  margin-right: 10px;
+`;
+const HashtagResultText = styled(HashtagResult)`
+  color: #f8f9fa;
 `;
 
 const RecommendWrapper = styled.div`
@@ -213,11 +230,22 @@ const RecommendBlock = styled.div`
   .scrollWrapper {
     margin-top: 130px;
   }
+  .resultTextWrapper {
+    display: flex;
+    margin-top: 4vh;
+  }
 `;
 
 const RecommendContents = styled.div`
   margin-top: 20px;
   height: 206px;
+  display: flex;
+  overflow-y: hidden;
+  ::-webkit-scrollbar {
+    /* width: 0px;
+    height: 7px; */
+    display: none;
+  }
 `;
 
 const RecommendItems = styled.div`
