@@ -16,4 +16,3 @@ EXPOSE 8443 3000 3001 7443
 # COPY . .
 
 CMD ["npm","run","start"]
-CMD ["redis-server --port 6379"]
