@@ -27,17 +27,17 @@ function InviteProject(props) {
             .then((data) => {
               if (data.success === true) {
                 alert(data.message);
-                // navigate(`/project/${res.project}`, { replace: false });
+                navigate(`/project/${res.project}`, { replace: false });
               } else {
                 // error(result.message);
                 alert(data.message);
-                // navigate("/");
+                navigate("/");
               }
             })
             .catch((e) => console.log(e));
         } else {
           alert(res.message);
-          // navigate("/");
+          navigate("/");
         }
       })
       .catch((err) => {
