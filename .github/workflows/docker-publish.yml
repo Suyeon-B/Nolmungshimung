@@ -27,6 +27,36 @@ jobs:
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
       
+      - 
+        name: Set env Node
+        run: |
+          echo "MONGO_URI=$MONGO_URI" >> ./BE/.env
+          echo "NODE_TLS_REJECT_UNAUTHORIZED=$NODE_TLS_REJECT_UNAUTHORIZED" >> ./BE/.env
+          echo "Redis_IP=$Redis_IP" >> ./BE/.env
+          echo "REACT_APP_SERVER_IP=$REACT_APP_SERVER_IP" >> ./BE/.env
+          echo "NODEMAILER_USER=$NODEMAILER_USER" >> ./BE/.env
+          echo "NODEMAILER_PASS=$NODEMAILER_PASS" >> ./BE/.env
+          echo "Google_KEY=$Google_KEY" >> ./BE/.env
+        env:
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+          NODE_TLS_REJECT_UNAUTHORIZED: ${{ secrets.NODE_TLS_REJECT_UNAUTHORIZED }}
+          Redis_IP: ${{ secrets.Redis_IP }}
+          REACT_APP_SERVER_IP: ${{ secrets.REACT_APP_SERVER_IP }}
+          NODEMAILER_USER: ${{ secrets.NODEMAILER_USER }}
+          NODEMAILER_PASS: ${{ secrets.NODEMAILER_PASS }}
+          Google_KEY: ${{ secrets.Google_KEY }}
+      -
+        name: Set env React
+        run: |
+          echo "REACT_APP_SERVER_IP=$REACT_APP_SERVER_IP" >> ./FE/.env
+          echo "Google_KEY=$Google_KEY" >> ./FE/.env
+          echo "Kakao_KEY=$Kakao_KEY" >> ./FE/.env
+          echo "Kakao_Clinet_ID=$Kakao_Clinet_ID" >> ./FE/.env
+        env:
+          REACT_APP_SERVER_IP: ${{ secrets.REACT_APP_SERVER_IP }}
+          Google_KEY: ${{ secrets.Google_KEY }}
+          Kakao_KEY: ${{ secrets.Kakao_KEY }}
+          Kakao_Clinet_ID: ${{ secrets.Kakao_Clinet_ID }}
       -
         name: react Build and push
         uses: docker/build-push-action@v2
