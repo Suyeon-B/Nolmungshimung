@@ -90,7 +90,7 @@ router.post("/find/:id", async function (req, res, next) {
 function GetGoogleID(props) {
   let url =
     "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?";
-  const api_key = "AIzaSyAFeyVrH7cjDHGVVLqhifBI-DFlTUwEn8E";
+  const api_key = process.env.REACT_APP_GOOGLE_KEY;
   url =
     url +
     "input=" +
@@ -113,7 +113,7 @@ function GetGoogleID(props) {
 }
 
 function GetGooglePlace(id, props) {
-  const api_key = "AIzaSyAFeyVrH7cjDHGVVLqhifBI-DFlTUwEn8E";
+  const api_key = process.env.REACT_APP_GOOGLE_KEY;
   let url =
     "https://maps.googleapis.com/maps/api/place/details/json?fields=name,rating,formatted_phone_number,photo,type,opening_hours,price_level,review,user_ratings_total&language=kr&place_id=";
   url = url + id + "&key=" + api_key;

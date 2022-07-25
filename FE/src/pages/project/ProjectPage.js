@@ -57,6 +57,9 @@ const ProjectPage = (props) => {
 
   useEffect(() => {
     console.log(auth);
+    // if (!auth.user) {
+    //   window.location.href = "/signin";
+    // }
     if (projectId === null) return;
     async function fetchInfo() {
       const data = await fetchProjectById(projectId);
