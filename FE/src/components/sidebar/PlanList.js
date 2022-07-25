@@ -167,10 +167,6 @@ function PlanList({
     setIsDrage(true);
   }
 
-  // useEffect(() => {
-  //   setSelectedDay(0);
-  // }, [routes]);
-
   const onClick = (event) => {
     const selectIdx = +event.target.dataset.idx;
 
@@ -427,6 +423,7 @@ const DateDetailBtnDiv = styled.div`
   background-color: ${(props) =>
     props.attention === props["data-idx"] && "yellow"};
 
+  cursor: pointer;
   /* transition: all ease 2s 0s; */
 
   &:hover {
@@ -450,6 +447,7 @@ const DateDetailBtn = styled.button`
   /* &:hover {
     background-color: red;
   } */
+  cursor: pointer;
 `;
 
 const ItemInnerDiv = styled.div`

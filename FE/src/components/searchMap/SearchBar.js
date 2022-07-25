@@ -15,6 +15,9 @@ const SearchBar = (props) => {
     props.changePlace(InputText);
     setInputText("");
     props.handleSelect(null);
+    props.sumit(!props.current);
+    props.setSwLatlng([33.592161526546604, 126.04650255976554]);
+    props.setNeLatlng([33.14572269165777, 127.07480227781775]);
   };
   return (
     <form

@@ -2,9 +2,9 @@ import React, { useState } from "react";
 
 import styled from "styled-components";
 import "react-calendar/dist/Calendar.css"; // css import
-import CalendarTest from "./CalendarTest";
+import CalendarTwo from "./CalendarTwo";
 import { useNavigate } from "react-router-dom";
-
+import { useAuth } from "../components/auth/Auth";
 const setDay = (value) => {
   return [
     value.getFullYear(),
@@ -15,6 +15,7 @@ const setDay = (value) => {
 };
 
 const CreateProject = () => {
+  const auth = useAuth();
   let navigate = useNavigate();
   const [projectTitle, setProjectTitle] = useState("");
   const [showCalendar, setShowCalendar] = useState(false);
@@ -44,7 +45,8 @@ const CreateProject = () => {
 
     const term = parseInt((eDate - sDate) / (1000 * 60 * 60 * 24));
     const project = [
-      sessionStorage.getItem("user_email"),
+      // sessionStorage.getItem("user_email"),
+      auth.user.user_email,
       {
         project_title: projectTitle,
         start_date: startDate,
@@ -112,7 +114,7 @@ const CreateProject = () => {
           </CreateProjectSubmit>
         </CreateBtns>
         <CalendarContainer>
-          {showCalendar && <CalendarTest settedDate={settedDate} />}
+          {showCalendar && <CalendarTwo settedDate={settedDate} />}
         </CalendarContainer>
       </CalenderForm>
     </PageContainer>
@@ -161,12 +163,14 @@ const CalendarBtnContainer = styled.div`
   background: #ffffff;
   filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
   border-radius: 10px;
+  cursor: pointer;
 `;
 const CalendarBtn = styled.div`
   display: flex;
   background: #ffffff;
   border: 0px;
   align-items: center;
+  cursor: pointer;
 `;
 const CalendarBtnDay = styled.span`
   margin-left: 20px;
@@ -176,6 +180,7 @@ const CalendarBtnDay = styled.span`
   line-height: 48px;
   /* identical to box height */
   color: #7d7a7a;
+  cursor: pointer;
 `;
 const CalendarContainer = styled.div`
   display: flex;
@@ -205,6 +210,7 @@ const CreateBtns = styled.div`
   align-items: center;
   width: 810px;
   justify-content: space-between;
+  cursor: pointer;
 `;
 
 const CreateHomeImg = styled.img`

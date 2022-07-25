@@ -81,9 +81,7 @@ function MarkMap(item, selectedIndex) {
     //   markers[i].setMap(null);
     // }
     bounds = new kakao.maps.LatLngBounds();
-    console.log("안녕");
 
-    console.log(position);
     for (var i = 0; i < position.length; i++) {
       var content =
         `<div style="

@@ -1,9 +1,10 @@
 import React from "react";
 import SignUp from "./pages/sign/SignUp";
 import SignIn from "./pages/sign/SignIn";
-import Result from "./pages/Result";
+import Result from "./pages/result/Result";
 import KakaoSignIn from "./components/sign/KakaoSignIn";
 import VoiceTalk from "./components/voiceTalk/voiceTalk";
+import InviteProject from "./components/invite/InviteProject";
 import {
   BrowserRouter as Router,
   Routes,
@@ -25,9 +26,11 @@ import {
   NotRequireAuth,
 } from "./components/auth/Auth";
 
+import RecommendPage from "./pages/recommend/RecommendPage";
+import RecommendPageDetail from "./pages/recommend/RecommendPageDetail";
+
 // react query devtool
 import { ReactQueryDevtools } from "react-query/devtools";
-import CalendarTest from "./components/CalendarTest";
 import HomeNew from "./pages/HomeNew";
 
 const queryClient = new QueryClient(); // 인스턴스 생성
@@ -80,7 +83,15 @@ function App() {
                   </RequireAuth>
                 }
               />
-              <Route path="Calendar/*" element={<CalendarTest />} />
+              <Route
+                path="invite/"
+                element={
+                  <RequireAuth>
+                    <InviteProject />
+                  </RequireAuth>
+                }
+              />
+
               <Route
                 path="project/:projectId/result"
                 element={
@@ -89,12 +100,6 @@ function App() {
                   </RequireAuth>
                 }
               />
-              {/* <Route
-                path="project/:projectId/:tripDate"
-                element={<ProjectPage />}
-              />
-              <Route path="test/:tripDate" element={<TextEditor />} /> */}
-
               {/* 로그인안했을시 로그인 페이지로 이동 */}
 
               {/* <Route
@@ -105,8 +110,12 @@ function App() {
                   // </RequireAuth>
                 }
               /> */}
+              <Route path="recommend/*" element={<RecommendPage />} />
+              <Route
+                path="recommend/project/:projectId"
+                element={<RecommendPageDetail />}
+              />
               <Route path="*" element={<Navigate to="/" replace />} />
-              {/* <Route path="test/:projectId" element={<TextEditor />} /> */}
             </Routes>
           </BodyDiv>
         </Router>

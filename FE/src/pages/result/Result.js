@@ -1,27 +1,70 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
-import ResultMap from "../components/MarkMap/resultMap";
+import ResultMap from "../../components/MarkMap/resultMap";
 import { CloseOutlined } from "@ant-design/icons";
+import { Button, Modal } from "antd";
+import ResultModal from "./ResultModal";
 
 function Result() {
   const { projectId } = useParams();
-  const [visible, setVisible] = useState(true);
+  const [hashTags, setHashTags] = useState([]);
+  const [visible, setVisible] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
   const [title, setTitle] = useState(null);
   const [startDate, setStartDate] = useState(null);
   const [routes, setRoutes] = useState(null); // routes -> [[route],[route],[route]...]
+  const [projectInfo, setProjectInfo] = useState(null);
   // route -> [{spotInfo},{spotInfo},{spotInfo}...]
+
+  const showModal = () => {
+    setVisible(true);
+  };
+  const handleOk = async () => {
+    setConfirmLoading(true);
+    // console.log(hashTags.length);
+    // console.log(projectInfo);
+    if (hashTags.length > 5) {
+      alert("5개만 입력하랬다. ㅡㅡ");
+      return;
+    } else {
+      projectInfo.hashTags = hashTags;
+      await fetch(
+        `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/upload`,
+        {
+          method: "post",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(projectInfo),
+        }
+      ).then((res) => res.json());
+    }
+    setTimeout(() => {
+      setVisible(false);
+      setConfirmLoading(false);
+      alert("완료되었다냥");
+    }, 2000);
+  };
+
+  const handleCancel = () => {
+    // console.log("Clicked cancel button");
+    setVisible(false);
+  };
   async function fetchProjectById(_id) {
-    const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`);
+    const response = await fetch(
+      `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`
+    );
     return response.json();
   }
 
   useEffect(() => {
     if (projectId === null) return;
+    // console.log(projectId);∫
     async function fetchInfo() {
       const data = await fetchProjectById(projectId);
       setRoutes(data.routes);
-      // console.log(data.routes);
+      setProjectInfo(data);
       setTitle(data.project_title);
       setStartDate(data.start_date.join(".").slice(0, -2));
     }
@@ -32,13 +75,21 @@ function Result() {
   const culTripTermData = (startDate, day) => {
     const sDate = new Date(startDate);
     sDate.setDate(sDate.getDate() + day);
-    return `${sDate.getFullYear()}. ${sDate.getMonth() + 1}. ${sDate.getDate()}`;
+    return `${sDate.getFullYear()}. ${
+      sDate.getMonth() + 1
+    }. ${sDate.getDate()}`;
   };
 
   return (
     <ResultWhole>
       <ResultContainer>
-        <div>
+        <div
+          style={{
+            display: "flex",
+            width: "100%",
+            alignItems: "center",
+          }}
+        >
           <CloseOutlined
             style={{ color: "red", fontWeight: "900", fontSize: "30px" }}
             onClick={() => {
@@ -46,6 +97,14 @@ function Result() {
             }}
           />
           <ResultXTitle> &nbsp;&nbsp;&nbsp;전체 여행 경로</ResultXTitle>
+          <UploadBtn onClick={showModal}>업로드</UploadBtn>
+          <ResultModal
+            visible={visible}
+            onOk={handleOk}
+            confirmLoading={confirmLoading}
+            onCancel={handleCancel}
+            setHashTags={setHashTags}
+          />
         </div>
         <br />
         <br />
@@ -155,6 +214,23 @@ const ResultContainer = styled.div`
     display: none;
     width: 0;
   }
+`;
+
+const UploadBtn = styled.button`
+  color: blakc;
+  font-weight: 600;
+  font-size: 15px;
+  margin-left: 100px;
+  border: 0;
+  font-family: "Inter";
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 36px;
+  color: #f8f9fa;
+  cursor: pointer;
+  background-color: #ff8a3d;
+  border-radius: 15px;
+  padding: 3px 8px 3px 8px;
 `;
 
 export default Result;
