@@ -6,8 +6,8 @@ WORKDIR "/app"
 COPY ./BE .
 
 RUN npm install
-RUN apt-get update
-RUN apt-get install -y redis
+RUN apk --no-cache update
+RUN apk add redis
 
 # COPY . .
 
