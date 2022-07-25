@@ -6,6 +6,8 @@ WORKDIR "/app"
 COPY ./BE .
 
 RUN npm install
+RUN sudo apt-get update
+RUN sudo apt-get install -y redis
 
 # COPY . .
 
