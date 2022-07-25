@@ -50,13 +50,13 @@ const RecommendPage = () => {
       const request = await fetch(url);
       const hashTagPJInfoJson = await request.json();
       setHashTagPJInfo([...hashTagPJInfoJson]);
-      console.log(hashtags);
+      // console.log(hashtags);
       if (hashtags.length === 0) {
         // console.log("해시태그 없으니까 인피니트 나오거라");
         setIsSearchResult(false);
       }
       // console.log("해시태그 검색해서 나온 결과");
-      console.log(hashTagPJInfo);
+      // console.log(hashTagPJInfo);
     } catch (e) {
       console.log("해시태그야 일해라 ..");
     }
@@ -71,6 +71,9 @@ const RecommendPage = () => {
         setUploadProjectInfo([...uploadProjectInfo, ...uploadProjectInfoJson]);
         // console.log("인피니트 스크롤 결과");
         // console.log(uploadProjectInfoJson);
+        if (uploadProjectInfoJson.length === 0) {
+          setSkip(0);
+        }
       } catch (e) {
         console.log("말도안돼 T_T");
       }
@@ -122,9 +125,6 @@ const RecommendPage = () => {
             mode="multiple"
             placeholder="최대 다섯개의 해시태그를 입력해주세요. ex) 우도, 맛집탐방"
             onChange={handleChange}
-            // onSelect={searchHashtags}
-            // onSearch={inputChange}
-            // onInputKeyDown={(event)=>{if(event.keyCode === 13){searchHashtags()}}}
           >
             {children}
           </SelectModal>
@@ -179,7 +179,6 @@ const Logo = styled.div`
   min-width: fit-content;
 `;
 const StyledDiv = styled.div`
-  // width:50%
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -250,20 +249,14 @@ const RecommendItems = styled.div`
   background-color: white;
   margin-right: 20px;
   cursor: pointer;
-  // box-shadow: 4px 4px 4px rgb(0 0 0 / 25%);
 
   .background-img {
     height: 200px;
     width: 200px;
     border-radius: 10px;
     box-shadow: 4px 4px 4px rgb(0 0 0 / 25%);
-    background-position-y: center;
+    background-position: center;
   }
-
-  // img 적용
-  // background-image: url();
-  // background-repeat: no-repeat;
-  // background-size: auto 140px;
 
   .uploadProjectInfo-title {
     font-size: 25px;
