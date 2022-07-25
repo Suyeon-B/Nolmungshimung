@@ -135,6 +135,7 @@ const RecommendPage = () => {
         <RecommendBlock>
           {mainText}
           <div className="scrollWrapper">
+            <HashtagResultTextDark>🏝 모든 프로젝트</HashtagResultTextDark>
             <RecommendContents onWheel={handleScroll}>
               {uploadProjectInfo.map((el, i) => {
                 return i % 2 === 0 ? null : <ScrollRow key={i} el={el} />;
@@ -153,7 +154,7 @@ const RecommendPage = () => {
           {mainText}
           <div className="resultTextWrapper">
             <HashtagResult>#{hashtags}</HashtagResult>
-            <HashtagResultText>검색 결과</HashtagResultText>
+            <HashtagResultText>검색 결과 🔍</HashtagResultText>
           </div>
 
           <RecommendContents>
@@ -194,6 +195,10 @@ const HashtagResultText = styled(HashtagResult)`
   color: #f8f9fa;
 `;
 
+const HashtagResultTextDark = styled(HashtagResultText)`
+  color: #232a3c;
+`;
+
 const RecommendWrapper = styled.div`
   background-color: #ff8a3d;
   width: 100%;
@@ -212,13 +217,13 @@ const RecommendBlock = styled.div`
   white-space: pre-line;
   font-weight: 700;
   color: white;
-  padding: 8vh;
+  padding: 7vh;
   letter-spacing: 1px;
   line-height: 65px;
   min-width: 800px;
 
   .scrollWrapper {
-    margin-top: 130px;
+    margin-top: 60px;
   }
   .resultTextWrapper {
     display: flex;
@@ -262,7 +267,7 @@ const RecommendItems = styled.div`
 
   .uploadProjectInfo-title {
     font-size: 25px;
-    color: #232a3c;
+    color: #f8f9fa;
     text-align: center;
     padding-top: 40px;
   }
