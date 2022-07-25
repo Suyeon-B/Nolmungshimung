@@ -14,7 +14,6 @@ const Redis = require(__base + "routes/util/redis").publisher;
 router.get("/", async (req, res, next) => {
   try {
     const uploadProjectInfo = await UploadProject.find();
-    console.log(uploadProjectInfo);
     return res.json(uploadProjectInfo);
     // console.log(uploadProjectInfo);
   } catch (error) {
@@ -23,10 +22,21 @@ router.get("/", async (req, res, next) => {
   }
 });
 
+// infinite scroll
+router.get("/infinite", async (req, res, next) => {
+  try {
+    const skip = req.query.skip && /^\d+$/.test(req.query.skip) ? Number(req.query.skip) : 0;
+    // 한 번에 7개의 프로젝트 정보만 load합니다.
+    const uploadProjectInfo = await UploadProject.find({}, undefined, { skip, limit: 14 }).sort(res._id);
+    res.send(uploadProjectInfo);
+  } catch (e) {
+    res.status(500).send();
+  }
+});
+
 router.post("/alldate", async (req, res, next) => {
   try {
-    const { projectId, userId, startDate, projectTitle, userName, userEmail } =
-      req.body;
+    const { projectId, userId, startDate, projectTitle, userName, userEmail } = req.body;
 
     const getProject = await UploadProject.findById(projectId);
     const user = await User.findById(userId);
@@ -48,9 +58,7 @@ router.post("/alldate", async (req, res, next) => {
     user["user_projects"].push(response._id.toString());
     await user.save();
 
-    res
-      .status(200)
-      .send({ success: "프로젝트 가져오기 성공!", projectId: response._id });
+    res.status(200).send({ success: "프로젝트 가져오기 성공!", projectId: response._id });
   } catch (error) {
     console.log(error);
     res.status(404).send({ error: "프로젝트 가져오기 실패!" });
@@ -60,15 +68,7 @@ router.post("/alldate", async (req, res, next) => {
 router.post("/selectdate", async (req, res, next) => {
   try {
     console.log(req.body);
-    const {
-      projectId,
-      userId,
-      startDate,
-      projectTitle,
-      userName,
-      userEmail,
-      selectDate,
-    } = req.body;
+    const { projectId, userId, startDate, projectTitle, userName, userEmail, selectDate } = req.body;
 
     const getProject = await UploadProject.findById(projectId);
     const user = await User.findById(userId);
@@ -100,9 +100,7 @@ router.post("/selectdate", async (req, res, next) => {
     user["user_projects"].push(response._id.toString());
     await user.save();
 
-    res
-      .status(200)
-      .send({ success: "프로젝트 가져오기 성공!", projectId: response._id });
+    res.status(200).send({ success: "프로젝트 가져오기 성공!", projectId: response._id });
   } catch (error) {
     console.log(error);
     res.status(404).send({ error: "프로젝트 가져오기 실패!" });
@@ -145,10 +143,7 @@ router.get("/hashtag", async (req, res, next) => {
 });
 
 router.get("/hashtags", async (req, res, next) => {
-  let responseData = await HashTags.findOne(
-    {},
-    { _id: false, hash_tag_names: true }
-  ).lean();
+  let responseData = await HashTags.findOne({}, { _id: false, hash_tag_names: true }).lean();
   return res.status(200).send(responseData.hash_tag_names);
 });
 
