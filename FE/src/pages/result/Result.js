@@ -28,6 +28,11 @@ function Result() {
       alert("5개만 입력하랬다. ㅡㅡ");
       return;
     } else {
+      if (routes[0].length > 0) {
+        // console.log(routes[0][0].id);
+        projectInfo.travelId = routes[0][0].id;
+      }
+      console.log(projectInfo);
       projectInfo.hashTags = hashTags;
       await fetch(
         `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/upload`,
@@ -97,17 +102,7 @@ function Result() {
             }}
           />
           <ResultXTitle> &nbsp;&nbsp;&nbsp;전체 여행 경로</ResultXTitle>
-          <button
-            style={{
-              color: "black",
-              fontWeight: "600",
-              fontSize: "15px",
-              marginLeft: "100px",
-            }}
-            onClick={showModal}
-          >
-            업로드하기
-          </button>
+          <UploadBtn onClick={showModal}>업로드</UploadBtn>
           <ResultModal
             visible={visible}
             onOk={handleOk}
@@ -224,6 +219,23 @@ const ResultContainer = styled.div`
     display: none;
     width: 0;
   }
+`;
+
+const UploadBtn = styled.button`
+  color: blakc;
+  font-weight: 600;
+  font-size: 15px;
+  margin-left: 100px;
+  border: 0;
+  font-family: "Inter";
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 36px;
+  color: #f8f9fa;
+  cursor: pointer;
+  background-color: #ff8a3d;
+  border-radius: 15px;
+  padding: 3px 8px 3px 8px;
 `;
 
 export default Result;

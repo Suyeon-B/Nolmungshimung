@@ -5,10 +5,11 @@ var router = express.Router();
 const Project = require(__base + "models/Project");
 const UploadProject = require(__base + "models/UploadProject");
 const HashTable = require(__base + "models/HashTable");
+const { Travel } = require(__base + "models/Travel");
 const HashTags = require(__base + "models/HashTags");
 const { User } = require(__base + "models/User");
 //redis
-const Redis = require(__base + 'routes/util/redis').publisher
+const Redis = require(__base + "routes/util/redis").publisher;
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
@@ -50,68 +51,87 @@ router.post("/upload", async (req, res) => {
   // console.log(req.body);
   const info = req.body;
 
-  // console.log("INFO", info);
-  const projectId = req.body._id;
+  if (info.travelId) {
+    let travelId = info.travelId;
+    // console.log(travelId);
+    let travel = await Travel.findOne({ place_id: travelId });
+    delete info.travelId;
+    if (travel.photos.length > 0) {
+      const api_key = process.env.REACT_APP_GOOGLE_KEY;
+      let img = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${travel.photos[0]["photo_reference"]}&sensor=false&key=${api_key}`;
+      // console.log(img);
+      info.img = img;
+    }
+  }
+  console.log("INFO", info);
+  // const projectId = req.body._id;
   delete info._id;
   // console.log("?????", info.hashTags);
   // console.log("?!", projectId);
   const reqHashTags = info.hashTags;
   // console.log("hashtags", hashTags);
   const uploadProject = new UploadProject(info);
-
+  let projectId;
   try {
-    await uploadProject.save();
-    try {
-      for (let i = 0; i < reqHashTags.length; i++) {
-        let updateHashTable = await HashTable.findOne({
-          hash_tag_name: reqHashTags[i],
-        });
-        // console.log(updateHashTable);
-        if (updateHashTable) {
-          // hashTag가 이미 존재하는 경우
-          // console.log(projectId);
-          await HashTable.findOneAndUpdate(
-            {
-              hash_tag_name: reqHashTags[i],
-            },
-            { $push: { project_id: projectId } },
-            { new: true }
-          );
-        } else {
-          // hashTag가 존재하지 않는 경우
-          const hashTable = new HashTable({
-            hash_tag_name: reqHashTags[i],
-            project_id: [projectId],
-          });
-          try {
-            await hashTable.save();
-          } catch (error) {
-            console.log(`Hash table ${i}번째 error : ${error}`);
-            res.send(404).send({ error: `hash table ${i}번째 upload Fail` });
-          }
-          try {
-            // category save
-            // find -> push -> save
-            const hashTags = await HashTags.find();
-            // console.log(hashTags[0].hash_tag_names);
-            hashTags[0].hash_tag_names.push(reqHashTags[i]);
-            // console.log(hashTags[0].hash_tag_names);
-            await hashTags[0].save();
-          } catch (error) {
-            console.log(`Hash tag ${i}번째 error : ${error}`);
-            res.send(404).send({ error: `hash tag ${i}번째 save Fail` });
-          }
-        }
-      }
+    const uploadProjectInfo = await uploadProject.save();
 
-      res.status(200).send({ success: true });
-    } catch (error) {
-      console.log(`Hash Table Save ERROR ${error}`);
-      res.send(404).send({ error: "hash table upload Fail" });
-    }
+    projectId = uploadProjectInfo._id;
   } catch (error) {
     console.log(`Project Upload ERROR: ${error}`);
-    res.send(404).send({ error: "project Upload Fail" });
+    return res.send(404).send({ error: "project Upload Fail" });
+  }
+  try {
+    // console.log("twice TRY projectId", projectId);
+    for (let i = 0; i < reqHashTags.length; i++) {
+      let updateHashTable = await HashTable.findOne({
+        hash_tag_name: reqHashTags[i],
+      });
+      // console.log(updateHashTable);
+      if (updateHashTable) {
+        // hashTag가 이미 존재하는 경우
+        // console.log(projectId);
+        await HashTable.findOneAndUpdate(
+          {
+            hash_tag_name: reqHashTags[i],
+          },
+          { $push: { project_id: projectId } },
+          { new: true }
+        );
+      } else {
+        // hashTag가 존재하지 않는 경우
+        const hashTable = new HashTable({
+          hash_tag_name: reqHashTags[i],
+          project_id: [projectId],
+        });
+        try {
+          await hashTable.save();
+        } catch (error) {
+          console.log(`Hash table ${i}번째 error : ${error}`);
+          return res
+            .send(404)
+            .send({ error: `hash table ${i}번째 upload Fail` });
+        }
+        try {
+          // category save
+          // find -> push -> save
+          const hashTags = await HashTags.find();
+          // console.log(hashTags[0].hash_tag_names);
+          hashTags[0].hash_tag_names.push(reqHashTags[i]);
+          // console.log(hashTags[0].hash_tag_names);
+          await hashTags[0].save();
+        } catch (error) {
+          console.log(
+            `Hash tag ${i}번째 error : ${error} hashtags디비를 만들어 달라냥`
+          );
+          return res.send(404).send({ error: `hash tag ${i}번째 save Fail` });
+        }
+      }
+    }
+
+    return res.status(200).send({ success: true });
+  } catch (error) {
+    console.log(`Hash Table Save ERROR ${error}`);
+    return res.send(404).send({ error: "hash table upload Fail" });
   }
 });
 
@@ -169,12 +189,12 @@ router.post("/routes/:id", async (req, res) => {
 });
 
 router.patch("/routes/:id", async (req, res) => {
-  try{
-    await Redis.setEx(`routes/${req.params.id}`,10, '')
-    await Redis.set(`${req.params.id}`, JSON.stringify(req.body))
+  try {
+    await Redis.setEx(`routes/${req.params.id}`, 10, "");
+    await Redis.set(`${req.params.id}`, JSON.stringify(req.body));
     res.status(200).send({ success: true });
-  }catch(e){
-    console.log(`redis Error : ${e}`)
+  } catch (e) {
+    console.log(`redis Error : ${e}`);
   }
 
   // try {
@@ -192,14 +212,11 @@ router.patch("/routes/:id", async (req, res) => {
 
 router.get("/:id", async (req, res, next) => {
   const { id } = req.params;
-
-  console.log(":id find", id);
-
   try {
     const projectInfo = await Project.findById({ _id: id });
-    let routes = await Redis.get(`${req.params.id}`)
-    if (routes){
-      projectInfo.routes = JSON.parse(routes)
+    let routes = await Redis.get(`${req.params.id}`);
+    if (routes) {
+      projectInfo.routes = JSON.parse(routes);
     }
     return res.json(projectInfo);
   } catch (error) {
@@ -207,11 +224,10 @@ router.get("/:id", async (req, res, next) => {
     res.status(404).send({ error: "project not found" });
   }
 });
-
+// 프로젝트 삭제
 router.post("/:id", async (req, res, next) => {
   const { id } = req.params;
   const body = req.body;
-  console.log(body);
 
   try {
     const projectInfo = await Project.findById({ _id: id });
@@ -224,8 +240,6 @@ router.post("/:id", async (req, res, next) => {
         projectInfo.people.splice(i, 1);
       }
     }
-
-    await projectInfo.save();
 
     userInfo.user_projects = userInfo.user_projects.filter(
       (projectId) => projectId !== id
@@ -242,14 +256,13 @@ router.post("/:id", async (req, res, next) => {
 
 router.post("/friends/:id", async (req, res, next) => {
   const { id } = req.params;
+  // console.log("프로젝트", id);
   // console.log(req.body.email);
-  // console.log(id);
+
   // const test = await Project.findById(id);
   // console.log(test);
   try {
     const userInfo = await User.findOne({ user_email: req.body.email });
-    // console.log([userInfo._id, userInfo.user_name, userInfo.user_email, id]);
-    // 중복체크 ,....
     const projectInuser = await Project.findOne({
       _id: id,
       // people: [userInfo._id, userInfo.user_name, userInfo.user_email],
@@ -258,9 +271,10 @@ router.post("/friends/:id", async (req, res, next) => {
     if (projectInuser.people) {
       for (let n = 0; n < projectInuser.people.length; n++) {
         if (projectInuser.people[n][2] == userInfo.user_email) {
-          res
-            .status(404)
-            .send({ success: false, message: "이미 초대된 친구입니다." });
+          res.status(200).send({
+            success: true,
+            message: "이미 초대에 응한 프로젝트입니다.",
+          });
           return;
         }
       }
@@ -285,23 +299,17 @@ router.post("/friends/:id", async (req, res, next) => {
         }
       );
 
-      res.status(200).send({ success: true });
+      res.status(200).send({ success: true, message: "수락완!" });
     } catch (error) {
       console.log(error);
       // 이메일 존재하지만 추가 못함
       res.status(404).send({
         success: false,
-        message: "알 수 없는 이유로 친구추가를 실패했습니다.",
+        message: "알 수 없는 이유로 프로젝트 추가를 실패했습니다.",
       });
     }
   } catch (error) {
     console.log(error);
-    // 회원가입하지 않은 유저 -> 유저에게 이메일 전송
-    // console.log(`plz send email`);
-    res.status(404).send({
-      success: false,
-      message: "회원가입하지 않은 유저입니다. 이메일 전송을 구현해주세요.",
-    });
   }
 });
 
