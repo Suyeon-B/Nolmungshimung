@@ -12,6 +12,7 @@ const UploadProjectSchema = mongoose.Schema({
   upload_flag: { type: Array },
   trip_date: { type: Array },
   hashTags: { type: Array },
+  img: { type: String },
 });
 
 module.exports = mongoose.model("UploadProject", UploadProjectSchema);

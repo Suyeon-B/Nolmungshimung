@@ -84,7 +84,7 @@ function App() {
                 }
               />
               <Route
-                path="invite/"
+                path="invite/*"
                 element={
                   <RequireAuth>
                     <InviteProject />
