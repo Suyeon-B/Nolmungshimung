@@ -36,7 +36,8 @@ jobs:
           echo "REACT_APP_SERVER_IP=$REACT_APP_SERVER_IP" >> ./BE/.env
           echo "NODEMAILER_USER=$NODEMAILER_USER" >> ./BE/.env
           echo "NODEMAILER_PASS=$NODEMAILER_PASS" >> ./BE/.env
-          echo "REACT_APP_GOOGLE_KEY=$Google_KEY" >> ./BE/.env
+          echo "REACT_APP_GOOGLE_KEY=$REACT_APP_GOOGLE_KEY" >> ./BE/.env
+          echo "CORS_SERVER_IP=$CORS_SERVER_IP" >> ./BE/.env          
         env:
           MONGO_URI: ${{ secrets.MONGO_URI }}
           NODE_TLS_REJECT_UNAUTHORIZED: ${{ secrets.NODE_TLS_REJECT_UNAUTHORIZED }}
@@ -44,7 +45,8 @@ jobs:
           REACT_APP_SERVER_IP: ${{ secrets.REACT_APP_SERVER_IP }}
           NODEMAILER_USER: ${{ secrets.NODEMAILER_USER }}
           NODEMAILER_PASS: ${{ secrets.NODEMAILER_PASS }}
-          Google_KEY: ${{ secrets.Google_KEY }}
+          REACT_APP_GOOGLE_KEY: ${{ secrets.Google_KEY }}
+          CORS_SERVER_IP: ${{ secrets.CORS_SERVER_IP }}
       -
         name: Set env React
         run: |
