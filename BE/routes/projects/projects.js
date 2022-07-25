@@ -57,7 +57,7 @@ router.post("/upload", async (req, res) => {
     let travel = await Travel.findOne({ place_id: travelId });
     delete info.travelId;
     if (travel.photos.length > 0) {
-      const api_key = "AIzaSyAFeyVrH7cjDHGVVLqhifBI-DFlTUwEn8E";
+      const api_key = process.env.REACT_APP_GOOGLE_KEY;
       let img = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${travel.photos[0]["photo_reference"]}&sensor=false&key=${api_key}`;
       // console.log(img);
       info.img = img;
