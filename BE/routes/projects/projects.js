@@ -63,7 +63,7 @@ router.post("/upload", async (req, res) => {
       info.img = img;
     }
   }
-  console.log("INFO", info);
+  // console.log("INFO", info);
   // const projectId = req.body._id;
   delete info._id;
   // console.log("?????", info.hashTags);
