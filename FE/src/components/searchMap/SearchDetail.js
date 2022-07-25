@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 import "./Drawer.css";
 
-const api_key = "AIzaSyAFeyVrH7cjDHGVVLqhifBI-DFlTUwEn8E";
+const api_key = process.env.REACT_APP_GOOGLE_KEY;
 
 const App = (s) => (
   <Rate style={{ marginBottom: "10px" }} disabled defaultValue={s} />

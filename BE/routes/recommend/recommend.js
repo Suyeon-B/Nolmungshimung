@@ -14,12 +14,29 @@ const Redis = require(__base + "routes/util/redis").publisher;
 router.get("/", async (req, res, next) => {
   try {
     const uploadProjectInfo = await UploadProject.find();
-    console.log(uploadProjectInfo);
     return res.json(uploadProjectInfo);
     // console.log(uploadProjectInfo);
   } catch (error) {
     console.log(`uploaded project find: ${error}`);
     res.status(404).send({ error: "project not found" });
+  }
+});
+
+// infinite scroll
+router.get("/infinite", async (req, res, next) => {
+  try {
+    const skip =
+      req.query.skip && /^\d+$/.test(req.query.skip)
+        ? Number(req.query.skip)
+        : 0;
+    // 한 번에 7개의 프로젝트 정보만 load합니다.
+    const uploadProjectInfo = await UploadProject.find({}, undefined, {
+      skip,
+      limit: 14,
+    }).sort(res._id);
+    res.send(uploadProjectInfo);
+  } catch (e) {
+    res.status(500).send();
   }
 });
 
