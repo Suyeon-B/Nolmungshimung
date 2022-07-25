@@ -35,7 +35,7 @@ const move = (source, destination, droppableSource, droppableDestination) => {
 };
 const grid = 8;
 
-const getItemStyle = (isDragging, draggableStyle, color, userName) => ({
+const getItemStyle = (isDragging, draggableStyle, color) => ({
   // some basic styles to make the items look a bit nicer
 
   userSelect: "none",
@@ -495,4 +495,4 @@ const PlanItemDiv = styled.div`
   box-sizing: inherit;
 `;
 
-export default PlanList;
+export default React.memo(PlanList);

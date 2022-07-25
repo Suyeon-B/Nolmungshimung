@@ -14,7 +14,7 @@ function ResultMap(props) {
     map.setBounds(bounds);
   }
   useEffect(() => {
-    console.log(props.routes);
+    // console.log(props.routes);
     let bounds = new kakao.maps.LatLngBounds();
     const routes = [];
     const lines = [];

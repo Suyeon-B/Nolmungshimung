@@ -90,31 +90,21 @@ const RecommendPage = () => {
     return (
       <Link to={`project/${el._id}`}>
         <RecommendItems>
-          <div className="uploadProjectInfo-title">{el.project_title}</div>
-          <div className="uploadProjectInfo-hashTags">
-            {el.hashTags.map((hashTag, index) => (
-              <span key={index}>
-                {"#"}
-                {hashTag}{" "}
-              </span>
-            ))}
+          <div className="background-img" style={{ backgroundImage: `url(${el.img})` }}>
+            <div className="uploadProjectInfo-title">{el.project_title}</div>
+            <div className="uploadProjectInfo-hashTags">
+              {el.hashTags.map((hashTag, index) => (
+                <span key={index}>
+                  {"#"}
+                  {hashTag}{" "}
+                </span>
+              ))}
+            </div>
           </div>
         </RecommendItems>
       </Link>
     );
   };
-
-  // const showHashtags = ({el}) => {
-  //   return (
-  //     {el.map((hashTag, index) => (
-  //       <span key={index}>
-  //         {"#"}
-  //         {hashTag}{" "}
-  //       </span>
-  //     ))}
-  //     검색결과
-  //   )
-  // }
 
   return (
     <RecommendWrapper>
@@ -255,17 +245,35 @@ const RecommendItems = styled.div`
   background-color: white;
   margin-right: 20px;
   cursor: pointer;
-  box-shadow: 4px 4px 4px rgb(0 0 0 / 25%);
+  // box-shadow: 4px 4px 4px rgb(0 0 0 / 25%);
+
+  .background-img {
+    height: 200px;
+    width: 200px;
+    border-radius: 10px;
+    box-shadow: 4px 4px 4px rgb(0 0 0 / 25%);
+    background-position-y: center;
+  }
+
+  // img 적용
+  // background-image: url();
+  // background-repeat: no-repeat;
+  // background-size: auto 140px;
+
   .uploadProjectInfo-title {
     font-size: 25px;
-    color: black;
+    color: #232a3c;
     text-align: center;
-    padding: 30px;
+    padding-top: 40px;
   }
   .uploadProjectInfo-hashTags {
     font-size: 15px;
     color: #7c8289;
     text-align: center;
+    margin-top: 33px;
+    background: white;
+    border-radius: 0px 0px 10px 10px;
+    height: 62px;
   }
 `;
 
