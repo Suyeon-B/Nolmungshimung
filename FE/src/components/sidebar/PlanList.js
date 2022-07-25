@@ -231,7 +231,7 @@ function PlanList({
                         <img
                           data-idx={ind}
                           onClick={onClick}
-                          style={{ width: "15px" }}
+                          style={{ width: "15px", height: "8.3px" }}
                           src="\statics\images\date_arrow.png"
                         />
                       </DateDetailBtn>

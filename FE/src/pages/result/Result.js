@@ -238,4 +238,4 @@ const UploadBtn = styled.button`
   padding: 3px 8px 3px 8px;
 `;
 
-export default Result;
+export default React.memo(Result);

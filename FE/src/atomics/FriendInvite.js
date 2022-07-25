@@ -182,4 +182,4 @@ const InviteEmailInput = styled.input`
   outline: none;
 `;
 
-export default FriendInvite;
+export default React.memo(FriendInvite);
