@@ -5,6 +5,7 @@ var router = express.Router();
 const Project = require(__base + "models/Project");
 const UploadProject = require(__base + "models/UploadProject");
 const HashTable = require(__base + "models/HashTable");
+const { Travel } = require(__base + "models/Travel");
 const HashTags = require(__base + "models/HashTags");
 const { User } = require(__base + "models/User");
 //redis
@@ -50,7 +51,19 @@ router.post("/upload", async (req, res) => {
   // console.log(req.body);
   const info = req.body;
 
-  // console.log("INFO", info);
+  if (info.travelId) {
+    let travelId = info.travelId;
+    // console.log(travelId);
+    let travel = await Travel.findOne({ place_id: travelId });
+    delete info.travelId;
+    if (travel.photos.length > 0) {
+      const api_key = "AIzaSyAFeyVrH7cjDHGVVLqhifBI-DFlTUwEn8E";
+      let img = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${travel.photos[0]["photo_reference"]}&sensor=false&key=${api_key}`;
+      // console.log(img);
+      info.img = img;
+    }
+  }
+  console.log("INFO", info);
   // const projectId = req.body._id;
   delete info._id;
   // console.log("?????", info.hashTags);
@@ -225,12 +238,10 @@ router.post("/:id", async (req, res, next) => {
         projectInfo.people.splice(i, 1);
       }
     }
-    console.log(projectInfo);
 
     userInfo.user_projects = userInfo.user_projects.filter(
       (projectId) => projectId !== id
     );
-    console.log(userInfo);
 
     await userInfo.save();
 
