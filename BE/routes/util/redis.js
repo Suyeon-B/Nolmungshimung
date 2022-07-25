@@ -15,7 +15,7 @@ var redis = require('redis');
 const Project = require(__base + "models/Project");
 
 var subscriber = redis.createClient({
-  host: 'redis_boot',
+  host: 'redis',
   port: '6379',
 });
 
@@ -54,7 +54,7 @@ subscriber.connect().then(async () => {
 });
 
 var publisher = redis.createClient({
-    host: 'redis_boot',
+    url: 'redis',
   port: '6379',
 });
 
