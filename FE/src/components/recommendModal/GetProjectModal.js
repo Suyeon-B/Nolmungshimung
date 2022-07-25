@@ -29,17 +29,12 @@ const GetProjectModal = ({ routes }) => {
 
   const [projectTitle, setProjectTitle] = useState("");
   const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
   const [selectDate, setSelectDate] = useState([]);
   const [toggleBtn, setToggleBtn] = useState(true);
   const auth = useAuth();
   const { projectId } = useParams();
   const navigate = useNavigate();
 
-  const settedDate = (startDate, endDate) => {
-    setStartDate(setDay(startDate));
-    setEndDate(setDay(endDate));
-  };
   const showModal = () => {
     setVisible(true);
   };
@@ -91,6 +86,11 @@ const GetProjectModal = ({ routes }) => {
     // 달력 날짜 입력, 프로젝트 제목 입력 예외 처리 추가
 
     event.preventDefault();
+    if (projectTitle.trim() === "") {
+      alert("여행 제목을 입력해주세요");
+    } else if (startDate === null) {
+      alert("여행 날짜를 선택해주세요");
+    }
     const data = {
       projectId,
       userId: auth.user._id,
