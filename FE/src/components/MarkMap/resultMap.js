@@ -104,4 +104,4 @@ function ResultMap(props) {
   );
 }
 
-export default ResultMap;
+export default React.memo(ResultMap);

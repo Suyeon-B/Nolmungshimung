@@ -179,4 +179,4 @@ const StyleProjectList = styled.div`
   align-items: flex-start;
 `;
 
-export default ProjectList;
+export default React.memo(ProjectList);

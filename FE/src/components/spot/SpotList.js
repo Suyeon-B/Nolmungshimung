@@ -92,7 +92,7 @@ const getListStyle = (isDraggingOver) => ({
 
 const transDayItem = (dayItem, selectedIndex) => {};
 
-export default function SpotList({
+function SpotList({
   handleVisible,
   handleContents,
   dayItem,
@@ -457,3 +457,4 @@ const SpotListItemDiv = styled.div`
 // }
 
 // animation: ${(props) => props.user_color && `color 1.5s linear`};
+export default React.memo(SpotList);
