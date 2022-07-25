@@ -53,7 +53,7 @@ subscriber.connect().then(async () => {
 });
 
 var publisher = redis.createClient({
-  host: '127.0.0.1',
+  host: process.env.Redis_IP,
   port: '6379',
 });
 
