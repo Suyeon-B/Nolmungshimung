@@ -39,7 +39,8 @@ const HomeNew = () => {
         />
       </StyledImgDiv>
       <StyleHomeDiv>
-        {auth.user ? (
+        {/* {auth === null && <h1>LOADING</h1>} */}
+        {auth.user && (
           <>
             <HomeItems
               onClickLogOut={onClickLogOut}
@@ -47,7 +48,8 @@ const HomeNew = () => {
             />
             <ProjectList goProject={goProject} />
           </>
-        ) : (
+        )}
+        {auth.user === undefined && (
           <HomeMain goRecommend={goRecommend} goSignIn={goSignIn} />
         )}
 

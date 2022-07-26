@@ -56,7 +56,8 @@ function SignIn() {
           sessionStorage.setItem("myNickname", res.user_name);
           sessionStorage.setItem("user_email", res.user_email);
           // navigate("/", { replace: true });
-          console.log(location);
+          // console.log(location);
+          // console.log(res.user);
           if (location.state?.page === "recommend") {
             navigate(-1, {
               state: {
@@ -64,9 +65,10 @@ function SignIn() {
               },
             });
           } else {
-            window.location.href = "/";
+            await login(res.user);
+            // window.location.href = "/";
+            navigate("/", { replace: true });
           }
-          await login({ user: id });
         } else {
           fail(res.message);
         }
