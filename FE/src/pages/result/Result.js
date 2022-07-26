@@ -259,6 +259,7 @@ const ResultMemoBox = styled.div`
 
   .memoText {
     white-space: pre-wrap;
+    word-break: break-all;
   }
 `;
 

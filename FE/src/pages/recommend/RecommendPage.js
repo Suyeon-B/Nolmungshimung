@@ -259,14 +259,14 @@ const RecommendItems = styled.div`
   background-color: white;
   margin-right: 20px;
   cursor: pointer;
-
+  background: #232a3c;
+  
   .background-img {
     height: 200px;
     width: 200px;
     border-radius: 10px;
     box-shadow: 4px 4px 4px rgb(0 0 0 / 25%);
     background-position: center;
-    background: #232a3c;
   }
 
   .uploadProjectInfo-title {
