@@ -34,13 +34,16 @@ function Result() {
       }
       console.log(projectInfo);
       projectInfo.hashTags = hashTags;
-      await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/upload`, {
-        method: "post",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify(projectInfo),
-      }).then((res) => res.json());
+      await fetch(
+        `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/upload`,
+        {
+          method: "post",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(projectInfo),
+        }
+      ).then((res) => res.json());
     }
     setTimeout(() => {
       setVisible(false);
@@ -54,7 +57,9 @@ function Result() {
     setVisible(false);
   };
   async function fetchProjectById(_id) {
-    const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`);
+    const response = await fetch(
+      `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`
+    );
     return response.json();
   }
 
@@ -75,7 +80,9 @@ function Result() {
   const culTripTermData = (startDate, day) => {
     const sDate = new Date(startDate);
     sDate.setDate(sDate.getDate() + day);
-    return `${sDate.getFullYear()}. ${sDate.getMonth() + 1}. ${sDate.getDate()}`;
+    return `${sDate.getFullYear()}. ${
+      sDate.getMonth() + 1
+    }. ${sDate.getDate()}`;
   };
 
   const ShowMemoResult = () => {
@@ -97,15 +104,18 @@ function Result() {
             display: "flex",
             width: "100%",
             alignItems: "center",
+            justifyContent: "space-between",
           }}
         >
-          <CloseOutlined
-            style={{ color: "red", fontWeight: "900", fontSize: "30px" }}
-            onClick={() => {
-              window.history.back();
-            }}
-          />
-          <ResultXTitle> &nbsp;&nbsp;&nbsp;전체 여행 경로</ResultXTitle>
+          <div>
+            <CloseOutlined
+              style={{ color: "red", fontWeight: "900", fontSize: "30px" }}
+              onClick={() => {
+                window.history.back();
+              }}
+            />
+            <ResultXTitle> 전체 여행 경로</ResultXTitle>
+          </div>
           <UploadBtn onClick={showModal}>업로드</UploadBtn>
           <ResultModal
             visible={visible}
@@ -231,17 +241,19 @@ const ResultContainer = styled.div`
 `;
 
 const UploadBtn = styled.button`
-  margin-left: 129.5px;
+  /* margin-left: 129.5px;
+  line-height: 36px; */
+  height: 40px;
   border: 0;
   font-family: "Inter";
   font-weight: 600;
   font-size: 17px;
-  line-height: 36px;
   color: #f8f9fa;
   cursor: pointer;
   background-color: #ff8a3d;
   border-radius: 10px;
   padding: 3px 8px 3px 8px;
+  wi
 `;
 
 const ResultMemoBox = styled.div`
