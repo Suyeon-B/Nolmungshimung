@@ -1,7 +1,7 @@
 import React from "react";
 import MousePointer from "./MousePointer";
 
-const TextEditorUsers = ({ presences, selectedIndex }) => {
+const MousePointerUsers = ({ presences, selectedIndex }) => {
   // console.log(presences);
   return (
     <>
@@ -51,4 +51,4 @@ const TextEditorUsers = ({ presences, selectedIndex }) => {
   );
 };
 
-export default TextEditorUsers;
+export default MousePointerUsers;
