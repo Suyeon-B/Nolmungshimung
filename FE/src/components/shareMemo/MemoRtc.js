@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, Component } from "react";
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
 import { QuillBinding } from "y-quill";
@@ -8,6 +8,7 @@ import ReactQuill from "react-quill";
 import styled from "styled-components";
 import { ConnectuserContext } from "../../context/ConnectUserContext";
 import socket from "../../socket";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/Auth";
 
 const TOOLBAR_OPTIONS = [
@@ -20,6 +21,8 @@ const TOOLBAR_OPTIONS = [
   ["link", "blockquote"],
 ];
 
+let newYtext = new Set();
+
 const MemoRtc = ({ project_Id }) => {
   // const auth = useAuth();
   let quillRef = null;
@@ -28,6 +31,7 @@ const MemoRtc = ({ project_Id }) => {
   const [projectID, setProjectId] = useState(project_Id);
   const { connectUser, setConnectUser } = useContext(ConnectuserContext);
   const userName = sessionStorage.getItem("myNickname");
+  const navigate = useNavigate();
 
   useEffect(() => {
     setProjectId(project_Id);
@@ -36,9 +40,16 @@ const MemoRtc = ({ project_Id }) => {
   useEffect(() => {
     attachQuillRefs();
 
+    // try {
     const ydoc = new Y.Doc();
     const provider = new WebrtcProvider(`${projectID}`, ydoc);
     const ytext = ydoc.getText(`${projectID}`);
+    console.log(ytext);
+    // } catch (err) {
+    // alert("비정상적인 접근입니다.");
+    // navigate("/");
+    // }
+
     try {
       provider.awareness.setLocalStateField("user", {
         name: userName,
@@ -46,12 +57,11 @@ const MemoRtc = ({ project_Id }) => {
       });
     } catch (err) {
       alert("로그인을 해주세요.");
-      window.location.href = "/";
+      navigate("/");
     }
 
     // console.log(" ==== socket 접속자 수 : ", socket._callbacks.$deleteCurser.length);
     // const connectUsers = socket._callbacks.$deleteCurser.length;
-
     const connectUsers = Object.keys(connectUser).length;
     // console.log(" @#@#@#@#@# connectuser : ", connectUsers);
     if (connectUsers < 2) {
@@ -76,6 +86,7 @@ const MemoRtc = ({ project_Id }) => {
         });
     }
 
+    // newYtext.add(ytext);
     const binding = new QuillBinding(ytext, quillRef, provider.awareness);
 
     return () => {
