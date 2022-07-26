@@ -8,8 +8,8 @@ const HashTable = require(__base + "models/HashTable");
 const { Travel } = require(__base + "models/Travel");
 const HashTags = require(__base + "models/HashTags");
 const { User } = require(__base + "models/User");
-//redis
-// const Redis = require(__base + "routes/util/redis").publisher;
+
+const Redis = require(__base + "routes/util/redis").publisher;
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
@@ -69,6 +69,8 @@ router.post("/upload", async (req, res) => {
   // console.log("?????", info.hashTags);
   // console.log("?!", projectId);
   const reqHashTags = info.hashTags;
+  //redis
+  await Redis.SADD('hashtags', reqHashTags);
   // console.log("hashtags", hashTags);
   const uploadProject = new UploadProject(info);
   let projectId;
@@ -120,7 +122,9 @@ router.post("/upload", async (req, res) => {
           // console.log(hashTags[0].hash_tag_names);
           await hashTags[0].save();
         } catch (error) {
-          console.log(`Hash tag ${i}번째 error : ${error}`);
+          console.log(
+            `Hash tag ${i}번째 error : ${error} hashtags디비를 만들어 달라냥`
+          );
           return res.send(404).send({ error: `hash tag ${i}번째 save Fail` });
         }
       }
@@ -189,7 +193,6 @@ router.post("/routes/:id", async (req, res) => {
 router.patch("/routes/:id", async (req, res) => {
   try {
     //redis
-    const Redis = require(__base + "routes/util/redis").publisher;
     await Redis.setEx(`routes/${req.params.id}`, 10, "");
     await Redis.set(`${req.params.id}`, JSON.stringify(req.body));
     res.status(200).send({ success: true });
@@ -214,7 +217,6 @@ router.get("/:id", async (req, res, next) => {
   const { id } = req.params;
   try {
     //redis
-    const Redis = require(__base + "routes/util/redis").publisher;
     const projectInfo = await Project.findById({ _id: id });
     let routes = await Redis.get(`${req.params.id}`);
     if (routes) {

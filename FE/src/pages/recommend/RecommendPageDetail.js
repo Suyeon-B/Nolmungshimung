@@ -41,15 +41,18 @@ const RecommendPageDetail = () => {
             display: "flex",
             width: "100%",
             alignItems: "center",
+            justifyContent: "space-between",
           }}
         >
-          <CloseOutlined
-            style={{ color: "red", fontWeight: "900", fontSize: "30px" }}
-            onClick={() => {
-              window.history.back();
-            }}
-          />
-          <ResultXTitle> &nbsp;&nbsp;&nbsp;전체 여행 경로</ResultXTitle>
+          <div>
+            <CloseOutlined
+              style={{ color: "red", fontWeight: "900", fontSize: "30px" }}
+              onClick={() => {
+                window.history.back();
+              }}
+            />
+            <ResultXTitle> &nbsp;&nbsp;&nbsp;전체 여행 경로</ResultXTitle>
+          </div>
           <GetProjectModal routes={routes} />
         </div>
         <br />
@@ -124,7 +127,7 @@ const ResultProjectTitle = styled.span`
   color: #ff8a3d;
 `;
 const ResultLine = styled.div`
-  border-bottom: 4px solid lightgray;
+  border-bottom: 2px solid #c1c7cd;
   margin-bottom: 25px;
   margin-top: 20px;
 `;

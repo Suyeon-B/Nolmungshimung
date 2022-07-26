@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import SearchListRoute from "../../components/searchMap/SearchListRoute";
 import SearchBar from "../../components/searchMap/SearchBar";
 import styled from "styled-components";
@@ -82,7 +82,7 @@ const Search = ({
   ]);
   const [sumit, setSumit] = useState(false);
 
-  function onClick(event) {
+  const onClick = (event) => {
     var bounds = map.getBounds();
     var swLatlng = bounds.getSouthWest();
     var neLatlng = bounds.getNorthEast();
@@ -92,7 +92,7 @@ const Search = ({
     // console.log(swLatlng, neLatlng);
 
     setSumit(!sumit);
-  }
+  };
 
   const handleSelect = (value) => {
     setClick(value);

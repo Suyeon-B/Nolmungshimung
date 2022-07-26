@@ -15,12 +15,13 @@ async function fetchCallAuth() {
       credentials: "include",
     }
   );
+
   return response.json();
 }
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(null);
   useEffect(() => {
     // console.log("auth auth");
     //To know my current status, send Auth request
@@ -54,14 +55,12 @@ export const AuthProvider = ({ children }) => {
     async function callAuth() {
       const data = await fetchCallAuth();
       setUser(data.user_name);
-      console.log(data.user_name);
-      // if(data.user)
+      setLoading(data.success);
     }
     try {
-      setLoading(true);
       callAuth();
     } catch {
-      setLoading(true);
+      console.log("WTF");
     }
     console.log(user);
     // setUser(userAuth);
@@ -93,13 +92,11 @@ export const useAuth = () => {
 
 export const RequireAuth = ({ children }) => {
   const auth = useAuth();
-  // console.log(`auth in Auth: ${JSON.stringify(auth)}`);
-  if (auth.loading) {
-    if (auth?.user) {
-      return children;
-    }
-    // return children;
+
+  if (auth.loading === false) {
     return <Navigate to="/signin" />;
+  } else if (auth.loading === true) {
+    return children;
   }
 };
 
@@ -107,9 +104,6 @@ export const NotRequireAuth = ({ children }) => {
   const auth = useAuth();
 
   if (auth?.user) {
-    // console.log(`auth in Auth : ${JSON.stringify(auth)}`);
-    // console.log(`auth.user in Auth: ${JSON.stringify(auth.user)}`);
-    // return children;
     return <Navigate to="/" />;
   }
   return children;

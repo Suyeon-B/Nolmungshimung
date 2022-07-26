@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import styled from "styled-components";
 import PlanList from "./PlanList";
 import { useNavigate } from "react-router-dom";
 import Footer from "./Footer";
 import { HomeFilled } from "@ant-design/icons";
+import SideBarTitle from "../../atomics/SideBarTitle";
 
 const PlanSideBar = ({
   item,
@@ -19,31 +20,24 @@ const PlanSideBar = ({
   setAttentionIndex,
   userName,
 }) => {
+  const navigate = useNavigate();
+
   const [detailColor, setDetailColor] = useState("white");
   const [searchColor, setSearchColor] = useState("#ebebeb");
-  const onClickDetail = () => {
+  const onClickDetail = useCallback(() => {
     goDetailPage();
     setSearchColor("white");
     setDetailColor("#ebebeb");
-  };
-  const onClickSearch = () => {
+  }, [searchColor, detailColor]);
+  const onClickSearch = useCallback(() => {
     goSearchPage();
     setSearchColor("#ebebeb");
     setDetailColor("white");
-  };
-  const navigate = useNavigate();
+  }, [searchColor, detailColor]);
   return (
     <SideBar>
-      <PlanTitleWrap>
-        <PlanHome
-          onClick={() => {
-            navigate("/");
-          }}
-        />
-        {/* <img width={"35px"} src="\statics\images\homeIcon.png" /> */}
-        {/* </NoneStyleBtn> */}
-        <PlanTitle>{item.project_title}</PlanTitle>
-      </PlanTitleWrap>
+      {/* Component나누자 */}
+      <SideBarTitle title={item.project_title} />
 
       <SideBarBtnDIv>
         <SideBarBtn onClick={onClickSearch} color={searchColor}>
@@ -107,7 +101,7 @@ const PlanTitle = styled.h1`
   display: inline-flex;
   font-style: normal;
   font-weight: 700;
-  font-size: 1.6vw;
+  font-size: 2.5vh;
   line-height: 48px;
   color: #ff8a3d;
   margin-left: 10px;
@@ -161,4 +155,4 @@ const PlanHome = styled(HomeFilled)`
   /* width: 10px' */
 `;
 
-export default PlanSideBar;
+export default React.memo(PlanSideBar);

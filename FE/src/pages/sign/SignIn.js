@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useMutation } from "react-query";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../components/auth/Auth";
 import { Modal } from "antd";
 
@@ -21,6 +21,7 @@ function SignIn() {
     });
   };
   let navigate = useNavigate();
+  const location = useLocation();
   const { login } = useAuth();
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
@@ -35,24 +36,36 @@ function SignIn() {
   });
 
   async function singInUser(data) {
-    await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/users/signin`, {
-      method: "post",
-      headers: {
-        "content-type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify(data),
-    })
+    await fetch(
+      `https://${process.env.REACT_APP_SERVER_IP}:8443/users/signin`,
+      {
+        method: "post",
+        headers: {
+          "content-type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(data),
+      }
+    )
       .then((res) => res.json())
       .then(async (res) => {
         console.log("res : ", res);
         if (res.loginSuccess === true) {
-          success();
+          // success();
           console.log("Sign In Success");
           sessionStorage.setItem("myNickname", res.user_name);
           sessionStorage.setItem("user_email", res.user_email);
           // navigate("/", { replace: true });
-          window.location.href = "/";
+          console.log(location);
+          if (location.state?.page === "recommend") {
+            navigate(-1, {
+              state: {
+                page: "signin",
+              },
+            });
+          } else {
+            window.location.href = "/";
+          }
           await login({ user: id });
         } else {
           fail(res.message);
@@ -85,8 +98,20 @@ function SignIn() {
           <SignUpBtn onClick={onClickSignUp}>Sign Up</SignUpBtn>
         </Btns>
         <Form onSubmit={onSubmitSignUp}>
-          <Input placeholder="jeju@island.com" type="text" value={id} onChange={onchangeId} required />
-          <Input placeholder="password" type="password" value={password} onChange={onchangePassword} required />
+          <Input
+            placeholder="jeju@island.com"
+            type="text"
+            value={id}
+            onChange={onchangeId}
+            required
+          />
+          <Input
+            placeholder="password"
+            type="password"
+            value={password}
+            onChange={onchangePassword}
+            required
+          />
           <SubmitInput value="로그인" type="submit" />
           <br />
           <a href={kauthUrl}>

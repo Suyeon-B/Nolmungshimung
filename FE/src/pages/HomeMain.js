@@ -5,10 +5,10 @@ const HomeMain = ({ goRecommend, goSignIn }) => {
   return (
     <StyledHomeMain>
       <StyledTitle>어디로 떠나보시겠어요?</StyledTitle>
-      <btnWrapper>
+      <BtnWrapper>
         <StyledWhiteBtn onClick={goSignIn}>프로젝트 만들기</StyledWhiteBtn>
         <StyledBtn onClick={goRecommend}>추천계획 둘러보기</StyledBtn>
-      </btnWrapper>
+      </BtnWrapper>
     </StyledHomeMain>
   );
 };
@@ -64,7 +64,7 @@ const StyledHomeMain = styled.div`
   height: 60%;
 `;
 
-const btnWrapper = styled.div`
+const BtnWrapper = styled.div`
   display: flex;
 `;
 

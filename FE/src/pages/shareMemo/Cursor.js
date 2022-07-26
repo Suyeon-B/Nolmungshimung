@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useContext } from "react";
-import "./TextEditor.css";
+import "./MousePointerUsers.css";
 import cloneDeep from "lodash/cloneDeep";
 import "quill/dist/quill.snow.css";
-import TextEditorUsers from "./TextEditorUsers";
+import MousePointerUsers from "./MousePointerUsers";
 import socket from "../../socket";
 import { ConnectuserContext } from "../../context/ConnectUserContext";
 import { useAuth } from "../../components/auth/Auth";
@@ -84,9 +84,9 @@ function Cursor({ project_Id, selectedIndex }) {
     <>
       <div id="editor-container"></div>
       <div id="cursor_item"></div>
-      <TextEditorUsers presences={presences} selectedIndex={selectedIndex} />
+      <MousePointerUsers presences={presences} selectedIndex={selectedIndex} />
     </>
   );
 }
 
-export default Cursor;
+export default React.memo(Cursor);

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import PlanSideBar from "../../components/sidebar/PlanSideBar";
 import Search from "../search/Search";
@@ -47,6 +47,14 @@ const ProjectPage = (props) => {
     "#05FFCC": false,
     "#4A4A4A": false,
   };
+  const getColor = () => {
+    for (let color in colors) {
+      if (!colors[color]) {
+        colors[color] = true;
+        return color;
+      }
+    }
+  };
 
   useEffect(() => {
     window.addEventListener("beforeunload", (event) => {
@@ -57,6 +65,9 @@ const ProjectPage = (props) => {
 
   useEffect(() => {
     console.log(auth);
+    // if (!auth.user) {
+    //   window.location.href = "/signin";
+    // }
     if (projectId === null) return;
     async function fetchInfo() {
       const data = await fetchProjectById(projectId);
@@ -83,15 +94,6 @@ const ProjectPage = (props) => {
       // joinVoice.exitRoom();
     };
   }, [projectId]);
-
-  const getColor = () => {
-    for (let color in colors) {
-      if (!colors[color]) {
-        colors[color] = true;
-        return color;
-      }
-    }
-  };
 
   useEffect(() => {
     socket.on("connectUser", (connectUserInfo) => {
@@ -238,19 +240,19 @@ const ProjectPage = (props) => {
     };
   }, []);
 
+  const goSearchPage = useCallback(() => {
+    setIsFirstPage(true);
+  }, [isFirstPage]);
+  const goDetailPage = useCallback(() => {
+    setIsFirstPage(false);
+  }, [isFirstPage]);
+
   if (isLoading) {
     if (items) {
       setIsLoading(false);
     }
     return <div>isLoading....</div>;
   }
-
-  const goSearchPage = () => {
-    setIsFirstPage(true);
-  };
-  const goDetailPage = () => {
-    setIsFirstPage(false);
-  };
 
   // const triggerNotif = () => {
   //   useNotification("놀멍쉬멍", {
@@ -306,4 +308,4 @@ const PlanSection = styled.section`
   width: 81%;
 `;
 
-export default ProjectPage;
+export default React.memo(ProjectPage);

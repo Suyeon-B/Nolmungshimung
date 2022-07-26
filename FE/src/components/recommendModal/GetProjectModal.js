@@ -3,9 +3,10 @@ import React, { useState } from "react";
 import ModalCalender from "./ModalCalendar";
 import ModalCalendarRange from "./ModalCalendarRange";
 import { useAuth } from "../auth/Auth";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import DropDown from "./DropDown";
 import styled from "styled-components";
+import SignIn from "../../pages/sign/SignIn";
 
 const setDay = (value) => {
   return [
@@ -31,13 +32,9 @@ const GetProjectModal = ({ routes }) => {
   const [startDate, setStartDate] = useState(null);
   const [selectDate, setSelectDate] = useState([]);
   const [toggleBtn, setToggleBtn] = useState(true);
-  const auth = useAuth();
+  let auth = useAuth();
   const { projectId } = useParams();
   const navigate = useNavigate();
-
-  const showModal = () => {
-    setVisible(true);
-  };
 
   const fetchSelectDate = async (data) => {
     data["selectDate"] = selectDate;
@@ -107,6 +104,17 @@ const GetProjectModal = ({ routes }) => {
     }
   };
 
+  const showModal = () => {
+    if (auth.user === undefined) {
+      navigate("/signIn", {
+        state: {
+          page: "recommend",
+        },
+      });
+    }
+    setVisible(true);
+  };
+
   const handleCancel = () => {
     setVisible(false);
   };
@@ -117,9 +125,7 @@ const GetProjectModal = ({ routes }) => {
 
   return (
     <>
-      <Button type="primary" onClick={showModal}>
-        내 프로젝트로 가져오기
-      </Button>
+      <StyledGetBtn onClick={showModal}>가져오기</StyledGetBtn>
       <StyledModal
         title="내 프로젝트로 가져오기"
         visible={visible}
@@ -187,7 +193,14 @@ const GetProjectModal = ({ routes }) => {
     </>
   );
 };
-
+const StyledGetBtn = styled(Button)`
+  border-radius: 5px;
+  background-color: #ff8a3d;
+  border-color: #ff8a3d;
+  color: white;
+  font-size: 13 px;
+  font-weight: 700;
+`;
 const StyledP = styled.p`
   font-size: 22px;
   font-weight: 700;

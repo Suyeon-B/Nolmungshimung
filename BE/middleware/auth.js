@@ -73,15 +73,15 @@ exports.authMain = async function (req, res, next) {
   var isAuth = await authCheck(req, res);
   if (isAuth === null) {
     // console.log("isAuth null;");
-    return { success: false, message: "로그인 해주세요." };
+    return res.json({ success: false, message: "로그인 해주세요." });
   } else if (!isAuth) {
     //권한 없음
     // console.log("isAuth false;");
-    return {
+    return res.json({
       success: false,
       message:
         "로그인을 다시 해보세요. 지속적인 문제 발생 시, 다음 전화번호로 연락 부탁드립니다. ( 010 5797 6647 )",
-    };
+    });
   }
   // console.log("authMain success");
   next();

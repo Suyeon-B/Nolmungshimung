@@ -203,17 +203,21 @@ router.post("/signin", (req, res) => {
 
 router.post("/signout", (req, res) => {
   // console.log('signout req.user : ' + JSON.stringify(req.user));
-  User.findOneAndUpdate({ _id: req.user._id }, { userAccessToken: "", userRefreshToken: "" }, (err, doc) => {
-    if (err)
-      return res.json({
-        success: false,
-        message: "로그아웃 시, 에러 발생했습니다",
-      });
+  User.findOneAndUpdate(
+    { _id: req.user._id },
+    { userAccessToken: "", userRefreshToken: "" },
+    (err, doc) => {
+      if (err)
+        return res.json({
+          success: false,
+          message: "로그아웃 시, 에러 발생했습니다",
+        });
 
-    return res.status(200).send({
-      success: true,
-    });
-  });
+      return res.status(200).send({
+        success: true,
+      });
+    }
+  );
 });
 
 router.get("/auth", authMain, async (req, res) => {
@@ -223,6 +227,7 @@ router.get("/auth", authMain, async (req, res) => {
   return await res.status(200).json({
     // _id: req.user._id,
     // user_email: req.user.user_email,
+    success: true,
     user_name: req.user,
     isAuth: true,
   });
@@ -268,7 +273,8 @@ router.post("/kakao", async (req, res) => {
     if (!userEmail) {
       return res.status(400).json({
         loginSuccess: false,
-        message: "사용자 이메일을 제공하지않을 경우 카카오 로그인이 불가능합니다.",
+        message:
+          "사용자 이메일을 제공하지않을 경우 카카오 로그인이 불가능합니다.",
       });
     }
 
@@ -283,7 +289,7 @@ router.post("/kakao", async (req, res) => {
     const c_user = await checkUserEmail(user.user_email);
 
     if (c_user !== null) {
-      console.log("있어용");
+      console.log(c_user);
       c_user.generateToken((err, user) => {
         if (err) {
           return res.status(400).json({
@@ -296,8 +302,9 @@ router.post("/kakao", async (req, res) => {
           loginSuccess: true,
           user_email: user.user_email,
           user_name: user.user_name,
+          user_projects: user.user_projects,
           message: "성공적으로 로그인했습니다.",
-          token: user.userAccessToken,
+          // token: user.userAccessToken,
         });
       });
     } else {
@@ -321,7 +328,8 @@ router.post("/kakao", async (req, res) => {
             user_email: user.user_email,
             user_name: user.user_name,
             message: "성공적으로 로그인했습니다.",
-            token: user.userAccessToken,
+            user_projects: user.user_projects,
+            // token: user.userAccessToken,
           });
         });
       });

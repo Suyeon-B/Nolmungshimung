@@ -62,6 +62,7 @@ const ProjectList = ({ goProject }) => {
 
   useEffect(() => {
     if (auth.user === undefined || auth.user === null) return;
+    console.log("여기", auth.user);
     // auth.user 불러오질 못함.
     // 세션은 ..? 안됨
     // -> auth.user가 변경될때마다 재랜더링 ㄲ
@@ -179,4 +180,4 @@ const StyleProjectList = styled.div`
   align-items: flex-start;
 `;
 
-export default ProjectList;
+export default React.memo(ProjectList);

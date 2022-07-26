@@ -92,7 +92,7 @@ const getListStyle = (isDraggingOver) => ({
 
 const transDayItem = (dayItem, selectedIndex) => {};
 
-export default function SpotList({
+function SpotList({
   handleVisible,
   handleContents,
   dayItem,
@@ -273,32 +273,40 @@ export default function SpotList({
                                   ? item.category_group_name
                                   : "-"}
                               </SpotCategory>
-                              {item.user_name && (
-                                <div
-                                  style={{
-                                    position: "absolute",
-                                    marginTop: "63px",
-                                    marginLeft: "270px",
-                                    backgroundColor: `${item.lock}`,
-                                    color: "white",
-                                    padding: "2px",
-                                  }}
-                                >
-                                  {item.user_name}
-                                </div>
-                              )}
                             </SpotItemDiv>
-                            <DeleteOutlined
-                              style={{ fontSize: "25px" }}
-                              onClick={() => {
-                                const newDayItem = [...dayItem];
-                                const newState = [...[dayItem[selectedIndex]]];
-                                newState[ind].splice(index, 1);
-                                newDayItem[selectedIndex] = [...newState[0]];
-                                setItemRoute(newDayItem);
-                                setIsAddDel(true);
-                              }}
-                            />
+                            {item.user_name && (
+                              <div
+                                style={{
+                                  // position: "absolute",
+                                  // marginTop: "63px",
+                                  // marginLeft: "270px",
+                                  backgroundColor: `${item.lock}`,
+                                  color: "white",
+                                  padding: "2px",
+                                  width: "auto",
+                                  height: "20px",
+                                  textAlignLast: "center",
+                                  marginTop: "10px",
+                                }}
+                              >
+                                {item.user_name}
+                              </div>
+                            )}
+                            {!item.user_name && (
+                              <DeleteOutlined
+                                style={{ fontSize: "25px" }}
+                                onClick={() => {
+                                  const newDayItem = [...dayItem];
+                                  const newState = [
+                                    ...[dayItem[selectedIndex]],
+                                  ];
+                                  newState[ind].splice(index, 1);
+                                  newDayItem[selectedIndex] = [...newState[0]];
+                                  setItemRoute(newDayItem);
+                                  setIsAddDel(true);
+                                }}
+                              />
+                            )}
                           </div>
                         </SpotListItemDiv>
                       )}
@@ -357,32 +365,40 @@ export default function SpotList({
                                   ? item.category_group_name
                                   : "-"}
                               </SpotCategory>
-                              {item.user_name && (
-                                <div
-                                  style={{
-                                    position: "absolute",
-                                    marginTop: "63px",
-                                    marginLeft: "270px",
-                                    backgroundColor: `${item.lock}`,
-                                    color: "white",
-                                    padding: "2px",
-                                  }}
-                                >
-                                  {item.user_name}
-                                </div>
-                              )}
                             </SpotItemDiv>
-                            <DeleteOutlined
-                              style={{ fontSize: "25px" }}
-                              onClick={() => {
-                                const newDayItem = [...dayItem];
-                                const newState = [...[dayItem[selectedIndex]]];
-                                newState[ind].splice(index, 1);
-                                newDayItem[selectedIndex] = [...newState[0]];
-                                setItemRoute(newDayItem);
-                                setIsAddDel(true);
-                              }}
-                            />
+                            {item.user_name && (
+                              <div
+                                style={{
+                                  // position: "absolute",
+                                  // marginTop: "63px",
+                                  // marginLeft: "270px",
+                                  backgroundColor: `${item.lock}`,
+                                  color: "white",
+                                  padding: "2px",
+                                  width: "auto",
+                                  height: "20px",
+                                  textAlignLast: "center",
+                                  marginTop: "10px",
+                                }}
+                              >
+                                {item.user_name}
+                              </div>
+                            )}
+                            {!item.user_name && (
+                              <DeleteOutlined
+                                style={{ fontSize: "25px" }}
+                                onClick={() => {
+                                  const newDayItem = [...dayItem];
+                                  const newState = [
+                                    ...[dayItem[selectedIndex]],
+                                  ];
+                                  newState[ind].splice(index, 1);
+                                  newDayItem[selectedIndex] = [...newState[0]];
+                                  setItemRoute(newDayItem);
+                                  setIsAddDel(true);
+                                }}
+                              />
+                            )}
                           </div>
                         </SpotListItemDiv>
                       )}
@@ -457,3 +473,4 @@ const SpotListItemDiv = styled.div`
 // }
 
 // animation: ${(props) => props.user_color && `color 1.5s linear`};
+export default React.memo(SpotList);

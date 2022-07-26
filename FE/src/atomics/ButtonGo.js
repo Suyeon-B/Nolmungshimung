@@ -28,4 +28,4 @@ const Button = styled.button`
   word-break: break-word;
 `;
 
-export default ButtonGo;
+export default React.memo(ButtonGo);
