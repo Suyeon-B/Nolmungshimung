@@ -16,7 +16,7 @@ router.post("/mail", async (req, res) => {
     }
   );
   try {
-    if (await inviteMail(req.body.email, inviteToken)) {
+    if (await inviteMail(req.body.email, inviteToken, req.body.projectId)) {
       return res
         .status(200)
         .json({ success: true, message: "그룹 초대 메일이 발송되었습니다." });
