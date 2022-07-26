@@ -257,7 +257,6 @@ const UploadBtn = styled.button`
   background-color: #ff8a3d;
   border-radius: 10px;
   padding: 3px 8px 3px 8px;
-  wi
 `;
 
 const ResultMemoBox = styled.div`
