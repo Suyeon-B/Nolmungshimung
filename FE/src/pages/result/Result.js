@@ -34,16 +34,13 @@ function Result() {
       }
       console.log(projectInfo);
       projectInfo.hashTags = hashTags;
-      await fetch(
-        `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/upload`,
-        {
-          method: "post",
-          headers: {
-            "content-type": "application/json",
-          },
-          body: JSON.stringify(projectInfo),
-        }
-      ).then((res) => res.json());
+      await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/upload`, {
+        method: "post",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(projectInfo),
+      }).then((res) => res.json());
     }
     setTimeout(() => {
       setVisible(false);
@@ -57,9 +54,7 @@ function Result() {
     setVisible(false);
   };
   async function fetchProjectById(_id) {
-    const response = await fetch(
-      `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`
-    );
+    const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`);
     return response.json();
   }
 
@@ -80,9 +75,7 @@ function Result() {
   const culTripTermData = (startDate, day) => {
     const sDate = new Date(startDate);
     sDate.setDate(sDate.getDate() + day);
-    return `${sDate.getFullYear()}. ${
-      sDate.getMonth() + 1
-    }. ${sDate.getDate()}`;
+    return `${sDate.getFullYear()}. ${sDate.getMonth() + 1}. ${sDate.getDate()}`;
   };
 
   return (
@@ -144,6 +137,9 @@ function Result() {
               </div>
             );
           })}
+        <ResultLine />
+        <ResultTitle>Memo</ResultTitle>
+        <ResultMemoBox>하이</ResultMemoBox>
       </ResultContainer>
       <ResultMap routes={routes} />
     </ResultWhole>
@@ -192,7 +188,7 @@ const ResultTitle = styled.section`
 `;
 
 const ResultLine = styled.div`
-  border-bottom: 4px solid lightgray;
+  border-bottom: 2px solid #c1c7cd;
   margin-bottom: 25px;
   margin-top: 20px;
 `;
@@ -222,10 +218,7 @@ const ResultContainer = styled.div`
 `;
 
 const UploadBtn = styled.button`
-  color: blakc;
-  font-weight: 600;
-  font-size: 15px;
-  margin-left: 100px;
+  margin-left: 129.5px;
   border: 0;
   font-family: "Inter";
   font-weight: 600;
@@ -234,8 +227,18 @@ const UploadBtn = styled.button`
   color: #f8f9fa;
   cursor: pointer;
   background-color: #ff8a3d;
-  border-radius: 15px;
+  border-radius: 10px;
   padding: 3px 8px 3px 8px;
+`;
+
+const ResultMemoBox = styled.div`
+  height: 100%;
+  background-color: #f8f9fa;
+  border-color: #c1c7cd;
+  border-radius: 10px;
+  border-style: solid;
+  border-width: 2px;
+  padding: 15px;
 `;
 
 export default React.memo(Result);
