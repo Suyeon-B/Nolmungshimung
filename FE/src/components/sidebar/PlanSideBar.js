@@ -31,12 +31,12 @@ const PlanSideBar = ({
     goDetailPage();
     setSearchColor("white");
     setDetailColor("#ebebeb");
-  }, [searchColor, detailColor]);
+  }, []);
   const onClickSearch = useCallback(() => {
     goSearchPage();
     setSearchColor("#ebebeb");
     setDetailColor("white");
-  }, [searchColor, detailColor]);
+  }, []);
   return (
     <SideBar>
       {/* Component나누자 */}
