@@ -31,7 +31,6 @@ const MemoRtc = ({ project_Id, userName }) => {
   const [projectID, setProjectId] = useState(project_Id);
   const { connectUser, setConnectUser } = useContext(ConnectuserContext);
   // const userName = sessionStorage.getItem("myNickname");
-  const userName = userName;
   const navigate = useNavigate();
 
   useEffect(() => {
