@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { HomeFilled, SearchOutlined } from "@ant-design/icons";
 import { Select } from "antd";
+import { throttle } from "lodash";
 
 const { Option } = Select;
 
@@ -28,6 +29,7 @@ const RecommendPage = () => {
   // infinite scroll
   const [uploadProjectInfo, setUploadProjectInfo] = useState([]);
   const [skip, setSkip] = useState(0);
+  // const [isFetching, setIsFetching] = useState(false);
 
   const children = [];
   for (let i = 0; i < hashTag.length; i++) {
@@ -71,6 +73,7 @@ const RecommendPage = () => {
         setUploadProjectInfo([...uploadProjectInfo, ...uploadProjectInfoJson]);
         // console.log("인피니트 스크롤 결과");
         // console.log(uploadProjectInfoJson);
+        // console.log("야야야야야야");
         if (uploadProjectInfoJson.length === 0) {
           setSkip(0);
         }
@@ -79,15 +82,31 @@ const RecommendPage = () => {
       }
     };
     fetchUploadProjectInfo();
+    // setIsFetching(false);
   }, [skip]);
 
-  const handleScroll = (e) => {
-    const { offsetHeight, scrollTop, scrollHeight } = e.target;
-
-    if (offsetHeight + scrollTop === scrollHeight) {
-      setSkip(uploadProjectInfo.length);
-    }
+  var throttle = function (func, delay) {
+    return function () {
+      var timer = null;
+      var clientHeight = document.body.clientHeight;
+      var scrollTop = document.body.scrollTop;
+      var scrollHieght = document.body.scrollHeight;
+      // console.log(clientHeight, scrollTop, scrollHieght);
+      if (scrollHieght - clientHeight - scrollTop < 200) {
+        timer = setTimeout(func, delay);
+        // setSkip(uploadProjectInfo.length % 10);
+      }
+    };
   };
+
+  const handleScroll = throttle(function (e) {
+    try {
+      const { offsetHeight, scrollTop, scrollHeight } = e.target;
+      if (offsetHeight + scrollTop === scrollHeight) {
+        setSkip(uploadProjectInfo.length);
+      }
+    } catch (err) {}
+  }, 10000);
 
   const ScrollRow = ({ el }) => {
     const defaultHashTags = ["제주도", "여행"];
@@ -260,7 +279,7 @@ const RecommendItems = styled.div`
   margin-right: 20px;
   cursor: pointer;
   background: #232a3c;
-  
+
   .background-img {
     height: 200px;
     width: 200px;
