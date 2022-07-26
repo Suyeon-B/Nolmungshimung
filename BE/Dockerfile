@@ -6,8 +6,6 @@ WORKDIR "/app"
 COPY ./BE .
 
 RUN npm install
-RUN apk --no-cache update
-RUN apk add redis
 
 # COPY . .
 
