@@ -111,12 +111,13 @@ function GetGoogleID(props) {
 
         console.log("바디", body);
 
-        if (JSON.parse(body).candidates) {
+        try {
           const place = JSON.parse(body).candidates;
-          resolve(place);
+        } catch (e) {
+          reject(body);
         }
 
-        reject(body);
+        resolve(place);
       });
     } catch (e) {
       console.log(e);
