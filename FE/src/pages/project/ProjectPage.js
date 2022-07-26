@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import PlanSideBar from "../../components/sidebar/PlanSideBar";
 import Search from "../search/Search";
@@ -47,6 +47,14 @@ const ProjectPage = (props) => {
     "#05FFCC": false,
     "#4A4A4A": false,
   };
+  const getColor = () => {
+    for (let color in colors) {
+      if (!colors[color]) {
+        colors[color] = true;
+        return color;
+      }
+    }
+  };
 
   useEffect(() => {
     window.addEventListener("beforeunload", (event) => {
@@ -83,15 +91,6 @@ const ProjectPage = (props) => {
       // joinVoice.exitRoom();
     };
   }, [projectId]);
-
-  const getColor = () => {
-    for (let color in colors) {
-      if (!colors[color]) {
-        colors[color] = true;
-        return color;
-      }
-    }
-  };
 
   useEffect(() => {
     socket.on("connectUser", (connectUserInfo) => {
