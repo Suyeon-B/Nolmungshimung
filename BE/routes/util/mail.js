@@ -52,7 +52,7 @@ exports.inviteMail = function (email, inviteToken, project) {
       <h1>WelCome 놀멍쉬멍</h1>
       <img src="./mailImage.png" style="width :547px; height : 300px" />
       <h2>"${project}" 여행 계획에서 당신을 초대했습니다.</h2>
-      <h2>초대링크 : ${url}</h2>
+      <h2>초대링크 : <a>${url}<a></h2>
     </div>`,
       // html:
       //   "<p>아래 링크를 누르면 그룹으로 초대됩니다.</p>" +

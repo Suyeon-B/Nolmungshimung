@@ -90,6 +90,7 @@ const RecommendPage = () => {
   };
 
   const ScrollRow = ({ el }) => {
+    const defaultHashTags = ["제주도", "여행"];
     return (
       <div>
         <Link to={`project/${el._id}`}>
@@ -97,16 +98,19 @@ const RecommendPage = () => {
             <div className="background-img" style={{ backgroundImage: `url(${el.img})` }}>
               <div className="uploadProjectInfo-title">{el.project_title}</div>
               <div className="uploadProjectInfo-hashTags">
-                {el.hashTags ? (
-                  el.hashTags.map((hashTag, index) => (
-                    <span key={index}>
-                      {"#"}
-                      {hashTag}{" "}
-                    </span>
-                  ))
-                ) : (
-                  <div>{"# 놀멍쉬멍"}</div>
-                )}
+                {el.hashTags.length === 0
+                  ? defaultHashTags.map((hashTag, index) => (
+                      <span key={index}>
+                        {"#"}
+                        {hashTag}{" "}
+                      </span>
+                    ))
+                  : el.hashTags.map((hashTag, index) => (
+                      <span key={index}>
+                        {"#"}
+                        {hashTag}{" "}
+                      </span>
+                    ))}
               </div>
             </div>
           </RecommendItems>
@@ -262,6 +266,7 @@ const RecommendItems = styled.div`
     border-radius: 10px;
     box-shadow: 4px 4px 4px rgb(0 0 0 / 25%);
     background-position: center;
+    background: #232a3c;
   }
 
   .uploadProjectInfo-title {

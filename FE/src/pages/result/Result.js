@@ -81,9 +81,13 @@ function Result() {
   const ShowMemoResult = () => {
     let text = "로딩중 ...";
     if (projectInfo) {
-      const textLines = projectInfo.quillRefEditor.length;
-      for (var i = 0; i < textLines; i++) {
-        text = projectInfo.quillRefEditor[i].insert;
+      try {
+        const textLines = projectInfo.quillRefEditor.length;
+        for (var i = 0; i < textLines; i++) {
+          text = projectInfo.quillRefEditor[i].insert;
+        }
+      } catch (err) {
+        console.log("메모 로딩에 실패했습니다.");
       }
     }
     return <div className="memoText">{text}</div>;
