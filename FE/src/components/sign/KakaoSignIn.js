@@ -55,14 +55,17 @@ function KakaoSignIn(props) {
       body: JSON.stringify({ token }),
     })
       .then((res) => res.json())
-      .then((data) => {
+      .then(async (data) => {
         if (data.loginSuccess === true) {
           console.log("Sign In Success");
-          navigate("/", { replace: true });
+
           sessionStorage.setItem("myNickname", data.user_name);
           sessionStorage.setItem("user_email", data.user_email);
-          console.log(data.token);
-          login({ user: data.user_email });
+          // console.log(data.token);
+
+          window.location.href = "/";
+          await login({ user: data.user_email });
+          // navigate("/", { replace: true });
         } else {
           window.alert(data.message);
           navigate("/signin");
