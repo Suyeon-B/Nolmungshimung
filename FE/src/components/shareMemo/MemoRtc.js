@@ -23,14 +23,15 @@ const TOOLBAR_OPTIONS = [
 
 let newYtext = new Set();
 
-const MemoRtc = ({ project_Id }) => {
+const MemoRtc = ({ project_Id, userName }) => {
   // const auth = useAuth();
   let quillRef = null;
   let reactQuillRef = null;
   Quill.register("modules/cursors", QuillCursors);
   const [projectID, setProjectId] = useState(project_Id);
   const { connectUser, setConnectUser } = useContext(ConnectuserContext);
-  const userName = sessionStorage.getItem("myNickname");
+  // const userName = sessionStorage.getItem("myNickname");
+  const userName = userName;
   const navigate = useNavigate();
 
   useEffect(() => {
