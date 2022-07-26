@@ -1,5 +1,6 @@
 const nodemailer = require("nodemailer");
 const config_mail = require(__base + "secure_mail.json");
+const Project = require(__base + "models/Project");
 
 exports.signupMail = function (certificationNumber, receive) {
   return new Promise(async (resolve, reject) => {
@@ -27,9 +28,11 @@ exports.signupMail = function (certificationNumber, receive) {
   });
 };
 
-exports.inviteMail = function (email, inviteToken, project) {
+exports.inviteMail = function (email, inviteToken, projectId) {
   // console.log(email, inviteToken);
   return new Promise(async (resolve, reject) => {
+    const project = await Project.findById(projectId);
+    const projectName = project.project_title;
     const transporter = nodemailer.createTransport({
       service: "gmail",
       host: "smtp.gmail.com",
@@ -51,7 +54,7 @@ exports.inviteMail = function (email, inviteToken, project) {
       html: `<div style="width : 550px; height : 700px; display: flex; flex-direction: column; align-items: center;">
       <h1>WelCome 놀멍쉬멍</h1>
       <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fb9TqMa%2FbtrIkowSQj7%2F4MgsPytZRxkgN8NrgUejvK%2Fimg.png" style="width :547px; height : 300px" />
-      <h2>"${project}" 여행 계획에서 당신을 초대했습니다.</h2>
+      <h2>"${projectName}" 여행 계획에서 당신을 초대하였습니다.</h2>
       <h2>초대링크 : <a href=${url}>바로가기</a></h2>
     </div>`,
       // html:
