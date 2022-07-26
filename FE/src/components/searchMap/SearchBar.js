@@ -77,4 +77,4 @@ const StyledInput = styled.input`
   outline: none;
   border: 0;
 `;
-export default SearchBar;
+export default React.memo(SearchBar);

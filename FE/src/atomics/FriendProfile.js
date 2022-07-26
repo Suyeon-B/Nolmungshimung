@@ -34,4 +34,4 @@ const FriendNameText = styled.span`
   color: #ffffff;
 `;
 
-export default FriendProfile;
+export default React.memo(FriendProfile);

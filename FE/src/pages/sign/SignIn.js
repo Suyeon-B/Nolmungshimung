@@ -35,19 +35,22 @@ function SignIn() {
   });
 
   async function singInUser(data) {
-    await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/users/signin`, {
-      method: "post",
-      headers: {
-        "content-type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify(data),
-    })
+    await fetch(
+      `https://${process.env.REACT_APP_SERVER_IP}:8443/users/signin`,
+      {
+        method: "post",
+        headers: {
+          "content-type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(data),
+      }
+    )
       .then((res) => res.json())
       .then(async (res) => {
         console.log("res : ", res);
         if (res.loginSuccess === true) {
-          success();
+          // success();
           console.log("Sign In Success");
           sessionStorage.setItem("myNickname", res.user_name);
           sessionStorage.setItem("user_email", res.user_email);
@@ -85,8 +88,20 @@ function SignIn() {
           <SignUpBtn onClick={onClickSignUp}>Sign Up</SignUpBtn>
         </Btns>
         <Form onSubmit={onSubmitSignUp}>
-          <Input placeholder="jeju@island.com" type="text" value={id} onChange={onchangeId} required />
-          <Input placeholder="password" type="password" value={password} onChange={onchangePassword} required />
+          <Input
+            placeholder="jeju@island.com"
+            type="text"
+            value={id}
+            onChange={onchangeId}
+            required
+          />
+          <Input
+            placeholder="password"
+            type="password"
+            value={password}
+            onChange={onchangePassword}
+            required
+          />
           <SubmitInput value="로그인" type="submit" />
           <br />
           <a href={kauthUrl}>
