@@ -40,7 +40,9 @@ const RecommendPage = () => {
   };
 
   async function searchHashtags() {
-    let url = `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/hashtag?taglist=${JSON.stringify(hashtags)}`;
+    let url = `https://${
+      process.env.REACT_APP_SERVER_IP
+    }:8443/recommend/hashtag?taglist=${JSON.stringify(hashtags)}`;
     if (!hashtags.length) {
       url = `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend`;
     }
@@ -66,7 +68,9 @@ const RecommendPage = () => {
   useEffect(() => {
     const fetchUploadProjectInfo = async () => {
       try {
-        const request = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/infinite?skip=${skip}`);
+        const request = await fetch(
+          `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/infinite?skip=${skip}`
+        );
         const uploadProjectInfoJson = await request.json();
         setUploadProjectInfo([...uploadProjectInfo, ...uploadProjectInfoJson]);
         // console.log("인피니트 스크롤 결과");
@@ -93,7 +97,10 @@ const RecommendPage = () => {
     return (
       <Link to={`project/${el._id}`}>
         <RecommendItems>
-          <div className="background-img" style={{ backgroundImage: `url(${el.img})` }}>
+          <div
+            className="background-img"
+            style={{ backgroundImage: `url(${el.img})` }}
+          >
             <div className="uploadProjectInfo-title">{el.project_title}</div>
             <div className="uploadProjectInfo-hashTags">
               {el.hashTags.map((hashTag, index) => (

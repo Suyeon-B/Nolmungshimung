@@ -147,8 +147,10 @@ router.get("/hashtag", async (req, res, next) => {
 
 router.get("/hashtags", async (req, res, next) => {
   try {
-    let responseData = await HashTags.findOne({}, { _id: false, hash_tag_names: true }).lean();
-    return res.status(200).send(responseData.hash_tag_names);
+    const redisData = await Redis.SMEMBERS(`hashtags`, 0, -1);
+    // const redisData = await Redis.LRANGE(`hashtags`, 0, -1);
+    // if (redisData.length) return res.status(200).send(redisData)
+    return res.status(200).send(redisData)
   } catch (error) {
     console.log(`HashTag가 존재하지 않아유 ~`);
     return res.status(403).send({ status: 403, msg: error });

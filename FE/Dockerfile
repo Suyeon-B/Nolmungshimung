@@ -14,7 +14,6 @@ RUN npm install --force
 # RUN yarn
 # RUN yarn install
  
-ENV REACT_APP_SERVER_IP 3.36.66.43
 EXPOSE 3000
 
 # 소스 복사 

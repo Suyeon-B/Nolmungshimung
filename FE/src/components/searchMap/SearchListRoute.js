@@ -84,7 +84,7 @@ const SearchListRoute = ({
           console.log("디비에 없음");
           setContents(data.data);
         } else {
-          console.log(data.message);
+          console.log("여긴다", data.message);
         }
         setVisible(true);
       })
@@ -214,6 +214,7 @@ const StyledDropDown = styled.div`
       border-radius: 3px;
       padding: 4px;
       box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+      z-index: 2;
     }
   }
 `;

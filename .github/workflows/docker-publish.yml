@@ -1,0 +1,102 @@
+name: Docker
+
+## 바뀌는가?
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+on:
+  push:
+    branches: [ "master" ]
+    # Publish semver tags as releases.
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+      -
+        name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      
+      - 
+        name: Set env Node
+        run: |
+          echo "MONGO_URI=$MONGO_URI" >> ./BE/.env
+          echo "NODE_TLS_REJECT_UNAUTHORIZED=$NODE_TLS_REJECT_UNAUTHORIZED" >> ./BE/.env
+          echo "Redis_IP=$Redis_IP" >> ./BE/.env
+          echo "REACT_APP_SERVER_IP=$REACT_APP_SERVER_IP" >> ./BE/.env
+          echo "NODEMAILER_USER=$NODEMAILER_USER" >> ./BE/.env
+          echo "NODEMAILER_PASS=$NODEMAILER_PASS" >> ./BE/.env
+          echo "REACT_APP_GOOGLE_KEY=$REACT_APP_GOOGLE_KEY" >> ./BE/.env
+          echo "CORS_SERVER_IP=$CORS_SERVER_IP" >> ./BE/.env          
+        env:
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+          NODE_TLS_REJECT_UNAUTHORIZED: ${{ secrets.NODE_TLS_REJECT_UNAUTHORIZED }}
+          Redis_IP: ${{ secrets.Redis_IP }}
+          REACT_APP_SERVER_IP: ${{ secrets.REACT_APP_SERVER_IP }}
+          NODEMAILER_USER: ${{ secrets.NODEMAILER_USER }}
+          NODEMAILER_PASS: ${{ secrets.NODEMAILER_PASS }}
+          REACT_APP_GOOGLE_KEY: ${{ secrets.Google_KEY }}
+          CORS_SERVER_IP: ${{ secrets.CORS_SERVER_IP }}
+      -
+        name: Set env React
+        run: |
+          echo "REACT_APP_SERVER_IP=$REACT_APP_SERVER_IP" >> ./FE/.env
+          echo "REACT_APP_GOOGLE_KEY=$REACT_APP_GOOGLE_KEY" >> ./FE/.env
+        env:
+          REACT_APP_SERVER_IP: ${{ secrets.REACT_APP_SERVER_IP }}
+          REACT_APP_GOOGLE_KEY: ${{ secrets.Google_KEY }}
+      -
+        name: react Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./FE/Dockerfile 
+          platforms: linux/amd64
+          push: true
+          tags: wnsrb003/react-app-nolshimung:latest
+      -
+        name: api-server Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./BE/Dockerfile 
+          platforms: linux/amd64
+          push: true
+          tags: wnsrb003/api-server-nolshimung:latest
+  Deploy:
+    needs: build
+    name: continuos deploy
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v2
+      - name: copy file via ssh password
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ubuntu
+          password: ${{ secrets.PASSWD }}
+          source: "docker-compose.yml"
+          target: "/home/ubuntu/"
+      - name: Run scripts in server
+        uses: appleboy/ssh-action@master
+        with:
+          password: ${{ secrets.PASSWD }}
+          host: ${{ secrets.HOST }}
+          username: ubuntu
+          script: |
+            sudo docker-compose down &&
+            sudo docker container prune -f &&
+            sudo docker image prune -f &&
+            sudo docker-compose -f ./docker-compose.yml pull && 
+            sudo docker-compose -f ./docker-compose.yml up -d
