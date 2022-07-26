@@ -78,6 +78,17 @@ function Result() {
     return `${sDate.getFullYear()}. ${sDate.getMonth() + 1}. ${sDate.getDate()}`;
   };
 
+  const ShowMemoResult = () => {
+    let text = "로딩중 ...";
+    if (projectInfo) {
+      const textLines = projectInfo.quillRefEditor.length;
+      for (var i = 0; i < textLines; i++) {
+        text = projectInfo.quillRefEditor[i].insert;
+      }
+    }
+    return <div className="memoText">{text}</div>;
+  };
+
   return (
     <ResultWhole>
       <ResultContainer>
@@ -139,7 +150,9 @@ function Result() {
           })}
         <ResultLine />
         <ResultTitle>Memo</ResultTitle>
-        <ResultMemoBox>하이</ResultMemoBox>
+        <ResultMemoBox>
+          <ShowMemoResult />
+        </ResultMemoBox>
       </ResultContainer>
       <ResultMap routes={routes} />
     </ResultWhole>
@@ -239,6 +252,10 @@ const ResultMemoBox = styled.div`
   border-style: solid;
   border-width: 2px;
   padding: 15px;
+
+  .memoText {
+    white-space: pre-wrap;
+  }
 `;
 
 export default React.memo(Result);

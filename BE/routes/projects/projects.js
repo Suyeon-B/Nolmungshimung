@@ -193,7 +193,6 @@ router.post("/routes/:id", async (req, res) => {
 router.patch("/routes/:id", async (req, res) => {
   try {
     //redis
-    // const Redis = require(__base + "routes/util/redis").publisher;
     await Redis.setEx(`routes/${req.params.id}`, 10, "");
     await Redis.set(`${req.params.id}`, JSON.stringify(req.body));
     res.status(200).send({ success: true });
@@ -218,7 +217,6 @@ router.get("/:id", async (req, res, next) => {
   const { id } = req.params;
   try {
     //redis
-    // const Redis = require(__base + "routes/util/redis").publisher;
     const projectInfo = await Project.findById({ _id: id });
     let routes = await Redis.get(`${req.params.id}`);
     if (routes) {
