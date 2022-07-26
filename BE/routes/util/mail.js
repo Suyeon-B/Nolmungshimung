@@ -20,7 +20,7 @@ exports.signupMail = function (certificationNumber, receive) {
   });
 };
 
-exports.inviteMail = function (email, inviteToken) {
+exports.inviteMail = function (email, inviteToken, project) {
   // console.log(email, inviteToken);
   return new Promise(async (resolve, reject) => {
     const transporter = nodemailer.createTransport({
