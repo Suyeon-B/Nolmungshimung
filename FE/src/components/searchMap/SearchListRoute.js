@@ -214,6 +214,7 @@ const StyledDropDown = styled.div`
       border-radius: 3px;
       padding: 4px;
       box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+      z-index: 2;
     }
   }
 `;
