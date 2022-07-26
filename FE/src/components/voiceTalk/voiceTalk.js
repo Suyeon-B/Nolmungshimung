@@ -250,4 +250,4 @@ const Room = (props) => {
 
 const MyVideo = styled.audio``;
 
-export default Room;
+export default React.memo(Room);

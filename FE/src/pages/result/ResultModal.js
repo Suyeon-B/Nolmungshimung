@@ -2,7 +2,13 @@ import { Button, Modal, Select } from "antd";
 import React, { useState } from "react";
 const { Option } = Select;
 
-const ResultModal = ({ visible, onOk, confirmLoading, onCancel, setHashTags }) => {
+const ResultModal = ({
+  visible,
+  onOk,
+  confirmLoading,
+  onCancel,
+  setHashTags,
+}) => {
   const children = [];
   const hashTag = [];
 
@@ -17,7 +23,13 @@ const ResultModal = ({ visible, onOk, confirmLoading, onCancel, setHashTags }) =
   };
   return (
     <>
-      <Modal title="업로드하기" visible={visible} onOk={onOk} confirmLoading={confirmLoading} onCancel={onCancel}>
+      <Modal
+        title="업로드하기"
+        visible={visible}
+        onOk={onOk}
+        confirmLoading={confirmLoading}
+        onCancel={onCancel}
+      >
         <Select
           mode="tags"
           style={{
@@ -33,4 +45,4 @@ const ResultModal = ({ visible, onOk, confirmLoading, onCancel, setHashTags }) =
   );
 };
 
-export default ResultModal;
+export default React.memo(ResultModal);

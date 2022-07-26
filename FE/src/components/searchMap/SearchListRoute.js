@@ -237,4 +237,4 @@ const StyledBtn = styled.button`
   }
 `;
 
-export default SearchListRoute;
+export default React.memo(SearchListRoute);
