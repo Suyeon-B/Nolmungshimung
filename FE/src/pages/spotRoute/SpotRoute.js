@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import styled from "styled-components";
 import SpotList from "../../components/spot/SpotList";
 import MarkMap from "../../components/MarkMap/MarkMap";
@@ -8,6 +8,7 @@ import SearchDetail from "../../components/searchMap/SearchDetail";
 import { AlertFilled } from "@ant-design/icons";
 import socket from "../../socket";
 import { useNavigate } from "react-router-dom";
+import SpotRouteTitle from "../../components/spot/SpotRouteTitle";
 
 function SpotRoute({
   startDate,
@@ -25,49 +26,56 @@ function SpotRoute({
   const [contents, setContents] = useState(null);
   let navigate = useNavigate();
 
-  const handleVisible = (value) => {
-    setVisible(value);
-  };
-  const handleContents = (value) => {
-    const data = {
-      input: value.road_address_name + "" + value.place_name,
-      place_id: value.id,
-      place_name: value.place_name,
-      road_address_name: value.road_address_name
-        ? value.road_address_name
-        : value.address_name,
-      category_group_name: value.category_group_name,
-      phone: value.phone,
-      place_url: value.place_url,
-    };
+  const handleVisible = useCallback(
+    (value) => {
+      setVisible(value);
+    },
+    [visible]
+  );
+  const handleContents = useCallback(
+    (value) => {
+      const data = {
+        input: value.road_address_name + "" + value.place_name,
+        place_id: value.id,
+        place_name: value.place_name,
+        road_address_name: value.road_address_name
+          ? value.road_address_name
+          : value.address_name,
+        category_group_name: value.category_group_name,
+        phone: value.phone,
+        place_url: value.place_url,
+      };
 
-    fetch(
-      `https://${process.env.REACT_APP_SERVER_IP}:8443/travel/find/` + value.id,
-      {
-        method: "POST", // 또는 'PUT'
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }
-    ) //get
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.status === 200) {
-          console.log(data);
-          console.log("db에 있습니다");
-          setContents(data.data);
-        } else if (data.status === 206) {
-          console.log("디비에 없음");
-          setContents(data.data);
-        } else {
-          console.log(data.message);
+      fetch(
+        `https://${process.env.REACT_APP_SERVER_IP}:8443/travel/find/` +
+          value.id,
+        {
+          method: "POST", // 또는 'PUT'
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
         }
-      })
-      .catch((error) => console.log(error));
-    // console.log(value.id);
-    // setContents(value);
-  };
+      ) //get
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.status === 200) {
+            console.log(data);
+            console.log("db에 있습니다");
+            setContents(data.data);
+          } else if (data.status === 206) {
+            console.log("디비에 없음");
+            setContents(data.data);
+          } else {
+            console.log(data.message);
+          }
+        })
+        .catch((error) => console.log(error));
+      // console.log(value.id);
+      // setContents(value);
+    },
+    [contents]
+  );
   MarkMap(item, selectedIndex);
 
   useEffect(() => {
@@ -110,19 +118,13 @@ function SpotRoute({
   };
   return (
     <SpotRouteContainer>
-      <SpotRouteTitle>
-        <section>
-          <SpotRouteTitleDay>
-            {culTripTermData(startDate, selectedIndex)}
-          </SpotRouteTitleDay>
-          <AlertFilled
-            style={{ color: "#ff8a3d", fontSize: "34px", marginLeft: "15px" }}
-            onClick={callFriends}
-          />
-          <span>주목시키기</span>
-        </section>
-        <SpotRouteTitleBtn onClick={onClcikResult}>작성 완료</SpotRouteTitleBtn>
-      </SpotRouteTitle>
+      <SpotRouteTitle
+        date={culTripTermData(startDate, selectedIndex)}
+        projectId={projectId}
+        selectedIndex={selectedIndex}
+        userName={userName}
+      />
+
       <SpotRouteSection>
         <SpotList
           selectedIndex={selectedIndex}
@@ -172,36 +174,4 @@ const SpotRouteSection = styled.section`
   margin-bottom: 20px;
 `;
 
-const SpotRouteTitle = styled.section`
-  width: 100%;
-  margin-top: 29px;
-  border-bottom: 1px solid #c1c7cd;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`;
-
-const SpotRouteTitleDay = styled.span`
-  display: inline-flex;
-  font-style: normal;
-  font-weight: 700;
-  font-size: 28px;
-  line-height: 48px;
-  color: #ff8a3d;
-  margin-left: 15px;
-`;
-
-const SpotRouteTitleBtn = styled.button`
-  white-space: nowrap;
-  margin-right: 25px;
-  margin-bottom: 10px;
-  background-color: #ff8a3d;
-  border: 0;
-  border-radius: 4px;
-  padding: 14px;
-  color: #f8f9fa;
-  font-weight: 800;
-  cursor: pointer;
-`;
-
-export default SpotRoute;
+export default React.memo(SpotRoute);

@@ -1,4 +1,4 @@
-import { Drawer, Rate } from "antd";
+import { Drawer, Rate, Carousel } from "antd";
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import "./Drawer.css";
@@ -29,9 +29,11 @@ function SearchDetail(props) {
       className="site-form-in-drawer-wrapper"
     >
       <div style={{ marginLeft: "15px", marginRight: "15px" }}>
-        <div>
-          <StyledImg src={imgUrl[0]} />
-        </div>
+        <Carousel autoplay>
+          {imgUrl.map((el, idx) => {
+            return <StyledImg src={el} key={idx + 777} />;
+          })}
+        </Carousel>
 
         <StyledTitle>{props.contents.place_name}</StyledTitle>
         <p
@@ -120,7 +122,7 @@ function SearchDetail(props) {
         </div>
         {props.contents.reviews &&
           props.contents.reviews.map((item, index) => (
-            <li>
+            <li key={index}>
               {item["author_name"]} : {item["text"]}
             </li>
           ))}
@@ -137,8 +139,8 @@ function SearchDetail(props) {
 const StyledImg = styled.img`
   width: 300px;
   height: 280px;
+  object-fit: fill;
   border-radius: 5px;
-  margin-left: 5px;
 `;
 
 const StyledTitle = styled.h2`
@@ -161,4 +163,4 @@ const StyleIcon = styled.span`
   }
 `;
 
-export default SearchDetail;
+export default React.memo(SearchDetail);
