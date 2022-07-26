@@ -15,9 +15,7 @@ const RecommendPageDetail = () => {
   console.log("여기는 추천 프로젝트 디테일이지롱~~");
 
   async function fetchProjectById(_id) {
-    const response = await fetch(
-      `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/projects/${_id}`
-    );
+    const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/projects/${_id}`);
     return response.json();
   }
 
@@ -124,7 +122,7 @@ const ResultProjectTitle = styled.span`
   color: #ff8a3d;
 `;
 const ResultLine = styled.div`
-  border-bottom: 4px solid lightgray;
+  border-bottom: 2px solid #c1c7cd;
   margin-bottom: 25px;
   margin-top: 20px;
 `;
