@@ -84,7 +84,7 @@ const SearchListRoute = ({
           console.log("디비에 없음");
           setContents(data.data);
         } else {
-          console.log(data.message);
+          console.log("여긴다", data.message);
         }
         setVisible(true);
       })
