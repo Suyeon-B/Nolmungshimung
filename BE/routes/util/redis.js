@@ -15,7 +15,8 @@ var redis = require('redis');
 const Project = require(__base + "models/Project");
 const HashTags = require(__base + "models/HashTags");
 var subscriber = redis.createClient({
-  url: 'redis://redis_boot:6379',
+  host: '127.0.0.1',
+  port: '6379',
 });
 
 
