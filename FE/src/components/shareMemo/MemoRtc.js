@@ -44,7 +44,9 @@ const MemoRtc = ({ project_Id, userName }) => {
     const ydoc = new Y.Doc();
     const provider = new WebrtcProvider(`${projectID}`, ydoc);
     const ytext = ydoc.getText(`${projectID}`);
-    console.log(ytext);
+    // console.log("##@#@$@#$@#$@#@#");
+    // console.log(quillRef);
+    // console.log(quillRef.root.innerHTML);
     // } catch (err) {
     // alert("비정상적인 접근입니다.");
     // navigate("/");
@@ -65,16 +67,13 @@ const MemoRtc = ({ project_Id, userName }) => {
     const connectUsers = Object.keys(connectUser).length;
     // console.log(" @#@#@#@#@# connectuser : ", connectUsers);
     if (connectUsers < 2) {
-      fetch(
-        `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/memo/${projectID}`,
-        {
-          method: "get",
-          headers: {
-            "content-type": "application/json",
-          },
-          credentials: "include",
-        }
-      )
+      fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/memo/${projectID}`, {
+        method: "get",
+        headers: {
+          "content-type": "application/json",
+        },
+        credentials: "include",
+      })
         .then((res) => res.json())
         .then((res) => {
           // console.log("===== fetch 결과 =====");
