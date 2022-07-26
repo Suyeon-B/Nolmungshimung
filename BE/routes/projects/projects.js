@@ -5,6 +5,7 @@ var router = express.Router();
 const Project = require(__base + "models/Project");
 const UploadProject = require(__base + "models/UploadProject");
 const HashTable = require(__base + "models/HashTable");
+const { Travel } = require(__base + "models/Travel");
 const HashTags = require(__base + "models/HashTags");
 const { User } = require(__base + "models/User");
 //redis
@@ -50,6 +51,18 @@ router.post("/upload", async (req, res) => {
   // console.log(req.body);
   const info = req.body;
 
+  if (info.travelId) {
+    let travelId = info.travelId;
+    // console.log(travelId);
+    let travel = await Travel.findOne({ place_id: travelId });
+    delete info.travelId;
+    if (travel.photos.length > 0) {
+      const api_key = process.env.REACT_APP_GOOGLE_KEY;
+      let img = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${travel.photos[0]["photo_reference"]}&sensor=false&key=${api_key}`;
+      // console.log(img);
+      info.img = img;
+    }
+  }
   // console.log("INFO", info);
   // const projectId = req.body._id;
   delete info._id;
@@ -107,7 +120,9 @@ router.post("/upload", async (req, res) => {
           // console.log(hashTags[0].hash_tag_names);
           await hashTags[0].save();
         } catch (error) {
-          console.log(`Hash tag ${i}번째 error : ${error}`);
+          console.log(
+            `Hash tag ${i}번째 error : ${error} hashtags디비를 만들어 달라냥`
+          );
           return res.send(404).send({ error: `hash tag ${i}번째 save Fail` });
         }
       }

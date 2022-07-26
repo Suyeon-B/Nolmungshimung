@@ -35,7 +35,7 @@ const ResultModal = ({
           style={{
             width: "100%",
           }}
-          placeholder="최대 다섯개의 해쉬태그를 입력해주세요. ex) 우도, 맛집탐방"
+          placeholder="최대 다섯개의 해시태그를 입력해주세요. ex) 우도, 맛집탐방"
           onChange={handleChange}
         >
           {children}
@@ -45,4 +45,4 @@ const ResultModal = ({
   );
 };
 
-export default ResultModal;
+export default React.memo(ResultModal);

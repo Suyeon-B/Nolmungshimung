@@ -8,7 +8,7 @@ function InviteProject(props) {
   const navigate = useNavigate();
   const token = new URLSearchParams(window.location.search).get("token");
 
-  // console.log(auth.user.user_email);
+  console.log(auth.user.user_email);
   useEffect(() => {
     fetch(
       `https://${process.env.REACT_APP_SERVER_IP}:8443/invite/${token}/${auth.user.user_email}`,

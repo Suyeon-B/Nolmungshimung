@@ -89,4 +89,4 @@ function Cursor({ project_Id, selectedIndex }) {
   );
 }
 
-export default Cursor;
+export default React.memo(Cursor);

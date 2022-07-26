@@ -65,6 +65,9 @@ const ProjectPage = (props) => {
 
   useEffect(() => {
     console.log(auth);
+    // if (!auth.user) {
+    //   window.location.href = "/signin";
+    // }
     if (projectId === null) return;
     async function fetchInfo() {
       const data = await fetchProjectById(projectId);
@@ -237,19 +240,19 @@ const ProjectPage = (props) => {
     };
   }, []);
 
+  const goSearchPage = useCallback(() => {
+    setIsFirstPage(true);
+  }, [isFirstPage]);
+  const goDetailPage = useCallback(() => {
+    setIsFirstPage(false);
+  }, [isFirstPage]);
+
   if (isLoading) {
     if (items) {
       setIsLoading(false);
     }
     return <div>isLoading....</div>;
   }
-
-  const goSearchPage = () => {
-    setIsFirstPage(true);
-  };
-  const goDetailPage = () => {
-    setIsFirstPage(false);
-  };
 
   // const triggerNotif = () => {
   //   useNotification("놀멍쉬멍", {
@@ -305,4 +308,4 @@ const PlanSection = styled.section`
   width: 81%;
 `;
 
-export default ProjectPage;
+export default React.memo(ProjectPage);

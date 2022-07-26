@@ -28,6 +28,11 @@ function Result() {
       alert("5개만 입력하랬다. ㅡㅡ");
       return;
     } else {
+      if (routes[0].length > 0) {
+        // console.log(routes[0][0].id);
+        projectInfo.travelId = routes[0][0].id;
+      }
+      console.log(projectInfo);
       projectInfo.hashTags = hashTags;
       await fetch(
         `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/upload`,
@@ -233,4 +238,4 @@ const UploadBtn = styled.button`
   padding: 3px 8px 3px 8px;
 `;
 
-export default Result;
+export default React.memo(Result);
