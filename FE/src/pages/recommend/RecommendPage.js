@@ -223,7 +223,7 @@ const RecommendBlock = styled.div`
   white-space: pre-line;
   font-weight: 700;
   color: white;
-  padding: 10vh;
+  padding: 5vh 10vh 0 10vh;
   letter-spacing: 1px;
   line-height: 65px;
   min-width: 800px;
