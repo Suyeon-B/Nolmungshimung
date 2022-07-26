@@ -40,9 +40,7 @@ const RecommendPage = () => {
   };
 
   async function searchHashtags() {
-    let url = `https://${
-      process.env.REACT_APP_SERVER_IP
-    }:8443/recommend/hashtag?taglist=${JSON.stringify(hashtags)}`;
+    let url = `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/hashtag?taglist=${JSON.stringify(hashtags)}`;
     if (!hashtags.length) {
       url = `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend`;
     }
@@ -68,9 +66,7 @@ const RecommendPage = () => {
   useEffect(() => {
     const fetchUploadProjectInfo = async () => {
       try {
-        const request = await fetch(
-          `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/infinite?skip=${skip}`
-        );
+        const request = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/infinite?skip=${skip}`);
         const uploadProjectInfoJson = await request.json();
         setUploadProjectInfo([...uploadProjectInfo, ...uploadProjectInfoJson]);
         // console.log("인피니트 스크롤 결과");
@@ -94,25 +90,32 @@ const RecommendPage = () => {
   };
 
   const ScrollRow = ({ el }) => {
+    const defaultHashTags = ["제주도", "여행"];
     return (
-      <Link to={`project/${el._id}`}>
-        <RecommendItems>
-          <div
-            className="background-img"
-            style={{ backgroundImage: `url(${el.img})` }}
-          >
-            <div className="uploadProjectInfo-title">{el.project_title}</div>
-            <div className="uploadProjectInfo-hashTags">
-              {el.hashTags.map((hashTag, index) => (
-                <span key={index}>
-                  {"#"}
-                  {hashTag}{" "}
-                </span>
-              ))}
+      <div>
+        <Link to={`project/${el._id}`}>
+          <RecommendItems>
+            <div className="background-img" style={{ backgroundImage: `url(${el.img})` }}>
+              <div className="uploadProjectInfo-title">{el.project_title}</div>
+              <div className="uploadProjectInfo-hashTags">
+                {el.hashTags.length === 0
+                  ? defaultHashTags.map((hashTag, index) => (
+                      <span key={index}>
+                        {"#"}
+                        {hashTag}{" "}
+                      </span>
+                    ))
+                  : el.hashTags.map((hashTag, index) => (
+                      <span key={index}>
+                        {"#"}
+                        {hashTag}{" "}
+                      </span>
+                    ))}
+              </div>
             </div>
-          </div>
-        </RecommendItems>
-      </Link>
+          </RecommendItems>
+        </Link>
+      </div>
     );
   };
 
@@ -223,7 +226,7 @@ const RecommendBlock = styled.div`
   white-space: pre-line;
   font-weight: 700;
   color: white;
-  padding: 10vh;
+  padding: 5vh 10vh 0 10vh;
   letter-spacing: 1px;
   line-height: 65px;
   min-width: 800px;
@@ -263,6 +266,7 @@ const RecommendItems = styled.div`
     border-radius: 10px;
     box-shadow: 4px 4px 4px rgb(0 0 0 / 25%);
     background-position: center;
+    background: #232a3c;
   }
 
   .uploadProjectInfo-title {

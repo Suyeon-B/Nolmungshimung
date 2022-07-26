@@ -191,6 +191,7 @@ router.post("/signin", (req, res) => {
         res.cookie("w_refresh", user.userRefreshToken);
         res.cookie("w_access", user.userAccessToken).status(200).json({
           loginSuccess: true,
+          user: user,
           user_email: user.user_email,
           user_name: user.user_name,
           user_projects: user.user_projects,
