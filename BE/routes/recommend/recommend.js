@@ -163,10 +163,14 @@ router.get("/hashtag", async (req, res, next) => {
 
 router.get("/hashtags", async (req, res, next) => {
   try {
+    const redisData = await Redis.get(`hashtags`);
+    if (redisData) return res.status(200).send(redisData)
+
     let responseData = await HashTags.findOne(
       {},
       { _id: false, hash_tag_names: true }
     ).lean();
+    await redisData.set(`hashtags`, JSON.stringify(responseData.hash_tag_names));
     return res.status(200).send(responseData.hash_tag_names);
   } catch (error) {
     console.log(`HashTag가 존재하지 않아유 ~`);
