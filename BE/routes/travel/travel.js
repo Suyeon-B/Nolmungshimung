@@ -101,18 +101,22 @@ function GetGoogleID(props) {
   console.log(url, "durl?");
   // console.log(url);
   return new Promise((resolve, reject) => {
-    request(url, (error, response, body) => {
-      // console.log("body: ", response.response);
-      if (error) {
-        reject(error);
-      }
-      if (body) {
-        console.log("바디", body);
-        const place = JSON.parse(body).candidates;
-        resolve(place);
-      }
-      reject("error 바디없음");
-    });
+    try {
+      request(url, (error, response, body) => {
+        // console.log("body: ", response.response);
+        if (error) {
+          reject(error);
+        }
+        if (body) {
+          console.log("바디", body);
+          const place = JSON.parse(body).candidates;
+          resolve(place);
+        }
+        reject("error 바디없음");
+      });
+    } catch (e) {
+      console.log(e);
+    }
   });
 }
 
