@@ -54,7 +54,8 @@ subscriber.connect().then(async () => {
 });
 
 var publisher = redis.createClient({
-  url: 'redis://redis_boot:6379',
+  host: '127.0.0.1',
+  port: '6379',
 });
 
 publisher.on('reconnecting', () => {
