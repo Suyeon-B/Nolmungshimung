@@ -47,6 +47,14 @@ const ProjectPage = (props) => {
     "#05FFCC": false,
     "#4A4A4A": false,
   };
+  const getColor = () => {
+    for (let color in colors) {
+      if (!colors[color]) {
+        colors[color] = true;
+        return color;
+      }
+    }
+  };
 
   useEffect(() => {
     window.addEventListener("beforeunload", (event) => {
@@ -86,15 +94,6 @@ const ProjectPage = (props) => {
       // joinVoice.exitRoom();
     };
   }, [projectId]);
-
-  const getColor = () => {
-    for (let color in colors) {
-      if (!colors[color]) {
-        colors[color] = true;
-        return color;
-      }
-    }
-  };
 
   useEffect(() => {
     socket.on("connectUser", (connectUserInfo) => {

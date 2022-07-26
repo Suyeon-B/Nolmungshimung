@@ -1,7 +1,8 @@
+# 맛이 어떤데?
 version: "3"
 services: 
     react-app-nolshimung:
-        image: wnsrb003/react-app-nolshimung
+        image: wnsrb003/react-app-nolshimung:latest
         # build: ./FE
         stdin_open: true
         ports: 
@@ -10,23 +11,23 @@ services:
         # networks: 
         #     - mern-app
     api-server-nolshimung:
-        image: wnsrb003/api-server-nolshimung
+        image: wnsrb003/api-server-nolshimung:latest
         # build: ./BE
         ports:
             - "8443:8443"
             - "7889:7889"
             - "3001:3001"
             - "3003:3003"
-    redis:
-        image: redis:alpine
-        command: redis-server --port 6379
-        container_name: redis_boot
-        hostname: redis_boot
-        labels: 
-            - "name=redis"
-            - "mode=standalone"
-        ports: 
-            - 6379:6379
+    redis_boot:
+        image: redis
+#         command: redis-server --port 6379
+#         container_name: redis_boot
+#         hostname: redis_boot
+#         labels: 
+#             - "name=redis"
+#             - "mode=standalone"
+#         ports: 
+#             - 6379:6379
         # links: 
         #     - mongo
         # depends_on: 
