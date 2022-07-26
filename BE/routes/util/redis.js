@@ -15,9 +15,9 @@ var redis = require('redis');
 const Project = require(__base + "models/Project");
 const HashTags = require(__base + "models/HashTags");
 var subscriber = redis.createClient({
-  host: process.env.Redis_IP,
-  port: '6379',
+  url: 'redis://redis_boot:6379',
 });
+
 
 subscriber.on('reconnecting', async () => {
   console.log('subscriber reconnect again');
@@ -53,8 +53,7 @@ subscriber.connect().then(async () => {
 });
 
 var publisher = redis.createClient({
-  host: '127.0.0.1',
-  port: '6379',
+  url: 'redis://redis_boot:6379',
 });
 
 publisher.on('reconnecting', () => {
