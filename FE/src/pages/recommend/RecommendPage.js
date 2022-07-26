@@ -91,21 +91,27 @@ const RecommendPage = () => {
 
   const ScrollRow = ({ el }) => {
     return (
-      <Link to={`project/${el._id}`}>
-        <RecommendItems>
-          <div className="background-img" style={{ backgroundImage: `url(${el.img})` }}>
-            <div className="uploadProjectInfo-title">{el.project_title}</div>
-            <div className="uploadProjectInfo-hashTags">
-              {el.hashTags.map((hashTag, index) => (
-                <span key={index}>
-                  {"#"}
-                  {hashTag}{" "}
-                </span>
-              ))}
+      <div>
+        <Link to={`project/${el._id}`}>
+          <RecommendItems>
+            <div className="background-img" style={{ backgroundImage: `url(${el.img})` }}>
+              <div className="uploadProjectInfo-title">{el.project_title}</div>
+              <div className="uploadProjectInfo-hashTags">
+                {el.hashTags ? (
+                  el.hashTags.map((hashTag, index) => (
+                    <span key={index}>
+                      {"#"}
+                      {hashTag}{" "}
+                    </span>
+                  ))
+                ) : (
+                  <div>{"# 놀멍쉬멍"}</div>
+                )}
+              </div>
             </div>
-          </div>
-        </RecommendItems>
-      </Link>
+          </RecommendItems>
+        </Link>
+      </div>
     );
   };
 

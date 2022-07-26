@@ -60,7 +60,7 @@ function Result() {
 
   useEffect(() => {
     if (projectId === null) return;
-    // console.log(projectId);∫
+    // console.log(projectId);
     async function fetchInfo() {
       const data = await fetchProjectById(projectId);
       setRoutes(data.routes);
