@@ -108,12 +108,15 @@ function GetGoogleID(props) {
         if (error) {
           reject(error);
         }
-        if (body) {
-          console.log("바디", body);
+
+        console.log("바디", body);
+
+        if (JSON.parse(body).candidates) {
           const place = JSON.parse(body).candidates;
           resolve(place);
         }
-        reject("error 바디없음");
+
+        reject(body);
       });
     } catch (e) {
       console.log(e);
