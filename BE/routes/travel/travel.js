@@ -22,6 +22,7 @@ router.post("/find/:id", async function (req, res, next) {
   } else {
     try {
       let place = await GetGoogleID(req.body);
+      console.log("준규야.........", place);
       let insertForm;
       if (place[0] && place[0].place_id) {
         detail = await GetGooglePlace(place[0].place_id, req.body);
