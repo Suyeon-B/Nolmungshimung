@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useMutation } from "react-query";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../components/auth/Auth";
 import { Modal } from "antd";
 
@@ -21,6 +21,7 @@ function SignIn() {
     });
   };
   let navigate = useNavigate();
+  const location = useLocation();
   const { login } = useAuth();
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
@@ -55,7 +56,16 @@ function SignIn() {
           sessionStorage.setItem("myNickname", res.user_name);
           sessionStorage.setItem("user_email", res.user_email);
           // navigate("/", { replace: true });
-          window.location.href = "/";
+          console.log(location);
+          if (location.state?.page === "recommend") {
+            navigate(-1, {
+              state: {
+                page: "signin",
+              },
+            });
+          } else {
+            window.location.href = "/";
+          }
           await login({ user: id });
         } else {
           fail(res.message);

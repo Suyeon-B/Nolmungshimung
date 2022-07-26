@@ -15,7 +15,9 @@ const RecommendPageDetail = () => {
   console.log("여기는 추천 프로젝트 디테일이지롱~~");
 
   async function fetchProjectById(_id) {
-    const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/projects/${_id}`);
+    const response = await fetch(
+      `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/projects/${_id}`
+    );
     return response.json();
   }
 
@@ -39,15 +41,18 @@ const RecommendPageDetail = () => {
             display: "flex",
             width: "100%",
             alignItems: "center",
+            justifyContent: "space-between",
           }}
         >
-          <CloseOutlined
-            style={{ color: "red", fontWeight: "900", fontSize: "30px" }}
-            onClick={() => {
-              window.history.back();
-            }}
-          />
-          <ResultXTitle> &nbsp;&nbsp;&nbsp;전체 여행 경로</ResultXTitle>
+          <div>
+            <CloseOutlined
+              style={{ color: "red", fontWeight: "900", fontSize: "30px" }}
+              onClick={() => {
+                window.history.back();
+              }}
+            />
+            <ResultXTitle> &nbsp;&nbsp;&nbsp;전체 여행 경로</ResultXTitle>
+          </div>
           <GetProjectModal routes={routes} />
         </div>
         <br />
