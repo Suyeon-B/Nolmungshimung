@@ -216,7 +216,7 @@ const RecommendBlock = styled.div`
   white-space: pre-line;
   font-weight: 700;
   color: white;
-  padding: 7vh;
+  padding: 10vh;
   letter-spacing: 1px;
   line-height: 65px;
   min-width: 800px;
@@ -226,7 +226,7 @@ const RecommendBlock = styled.div`
   }
   .resultTextWrapper {
     display: flex;
-    margin-top: 4vh;
+    margin-top: 6vh;
   }
 `;
 
