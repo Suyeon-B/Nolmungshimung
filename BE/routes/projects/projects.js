@@ -70,7 +70,7 @@ router.post("/upload", async (req, res) => {
   // console.log("?!", projectId);
   const reqHashTags = info.hashTags;
   //redis
-  await Redis.SADD('hashtags', reqHashTags);
+  if (reqHashTags.length) await Redis.SADD('hashtags', reqHashTags);
   // console.log("hashtags", hashTags);
   const uploadProject = new UploadProject(info);
   let projectId;
