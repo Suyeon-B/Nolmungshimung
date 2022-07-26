@@ -13,7 +13,7 @@
 // subscriber.pSubscribe('*');
 var redis = require('redis');
 const Project = require(__base + "models/Project");
-
+const HashTags = require(__base + "models/HashTags");
 var subscriber = redis.createClient({
   host: process.env.Redis_IP,
   port: '6379',
@@ -67,6 +67,14 @@ publisher.on('error', () => {
 
 publisher.connect().then(async () => {
   console.log('publisher connected');
+  // 초기 세팅
+  let responseData = await HashTags.findOne(
+    {},
+    { _id: false, hash_tag_names: true }
+  ).lean();
+  // await Redis.RPUSH('abc', ['1','2','3'])
+  await publisher.EXPIRE('hashtags', 0);
+  await publisher.SADD('hashtags', responseData.hash_tag_names);
 });
 
 module.exports = {publisher, subscriber};
