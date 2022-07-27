@@ -1,10 +1,10 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, Suspense } from "react";
 import styled from "styled-components";
 import { v4 as uuidV4 } from "uuid";
 import { overEvent, clickEvent, outEvent } from "../../pages/search/Search";
-import SearchDetail from "./SearchDetail";
+// import SearchDetail from "./SearchDetail";
+const SearchDetail = React.lazy(() => import("./SearchDetail"));
 import "../../App.css";
-import { useEffect } from "react";
 import { PlusCircleTwoTone } from "@ant-design/icons";
 import CommonBtn from "../../atomics/CommonBtn";
 
@@ -173,7 +173,13 @@ const SearchListRoute = ({
         상세보기
       </a>
       {contests !== null && (
-        <SearchDetail onClose={onClose} visible={visible} contents={contests} />
+        <Suspense fallback={<div>Loading...</div>}>
+          <SearchDetail
+            onClose={onClose}
+            visible={visible}
+            contents={contests}
+          />
+        </Suspense>
       )}
     </StyledLi>
   );

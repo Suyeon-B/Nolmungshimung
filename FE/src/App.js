@@ -1,37 +1,53 @@
-import React from "react";
-import SignUp from "./pages/sign/SignUp";
-import SignIn from "./pages/sign/SignIn";
-import Result from "./pages/result/Result";
-import KakaoSignIn from "./components/sign/KakaoSignIn";
-import VoiceTalk from "./components/voiceTalk/voiceTalk";
-import InviteProject from "./components/invite/InviteProject";
+import React, { Suspense } from "react";
+// import SignUp from "./pages/sign/SignUp";
+const SignUp = React.lazy(() => import("./pages/sign/SignUp"));
+// import SignIn from "./pages/sign/SignIn";
+const SignIn = React.lazy(() => import("./pages/sign/SignIn"));
+// import Result from "./pages/result/Result";
+const Result = React.lazy(() => import("./pages/result/Result"));
+// import KakaoSignIn from "./components/sign/KakaoSignIn";
+const KakaoSignIn = React.lazy(() => import("./components/sign/KakaoSignIn"));
+// import VoiceTalk from "./components/voiceTalk/voiceTalk";
+const VoiceTalk = React.lazy(() => import("./components/voiceTalk/voiceTalk"));
+// import InviteProject from "./components/invite/InviteProject";
+const InviteProject = React.lazy(() =>
+  import("./components/invite/InviteProject")
+);
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
 } from "react-router-dom";
-import CreateProject from "./components/CreateProject";
+// import CreateProject from "./components/CreateProject";
+const CreateProject = React.lazy(() => import("./components/CreateProject"));
 import styled from "styled-components";
 // import TextEditor from "./components/shareMemo/test";
-import TestMap from "./components/MarkMap/testMap";
 
 import "./App.css";
 import "./reset.css";
 import { QueryClient, QueryClientProvider } from "react-query";
-import ProjectPage from "./pages/project/ProjectPage";
+// import ProjectPage from "./pages/project/ProjectPage";
+const ProjectPage = React.lazy(() => import("./pages/project/ProjectPage"));
 import {
   AuthProvider,
   RequireAuth,
   NotRequireAuth,
 } from "./components/auth/Auth";
 
-import RecommendPage from "./pages/recommend/RecommendPage";
-import RecommendPageDetail from "./pages/recommend/RecommendPageDetail";
+// import RecommendPage from "./pages/recommend/RecommendPage";
+const RecommendPage = React.lazy(() =>
+  import("./pages/recommend/RecommendPage")
+);
+// import RecommendPageDetail from "./pages/recommend/RecommendPageDetail";
+const RecommendPageDetail = React.lazy(() =>
+  import("./pages/recommend/RecommendPageDetail")
+);
 
 // react query devtool
 import { ReactQueryDevtools } from "react-query/devtools";
-import HomeNew from "./pages/HomeNew";
+// import HomeNew from "./pages/HomeNew";
+const HomeNew = React.lazy(() => import("./pages/HomeNew"));
 
 const queryClient = new QueryClient(); // 인스턴스 생성
 const BodyDiv = styled.div`
@@ -51,7 +67,9 @@ function App() {
                 path="signin/*"
                 element={
                   <NotRequireAuth>
-                    <SignIn />
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <SignIn />
+                    </Suspense>
                   </NotRequireAuth>
                 }
               />
@@ -59,19 +77,43 @@ function App() {
                 path="signup/*"
                 element={
                   <NotRequireAuth>
-                    <SignUp />
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <SignUp />
+                    </Suspense>
                   </NotRequireAuth>
                 }
               />
-              <Route path="voicetalk/*" element={<VoiceTalk />} />
-              <Route path="testmap/" element={<TestMap />} />
-              <Route path="/" element={<HomeNew />} />
-              <Route path="/kakao/signin" element={<KakaoSignIn />} />
+              <Route
+                path="voicetalk/*"
+                element={
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <VoiceTalk />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/"
+                element={
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <HomeNew />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/kakao/signin"
+                element={
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <KakaoSignIn />
+                  </Suspense>
+                }
+              />
               <Route
                 path="project/*"
                 element={
                   <RequireAuth>
-                    <CreateProject />
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <CreateProject />
+                    </Suspense>
                   </RequireAuth>
                 }
               />
@@ -79,7 +121,9 @@ function App() {
                 path="project/:projectId"
                 element={
                   <RequireAuth>
-                    <ProjectPage />
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <ProjectPage />
+                    </Suspense>
                   </RequireAuth>
                 }
               />
@@ -87,7 +131,9 @@ function App() {
                 path="invite/*"
                 element={
                   <RequireAuth>
-                    <InviteProject />
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <InviteProject />
+                    </Suspense>
                   </RequireAuth>
                 }
               />
@@ -96,24 +142,27 @@ function App() {
                 path="project/:projectId/result"
                 element={
                   <RequireAuth>
-                    <Result />
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <Result />
+                    </Suspense>
                   </RequireAuth>
                 }
               />
-              {/* 로그인안했을시 로그인 페이지로 이동 */}
-
-              {/* <Route
-                path="search/*"
+              <Route
+                path="recommend/*"
                 element={
-                  // <RequireAuth>
-                  <SearchMap />
-                  // </RequireAuth>
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <RecommendPage />
+                  </Suspense>
                 }
-              /> */}
-              <Route path="recommend/*" element={<RecommendPage />} />
+              />
               <Route
                 path="recommend/project/:projectId"
-                element={<RecommendPageDetail />}
+                element={
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <RecommendPageDetail />
+                  </Suspense>
+                }
               />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
