@@ -4,15 +4,64 @@ import styled from "styled-components";
 import { CloseOutlined } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
 import GetProjectModal from "../../components/recommendModal/GetProjectModal";
+import SearchDetail from "../../components/searchMap/SearchDetail";
 
 const RecommendPageDetail = () => {
   const { projectId } = useParams();
 
   const [title, setTitle] = useState(null);
   const [routes, setRoutes] = useState(null); // routes -> [[route],[route],[route]...]
+  const [visible, setVisible] = useState(false);
+  const [contents, setContents] = useState(null);
 
+  const showDrawer = (route) => {
+    const data = {
+      input: route.road_address_name + "" + route.place_name,
+      place_id: route.id,
+      place_name: route.place_name,
+      road_address_name: route.road_address_name
+        ? route.road_address_name
+        : route.address_name,
+      category_group_name: route.category_group_name,
+      phone: route.phone,
+      place_url: route.place_url,
+    };
+
+    FindDetailContents(data);
+  };
+
+  function FindDetailContents(props) {
+    //1. 디비에 있나 확인
+
+    fetch(
+      `https://${process.env.REACT_APP_SERVER_IP}:8443/travel/find/` +
+        props.place_id,
+      {
+        method: "POST", // 또는 'PUT'
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(props),
+      }
+    ) //get
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status === 200) {
+          console.log(data);
+          console.log("db에 있습니다");
+          setContents(data.data);
+        } else if (data.status === 206) {
+          console.log("디비에 없음");
+          setContents(data.data);
+        } else {
+          console.log("여긴다", data.message);
+        }
+        setVisible(true);
+      })
+      .catch((error) => console.log(error));
+  }
   console.log(projectId);
-  console.log("여기는 추천 프로젝트 디테일이지롱~~");
+  console.log("여기는 추천 여행일정 디테일이지롱~~");
 
   async function fetchProjectById(_id) {
     const response = await fetch(
@@ -20,6 +69,11 @@ const RecommendPageDetail = () => {
     );
     return response.json();
   }
+
+  const onClose = () => {
+    setVisible(false);
+    setContents(null);
+  };
 
   useEffect(() => {
     if (projectId === null) return;
@@ -68,7 +122,7 @@ const RecommendPageDetail = () => {
                   <br />
                 </ResultTitle>{" "}
                 {route.map((el, index) => (
-                  <ResultRoute key={el.uid}>
+                  <ResultRoute key={el.uid} onClick={() => showDrawer(el)}>
                     {el.place_name}
                     <br />
                   </ResultRoute>
@@ -88,6 +142,13 @@ const RecommendPageDetail = () => {
               </div>
             );
           })}
+        {contents !== null && (
+          <SearchDetail
+            onClose={onClose}
+            visible={visible}
+            contents={contents}
+          />
+        )}
       </ResultContainer>
       <ResultMap routes={routes} />
     </ResultWhole>

@@ -10,12 +10,7 @@ import SignIn from "../../pages/sign/SignIn";
 import Badge from "../../atomics/Badge";
 
 const setDay = (value) => {
-  return [
-    value.getFullYear(),
-    value.getMonth() + 1,
-    value.getDate(),
-    value.getDay(),
-  ];
+  return [value.getFullYear(), value.getMonth() + 1, value.getDate(), value.getDay()];
 };
 
 const culTripTermData = (startDate, day) => {
@@ -42,19 +37,16 @@ const GetProjectModal = ({ routes }) => {
     console.log(data);
     console.log(selectDate);
 
-    const response = await fetch(
-      `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/selectdate`,
-      {
-        method: "post",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }
-    );
+    const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/selectdate`, {
+      method: "post",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
     console.log(response);
     if (response.ok) {
-      console.log("프로젝트로 이동시키기");
+      console.log("여행일정으로 이동시키기");
       const resData = await response.json();
       console.log(resData);
       navigate(`/project/${resData.projectId}`, { replace: false });
@@ -62,18 +54,15 @@ const GetProjectModal = ({ routes }) => {
   };
 
   const fetchAllDate = async (data) => {
-    const response = await fetch(
-      `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/alldate`,
-      {
-        method: "post",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }
-    );
+    const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/alldate`, {
+      method: "post",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
     if (response.ok) {
-      console.log("프로젝트로 이동시키기");
+      console.log("여행일정으로 이동시키기");
       const resData = await response.json();
       console.log(resData);
       navigate(`/project/${resData.projectId}`, { replace: false });
@@ -128,12 +117,12 @@ const GetProjectModal = ({ routes }) => {
     <>
       <StyledGetBtn onClick={showModal}>가져오기</StyledGetBtn>
       <StyledModal
-        title="내 프로젝트로 가져오기"
+        title="내 여행일정으로 가져오기"
         visible={visible}
         onOk={handleOk}
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
-        okText="프로젝트에 추가하기"
+        okText="여행일정에 추가하기"
         cancelText="취소"
       >
         {/* <form type="submit"> */}
@@ -146,16 +135,10 @@ const GetProjectModal = ({ routes }) => {
           onChange={onChange}
         />
         <StyledBtnDiv>
-          <StyledAllBtn
-            toggleBtn={toggleBtn}
-            onClick={() => setToggleBtn(true)}
-          >
+          <StyledAllBtn toggleBtn={toggleBtn} onClick={() => setToggleBtn(true)}>
             전체 가져오기
           </StyledAllBtn>
-          <StyledSelectBtn
-            toggleBtn={toggleBtn}
-            onClick={() => setToggleBtn(false)}
-          >
+          <StyledSelectBtn toggleBtn={toggleBtn} onClick={() => setToggleBtn(false)}>
             날짜 선택해서 가져오기
           </StyledSelectBtn>
         </StyledBtnDiv>
@@ -169,21 +152,13 @@ const GetProjectModal = ({ routes }) => {
         {!toggleBtn && (
           <>
             <StyledP>여행 기간 선택하기</StyledP>
-            <ModalCalendarRange
-              setSelectDate={setSelectDate}
-              setStartDate={setStartDate}
-            />
+            <ModalCalendarRange setSelectDate={setSelectDate} setStartDate={setStartDate} />
 
             {selectDate.map((el, index) => {
               return (
                 <p>
                   {culTripTermData(startDate, index)}{" "}
-                  <DropDown
-                    key={index}
-                    index={index}
-                    setSelectDate={setSelectDate}
-                    routes={routes}
-                  />
+                  <DropDown key={index} index={index} setSelectDate={setSelectDate} routes={routes} />
                 </p>
               );
             })}

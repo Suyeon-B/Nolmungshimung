@@ -26,7 +26,7 @@ const StyledBtn = styled.button`
   font-weight: 700;
   cursor: pointer;
   font-size: 22px;
-  background: rgba(255, 122, 0, 0.6);
+  background: rgba(255, 122, 0, 0.71);
   border-radius: 10px;
   width: 200px;
   height: 80px;
@@ -35,13 +35,19 @@ const StyledBtn = styled.button`
   text-align: center;
 
   color: #ffffff;
+  &:hover {
+    background: rgba(255, 122, 0, 0.4);
+  }
 `;
 
 const StyledWhiteBtn = styled(StyledBtn)`
-  background: rgba(255, 255, 255, 0.42);
+  background: rgba(255, 255, 255, 0.52);
   border-radius: 10px;
   color: #ff7a00;
   cursor: pointer;
+  &:hover {
+    background: rgba(255, 122, 0, 0.22);
+  }
 `;
 
 const StyledTitle = styled.h1`

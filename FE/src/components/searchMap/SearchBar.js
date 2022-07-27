@@ -23,7 +23,7 @@ const SearchBar = (props) => {
     <form
       onSubmit={handleSubmit}
       style={{
-        height: "50px",
+        height: "54px",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -45,11 +45,7 @@ const SearchBar = (props) => {
           onChange={onChange}
           value={InputText}
         />
-        <input
-          type="submit"
-          id="search.keyword.submit"
-          style={{ display: "none" }}
-        />
+        <input type="submit" id="search.keyword.submit" style={{ display: "none" }} />
       </StyledFieldset>
     </form>
   );

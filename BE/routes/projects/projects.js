@@ -22,11 +22,7 @@ router.post("/", async (req, res) => {
   const project = new Project(req.body[1]);
 
   // project["people"].push(user_date._id.toString());
-  project["people"].push([
-    user_date._id.toString(),
-    user_date.user_name,
-    user_date.user_email,
-  ]);
+  project["people"].push([user_date._id.toString(), user_date.user_name, user_date.user_email]);
 
   // 여행지 경로에 배열 추가하기
   for (let i = 0; i <= project["term"]; i++) {
@@ -40,7 +36,7 @@ router.post("/", async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "프로젝트 생성 완료",
+      message: "여행일정 생성 완료",
       projectId: data._id.toString(),
     });
   });
@@ -109,9 +105,7 @@ router.post("/upload", async (req, res) => {
           await hashTable.save();
         } catch (error) {
           console.log(`Hash table ${i}번째 error : ${error}`);
-          return res
-            .send(404)
-            .send({ error: `hash table ${i}번째 upload Fail` });
+          return res.send(404).send({ error: `hash table ${i}번째 upload Fail` });
         }
         try {
           // category save
@@ -122,9 +116,7 @@ router.post("/upload", async (req, res) => {
           // console.log(hashTags[0].hash_tag_names);
           await hashTags[0].save();
         } catch (error) {
-          console.log(
-            `Hash tag ${i}번째 error : ${error} hashtags DataBase를 만들어 주세요.`
-          );
+          console.log(`Hash tag ${i}번째 error : ${error} hashtags DataBase를 만들어 주세요.`);
           return res.send(404).send({ error: `hash tag ${i}번째 save Fail` });
         }
       }
@@ -149,13 +141,13 @@ router.post("/title", async (req, res) => {
       if (err) {
         return res.status(400).json({
           success: false,
-          message: "프로젝트 제목을 불러오는데 실패했습니다.",
+          message: "여행일정 제목을 불러오는데 실패했습니다.",
         });
       }
       if (Object.keys(data).length === 0) {
         res.status(200).json({
           success: false,
-          message: "프로젝트가 없습니다.",
+          message: "여행일정이 없습니다.",
         });
       } else {
         let projectInfo = [];
@@ -167,7 +159,7 @@ router.post("/title", async (req, res) => {
         res.status(200).json({
           success: true,
           projectInfo: projectInfo,
-          message: "프로젝트 제목을 성공적으로 불러왔습니다.",
+          message: "여행일정 제목을 성공적으로 불러왔습니다.",
         });
       }
     }
@@ -245,9 +237,7 @@ router.post("/:id", async (req, res, next) => {
       }
     }
 
-    userInfo.user_projects = userInfo.user_projects.filter(
-      (projectId) => projectId !== id
-    );
+    userInfo.user_projects = userInfo.user_projects.filter((projectId) => projectId !== id);
 
     await userInfo.save();
 
@@ -277,7 +267,7 @@ router.post("/friends/:id", async (req, res, next) => {
         if (projectInuser.people[n][2] == userInfo.user_email) {
           res.status(200).send({
             success: true,
-            message: "이미 초대에 응한 프로젝트입니다.",
+            message: "이미 초대에 응한 여행일정입니다.",
           });
           return;
         }
@@ -309,7 +299,7 @@ router.post("/friends/:id", async (req, res, next) => {
       // 이메일 존재하지만 추가 못함
       res.status(404).send({
         success: false,
-        message: "알 수 없는 이유로 프로젝트 추가를 실패했습니다.",
+        message: "알 수 없는 이유로 여행일정 추가를 실패했습니다.",
       });
     }
   } catch (error) {

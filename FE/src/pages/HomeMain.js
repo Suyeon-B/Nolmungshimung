@@ -6,7 +6,7 @@ const HomeMain = ({ goRecommend, goSignIn }) => {
     <StyledHomeMain>
       <StyledTitle>어디로 떠나보시겠어요?</StyledTitle>
       <BtnWrapper>
-        <StyledWhiteBtn onClick={goSignIn}>프로젝트 만들기</StyledWhiteBtn>
+        <StyledWhiteBtn onClick={goSignIn}>여행일정 만들기</StyledWhiteBtn>
         <StyledBtn onClick={goRecommend}>추천계획 둘러보기</StyledBtn>
       </BtnWrapper>
     </StyledHomeMain>
@@ -29,13 +29,19 @@ const StyledBtn = styled.button`
   margin: 10px;
   color: #ffffff;
   cursor: pointer;
+  &:hover {
+    background: rgba(255, 122, 0, 0.4);
+  }
 `;
 
 const StyledWhiteBtn = styled(StyledBtn)`
-  background: rgba(255, 255, 255, 0.42);
+  background: rgba(255, 255, 255, 0.52);
   border-radius: 10px;
   color: #ff7a00;
   cursor: pointer;
+  &:hover {
+    background: rgba(255, 122, 0, 0.22);
+  }
 `;
 
 const StyledTitle = styled.h1`

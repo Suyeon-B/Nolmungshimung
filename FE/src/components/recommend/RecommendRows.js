@@ -12,14 +12,16 @@ const RecommendRows = () => {
   useEffect(() => {
     const fetchUploadProjectInfo = async () => {
       try {
-        const request = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/infinite?skip=${skip}`);
+        const request = await fetch(
+          `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/infinite?skip=${skip}`
+        );
         const uploadProjectInfoJson = await request.json();
         setUploadProjectInfo([...uploadProjectInfo, ...uploadProjectInfoJson]);
         // console.log("인피니트 스크롤 결과");
         // console.log(uploadProjectInfoJson);
-        if (uploadProjectInfoJson.length === 0) {
-          setSkip(0);
-        }
+        // if (uploadProjectInfoJson.length === 0) {
+        //   setSkip(0);
+        // }
       } catch (e) {
         console.log("말도안돼 T_T");
       }
@@ -36,7 +38,7 @@ const RecommendRows = () => {
       // console.log(clientHeight, scrollTop, scrollHieght);
       if (scrollHieght - clientHeight - scrollTop < 200) {
         timer = setTimeout(func, delay);
-        // setSkip(uploadProjectInfo.length % 10);
+        setSkip(uploadProjectInfo.length);
       }
     };
   };
@@ -53,10 +55,13 @@ const RecommendRows = () => {
   const ScrollRow = ({ el }) => {
     const defaultHashTags = ["제주도", "여행"];
     return (
-      <div>
+      <StyledDiv>
         <Link to={`project/${el._id}`}>
           <RecommendItems>
-            <div className="background-img" style={{ backgroundImage: `url(${el.img})` }}>
+            <div
+              className="background-img"
+              style={{ backgroundImage: `url(${el.img})` }}
+            >
               <div className="uploadProjectInfo-title">{el.project_title}</div>
               <div className="uploadProjectInfo-hashTags">
                 {el.hashTags.length === 0
@@ -76,13 +81,13 @@ const RecommendRows = () => {
             </div>
           </RecommendItems>
         </Link>
-      </div>
+      </StyledDiv>
     );
   };
 
   return (
     <div className="scrollWrapper">
-      <HashtagResultTextDark>🏝 모든 프로젝트</HashtagResultTextDark>
+      <HashtagResultTextDark>🏝 모든 여행코스</HashtagResultTextDark>
       <RecommendContents onWheel={handleScroll}>
         {uploadProjectInfo.map((el, i) => {
           return i % 2 === 0 ? null : <ScrollRow key={i} el={el} />;
@@ -96,6 +101,17 @@ const RecommendRows = () => {
     </div>
   );
 };
+
+const StyledDiv = styled.div`
+  bottom: 0px;
+  transition: bottom 0.3s;
+
+  &:hover {
+    position: relative;
+    bottom: 10px;
+  }
+`;
+
 const RecommendItems = styled.div`
   height: 200px;
   width: 200px;
@@ -142,8 +158,9 @@ const HashtagResultTextDark = styled(HashtagResultText)`
   color: #232a3c;
 `;
 const RecommendContents = styled.div`
-  margin-top: 20px;
-  height: 206px;
+  margin-top: 10px;
+  padding-top: 10px;
+  height: 213px;
   display: flex;
   overflow-y: hidden;
   ::-webkit-scrollbar {
