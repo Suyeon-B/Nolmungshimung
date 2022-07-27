@@ -6,7 +6,7 @@ const AuthContext = createContext(null);
 
 async function fetchCallAuth() {
   const response = await fetch(
-    `https://${process.env.REACT_APP_SERVER_IP}/users/auth`,
+    `https://${process.env.REACT_APP_SERVER_IP}/users/auth`, { mode: 'no-cors'},
     {
       method: "get",
       headers: {
