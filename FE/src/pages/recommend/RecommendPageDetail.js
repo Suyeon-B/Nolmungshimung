@@ -16,7 +16,7 @@ const RecommendPageDetail = () => {
 
   async function fetchProjectById(_id) {
     const response = await fetch(
-      `http://${process.env.REACT_APP_SERVER_IP}/recommend/projects/${_id}`
+      `https://${process.env.REACT_APP_SERVER_IP}/recommend/projects/${_id}`
     );
     return response.json();
   }

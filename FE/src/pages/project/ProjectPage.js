@@ -18,7 +18,7 @@ import socket from "../../socket";
 
 async function fetchProjectById(_id) {
   const response = await fetch(
-    `http://${process.env.REACT_APP_SERVER_IP}/projects/${_id}`
+    `https://${process.env.REACT_APP_SERVER_IP}/projects/${_id}`
   );
   return response.json();
 }
@@ -163,7 +163,7 @@ const ProjectPage = (props) => {
     async function UpdateInfo() {
       try {
         await fetch(
-          `http://${process.env.REACT_APP_SERVER_IP}/projects/routes/${projectId}`,
+          `https://${process.env.REACT_APP_SERVER_IP}/projects/routes/${projectId}`,
           {
             method: "PATCH",
             headers: {
