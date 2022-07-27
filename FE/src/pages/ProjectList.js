@@ -10,26 +10,21 @@ const ProjectList = ({ goProject }) => {
   let projectsInfo = null;
 
   const onDelete = async (event) => {
-    if (confirm("프로젝트를 삭제하시겠어요??")) {
-      const projectId = event.target.dataset.id
-        ? event.target.dataset.id
-        : event.target.parentNode.dataset.id;
+    if (confirm("여행일정을 삭제하시겠어요??")) {
+      const projectId = event.target.dataset.id ? event.target.dataset.id : event.target.parentNode.dataset.id;
 
       console.log(projectId);
       const data = {
         _id: auth.user._id,
       };
       console.log(event.target);
-      const response = await fetch(
-        `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${projectId}`,
-        {
-          method: "post",
-          headers: {
-            "content-type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
+      const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${projectId}`, {
+        method: "post",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
       location.reload();
     }
   };
@@ -70,17 +65,14 @@ const ProjectList = ({ goProject }) => {
     // console.log(`auth.user.user_projects : ${auth.user.user.user_projects}`);
 
     async function fetchProjectList() {
-      await fetch(
-        `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/title`,
-        {
-          method: "post",
-          headers: {
-            "content-type": "application/json",
-          },
-          // credentials: "include",
-          body: JSON.stringify(projects),
-        }
-      )
+      await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/title`, {
+        method: "post",
+        headers: {
+          "content-type": "application/json",
+        },
+        // credentials: "include",
+        body: JSON.stringify(projects),
+      })
         .then((res) => res.json())
         .then((res) => {
           if (res.success === true) {
@@ -97,12 +89,8 @@ const ProjectList = ({ goProject }) => {
   return (
     <StyleProjectList>
       <TitleWrapper>
-        <StyledTitle>내 프로젝트 목록</StyledTitle>
-        <PlusCircleTwoTone
-          onClick={goProject}
-          style={{ fontSize: "30px" }}
-          twoToneColor="#FF8A3D"
-        />
+        <StyledTitle>내 여행계획 목록</StyledTitle>
+        <PlusCircleTwoTone onClick={goProject} style={{ fontSize: "30px" }} twoToneColor="#FF8A3D" />
       </TitleWrapper>
 
       <StyledLine></StyledLine>

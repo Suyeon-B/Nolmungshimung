@@ -248,7 +248,7 @@ const UploadBtn = styled.button`
   color: #f8f9fa;
   cursor: pointer;
   background-color: #ff8a3d;
-  border-radius: 10px;
+  border-radius: 5px;
   padding: 3px 8px 3px 8px;
 `;
 

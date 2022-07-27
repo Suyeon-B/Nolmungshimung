@@ -82,7 +82,7 @@ const RecommendRows = () => {
 
   return (
     <div className="scrollWrapper">
-      <HashtagResultTextDark>🏝 모든 프로젝트</HashtagResultTextDark>
+      <HashtagResultTextDark>🏝 모든 여행코스</HashtagResultTextDark>
       <RecommendContents onWheel={handleScroll}>
         {uploadProjectInfo.map((el, i) => {
           return i % 2 === 0 ? null : <ScrollRow key={i} el={el} />;
