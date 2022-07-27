@@ -17,9 +17,9 @@ const RecommendRows = () => {
         setUploadProjectInfo([...uploadProjectInfo, ...uploadProjectInfoJson]);
         // console.log("인피니트 스크롤 결과");
         // console.log(uploadProjectInfoJson);
-        if (uploadProjectInfoJson.length === 0) {
-          setSkip(0);
-        }
+        // if (uploadProjectInfoJson.length === 0) {
+        //   setSkip(0);
+        // }
       } catch (e) {
         console.log("말도안돼 T_T");
       }
@@ -36,7 +36,7 @@ const RecommendRows = () => {
       // console.log(clientHeight, scrollTop, scrollHieght);
       if (scrollHieght - clientHeight - scrollTop < 200) {
         timer = setTimeout(func, delay);
-        // setSkip(uploadProjectInfo.length % 10);
+        setSkip(uploadProjectInfo.length);
       }
     };
   };
