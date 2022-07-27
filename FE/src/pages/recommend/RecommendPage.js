@@ -26,7 +26,9 @@ const RecommendPage = () => {
   const mainText = "마음에 드는 여행 프로젝트를\n 내 프로젝트로! 😆";
   const [isSearchResult, setIsSearchResult] = useState(false);
 
-  const RecommendRows = React.lazy(() => import("../../components/recommend/RecommendRows"));
+  const RecommendRows = React.lazy(() =>
+    import("../../components/recommend/RecommendRows")
+  );
   const children = [];
   for (let i = 0; i < hashTag.length; i++) {
     children.push(<Option key={hashTag[i] + i}>{hashTag[i]}</Option>);
@@ -34,11 +36,13 @@ const RecommendPage = () => {
 
   const handleChange = (value) => {
     setHashTags(String(value).replace(/[0-9]/g, ""));
-    console.log(value.keyCode);
+    // console.log(value.keyCode);
   };
 
   async function searchHashtags() {
-    let url = `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/hashtag?taglist=${JSON.stringify(hashtags)}`;
+    let url = `https://${
+      process.env.REACT_APP_SERVER_IP
+    }:8443/recommend/hashtag?taglist=${JSON.stringify(hashtags)}`;
     if (!hashtags.length) {
       url = `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend`;
     }
