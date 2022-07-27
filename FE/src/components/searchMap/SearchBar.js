@@ -13,7 +13,7 @@ const SearchBar = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     props.changePlace(InputText);
-    setInputText("");
+    // setInputText("");
     props.handleSelect(null);
     props.sumit(!props.current);
     props.setSwLatlng([33.592161526546604, 126.04650255976554]);
@@ -48,6 +48,7 @@ const SearchBar = (props) => {
           type="submit"
           id="search.keyword.submit"
           style={{ display: "none" }}
+          autoComplete="off"
         />
       </StyledFieldset>
     </form>
