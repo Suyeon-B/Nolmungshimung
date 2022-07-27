@@ -1,5 +1,5 @@
 // import { randomUUID } from 'crypto';
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useBeforeunload } from "react-beforeunload";
 import Peer from "simple-peer";
 import styled from "styled-components";
@@ -205,7 +205,7 @@ const Room = (props) => {
     return <NewAudio key={index} peer={peer} number={arr.length} />;
   }
 
-  const toggleCameraAudio = () => {
+  const toggleCameraAudio = useCallback(() => {
     setUserVideoAudio((preList) => {
       let audioSwitch = preList["localUser"].audio;
       const userAudioTrack = userAudioRef.current.srcObject.getAudioTracks()[0];
@@ -224,7 +224,7 @@ const Room = (props) => {
     });
 
     socket.emit("BE-toggle-camera-audio", { roomId, switchTarget: "audio" });
-  };
+  }, [userVideoAudio]);
 
   const exitVoice = (e) => {
     e.preventDefault();

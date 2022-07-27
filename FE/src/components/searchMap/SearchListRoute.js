@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useCallback, Suspense } from "react";
 import styled from "styled-components";
 import { v4 as uuidV4 } from "uuid";
 import { overEvent, clickEvent, outEvent } from "../../pages/search/Search";
-import SearchDetail from "./SearchDetail";
+// import SearchDetail from "./SearchDetail";
+const SearchDetail = React.lazy(() => import("./SearchDetail"));
 import "../../App.css";
-import { useEffect } from "react";
 import { PlusCircleTwoTone } from "@ant-design/icons";
+import CommonBtn from "../../atomics/CommonBtn";
 
 const fetchAddTravelRoute = async (id, route) => {
   try {
@@ -84,7 +85,7 @@ const SearchListRoute = ({
           console.log("디비에 없음");
           setContents(data.data);
         } else {
-          console.log(data.message);
+          console.log("여긴다", data.message);
         }
         setVisible(true);
       })
@@ -107,10 +108,10 @@ const SearchListRoute = ({
     FindDetailContents(data);
   };
 
-  const onClose = () => {
+  const onClose = useCallback(() => {
     setVisible(false);
     setContents(null);
-  };
+  }, []);
 
   return (
     <StyledLi
@@ -135,7 +136,12 @@ const SearchListRoute = ({
         <StyledTile>{route.place_name}</StyledTile>
         <StyledDropDown>
           {/* <img className="hanlabong" src="\statics\images\hanlabong.png" /> */}
-          <PlusCircleTwoTone
+          {/* <PlusCircleTwoTone
+            style={{ fontSize: "30px" }}
+            twoToneColor="#FF8A3D"
+          /> */}
+          <CommonBtn
+            icon={PlusCircleTwoTone}
             style={{ fontSize: "30px" }}
             twoToneColor="#FF8A3D"
           />
@@ -167,7 +173,13 @@ const SearchListRoute = ({
         상세보기
       </a>
       {contests !== null && (
-        <SearchDetail onClose={onClose} visible={visible} contents={contests} />
+        <Suspense fallback={<div>Loading...</div>}>
+          <SearchDetail
+            onClose={onClose}
+            visible={visible}
+            contents={contests}
+          />
+        </Suspense>
       )}
     </StyledLi>
   );
@@ -214,6 +226,7 @@ const StyledDropDown = styled.div`
       border-radius: 3px;
       padding: 4px;
       box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+      z-index: 2;
     }
   }
 `;

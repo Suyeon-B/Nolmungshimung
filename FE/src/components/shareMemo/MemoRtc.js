@@ -44,7 +44,9 @@ const MemoRtc = ({ project_Id, userName }) => {
     const ydoc = new Y.Doc();
     const provider = new WebrtcProvider(`${projectID}`, ydoc);
     const ytext = ydoc.getText(`${projectID}`);
-    console.log(ytext);
+    // console.log("##@#@$@#$@#$@#@#");
+    // console.log(quillRef);
+    // console.log(quillRef.root.innerHTML);
     // } catch (err) {
     // alert("비정상적인 접근입니다.");
     // navigate("/");

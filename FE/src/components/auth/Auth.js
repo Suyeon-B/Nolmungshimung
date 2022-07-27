@@ -68,6 +68,8 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (user) => {
     await setUser(user);
+    await setLoading(true);
+    // window.location.href = "/";
   };
 
   const logout = async () => {
@@ -76,7 +78,9 @@ export const AuthProvider = ({ children }) => {
     deleteCookie("w_refresh");
     await setUser(null);
     sessionStorage.clear();
-    window.location.href = "/";
+    window.location.replace("/");
+    // window.location.href = "/";
+    await setLoading(false);
   };
 
   return (
@@ -87,6 +91,7 @@ export const AuthProvider = ({ children }) => {
 };
 
 export const useAuth = () => {
+
   return useContext(AuthContext);
 };
 

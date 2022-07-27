@@ -5,6 +5,7 @@ import styled from "styled-components";
 // import NomalMarker from "../../../public/statics/images/location-dot-solid.svg";
 import { Button } from "antd";
 import { RedoOutlined } from "@ant-design/icons";
+import MapSearchBtn from "../../atomics/MapSearchBtn";
 
 const { kakao } = window;
 
@@ -81,8 +82,10 @@ const Search = ({
     33.14572269165777, 127.07480227781775,
   ]);
   const [sumit, setSumit] = useState(false);
+  const [placeRender, setPlaceRender] = useState(null);
 
-  const onClick = (event) => {
+  const onClick = useCallback(() => {
+    console.log("on click");
     var bounds = map.getBounds();
     var swLatlng = bounds.getSouthWest();
     var neLatlng = bounds.getNorthEast();
@@ -92,11 +95,11 @@ const Search = ({
     // console.log(swLatlng, neLatlng);
 
     setSumit(!sumit);
-  };
+  }, [swLatlng, neLatlng, sumit]);
 
-  const handleSelect = (value) => {
+  const handleSelect = useCallback((value) => {
     setClick(value);
-  };
+  }, []);
 
   function removeMarker() {
     for (var i = 0; i < markers.length; i++) {
@@ -233,6 +236,27 @@ const Search = ({
     });
   }, [sumit]);
 
+  useEffect(() => {
+    if (Places.length === 0) return;
+    setPlaceRender(
+      Places.map((item, i) => (
+        <SearchListRoute
+          id={"list" + i}
+          key={i}
+          itemRoutes={itemRoutes}
+          setItemRoutes={setItemRoutes}
+          projectId={projectId}
+          route={item}
+          idx={i}
+          startDate={startDate}
+          setIsAddDel={setIsAddDel}
+          selected={click === i ? true : false}
+          handleSelect={handleSelect}
+        />
+      ))
+    );
+  }, [Places, click]);
+
   return (
     <Wapper>
       <SearchListDiv>
@@ -245,7 +269,8 @@ const Search = ({
           setNeLatlng={setNeLatlng}
         />
         <SearchUl id="searchBar">
-          {Places &&
+          {placeRender}
+          {/* {Places &&
             Places.map((item, i) => (
               <SearchListRoute
                 id={"list" + i}
@@ -260,7 +285,7 @@ const Search = ({
                 selected={click === i ? true : false}
                 handleSelect={handleSelect}
               />
-            ))}
+            ))} */}
           <div
             id="pagination"
             style={{ position: "relative", zIndex: 2 }}
@@ -268,7 +293,8 @@ const Search = ({
         </SearchUl>
       </SearchListDiv>
       <StyledMapDiv id="searchMap">
-        <Button
+        <MapSearchBtn onClick={onClick} />
+        {/* <Button
           onClick={onClick}
           type="primary"
           shape="round"
@@ -284,7 +310,7 @@ const Search = ({
           }}
         >
           현지도에서 검색
-        </Button>
+        </Button> */}
       </StyledMapDiv>
     </Wapper>
   );

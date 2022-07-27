@@ -60,7 +60,7 @@ function Result() {
 
   useEffect(() => {
     if (projectId === null) return;
-    // console.log(projectId);∫
+    // console.log(projectId);
     async function fetchInfo() {
       const data = await fetchProjectById(projectId);
       setRoutes(data.routes);
@@ -81,9 +81,13 @@ function Result() {
   const ShowMemoResult = () => {
     let text = "로딩중 ...";
     if (projectInfo) {
-      const textLines = projectInfo.quillRefEditor.length;
-      for (var i = 0; i < textLines; i++) {
-        text = projectInfo.quillRefEditor[i].insert;
+      try {
+        const textLines = projectInfo.quillRefEditor.length;
+        for (var i = 0; i < textLines; i++) {
+          text = projectInfo.quillRefEditor[i].insert;
+        }
+      } catch (err) {
+        console.log("메모 로딩에 실패했습니다.");
       }
     }
     return <div className="memoText">{text}</div>;
@@ -97,15 +101,18 @@ function Result() {
             display: "flex",
             width: "100%",
             alignItems: "center",
+            justifyContent: "space-between",
           }}
         >
-          <CloseOutlined
-            style={{ color: "red", fontWeight: "900", fontSize: "30px" }}
-            onClick={() => {
-              window.history.back();
-            }}
-          />
-          <ResultXTitle> &nbsp;&nbsp;&nbsp;전체 여행 경로</ResultXTitle>
+          <div>
+            <CloseOutlined
+              style={{ color: "red", fontWeight: "900", fontSize: "30px" }}
+              onClick={() => {
+                window.history.back();
+              }}
+            />
+            <ResultXTitle> 전체 여행 경로</ResultXTitle>
+          </div>
           <UploadBtn onClick={showModal}>업로드</UploadBtn>
           <ResultModal
             visible={visible}
@@ -148,11 +155,11 @@ function Result() {
               </div>
             );
           })}
-        <ResultLine />
+        {/* <ResultLine />
         <ResultTitle>Memo</ResultTitle>
         <ResultMemoBox>
           <ShowMemoResult />
-        </ResultMemoBox>
+        </ResultMemoBox> */}
       </ResultContainer>
       <ResultMap routes={routes} />
     </ResultWhole>
@@ -231,12 +238,13 @@ const ResultContainer = styled.div`
 `;
 
 const UploadBtn = styled.button`
-  margin-left: 129.5px;
+  /* margin-left: 129.5px;
+  line-height: 36px; */
+  height: 40px;
   border: 0;
   font-family: "Inter";
   font-weight: 600;
   font-size: 17px;
-  line-height: 36px;
   color: #f8f9fa;
   cursor: pointer;
   background-color: #ff8a3d;
@@ -246,6 +254,8 @@ const UploadBtn = styled.button`
 
 const ResultMemoBox = styled.div`
   height: 100%;
+  overflow-y: auto;
+  min-height: 20vh;
   background-color: #f8f9fa;
   border-color: #c1c7cd;
   border-radius: 10px;
@@ -255,6 +265,7 @@ const ResultMemoBox = styled.div`
 
   .memoText {
     white-space: pre-wrap;
+    word-break: break-all;
   }
 `;
 

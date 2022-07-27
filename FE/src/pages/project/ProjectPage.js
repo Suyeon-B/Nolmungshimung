@@ -1,9 +1,11 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, Suspense } from "react";
 import { useParams } from "react-router-dom";
 import PlanSideBar from "../../components/sidebar/PlanSideBar";
-import Search from "../search/Search";
-import Sfu from "./Sfu";
-import SpotRoute from "../spotRoute/SpotRoute";
+// import Search from "../search/Search";
+const Search = React.lazy(() => import("../search/Search"));
+// import Sfu from "./Sfu";
+// import SpotRoute from "../spotRoute/SpotRoute";
+const SpotRoute = React.lazy(() => import("../spotRoute/SpotRoute"));
 import styled from "styled-components";
 import { BrowserRouter as Routes, Route, Navigate } from "react-router-dom";
 import Voicetalk from "../../components/voiceTalk/voiceTalk";
@@ -278,26 +280,30 @@ const ProjectPage = (props) => {
       />
       <PlanSection>
         {isFirstPage && (
-          <Search
-            startDate={items.start_date}
-            itemRoutes={itemsRoute}
-            setItemRoutes={setItemsRoute}
-            projectId={projectId}
-            setIsAddDel={setIsAddDel}
-          />
+          <Suspense fallback={<div>Loading...</div>}>
+            <Search
+              startDate={items.start_date}
+              itemRoutes={itemsRoute}
+              setItemRoutes={setItemsRoute}
+              projectId={projectId}
+              setIsAddDel={setIsAddDel}
+            />
+          </Suspense>
         )}
         {!isFirstPage && (
-          <SpotRoute
-            projectId={projectId}
-            startDate={items.start_date}
-            selectedIndex={selectedIndex}
-            item={itemsRoute}
-            setItemRoute={setItemsRoute}
-            itemId={items._id}
-            setIsDrage={setIsDrage}
-            setIsAddDel={setIsAddDel}
-            userName={userName}
-          />
+          <Suspense fallback={<div>Loading...</div>}>
+            <SpotRoute
+              projectId={projectId}
+              startDate={items.start_date}
+              selectedIndex={selectedIndex}
+              item={itemsRoute}
+              setItemRoute={setItemsRoute}
+              itemId={items._id}
+              setIsDrage={setIsDrage}
+              setIsAddDel={setIsAddDel}
+              userName={userName}
+            />
+          </Suspense>
         )}
       </PlanSection>
       {auth.user && <Voicetalk projectId={projectId} auth={auth.user} />}

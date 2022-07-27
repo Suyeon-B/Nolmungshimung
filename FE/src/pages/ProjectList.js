@@ -67,6 +67,7 @@ const ProjectList = ({ goProject }) => {
     // 세션은 ..? 안됨
     // -> auth.user가 변경될때마다 재랜더링 ㄲ
     let projects = auth.user?.user_projects;
+    // console.log(`auth.user.user_projects : ${auth.user.user.user_projects}`);
 
     async function fetchProjectList() {
       await fetch(

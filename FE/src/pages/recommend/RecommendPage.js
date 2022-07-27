@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import React, { useEffect, useState, Suspense } from "react";
+import { useNavigate } from "react-router-dom";
 import { HomeFilled, SearchOutlined } from "@ant-design/icons";
 import { Select } from "antd";
+import { throttle } from "lodash";
 
 const { Option } = Select;
 
@@ -25,10 +26,7 @@ const RecommendPage = () => {
   const mainText = "마음에 드는 여행 프로젝트를\n 내 프로젝트로! 😆";
   const [isSearchResult, setIsSearchResult] = useState(false);
 
-  // infinite scroll
-  const [uploadProjectInfo, setUploadProjectInfo] = useState([]);
-  const [skip, setSkip] = useState(0);
-
+  const RecommendRows = React.lazy(() => import("../../components/recommend/RecommendRows"));
   const children = [];
   for (let i = 0; i < hashTag.length; i++) {
     children.push(<Option key={hashTag[i] + i}>{hashTag[i]}</Option>);
@@ -134,18 +132,10 @@ const RecommendPage = () => {
       {!isSearchResult && (
         <RecommendBlock>
           {mainText}
-          <div className="scrollWrapper">
-            <HashtagResultTextDark>🏝 모든 프로젝트</HashtagResultTextDark>
-            <RecommendContents onWheel={handleScroll}>
-              {uploadProjectInfo.map((el, i) => {
-                return i % 2 === 0 ? null : <ScrollRow key={i} el={el} />;
-              })}
-            </RecommendContents>
-            <RecommendContents onWheel={handleScroll}>
-              {uploadProjectInfo.map((el, i) => {
-                return i % 2 === 0 ? <ScrollRow key={i} el={el} /> : null;
-              })}
-            </RecommendContents>
+          <div>
+            <Suspense fallback={<div>Loading...</div>}>
+              <RecommendRows />
+            </Suspense>
           </div>
         </RecommendBlock>
       )}
@@ -194,10 +184,6 @@ const HashtagResultText = styled(HashtagResult)`
   color: #f8f9fa;
 `;
 
-const HashtagResultTextDark = styled(HashtagResultText)`
-  color: #232a3c;
-`;
-
 const RecommendWrapper = styled.div`
   background-color: #ff8a3d;
   width: 100%;
@@ -216,7 +202,7 @@ const RecommendBlock = styled.div`
   white-space: pre-line;
   font-weight: 700;
   color: white;
-  padding: 10vh;
+  padding: 5vh 10vh 0 10vh;
   letter-spacing: 1px;
   line-height: 65px;
   min-width: 800px;
@@ -239,39 +225,6 @@ const RecommendContents = styled.div`
     /* width: 0px;
     height: 7px; */
     display: none;
-  }
-`;
-
-const RecommendItems = styled.div`
-  height: 200px;
-  width: 200px;
-  border-radius: 10px;
-  background-color: white;
-  margin-right: 20px;
-  cursor: pointer;
-
-  .background-img {
-    height: 200px;
-    width: 200px;
-    border-radius: 10px;
-    box-shadow: 4px 4px 4px rgb(0 0 0 / 25%);
-    background-position: center;
-  }
-
-  .uploadProjectInfo-title {
-    font-size: 25px;
-    color: #f8f9fa;
-    text-align: center;
-    padding-top: 40px;
-  }
-  .uploadProjectInfo-hashTags {
-    font-size: 15px;
-    color: #7c8289;
-    text-align: center;
-    margin-top: 33px;
-    background: white;
-    border-radius: 0px 0px 10px 10px;
-    height: 62px;
   }
 `;
 
