@@ -1,11 +1,14 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, Suspense } from "react";
 import styled from "styled-components";
 import SpotList from "../../components/spot/SpotList";
 import MarkMap from "../../components/MarkMap/MarkMap";
 import MemoRtc from "../../components/shareMemo/MemoRtc";
 import Cursor from "../shareMemo/Cursor";
-import SearchDetail from "../../components/searchMap/SearchDetail";
-import { AlertFilled } from "@ant-design/icons";
+// import SearchDetail from "../../components/searchMap/SearchDetail";
+const SearchDetail = React.lazy(() =>
+  import("../../components/searchMap/SearchDetail")
+);
+// import { AlertFilled } from "@ant-design/icons";
 import socket from "../../socket";
 import { useNavigate } from "react-router-dom";
 import SpotRouteTitle from "../../components/spot/SpotRouteTitle";
@@ -141,7 +144,13 @@ function SpotRoute({
       <Cursor project_Id={itemId} selectedIndex={selectedIndex} />
       <MemoRtc project_Id={itemId} userName={userName} />
       {contents !== null && (
-        <SearchDetail onClose={onClose} visible={visible} contents={contents} />
+        <Suspense fallback={<div>Loading...</div>}>
+          <SearchDetail
+            onClose={onClose}
+            visible={visible}
+            contents={contents}
+          />
+        </Suspense>
       )}
     </SpotRouteContainer>
   );
