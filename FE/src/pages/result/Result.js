@@ -166,11 +166,11 @@ function Result() {
               </div>
             );
           })}
-        <ResultLine />
+        {/* <ResultLine />
         <ResultTitle>Memo</ResultTitle>
         <ResultMemoBox>
           <ShowMemoResult />
-        </ResultMemoBox>
+        </ResultMemoBox> */}
       </ResultContainer>
       <ResultMap routes={routes} />
     </ResultWhole>
