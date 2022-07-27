@@ -59,6 +59,19 @@ const AlertBtnWrapper = styled.section`
   color: white;
   font-weight: 800;
   cursor: pointer;
+  box-shadow: 3px 3px 3px #aaaaaa;
+  -ms-user-select: none;
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  &:hover {
+    background: rgba(255, 122, 0, 0.4);
+  }
+  &:active {
+    background: #ff8a3d;
+    box-shadow: none;
+  }
 
   .alertBtnText {
     margin-top: 3px;
