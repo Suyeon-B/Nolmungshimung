@@ -13,7 +13,7 @@ const SearchBar = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     props.changePlace(InputText);
-    setInputText("");
+    // setInputText("");
     props.handleSelect(null);
     props.sumit(!props.current);
     props.setSwLatlng([33.592161526546604, 126.04650255976554]);
@@ -30,6 +30,7 @@ const SearchBar = (props) => {
         boxShadow: "3px 3px 3px 0px lightgray",
         paddingBottom: "18px",
       }}
+      autoComplete="off"
     >
       <StyledFieldset>
         <SearchOutlined style={{ fontSize: "25px", color: "#FF8A3D" }} />
