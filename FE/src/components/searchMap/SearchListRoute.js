@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import styled from "styled-components";
 import { v4 as uuidV4 } from "uuid";
 import { overEvent, clickEvent, outEvent } from "../../pages/search/Search";
@@ -6,6 +6,7 @@ import SearchDetail from "./SearchDetail";
 import "../../App.css";
 import { useEffect } from "react";
 import { PlusCircleTwoTone } from "@ant-design/icons";
+import CommonBtn from "../../atomics/CommonBtn";
 
 const fetchAddTravelRoute = async (id, route) => {
   try {
@@ -107,10 +108,10 @@ const SearchListRoute = ({
     FindDetailContents(data);
   };
 
-  const onClose = () => {
+  const onClose = useCallback(() => {
     setVisible(false);
     setContents(null);
-  };
+  }, []);
 
   return (
     <StyledLi
@@ -135,7 +136,12 @@ const SearchListRoute = ({
         <StyledTile>{route.place_name}</StyledTile>
         <StyledDropDown>
           {/* <img className="hanlabong" src="\statics\images\hanlabong.png" /> */}
-          <PlusCircleTwoTone
+          {/* <PlusCircleTwoTone
+            style={{ fontSize: "30px" }}
+            twoToneColor="#FF8A3D"
+          /> */}
+          <CommonBtn
+            icon={PlusCircleTwoTone}
             style={{ fontSize: "30px" }}
             twoToneColor="#FF8A3D"
           />

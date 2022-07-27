@@ -47,9 +47,7 @@ const SearchBar = (props) => {
         <input
           type="submit"
           id="search.keyword.submit"
-          // value={<SearchOutlined />}
           style={{ display: "none" }}
-          // style={{ marginLeft: "10px" }}
         />
       </StyledFieldset>
     </form>
