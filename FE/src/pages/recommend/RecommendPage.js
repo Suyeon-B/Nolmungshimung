@@ -23,7 +23,7 @@ const RecommendPage = () => {
   const navigate = useNavigate();
   const [hashTagPJInfo, setHashTagPJInfo] = useState([]);
   const [hashtags, setHashTags] = useState([]);
-  const mainText = "마음에 드는 여행 프로젝트를\n 내 프로젝트로! 😆";
+  const mainText = "마음에 드는 여행코스를\n 내 여행일정으로 가져와보세요! 😆";
   const [isSearchResult, setIsSearchResult] = useState(false);
 
   const RecommendRows = React.lazy(() => import("../../components/recommend/RecommendRows"));

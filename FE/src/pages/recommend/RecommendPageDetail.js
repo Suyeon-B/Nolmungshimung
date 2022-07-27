@@ -61,7 +61,7 @@ const RecommendPageDetail = () => {
       .catch((error) => console.log(error));
   }
   console.log(projectId);
-  console.log("여기는 추천 프로젝트 디테일이지롱~~");
+  console.log("여기는 추천 여행일정 디테일이지롱~~");
 
   async function fetchProjectById(_id) {
     const response = await fetch(

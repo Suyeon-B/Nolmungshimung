@@ -6,7 +6,7 @@ const HomeMain = ({ goRecommend, goSignIn }) => {
     <StyledHomeMain>
       <StyledTitle>어디로 떠나보시겠어요?</StyledTitle>
       <BtnWrapper>
-        <StyledWhiteBtn onClick={goSignIn}>프로젝트 만들기</StyledWhiteBtn>
+        <StyledWhiteBtn onClick={goSignIn}>여행일정 만들기</StyledWhiteBtn>
         <StyledBtn onClick={goRecommend}>추천계획 둘러보기</StyledBtn>
       </BtnWrapper>
     </StyledHomeMain>
