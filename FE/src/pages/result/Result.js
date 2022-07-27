@@ -34,16 +34,13 @@ function Result() {
       }
       console.log(projectInfo);
       projectInfo.hashTags = hashTags;
-      await fetch(
-        `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/upload`,
-        {
-          method: "post",
-          headers: {
-            "content-type": "application/json",
-          },
-          body: JSON.stringify(projectInfo),
-        }
-      ).then((res) => res.json());
+      await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/upload`, {
+        method: "post",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(projectInfo),
+      }).then((res) => res.json());
     }
     setTimeout(() => {
       setVisible(false);
@@ -57,15 +54,13 @@ function Result() {
     setVisible(false);
   };
   async function fetchProjectById(_id) {
-    const response = await fetch(
-      `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`
-    );
+    const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`);
     return response.json();
   }
 
   useEffect(() => {
     if (projectId === null) return;
-    // console.log(projectId);∫
+    // console.log(projectId);
     async function fetchInfo() {
       const data = await fetchProjectById(projectId);
       setRoutes(data.routes);
@@ -80,17 +75,19 @@ function Result() {
   const culTripTermData = (startDate, day) => {
     const sDate = new Date(startDate);
     sDate.setDate(sDate.getDate() + day);
-    return `${sDate.getFullYear()}. ${
-      sDate.getMonth() + 1
-    }. ${sDate.getDate()}`;
+    return `${sDate.getFullYear()}. ${sDate.getMonth() + 1}. ${sDate.getDate()}`;
   };
 
   const ShowMemoResult = () => {
     let text = "로딩중 ...";
     if (projectInfo) {
-      const textLines = projectInfo.quillRefEditor.length;
-      for (var i = 0; i < textLines; i++) {
-        text = projectInfo.quillRefEditor[i].insert;
+      try {
+        const textLines = projectInfo.quillRefEditor.length;
+        for (var i = 0; i < textLines; i++) {
+          text = projectInfo.quillRefEditor[i].insert;
+        }
+      } catch (err) {
+        console.log("메모 로딩에 실패했습니다.");
       }
     }
     return <div className="memoText">{text}</div>;
@@ -253,11 +250,12 @@ const UploadBtn = styled.button`
   background-color: #ff8a3d;
   border-radius: 10px;
   padding: 3px 8px 3px 8px;
-  wi
 `;
 
 const ResultMemoBox = styled.div`
   height: 100%;
+  overflow-y: auto;
+  min-height: 20vh;
   background-color: #f8f9fa;
   border-color: #c1c7cd;
   border-radius: 10px;
@@ -267,6 +265,7 @@ const ResultMemoBox = styled.div`
 
   .memoText {
     white-space: pre-wrap;
+    word-break: break-all;
   }
 `;
 

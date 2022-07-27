@@ -18,7 +18,7 @@ const StyledBtn = styled.button`
   border: none;
 
   font-weight: 700;
-  font-size: 30px;
+  font-size: 27px;
   background: rgba(255, 122, 0, 0.71);
   border-radius: 10px;
   width: 240px;

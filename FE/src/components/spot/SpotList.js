@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useCallback } from "react";
 import styled from "styled-components";
 import { DeleteOutlined } from "@ant-design/icons";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
@@ -6,6 +6,7 @@ import SearchDetail from "../searchMap/SearchDetail";
 import socket from "../../socket";
 import { useParams } from "react-router-dom";
 import { ConnectuserContext } from "../../context/ConnectUserContext";
+import TrashCanIcon from "../../atomics/Icon";
 
 const SidePlanListDiv = styled.div`
   height: 100%;
@@ -207,6 +208,19 @@ function SpotList({
     setIsDrage(true);
   }
 
+  const onDelete = useCallback(
+    (ind, index) => {
+      console.log(ind, index);
+      const newDayItem = [...dayItem];
+      const newState = [...[dayItem[selectedIndex]]];
+      newState[ind].splice(index, 1);
+      newDayItem[selectedIndex] = [...newState[0]];
+      setItemRoute(newDayItem);
+      setIsAddDel(true);
+    },
+    [dayItem, selectedIndex]
+  );
+
   return (
     <SidePlanListDiv>
       <StyledDragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
@@ -293,19 +307,14 @@ function SpotList({
                               </div>
                             )}
                             {!item.user_name && (
-                              <DeleteOutlined
-                                style={{ fontSize: "25px" }}
+                              <NoneStyleBtn
                                 onClick={() => {
-                                  const newDayItem = [...dayItem];
-                                  const newState = [
-                                    ...[dayItem[selectedIndex]],
-                                  ];
-                                  newState[ind].splice(index, 1);
-                                  newDayItem[selectedIndex] = [...newState[0]];
-                                  setItemRoute(newDayItem);
-                                  setIsAddDel(true);
+                                  console.log("onclick");
+                                  onDelete(ind, index);
                                 }}
-                              />
+                              >
+                                <TrashCanIcon />
+                              </NoneStyleBtn>
                             )}
                           </div>
                         </SpotListItemDiv>
@@ -385,19 +394,14 @@ function SpotList({
                               </div>
                             )}
                             {!item.user_name && (
-                              <DeleteOutlined
-                                style={{ fontSize: "25px" }}
+                              <NoneStyleBtn
                                 onClick={() => {
-                                  const newDayItem = [...dayItem];
-                                  const newState = [
-                                    ...[dayItem[selectedIndex]],
-                                  ];
-                                  newState[ind].splice(index, 1);
-                                  newDayItem[selectedIndex] = [...newState[0]];
-                                  setItemRoute(newDayItem);
-                                  setIsAddDel(true);
+                                  console.log("onclick");
+                                  onDelete(ind, index);
                                 }}
-                              />
+                              >
+                                <TrashCanIcon />
+                              </NoneStyleBtn>
                             )}
                           </div>
                         </SpotListItemDiv>
@@ -414,6 +418,13 @@ function SpotList({
     </SidePlanListDiv>
   );
 }
+
+const NoneStyleBtn = styled.button`
+  outline: 0;
+  border: none;
+  background-color: white;
+  cursor: pointer;
+`;
 
 const SpotItemIndex = styled.div`
   display: inline-flex;

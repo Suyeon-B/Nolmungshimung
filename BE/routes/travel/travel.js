@@ -22,6 +22,7 @@ router.post("/find/:id", async function (req, res, next) {
   } else {
     try {
       let place = await GetGoogleID(req.body);
+      console.log("준규야.........", place);
       let insertForm;
       if (place[0] && place[0].place_id) {
         detail = await GetGooglePlace(place[0].place_id, req.body);
@@ -101,18 +102,27 @@ function GetGoogleID(props) {
   console.log(url, "durl?");
   // console.log(url);
   return new Promise((resolve, reject) => {
-    request(url, (error, response, body) => {
-      // console.log("body: ", response.response);
-      if (error) {
-        reject(error);
-      }
-      if (body) {
+    try {
+      request(url, (error, response, body) => {
+        // console.log("body: ", response.response);
+        if (error) {
+          reject(error);
+        }
+
         console.log("바디", body);
-        const place = JSON.parse(body).candidates;
-        resolve(place);
-      }
-      reject("error 바디없음");
-    });
+
+        try {
+          const data = JSON.parse(body);
+          const place = data.candidates;
+          resolve(place);
+        } catch (e) {
+          reject(body);
+        }
+        reject(body);
+      });
+    } catch (e) {
+      console.log(e);
+    }
   });
 }
 
