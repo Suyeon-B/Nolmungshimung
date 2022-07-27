@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Popover, Button, Modal, Space } from "antd";
 import { UsergroupAddOutlined } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import Badge from "./Badge";
+// import InviteEmailInput from "./InviteEmailInput";
 
 function FriendInvite() {
   const { projectId } = useParams();
@@ -55,6 +56,7 @@ function FriendInvite() {
   }, []);
 
   const sendInviteEmail = () => {
+    console.log(email);
     if (friends.length > 1) {
       for (let i = 0; i < friends.length; i++) {
         if (friends[i] === email) {
@@ -99,14 +101,20 @@ function FriendInvite() {
       })
       .catch((err) => console.log(`err: ${err}`));
   };
-  const onChangeEmail = (event) => {
-    setEmail(event.target.value);
-  };
-  const handleOnKeyPress = (event) => {
+  const onChangeEmail = useCallback((id, value) => {
+    // console.log(`event.target.value : ${event.target.value}`);
+    setEmail(id == 858 && { value: value });
+  }, []);
+  // const onChangeEmail = useCallback((event) => {
+  //   console.log(`event.target.value : ${event.target.value}`);
+  //   setEmail(event.target.value);
+  // }, []);
+  const handleOnKeyPress = useCallback((event) => {
+    console.log(event.key);
     if (event.key === "Enter") {
       sendInviteEmail();
     }
-  };
+  }, []);
   const text = <FriendInviteTitle>친구초대</FriendInviteTitle>;
   const content = (
     <div
@@ -123,6 +131,11 @@ function FriendInvite() {
           value={email}
           onChange={onChangeEmail}
           onKeyPress={handleOnKeyPress}
+          key="858"
+          id="858"
+          // email={email}
+          // onChangeEmail={onChangeEmail}
+          // handleOnKeyPress={handleOnKeyPress}
         />
         <UsergroupAddOutlined
           style={{ fontSize: "25px", color: "white" }}
