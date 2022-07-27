@@ -10,7 +10,7 @@ import { PlusCircleTwoTone } from "@ant-design/icons";
 const fetchAddTravelRoute = async (id, route) => {
   try {
     const response = await fetch(
-      `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${id}`,
+      `https://${process.env.REACT_APP_SERVER_IP}/projects/routes/${id}`,
       {
         method: "post",
         headers: {
@@ -64,7 +64,7 @@ const SearchListRoute = ({
     //1. 디비에 있나 확인
 
     fetch(
-      `https://${process.env.REACT_APP_SERVER_IP}:8443/travel/find/` +
+      `https://${process.env.REACT_APP_SERVER_IP}/travel/find/` +
         props.place_id,
       {
         method: "POST", // 또는 'PUT'

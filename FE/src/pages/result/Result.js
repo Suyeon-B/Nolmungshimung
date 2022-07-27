@@ -34,7 +34,7 @@ function Result() {
       }
       console.log(projectInfo);
       projectInfo.hashTags = hashTags;
-      await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/upload`, {
+      await fetch(`https://${process.env.REACT_APP_SERVER_IP}/projects/upload`, {
         method: "post",
         headers: {
           "content-type": "application/json",
@@ -54,7 +54,7 @@ function Result() {
     setVisible(false);
   };
   async function fetchProjectById(_id) {
-    const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`);
+    const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}/projects/${_id}`);
     return response.json();
   }
 

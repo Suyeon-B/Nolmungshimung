@@ -42,7 +42,7 @@ const GetProjectModal = ({ routes }) => {
     console.log(selectDate);
 
     const response = await fetch(
-      `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/selectdate`,
+      `https://${process.env.REACT_APP_SERVER_IP}/recommend/selectdate`,
       {
         method: "post",
         headers: {
@@ -62,7 +62,7 @@ const GetProjectModal = ({ routes }) => {
 
   const fetchAllDate = async (data) => {
     const response = await fetch(
-      `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/alldate`,
+      `https://${process.env.REACT_APP_SERVER_IP}/recommend/alldate`,
       {
         method: "post",
         headers: {

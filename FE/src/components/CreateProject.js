@@ -55,7 +55,7 @@ const CreateProject = () => {
       },
     ];
 
-    fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects`, {
+    fetch(`https://${process.env.REACT_APP_SERVER_IP}/projects`, {
       method: "post",
       headers: {
         "content-type": "application/json",

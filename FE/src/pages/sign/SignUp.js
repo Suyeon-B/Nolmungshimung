@@ -66,7 +66,7 @@ function SignUp() {
     const body = {
       userEmail: id,
     };
-    fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/users/mail`, {
+    fetch(`https://${process.env.REACT_APP_SERVER_IP}/users/mail`, {
       method: "post",
       headers: {
         "content-type": "application/json",
@@ -104,7 +104,7 @@ function SignUp() {
   });
 
   async function singUpUser(data) {
-    await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/users/signup`, {
+    await fetch(`https://${process.env.REACT_APP_SERVER_IP}/users/signup`, {
       method: "post",
       headers: {
         "content-type": "application/json",

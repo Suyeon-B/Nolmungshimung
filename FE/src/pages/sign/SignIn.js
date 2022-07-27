@@ -37,7 +37,7 @@ function SignIn() {
 
   async function singInUser(data) {
     await fetch(
-      `https://${process.env.REACT_APP_SERVER_IP}:8443/users/signin`,
+      `https://${process.env.REACT_APP_SERVER_IP}/users/signin`,
       {
         method: "post",
         headers: {

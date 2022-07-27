@@ -8,7 +8,7 @@ const { Option } = Select;
 import styled from "styled-components";
 
 let hashTag = [];
-fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/hashtags`, {
+fetch(`https://${process.env.REACT_APP_SERVER_IP}/recommend/hashtags`, {
   method: "get",
   headers: {
     "content-type": "application/json",
@@ -40,9 +40,9 @@ const RecommendPage = () => {
   };
 
   async function searchHashtags() {
-    let url = `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/hashtag?taglist=${JSON.stringify(hashtags)}`;
+    let url = `https://${process.env.REACT_APP_SERVER_IP}/recommend/hashtag?taglist=${JSON.stringify(hashtags)}`;
     if (!hashtags.length) {
-      url = `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend`;
+      url = `https://${process.env.REACT_APP_SERVER_IP}/recommend`;
     }
     try {
       setHashTagPJInfo([]);
@@ -66,7 +66,7 @@ const RecommendPage = () => {
   useEffect(() => {
     const fetchUploadProjectInfo = async () => {
       try {
-        const request = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/infinite?skip=${skip}`);
+        const request = await fetch(`https://${process.env.REACT_APP_SERVER_IP}/recommend/infinite?skip=${skip}`);
         const uploadProjectInfoJson = await request.json();
         setUploadProjectInfo([...uploadProjectInfo, ...uploadProjectInfoJson]);
         // console.log("인피니트 스크롤 결과");
