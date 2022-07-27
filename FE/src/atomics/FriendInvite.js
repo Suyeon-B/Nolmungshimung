@@ -37,7 +37,7 @@ function FriendInvite() {
 
   useEffect(() => {
     fetch(
-      `https://${process.env.REACT_APP_SERVER_IP}/projects/friends/${projectId}`,
+      `//${process.env.REACT_APP_SERVER_IP}/projects/friends/${projectId}`,
       {
         method: "get",
         headers: {
@@ -74,7 +74,7 @@ function FriendInvite() {
     }
     let data = { email: email, projectId: projectId };
     console.log(data);
-    fetch(`https://${process.env.REACT_APP_SERVER_IP}/invite/mail`, {
+    fetch(`//${process.env.REACT_APP_SERVER_IP}/invite/mail`, {
       method: "post",
       headers: {
         "content-type": "application/json",

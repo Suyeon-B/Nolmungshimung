@@ -4,12 +4,12 @@ module.exports = function (app) {
   app.use(
     // "/api",
     // createProxyMiddleware({
-    //   target: `https://${process.env.REACT_APP_SERVER_IP}`,
+    //   target: `//${process.env.REACT_APP_SERVER_IP}`,
     //   changeOrigin: true,
     // })
     "/place-api",
     createProxyMiddleware({
-      target: "https://maps.googleapis.com/maps/api/place",
+      target: "//maps.googleapis.com/maps/api/place",
       changeOrigin: true,
       pathRewrite: { "^/place-api": "" },
     })

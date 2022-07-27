@@ -14,7 +14,7 @@ function SearchDetail(props) {
   if (props.contents.photos) {
     props.contents.photos.map((el, idx) => {
       imgUrl.push(
-        `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${el["photo_reference"]}&sensor=false&key=${api_key}`
+        `//maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${el["photo_reference"]}&sensor=false&key=${api_key}`
       );
     });
   }

@@ -68,7 +68,7 @@ function TestMap(props) {
 
     // 마커 이미지의 이미지 주소입니다
     var imageSrc =
-      "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
+      "//t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
     console.log(position);
     for (var k = 0; k < position.length; k++) {
       let marker = new kakao.maps.Marker({

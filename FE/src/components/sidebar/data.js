@@ -18,10 +18,10 @@ data = {
           {
             author_name: "김상희",
             author_url:
-              "https://www.google.com/maps/contrib/103279554791036261158/reviews",
+              "//www.google.com/maps/contrib/103279554791036261158/reviews",
             language: "ko",
             profile_photo_url:
-              "https://lh3.googleusercontent.com/a-/AFdZucq9GETrchzcdIEXUz1TvW46PCjaU7_q6JejUiCprQ=s128-c0x00000000-cc-rp-mo-ba2",
+              "//lh3.googleusercontent.com/a-/AFdZucq9GETrchzcdIEXUz1TvW46PCjaU7_q6JejUiCprQ=s128-c0x00000000-cc-rp-mo-ba2",
             rating: 3,
             relative_time_description: "3년 전",
             text: "쥐가 너무 많아서. . .",
@@ -63,10 +63,10 @@ data = {
           {
             author_name: "김상희",
             author_url:
-              "https://www.google.com/maps/contrib/103279554791036261158/reviews",
+              "//www.google.com/maps/contrib/103279554791036261158/reviews",
             language: "ko",
             profile_photo_url:
-              "https://lh3.googleusercontent.com/a-/AFdZucq9GETrchzcdIEXUz1TvW46PCjaU7_q6JejUiCprQ=s128-c0x00000000-cc-rp-mo-ba2",
+              "//lh3.googleusercontent.com/a-/AFdZucq9GETrchzcdIEXUz1TvW46PCjaU7_q6JejUiCprQ=s128-c0x00000000-cc-rp-mo-ba2",
             rating: 3,
             relative_time_description: "3년 전",
             text: "쥐가 너무 많아서. . .",

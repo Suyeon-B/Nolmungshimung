@@ -21,7 +21,7 @@ const ProjectList = ({ goProject }) => {
       };
       console.log(event.target);
       const response = await fetch(
-        `https://${process.env.REACT_APP_SERVER_IP}/projects/${projectId}`,
+        `//${process.env.REACT_APP_SERVER_IP}/projects/${projectId}`,
         {
           method: "post",
           headers: {
@@ -71,7 +71,7 @@ const ProjectList = ({ goProject }) => {
 
     async function fetchProjectList() {
       await fetch(
-        `https://${process.env.REACT_APP_SERVER_IP}/projects/title`,
+        `//${process.env.REACT_APP_SERVER_IP}/projects/title`,
         {
           method: "post",
           headers: {

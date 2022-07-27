@@ -12,7 +12,7 @@ const RecommendRows = () => {
   useEffect(() => {
     const fetchUploadProjectInfo = async () => {
       try {
-        const request = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/infinite?skip=${skip}`);
+        const request = await fetch(`//${process.env.REACT_APP_SERVER_IP}:8443/recommend/infinite?skip=${skip}`);
         const uploadProjectInfoJson = await request.json();
         setUploadProjectInfo([...uploadProjectInfo, ...uploadProjectInfoJson]);
         // console.log("인피니트 스크롤 결과");
