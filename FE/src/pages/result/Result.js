@@ -172,7 +172,7 @@ function Result() {
                 {route.map((el, index) => (
                   <StyledTitleContainer>
                     <StyledTitlecircle
-                      randomRGB={colorArr[idx]}
+                      // randomRGB={colorArr[idx]}
                       style={{
                         background: color[el.category_group_code],
                       }}

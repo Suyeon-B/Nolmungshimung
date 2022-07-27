@@ -48,7 +48,7 @@ function ResultMap(props) {
     var mapContainer = document.getElementById("map"), // 지도를 표시할 div
       mapOption = {
         center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-        level: 4, // 지도의 확대 레벨
+        level: 3, // 지도의 확대 레벨
       };
 
     // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
@@ -69,7 +69,7 @@ function ResultMap(props) {
         height: 27px;
         border-radius: 50%;
         background-color: ${color[routes[i][j].category]};
-        border: 2px solid ${props.colorArr[i]};
+        border: 2px solid #123444;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -89,9 +89,9 @@ function ResultMap(props) {
       }
       const polyline = new kakao.maps.Polyline({
         path: lines[i], // 선을 구성하는 좌표배열 입니다
-        strokeWeight: 3.4, // 선의 두께 입니다
-        strokeColor: `${props.colorArr[i]}`, // 선의 색깔입니다
-        strokeOpacity: 1, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+        strokeWeight: 2.4, // 선의 두께 입니다
+        strokeColor: "#123444", //`${colorArr[i]}`, // 선의 색깔입니다
+        strokeOpacity: 0.7, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
         strokeStyle: "dash", // 선의 스타일입니다s
         // strokeStyle: "dashed",
       });
