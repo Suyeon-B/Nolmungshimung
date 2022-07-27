@@ -7,7 +7,7 @@ services:
         stdin_open: true
         ports: 
             - "3000:3000"
-            - "443:3000"
+#             - "443:3000"
         # networks: 
         #     - mern-app
     api-server-nolshimung:
