@@ -38,9 +38,9 @@ class Sfu {
           { urls: "stun:stun3.l.google.com:19302" },
           { urls: "stun:stun4.l.google.com:19302" },
           {
-              urls: 'turn:numb.viagenie.ca',
-              credential: 'muazkh',
-              username: 'webrtc@live.com'
+            urls: "turn:numb.viagenie.ca",
+            credential: "muazkh",
+            username: "webrtc@live.com",
           },
         ],
       },
@@ -67,13 +67,15 @@ class Sfu {
     // console.log('SFu 진입 !!!!!!!!!!');
     // console.log('!@@@@@', this.settings);
     const protocol = window.location.protocol === "https:" ? "wss" : "ws";
-    if (!sessionStorage.getItem("user_email")){
-      alert('로그인 해주세요')
+    if (!sessionStorage.getItem("user_email")) {
+      // alert('로그인 해주세요')
       window.location.href = "/";
     }
-    const url = `${protocol}://${window.location.hostname}:${this.settings.port}?${sessionStorage.getItem("user_email")}`;
+    const url = `${protocol}://${window.location.hostname}:${
+      this.settings.port
+    }?${sessionStorage.getItem("user_email")}`;
     this.connection = new WebSocket(url);
-    this.connection.onmessage = (data) => this.handleMessage(data); 
+    this.connection.onmessage = (data) => this.handleMessage(data);
     this.connection.onclose = () => this.handleClose();
     this.connection.onopen = (event) => {
       this.trigger(_EVENTS.onConnected, event);
@@ -112,25 +114,25 @@ class Sfu {
     // if (userVideo) {
     //   userVideo.srcObject.addTrack(stream.getTracks()[0]);
     // } else {
-      const video = document.createElement("video");
-      video.id = `remote_${username}`;
-      video.srcObject = stream;
-      video.autoplay = true;
-      video.muted = username == sessionStorage.getItem("user_email");
+    const video = document.createElement("video");
+    video.id = `remote_${username}`;
+    video.srcObject = stream;
+    video.autoplay = true;
+    video.muted = username == sessionStorage.getItem("user_email");
 
-      // const div = document.createElement("div");
-      // div.id = `user_${username}`;
-      // div.classList.add("videoWrap");
+    // const div = document.createElement("div");
+    // div.id = `user_${username}`;
+    // div.classList.add("videoWrap");
 
-      // const nameContainer = document.createElement("div");
-      // nameContainer.classList.add("display_name");
-      // const textNode = document.createTextNode(username);
-      // nameContainer.appendChild(textNode);
-      // div.appendChild(nameContainer);
-      // div.appendChild(video);
-      // // document.querySelector(".videos-inner").appendChild(div);
+    // const nameContainer = document.createElement("div");
+    // nameContainer.classList.add("display_name");
+    // const textNode = document.createTextNode(username);
+    // nameContainer.appendChild(textNode);
+    // div.appendChild(nameContainer);
+    // div.appendChild(video);
+    // // document.querySelector(".videos-inner").appendChild(div);
 
-      // this.trigger(_EVENTS.onRemoteTrack, stream);
+    // this.trigger(_EVENTS.onRemoteTrack, stream);
     // }
 
     // this.recalculateLayout();
@@ -261,9 +263,7 @@ class Sfu {
     const { username, consumerId } = this.clients.get(id);
     this.consumers.delete(consumerId);
     this.clients.delete(id);
-    this.localStream
-      .getTracks()
-      .forEach((track) => track.stop());
+    this.localStream.getTracks().forEach((track) => track.stop());
     // document.querySelector(`#user_${username}`).remove();
 
     // this.recalculateLayout();
@@ -316,7 +316,7 @@ class Sfu {
     console.log("*** negoitating ***");
     const offer = await this.localPeer.createOffer();
     await this.localPeer.setLocalDescription(offer);
-    
+
     this.connection.send(
       JSON.stringify({
         type: "connect",
