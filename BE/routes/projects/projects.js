@@ -70,7 +70,7 @@ router.post("/upload", async (req, res) => {
   // console.log("?!", projectId);
   const reqHashTags = info.hashTags;
   //redis
-  if (reqHashTags.length) await Redis.SADD('hashtags', reqHashTags);
+  if (reqHashTags.length) await Redis.SADD("hashtags", reqHashTags);
   // console.log("hashtags", hashTags);
   const uploadProject = new UploadProject(info);
   let projectId;
@@ -123,7 +123,7 @@ router.post("/upload", async (req, res) => {
           await hashTags[0].save();
         } catch (error) {
           console.log(
-            `Hash tag ${i}번째 error : ${error} hashtags디비를 만들어 달라냥`
+            `Hash tag ${i}번째 error : ${error} hashtags DataBase를 만들어 주세요.`
           );
           return res.send(404).send({ error: `hash tag ${i}번째 save Fail` });
         }
@@ -155,7 +155,7 @@ router.post("/title", async (req, res) => {
       if (Object.keys(data).length === 0) {
         res.status(200).json({
           success: false,
-          message: "프로젝트가 없다 냥.",
+          message: "프로젝트가 없습니다.",
         });
       } else {
         let projectInfo = [];

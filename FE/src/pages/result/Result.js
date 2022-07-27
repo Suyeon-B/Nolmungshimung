@@ -3,8 +3,8 @@ import styled from "styled-components";
 import { useParams } from "react-router-dom";
 import ResultMap from "../../components/MarkMap/resultMap";
 import { CloseOutlined } from "@ant-design/icons";
-import { Button, Modal } from "antd";
 import ResultModal from "./ResultModal";
+import Badge from "../../atomics/Badge";
 
 function Result() {
   const { projectId } = useParams();
@@ -14,9 +14,9 @@ function Result() {
   const [title, setTitle] = useState(null);
   const [startDate, setStartDate] = useState(null);
   const [routes, setRoutes] = useState(null); // routes -> [[route],[route],[route]...]
+
   const [projectInfo, setProjectInfo] = useState(null);
   // route -> [{spotInfo},{spotInfo},{spotInfo}...]
-
   const showModal = () => {
     setVisible(true);
   };
@@ -25,7 +25,8 @@ function Result() {
     // console.log(hashTags.length);
     // console.log(projectInfo);
     if (hashTags.length > 5) {
-      alert("5개만 입력하랬다. ㅡㅡ");
+      Badge.fail("업로드 실패", "5개 이하로 입력바랍니다.");
+      setConfirmLoading(false);
       return;
     } else {
       if (routes[0].length > 0) {
@@ -34,19 +35,25 @@ function Result() {
       }
       console.log(projectInfo);
       projectInfo.hashTags = hashTags;
-      await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/upload`, {
-        method: "post",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify(projectInfo),
-      }).then((res) => res.json());
+      await fetch(
+        `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/upload`,
+        {
+          method: "post",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(projectInfo),
+        }
+      ).then((res) => res.json());
     }
-    setTimeout(() => {
-      setVisible(false);
-      setConfirmLoading(false);
-      alert("완료되었다냥");
-    }, 2000);
+    setVisible(false);
+    setConfirmLoading(false);
+    // alert("Complete");
+    Badge.success("업로드 성공");
+    window.location.replace("/recommend");
+    // setTimeout(() => {
+    //   alert("완료되었다냥");
+    // }, 2000);
   };
 
   const handleCancel = () => {
@@ -54,7 +61,9 @@ function Result() {
     setVisible(false);
   };
   async function fetchProjectById(_id) {
-    const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`);
+    const response = await fetch(
+      `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`
+    );
     return response.json();
   }
 
@@ -75,7 +84,9 @@ function Result() {
   const culTripTermData = (startDate, day) => {
     const sDate = new Date(startDate);
     sDate.setDate(sDate.getDate() + day);
-    return `${sDate.getFullYear()}. ${sDate.getMonth() + 1}. ${sDate.getDate()}`;
+    return `${sDate.getFullYear()}. ${
+      sDate.getMonth() + 1
+    }. ${sDate.getDate()}`;
   };
 
   const ShowMemoResult = () => {
