@@ -207,20 +207,24 @@ const Room = (props) => {
 
   const toggleCameraAudio = useCallback(() => {
     setUserVideoAudio((preList) => {
-      let audioSwitch = preList["localUser"].audio;
-      const userAudioTrack = userAudioRef.current.srcObject.getAudioTracks()[0];
-      audioSwitch = !audioSwitch;
+      try{
+        let audioSwitch = preList["localUser"].audio;
+        const userAudioTrack = userAudioRef.current.srcObject.getAudioTracks()[0];
+        audioSwitch = !audioSwitch;
 
-      if (userAudioTrack) {
-        userAudioTrack.enabled = audioSwitch;
-      } else {
-        userStream.current.getAudioTracks()[0].enabled = audioSwitch;
+        if (userAudioTrack) {
+          userAudioTrack.enabled = audioSwitch;
+        } else {
+          userStream.current.getAudioTracks()[0].enabled = audioSwitch;
+        }
+
+        return {
+          ...preList,
+          localUser: { audio: audioSwitch },
+        };
+      }catch(e){
+        console.log(`VoiceToggle err : ${e}`);
       }
-
-      return {
-        ...preList,
-        localUser: { audio: audioSwitch },
-      };
     });
 
     socket.emit("BE-toggle-camera-audio", { roomId, switchTarget: "audio" });
