@@ -15,9 +15,10 @@ function MapSearchBtn(props) {
         backgroundColor: "#ff8a3d",
         borderColor: "#ff8a3d",
         zIndex: 2,
-        position: "fixed",
-        bottom: "70px",
-        left: "1070px",
+        marginBottom: "5%",
+        // position: "fixed",
+        // bottom: "70px",
+        // left: "1070px",
       }}
     >
       현지도에서 검색
