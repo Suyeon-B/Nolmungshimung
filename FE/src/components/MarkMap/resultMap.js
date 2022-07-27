@@ -2,14 +2,14 @@ import React, { useEffect } from "react";
 
 const { kakao } = window;
 
-const randomRGB = function () {
-  return Math.round(Math.random() * 0xffffff).toString(16);
-};
-const colorArr = [];
+// const randomRGB = function () {
+//   return Math.round(Math.random() * 0xffffff).toString(16);
+// };
+// const colorArr = [];
 
-for (let i = 0; i < 10; i++) {
-  colorArr.push(`#${randomRGB()}`);
-}
+// for (let i = 0; i < 10; i++) {
+//   colorArr.push(`#${randomRGB()}`);
+// }
 
 function ResultMap(props) {
   const color = {
@@ -69,7 +69,7 @@ function ResultMap(props) {
         height: 27px;
         border-radius: 50%;
         background-color: ${color[routes[i][j].category]};
-        border: 2px solid ${colorArr[i]};
+        border: 2px solid ${props.colorArr[i]};
         display: flex;
         justify-content: center;
         align-items: center;
@@ -90,7 +90,7 @@ function ResultMap(props) {
       const polyline = new kakao.maps.Polyline({
         path: lines[i], // 선을 구성하는 좌표배열 입니다
         strokeWeight: 3.4, // 선의 두께 입니다
-        strokeColor: `${colorArr[i]}`, // 선의 색깔입니다
+        strokeColor: `${props.colorArr[i]}`, // 선의 색깔입니다
         strokeOpacity: 1, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
         strokeStyle: "dash", // 선의 스타일입니다s
         // strokeStyle: "dashed",

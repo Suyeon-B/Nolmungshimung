@@ -338,6 +338,9 @@ const SearchUl = styled.ul`
 `;
 
 const StyledMapDiv = styled.div`
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
   height: 100vh;
   min-width: calc(100% - 340px);
   position: relative;
