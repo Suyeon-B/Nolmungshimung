@@ -271,8 +271,6 @@ function SpotList({
                                 <SpotItemIndex
                                   style={{
                                     background: color[item.category_group_code],
-                                    width: "25px",
-                                    fontSize: "13px",
                                   }}
                                 >
                                   {index + 1}
@@ -428,11 +426,11 @@ const NoneStyleBtn = styled.button`
 
 const SpotItemIndex = styled.div`
   display: inline-flex;
-  width: 20px;
+  width: 25px;
   height: 25px;
   border-radius: 50%;
   text-align: center;
-  font-size: 12px;
+  font-size: 13px;
   margin-right: 10px;
   color: white;
   justify-content: center;

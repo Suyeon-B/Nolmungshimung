@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useAuth } from "../auth/Auth";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import Badge from "../../atomics/Badge";
 
 function InviteProject(props) {
   const auth = useAuth();
@@ -26,17 +27,17 @@ function InviteProject(props) {
           addUser(auth.user.user_email, res.project)
             .then((data) => {
               if (data.success === true) {
-                alert(data.message);
+                Badge.success(data.message);
                 navigate(`/project/${res.project}`, { replace: false });
               } else {
                 // error(result.message);
-                alert(data.message);
+                Badge.fail("초대 실패", data.message);
                 navigate("/");
               }
             })
             .catch((e) => console.log(e));
         } else {
-          alert(res.message);
+          Badge.fail("초대 실패", res.message);
           navigate("/");
         }
       })

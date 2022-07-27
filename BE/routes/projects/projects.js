@@ -116,7 +116,7 @@ router.post("/upload", async (req, res) => {
           // console.log(hashTags[0].hash_tag_names);
           await hashTags[0].save();
         } catch (error) {
-          console.log(`Hash tag ${i}번째 error : ${error} hashtags디비를 만들어 달라냥`);
+          console.log(`Hash tag ${i}번째 error : ${error} hashtags DataBase를 만들어 주세요.`);
           return res.send(404).send({ error: `hash tag ${i}번째 save Fail` });
         }
       }

@@ -7,6 +7,7 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import DropDown from "./DropDown";
 import styled from "styled-components";
 import SignIn from "../../pages/sign/SignIn";
+import Badge from "../../atomics/Badge";
 
 const setDay = (value) => {
   return [value.getFullYear(), value.getMonth() + 1, value.getDate(), value.getDay()];
@@ -73,9 +74,9 @@ const GetProjectModal = ({ routes }) => {
 
     event.preventDefault();
     if (projectTitle.trim() === "") {
-      alert("여행 제목을 입력해주세요");
+      Badge.fail("가져오기 실패", "여행 제목을 입력해주세요");
     } else if (startDate === null) {
-      alert("여행 날짜를 선택해주세요");
+      Badge.fail("가져오기 실패", "여행 날짜를 선택해주세요");
     }
     const data = {
       projectId,

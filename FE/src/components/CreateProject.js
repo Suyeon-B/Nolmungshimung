@@ -5,6 +5,8 @@ import "react-calendar/dist/Calendar.css"; // css import
 import CalendarTwo from "./CalendarTwo";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../components/auth/Auth";
+import Badge from "../atomics/Badge";
+
 const setDay = (value) => {
   return [value.getFullYear(), value.getMonth() + 1, value.getDate(), value.getDay()];
 };
@@ -28,11 +30,11 @@ const CreateProject = () => {
   const onSubmit = (event) => {
     event.preventDefault();
     if (projectTitle === "") {
-      alert("여행 제목을 입력해주세요");
+      Badge.fail("생성 실패", "여행 제목을 입력해주세요");
       return;
     }
     if (!startDate || !endDate) {
-      alert("여행 일정을 선택해주세요");
+      Badge.fail("생성 실패", "여행 일정을 선택해주세요");
       return;
     }
     const sDate = new Date(startDate[0], startDate[1], startDate[2]).getTime();
