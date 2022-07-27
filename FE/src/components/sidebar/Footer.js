@@ -5,6 +5,7 @@ import FriendInvite from "../../atomics/FriendInvite";
 import { AudioFilled, AudioMutedOutlined } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
 import { ConnectuserContext } from "../../context/ConnectUserContext";
+import CommonBtn from "../../atomics/CommonBtn";
 
 function Footer(props) {
   const { projectId } = useParams();
@@ -19,6 +20,7 @@ function Footer(props) {
     // "구준규",
     // "금잔디연",
   ]);
+  const [micState, setMicState] = useState(null);
   // ! 빈배열이어야함 나중에 지울건데 예씨임
 
   useEffect(() => {
@@ -43,7 +45,7 @@ function Footer(props) {
 
           return (
             <FriendProfile
-              key={idx + 1}
+              key={idx + 100}
               nickName={userName}
               color={connectUser[userName].color}
             />
@@ -53,6 +55,26 @@ function Footer(props) {
     );
   }, [connectUser]);
 
+  useEffect(() => {
+    if (mic) {
+      setMicState(
+        <CommonBtn
+          icon={AudioFilled}
+          onClickEvent={onClickMic}
+          style={{ fontSize: "30px" }}
+        />
+      );
+    } else {
+      setMicState(
+        <CommonBtn
+          icon={AudioMutedOutlined}
+          onClickEvent={onClickMic}
+          style={{ fontSize: "30px" }}
+        />
+      );
+    }
+  }, [mic]);
+
   const onClickMic = () => {
     // 누르면 마이크 음소거 OR 소거
     setMic(!mic);
@@ -61,17 +83,8 @@ function Footer(props) {
   };
   return (
     <FooterContainer>
-      {mic ? (
-        <AudioFilled style={{ fontSize: "30px" }} onClick={onClickMic} />
-      ) : (
-        <AudioMutedOutlined style={{ fontSize: "35px" }} onClick={onClickMic} />
-      )}
+      {micState}
       {profiles}
-      {/* <FriendProfile nickName={"윤혁"} />
-      <FriendProfile nickName={"박준규"} />
-      <FriendProfile nickName={"장영지"} />
-      <FriendProfile nickName={"박수연"} />
-      <FriendProfile nickName={"허영원"} /> */}
       <FriendInvite />
     </FooterContainer>
   );
