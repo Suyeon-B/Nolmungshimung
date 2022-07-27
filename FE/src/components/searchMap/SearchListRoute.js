@@ -11,7 +11,7 @@ import CommonBtn from "../../atomics/CommonBtn";
 const fetchAddTravelRoute = async (id, route) => {
   try {
     const response = await fetch(
-      `//${process.env.REACT_APP_SERVER_IP}/projects/routes/${id}`,
+      `${process.env.REACT_APP_SERVER_IP}/projects/routes/${id}`,
       {
         method: "post",
         headers: {
@@ -65,7 +65,7 @@ const SearchListRoute = ({
     //1. 디비에 있나 확인
 
     fetch(
-      `//${process.env.REACT_APP_SERVER_IP}/travel/find/` +
+      `${process.env.REACT_APP_SERVER_IP}/travel/find/` +
         props.place_id,
       {
         method: "POST", // 또는 'PUT'

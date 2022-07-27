@@ -6,7 +6,7 @@ function useFetch(query, pageNumber) {
   const [uploadProject, setUploadProject] = useState([]);
   const [hasMore, setHasMore] = useState(false);
 
-  let url = `//${process.env.REACT_APP_SERVER_IP}:8443/recommend/`;
+  let url = `${process.env.REACT_APP_SERVER_IP}:8443/recommend/`;
   let urlWithParams = url + `${query}`;
 
   useEffect(() => {

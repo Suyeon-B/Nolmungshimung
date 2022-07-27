@@ -11,7 +11,7 @@ function InviteProject(props) {
   console.log(auth.user.user_email);
   useEffect(() => {
     fetch(
-      `//${process.env.REACT_APP_SERVER_IP}/invite/${token}/${auth.user.user_email}`,
+      `${process.env.REACT_APP_SERVER_IP}/invite/${token}/${auth.user.user_email}`,
       {
         method: "get",
         headers: {
@@ -57,7 +57,7 @@ function addUser(userId, projectId) {
   let data = { email: userId };
   return new Promise((resolve, reject) => {
     fetch(
-      `//${process.env.REACT_APP_SERVER_IP}/projects/friends/${projectId}`,
+      `${process.env.REACT_APP_SERVER_IP}/projects/friends/${projectId}`,
       {
         method: "post",
         headers: {
