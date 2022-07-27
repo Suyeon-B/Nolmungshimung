@@ -26,7 +26,9 @@ const RecommendPage = () => {
   const mainText = "마음에 드는 여행코스를\n 내 여행일정으로 가져와보세요! 😆";
   const [isSearchResult, setIsSearchResult] = useState(false);
 
-  const RecommendRows = React.lazy(() => import("../../components/recommend/RecommendRows"));
+  const RecommendRows = React.lazy(() =>
+    import("../../components/recommend/RecommendRows")
+  );
   const children = [];
   for (let i = 0; i < hashTag.length; i++) {
     children.push(<Option key={hashTag[i] + i}>{hashTag[i]}</Option>);
@@ -38,7 +40,9 @@ const RecommendPage = () => {
   };
 
   async function searchHashtags() {
-    let url = `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/hashtag?taglist=${JSON.stringify(hashtags)}`;
+    let url = `https://${
+      process.env.REACT_APP_SERVER_IP
+    }:8443/recommend/hashtag?taglist=${JSON.stringify(hashtags)}`;
     if (!hashtags.length) {
       url = `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend`;
     }
@@ -66,7 +70,10 @@ const RecommendPage = () => {
       <div>
         <Link to={`project/${el._id}`}>
           <RecommendItems>
-            <div className="background-img" style={{ backgroundImage: `url(${el.img})` }}>
+            <div
+              className="background-img"
+              style={{ backgroundImage: `url(${el.img})` }}
+            >
               <div className="uploadProjectInfo-title">{el.project_title}</div>
               <div className="uploadProjectInfo-hashTags">
                 {el.hashTags.length === 0
@@ -186,6 +193,9 @@ const RecommendItems = styled.div`
     border-radius: 10px;
     box-shadow: 4px 4px 4px rgb(0 0 0 / 25%);
     background-position: center;
+    &:hover {
+      box-shadow: none;
+    }
   }
 
   .uploadProjectInfo-title {

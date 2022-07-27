@@ -29,13 +29,19 @@ const StyledBtn = styled.button`
   margin: 10px;
   color: #ffffff;
   cursor: pointer;
+  &:hover {
+    background: rgba(255, 122, 0, 0.4);
+  }
 `;
 
 const StyledWhiteBtn = styled(StyledBtn)`
-  background: rgba(255, 255, 255, 0.42);
+  background: rgba(255, 255, 255, 0.52);
   border-radius: 10px;
   color: #ff7a00;
   cursor: pointer;
+  &:hover {
+    background: rgba(255, 122, 0, 0.22);
+  }
 `;
 
 const StyledTitle = styled.h1`

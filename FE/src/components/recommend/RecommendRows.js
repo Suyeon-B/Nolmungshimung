@@ -12,7 +12,9 @@ const RecommendRows = () => {
   useEffect(() => {
     const fetchUploadProjectInfo = async () => {
       try {
-        const request = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/infinite?skip=${skip}`);
+        const request = await fetch(
+          `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/infinite?skip=${skip}`
+        );
         const uploadProjectInfoJson = await request.json();
         setUploadProjectInfo([...uploadProjectInfo, ...uploadProjectInfoJson]);
         // console.log("인피니트 스크롤 결과");
@@ -53,10 +55,13 @@ const RecommendRows = () => {
   const ScrollRow = ({ el }) => {
     const defaultHashTags = ["제주도", "여행"];
     return (
-      <div>
+      <StyledDiv>
         <Link to={`project/${el._id}`}>
           <RecommendItems>
-            <div className="background-img" style={{ backgroundImage: `url(${el.img})` }}>
+            <div
+              className="background-img"
+              style={{ backgroundImage: `url(${el.img})` }}
+            >
               <div className="uploadProjectInfo-title">{el.project_title}</div>
               <div className="uploadProjectInfo-hashTags">
                 {el.hashTags.length === 0
@@ -76,7 +81,7 @@ const RecommendRows = () => {
             </div>
           </RecommendItems>
         </Link>
-      </div>
+      </StyledDiv>
     );
   };
 
@@ -96,6 +101,17 @@ const RecommendRows = () => {
     </div>
   );
 };
+
+const StyledDiv = styled.div`
+  bottom: 0px;
+  transition: bottom 0.3s;
+
+  &:hover {
+    position: relative;
+    bottom: 10px;
+  }
+`;
+
 const RecommendItems = styled.div`
   height: 200px;
   width: 200px;
@@ -142,8 +158,9 @@ const HashtagResultTextDark = styled(HashtagResultText)`
   color: #232a3c;
 `;
 const RecommendContents = styled.div`
-  margin-top: 20px;
-  height: 206px;
+  margin-top: 10px;
+  padding-top: 10px;
+  height: 213px;
   display: flex;
   overflow-y: hidden;
   ::-webkit-scrollbar {

@@ -10,7 +10,13 @@ function SpotRouteTitle(props) {
   useEffect(() => {
     if (notifyFlag === false) return;
     // console.log(notifyFlag);
-    socket.emit("attention", props.date, props.selectedIndex, props.projectId, props.userName);
+    socket.emit(
+      "attention",
+      props.date,
+      props.selectedIndex,
+      props.projectId,
+      props.userName
+    );
     setNotifyFlag(false);
     // console.log("attention");
   }, [notifyFlag]);
@@ -98,6 +104,9 @@ const SpotRouteTitleBtn = styled.button`
   font-weight: 800;
   cursor: pointer;
   height: 40px;
+  &:hover {
+    background: rgba(255, 122, 0, 0.4);
+  }
 `;
 
 export default React.memo(SpotRouteTitle);

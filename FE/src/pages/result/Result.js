@@ -341,6 +341,12 @@ const UploadBtn = styled.button`
   background-color: #ff8a3d;
   border-radius: 5px;
   padding: 3px 8px 3px 8px;
+  transition-duration: 0.3s;
+  box-shadow: 3px 3px 3px #aaaaaa;
+  &:active {
+    box-shadow: none;
+    transition-duration: 0.3s;
+  }
 `;
 
 const ResultMemoBox = styled.div`
