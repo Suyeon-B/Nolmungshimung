@@ -19,7 +19,7 @@ const randomRGB = function () {
 };
 const colorArr = [];
 
-for (let i = 0; i < 10; i++) {
+for (let i = 0; i < 100; i++) {
   colorArr.push(`#${randomRGB()}`);
 }
 
@@ -126,7 +126,7 @@ function Result() {
     }
     return <div className="memoText">{text}</div>;
   };
-  console.log(colorArr);
+
   return (
     <ResultWhole>
       <ResultContainer>

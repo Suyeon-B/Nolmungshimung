@@ -6,6 +6,15 @@ import { useParams } from "react-router-dom";
 import GetProjectModal from "../../components/recommendModal/GetProjectModal";
 import SearchDetail from "../../components/searchMap/SearchDetail";
 
+const randomRGB = function () {
+  return Math.round(Math.random() * 0xffffff).toString(16);
+};
+const colorArr = [];
+
+for (let i = 0; i < 100; i++) {
+  colorArr.push(`#${randomRGB()}`);
+}
+
 const RecommendPageDetail = () => {
   const { projectId } = useParams();
 
@@ -150,7 +159,7 @@ const RecommendPageDetail = () => {
           />
         )}
       </ResultContainer>
-      <ResultMap routes={routes} />
+      <ResultMap routes={routes} colorArr={colorArr} />
     </ResultWhole>
   );
 };

@@ -2,14 +2,14 @@ import React, { useEffect } from "react";
 
 const { kakao } = window;
 
-const randomRGB = function () {
-  return Math.round(Math.random() * 0xffffff).toString(16);
-};
-const colorArr = [];
+// const randomRGB = function () {
+//   return Math.round(Math.random() * 0xffffff).toString(16);
+// };
+// const colorArr = [];
 
-for (let i = 0; i < 10; i++) {
-  colorArr.push(`#${randomRGB()}`);
-}
+// for (let i = 0; i < 10; i++) {
+//   colorArr.push(`#${randomRGB()}`);
+// }
 
 function ResultMap(props) {
   const color = {
