@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { AlertFilled } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import socket from "../../socket";
+import Badge from "../../atomics/Badge";
+
 function SpotRouteTitle(props) {
   let navigate = useNavigate();
   const [notifyFlag, setNotifyFlag] = useState(false);
@@ -26,30 +28,74 @@ function SpotRouteTitle(props) {
   const callFriends = () => {
     // console.log(`notify flag is ${notifyFlag}`);
     setNotifyFlag(true);
+    Badge.success("친구들에게 알림을 보냈어요 !");
     // console.log(`notify flag is ${notifyFlag}`);
   };
   return (
     <SpotRouteTitleDiv>
       <section>
-        <SpotRouteTitleDay>{props.date}</SpotRouteTitleDay>
-        <AlertFilled
-          style={{ color: "#ff8a3d", fontSize: "34px", marginLeft: "15px" }}
-          onClick={callFriends}
-        />
-        <span>주목시키기</span>
+        <div className="dateAlert">
+          <SpotRouteTitleDay>{props.date}</SpotRouteTitleDay>
+          <AlertBtnWrapper onClick={callFriends}>
+            <AlertFilled
+              style={{ color: "white", fontSize: "25px" }}
+              // onClick={callFriends}
+            />
+            <span className="alertBtnText">주목시키기</span>
+          </AlertBtnWrapper>
+        </div>
       </section>
       <SpotRouteTitleBtn onClick={onClcikResult}>작성 완료</SpotRouteTitleBtn>
     </SpotRouteTitleDiv>
   );
 }
 
+const AlertBtnWrapper = styled.section`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 130px;
+  height: 40px;
+  background: #ff8a3d;
+  border-radius: 5px;
+  margin-left: 15px;
+  color: white;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 3px 3px 3px #aaaaaa;
+  -ms-user-select: none;
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  &:hover {
+    background: rgba(255, 122, 0, 0.4);
+  }
+  &:active {
+    background: #ff8a3d;
+    box-shadow: none;
+  }
+
+  .alertBtnText {
+    margin-top: 3px;
+    margin-left: 5px;
+  }
+`;
+
 const SpotRouteTitleDiv = styled.section`
   width: 100%;
   margin-top: 29px;
-  border-bottom: 1px solid #c1c7cd;
+  padding-bottom: 5px;
+  border-bottom: 2px solid #ebebeb;
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  .dateAlert {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
 `;
 
 const SpotRouteTitleDay = styled.span`
@@ -59,20 +105,24 @@ const SpotRouteTitleDay = styled.span`
   font-size: 28px;
   line-height: 48px;
   color: #ff8a3d;
-  margin-left: 15px;
+  margin-left: 25px;
 `;
 
 const SpotRouteTitleBtn = styled.button`
   white-space: nowrap;
   margin-right: 25px;
-  margin-bottom: 10px;
+  // margin-bottom: 10px;
   background-color: #ff8a3d;
   border: 0;
-  border-radius: 4px;
+  border-radius: 5px;
   padding: 14px;
   color: #f8f9fa;
   font-weight: 800;
   cursor: pointer;
+  height: 40px;
+  &:hover {
+    background: rgba(255, 122, 0, 0.4);
+  }
 `;
 
 export default React.memo(SpotRouteTitle);

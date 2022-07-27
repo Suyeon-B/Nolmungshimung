@@ -26,7 +26,7 @@ router.get("/", async (req, res, next) => {
 router.get("/infinite", async (req, res, next) => {
   try {
     const skip = req.query.skip && /^\d+$/.test(req.query.skip) ? Number(req.query.skip) : 0;
-    // 한 번에 16개의 프로젝트 정보만 load합니다.
+    // 한 번에 16개의 여행일정 정보만 load합니다.
     const uploadProjectInfo = await UploadProject.find({}, undefined, {
       skip,
       limit: 16,
@@ -61,10 +61,10 @@ router.post("/alldate", async (req, res, next) => {
     user["user_projects"].push(response._id.toString());
     await user.save();
 
-    res.status(200).send({ success: "프로젝트 가져오기 성공!", projectId: response._id });
+    res.status(200).send({ success: "여행일정 가져오기 성공!", projectId: response._id });
   } catch (error) {
     console.log(error);
-    res.status(404).send({ error: "프로젝트 가져오기 실패!" });
+    res.status(404).send({ error: "여행일정 가져오기 실패!" });
   }
 });
 
@@ -103,10 +103,10 @@ router.post("/selectdate", async (req, res, next) => {
     user["user_projects"].push(response._id.toString());
     await user.save();
 
-    res.status(200).send({ success: "프로젝트 가져오기 성공!", projectId: response._id });
+    res.status(200).send({ success: "여행일정 가져오기 성공!", projectId: response._id });
   } catch (error) {
     console.log(error);
-    res.status(404).send({ error: "프로젝트 가져오기 실패!" });
+    res.status(404).send({ error: "여행일정 가져오기 실패!" });
   }
 });
 

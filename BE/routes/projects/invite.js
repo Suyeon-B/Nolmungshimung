@@ -8,18 +8,12 @@ const jwt = require("jsonwebtoken");
 
 router.post("/mail", async (req, res) => {
   console.log("들어와");
-  var inviteToken = jwt.sign(
-    { userEmail: req.body.email, projectId: req.body.projectId },
-    "SECRETINVITE",
-    {
-      expiresIn: "1h",
-    }
-  );
+  var inviteToken = jwt.sign({ userEmail: req.body.email, projectId: req.body.projectId }, "SECRETINVITE", {
+    expiresIn: "1h",
+  });
   try {
     if (await inviteMail(req.body.email, inviteToken, req.body.projectId)) {
-      return res
-        .status(200)
-        .json({ success: true, message: "그룹 초대 메일이 발송되었습니다." });
+      return res.status(200).json({ success: true, message: "그룹 초대 메일이 발송되었습니다." });
     }
   } catch (error) {
     console.log(`invite email err :${error}`);
@@ -57,7 +51,7 @@ router.get("/:token/:user", async (req, res, next) => {
   if (data.userEmail === user) {
     return res.status(200).json({
       success: true,
-      message: "프로젝트에 참가되었습니다.",
+      message: "여행일정에 참가되었습니다.",
       project: data.projectId,
     });
   } else {

@@ -37,9 +37,10 @@ function SignUp() {
   const onClickEmail = (event) => {
     event.preventDefault();
     console.log(id);
-    if (!id) {
-      Badge.fail("회원가입 실패", "이메일을 정확하게 입력해주세요.");
-    }
+    Badge.success("이메일이 가는 중이에요. 잠시 기다려주세요!");
+    // if (!id) {
+    //   Badge.fail("회원가입 실패", "이메일을 정확하게 입력해주세요.");
+    // }
 
     const body = {
       userEmail: id,
