@@ -3,6 +3,7 @@ import { Popover, Button, Modal, Space } from "antd";
 import { UsergroupAddOutlined } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
+import Badge from "./Badge";
 
 function FriendInvite() {
   const { projectId } = useParams();
@@ -67,13 +68,15 @@ function FriendInvite() {
     }
     if (!isEmail(email)) {
       Modal.error({
-        content: "지대로된 이메일 넣어라",
+        content: "유효하지 않은 이메일입니다.",
       });
       setEmail("");
       return;
     }
     let data = { email: email, projectId: projectId };
     console.log(data);
+    Badge.success("메일이 전송중입니다. 잠시 기다려주세요.");
+
     fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/invite/mail`, {
       method: "post",
       headers: {

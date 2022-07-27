@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { AlertFilled } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import socket from "../../socket";
+import Badge from "../../atomics/Badge";
+
 function SpotRouteTitle(props) {
   let navigate = useNavigate();
   const [notifyFlag, setNotifyFlag] = useState(false);
@@ -26,6 +28,7 @@ function SpotRouteTitle(props) {
   const callFriends = () => {
     // console.log(`notify flag is ${notifyFlag}`);
     setNotifyFlag(true);
+    Badge.success("친구들에게 알림을 보냈어요 !");
     // console.log(`notify flag is ${notifyFlag}`);
   };
   return (
