@@ -50,7 +50,7 @@ function SpotRoute({
       };
 
       fetch(
-        `${process.env.REACT_APP_SERVER_IP}/travel/find/` +
+        `http://${process.env.REACT_APP_SERVER_IP}/travel/find/` +
           value.id,
         {
           method: "POST", // 또는 'PUT'

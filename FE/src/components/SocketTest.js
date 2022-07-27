@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import io from "socket.io-client";
 
-const socket = io(`${process.env.REACT_APP_SERVER_IP}:3001`);
+const socket = io(`http://${process.env.REACT_APP_SERVER_IP}:3001`);
 
 function SocketTest() {
   const [isConnected, setIsConnected] = useState(socket.connected);

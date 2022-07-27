@@ -6,7 +6,7 @@ const AuthContext = createContext(null);
 
 async function fetchCallAuth() {
   const response = await fetch(
-    `${process.env.REACT_APP_SERVER_IP}/users/auth`,
+    `http://${process.env.REACT_APP_SERVER_IP}/users/auth`,
     {
       method: "get",
       headers: {
@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
     //To know my current status, send Auth request
     // async function callAuth() {
     //   await fetch(
-    //     `${process.env.REACT_APP_SERVER_IP}/users/auth`,
+    //     `http://${process.env.REACT_APP_SERVER_IP}/users/auth`,
     //     {
     //       method: "get",
     //       headers: {

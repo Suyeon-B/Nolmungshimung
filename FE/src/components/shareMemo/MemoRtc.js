@@ -68,7 +68,7 @@ const MemoRtc = ({ project_Id, userName }) => {
     // console.log(" @#@#@#@#@# connectuser : ", connectUsers);
     if (connectUsers < 2) {
       fetch(
-        `${process.env.REACT_APP_SERVER_IP}/projects/memo/${projectID}`,
+        `http://${process.env.REACT_APP_SERVER_IP}/projects/memo/${projectID}`,
         {
           method: "get",
           headers: {
