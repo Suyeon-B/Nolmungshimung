@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { throttle } from "lodash";
 
 import styled from "styled-components";
 
@@ -26,13 +27,28 @@ const RecommendRows = () => {
     fetchUploadProjectInfo();
   }, [skip]);
 
-  const handleScroll = (e) => {
-    const { offsetHeight, scrollTop, scrollHeight } = e.target;
-
-    if (offsetHeight + scrollTop === scrollHeight) {
-      setSkip(uploadProjectInfo.length);
-    }
+  var throttle = function (func, delay) {
+    return function () {
+      var timer = null;
+      var clientHeight = document.body.clientHeight;
+      var scrollTop = document.body.scrollTop;
+      var scrollHieght = document.body.scrollHeight;
+      // console.log(clientHeight, scrollTop, scrollHieght);
+      if (scrollHieght - clientHeight - scrollTop < 200) {
+        timer = setTimeout(func, delay);
+        // setSkip(uploadProjectInfo.length % 10);
+      }
+    };
   };
+
+  const handleScroll = throttle(function (e) {
+    try {
+      const { offsetHeight, scrollTop, scrollHeight } = e.target;
+      if (offsetHeight + scrollTop === scrollHeight) {
+        setSkip(uploadProjectInfo.length);
+      }
+    } catch (err) {}
+  }, 10000);
 
   const ScrollRow = ({ el }) => {
     const defaultHashTags = ["제주도", "여행"];

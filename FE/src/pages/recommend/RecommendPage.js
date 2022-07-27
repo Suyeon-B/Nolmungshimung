@@ -2,6 +2,7 @@ import React, { useEffect, useState, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import { HomeFilled, SearchOutlined } from "@ant-design/icons";
 import { Select } from "antd";
+import { throttle } from "lodash";
 
 const { Option } = Select;
 
