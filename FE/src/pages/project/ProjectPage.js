@@ -62,6 +62,12 @@ const ProjectPage = (props) => {
     window.addEventListener("beforeunload", (event) => {
       socket.emit("projectLeave", [projectId, auth.user.user_name]);
     });
+
+    return () => {
+      window.removeEventListener("beforeunload", () => {
+        socket.emit("projectLeave", [projectId, auth.user.user_name]);
+      });
+    };
   }, []);
   let userName = auth?.user?.user_name;
 

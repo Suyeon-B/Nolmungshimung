@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { Button } from "antd";
 import { RedoOutlined } from "@ant-design/icons";
 import MapSearchBtn from "../../atomics/MapSearchBtn";
+import Badge from "../../atomics/Badge";
 
 const { kakao } = window;
 
@@ -219,13 +220,13 @@ const Search = ({
       } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
         removeMarker();
         displayPagination(pagination);
-        alert("검색 결과가 존재하지 않습니다.");
+        Badge.fail("검색 실패", "검색 결과가 존재하지 않습니다.");
 
         return;
       } else if (status === kakao.maps.services.Status.ERROR) {
         removeMarker();
         displayPagination(pagination);
-        alert("검색 결과 중 오류가 발생했습니다.");
+        Badge.fail("검색 실패", "검색 결과 중 오류가 발생했습니다.");
 
         return;
       }
