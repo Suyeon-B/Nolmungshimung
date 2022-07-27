@@ -11,20 +11,25 @@ const ProjectList = ({ goProject }) => {
 
   const onDelete = async (event) => {
     if (confirm("여행일정을 삭제하시겠어요??")) {
-      const projectId = event.target.dataset.id ? event.target.dataset.id : event.target.parentNode.dataset.id;
+      const projectId = event.target.dataset.id
+        ? event.target.dataset.id
+        : event.target.parentNode.dataset.id;
 
       console.log(projectId);
       const data = {
         _id: auth.user._id,
       };
       console.log(event.target);
-      const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${projectId}`, {
-        method: "post",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+      const response = await fetch(
+        `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${projectId}`,
+        {
+          method: "post",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
       location.reload();
     }
   };
@@ -65,14 +70,17 @@ const ProjectList = ({ goProject }) => {
     // console.log(`auth.user.user_projects : ${auth.user.user.user_projects}`);
 
     async function fetchProjectList() {
-      await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/title`, {
-        method: "post",
-        headers: {
-          "content-type": "application/json",
-        },
-        // credentials: "include",
-        body: JSON.stringify(projects),
-      })
+      await fetch(
+        `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/title`,
+        {
+          method: "post",
+          headers: {
+            "content-type": "application/json",
+          },
+          // credentials: "include",
+          body: JSON.stringify(projects),
+        }
+      )
         .then((res) => res.json())
         .then((res) => {
           if (res.success === true) {
@@ -90,7 +98,11 @@ const ProjectList = ({ goProject }) => {
     <StyleProjectList>
       <TitleWrapper>
         <StyledTitle>내 여행계획 목록</StyledTitle>
-        <PlusCircleTwoTone onClick={goProject} style={{ fontSize: "30px" }} twoToneColor="#FF8A3D" />
+        <PlusCircleTwoTone
+          onClick={goProject}
+          style={{ fontSize: "30px" }}
+          twoToneColor="#FF8A3D"
+        />
       </TitleWrapper>
 
       <StyledLine></StyledLine>
@@ -122,6 +134,12 @@ const StyledLi = styled.li`
   font-size: 28px;
   line-height: 45px;
   margin-bottom: 10px;
+  padding: 0px 10px;
+
+  &:hover {
+    background: gainsboro;
+    border-radius: 5px;
+  }
 
   color: #000000;
 `;
