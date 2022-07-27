@@ -13,7 +13,7 @@ const SearchBar = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     props.changePlace(InputText);
-    setInputText("");
+    // setInputText("");
     props.handleSelect(null);
     props.sumit(!props.current);
     props.setSwLatlng([33.592161526546604, 126.04650255976554]);
@@ -23,13 +23,14 @@ const SearchBar = (props) => {
     <form
       onSubmit={handleSubmit}
       style={{
-        height: "50px",
+        height: "54px",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         boxShadow: "3px 3px 3px 0px lightgray",
         paddingBottom: "18px",
       }}
+      autoComplete="off"
     >
       <StyledFieldset>
         <SearchOutlined style={{ fontSize: "25px", color: "#FF8A3D" }} />
@@ -44,13 +45,7 @@ const SearchBar = (props) => {
           onChange={onChange}
           value={InputText}
         />
-        <input
-          type="submit"
-          id="search.keyword.submit"
-          // value={<SearchOutlined />}
-          style={{ display: "none" }}
-          // style={{ marginLeft: "10px" }}
-        />
+        <input type="submit" id="search.keyword.submit" style={{ display: "none" }} />
       </StyledFieldset>
     </form>
   );

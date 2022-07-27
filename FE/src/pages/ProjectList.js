@@ -10,7 +10,7 @@ const ProjectList = ({ goProject }) => {
   let projectsInfo = null;
 
   const onDelete = async (event) => {
-    if (confirm("프로젝트를 삭제하시겠어요??")) {
+    if (confirm("여행일정을 삭제하시겠어요??")) {
       const projectId = event.target.dataset.id
         ? event.target.dataset.id
         : event.target.parentNode.dataset.id;
@@ -62,7 +62,7 @@ const ProjectList = ({ goProject }) => {
 
   useEffect(() => {
     if (auth.user === undefined || auth.user === null) return;
-    console.log("여기", auth.user);
+    // console.log("여기", auth.user);
     // auth.user 불러오질 못함.
     // 세션은 ..? 안됨
     // -> auth.user가 변경될때마다 재랜더링 ㄲ
@@ -97,7 +97,7 @@ const ProjectList = ({ goProject }) => {
   return (
     <StyleProjectList>
       <TitleWrapper>
-        <StyledTitle>내 프로젝트 목록</StyledTitle>
+        <StyledTitle>내 여행계획 목록</StyledTitle>
         <PlusCircleTwoTone
           onClick={goProject}
           style={{ fontSize: "30px" }}
@@ -134,6 +134,12 @@ const StyledLi = styled.li`
   font-size: 28px;
   line-height: 45px;
   margin-bottom: 10px;
+  padding: 0px 10px;
+
+  &:hover {
+    background: gainsboro;
+    border-radius: 5px;
+  }
 
   color: #000000;
 `;

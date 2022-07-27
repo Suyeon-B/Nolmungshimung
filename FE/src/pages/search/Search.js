@@ -5,6 +5,8 @@ import styled from "styled-components";
 // import NomalMarker from "../../../public/statics/images/location-dot-solid.svg";
 import { Button } from "antd";
 import { RedoOutlined } from "@ant-design/icons";
+import MapSearchBtn from "../../atomics/MapSearchBtn";
+import Badge from "../../atomics/Badge";
 
 const { kakao } = window;
 
@@ -13,9 +15,9 @@ var MARKER_WIDTH = 73, // 기본, 클릭 마커의 너비
   OVER_MARKER_WIDTH = 90, // 오버 마커의 너비
   OVER_MARKER_HEIGHT = 92, // 오버 마커의 높이
   NOMAL_MARKER_URL =
-    "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNzUycHQiIGhlaWdodD0iNzUycHQiIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDc1MiA3NTIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiA8ZyBmaWxsPSIjMDA0NDllIj4KICA8cGF0aCBkPSJtMzc2IDE4Ni41N2MtNTYuODI4IDAtMTAzLjI0IDQ2LjQxLTEwMy4yNCAxMDMuMjQgMC4wMDM5MDcgNTYuODI4IDEwMy4yNCAyNzUuNjIgMTAzLjI0IDI3NS42MnMxMDMuMjQtMjE4LjMyIDEwMy4yNC0yNzUuNjJjMC01Ny4zMDEtNDYuNDEtMTAzLjI0LTEwMy4yNC0xMDMuMjR6bTAuNDc2NTYgMTUxLjA3Yy0yOC40MTQgMC01MS42MjEtMjMuMjA3LTUxLjYyMS01MS42MjEgMC0yOC40MTQgMjIuNzMtNTIuMDk0IDUxLjYyMS01Mi4wOTQgMjguODg3IDAgNTEuNjE3IDIzLjIwNyA1MS42MTcgNTEuNjIxcy0yMy4yMDMgNTIuMDk0LTUxLjYxNyA1Mi4wOTR6Ii8+CiAgPHBhdGggZD0ibTQxMS4wNSAyODUuNTVjMCAxOS4wOTQtMTUuNDggMzQuNTctMzQuNTcgMzQuNTctMTkuMDk0IDAtMzQuNTc0LTE1LjQ3Ny0zNC41NzQtMzQuNTdzMTUuNDgtMzQuNTcgMzQuNTc0LTM0LjU3YzE5LjA5IDAgMzQuNTcgMTUuNDc3IDM0LjU3IDM0LjU3Ii8+CiA8L2c+Cjwvc3ZnPgo=",
+    "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNzUycHQiIGhlaWdodD0iNzUycHQiIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDc1MiA3NTIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiA8cGF0aCBkPSJtMzk2LjUxIDU2Ny41N2MtMTguNjQ4IDExLjMxMi00Mi45NDkgNS4zNzg5LTU0LjI3My0xMy4yNS02OS41OTQtMTE0LjQ4LTEwNC4zNi0xOTIuMzktMTA0LjM2LTIzNy42NiAwLTc2LjIwMyA2MS44NC0xMzcuOTggMTM4LjEyLTEzNy45OCA3Ni4yODkgMCAxMzguMTMgNjEuNzc3IDEzOC4xMyAxMzcuOTggMCA0NS4yNzctMzQuNzY2IDEyMy4xOS0xMDQuMzYgMjM3LjY2LTMuMjkzIDUuNDE0MS03LjgzOTggOS45NjA5LTEzLjI2MiAxMy4yNXptLTIwLjM1OS0xOTEuNTdjMzIuNzMgMCA1OS4yNjItMjYuNTA0IDU5LjI2Mi01OS4xOTUgMC0zMi42OTUtMjYuNTMxLTU5LjE5OS01OS4yNjItNTkuMTk5LTMyLjczIDAtNTkuMjYyIDI2LjUwNC01OS4yNjIgNTkuMTk5IDAgMzIuNjkxIDI2LjUzMSA1OS4xOTUgNTkuMjYyIDU5LjE5NXoiIGZpbGw9IiMwMDQ0OWUiLz4KPC9zdmc+Cg==",
   CLICK_MARKER_URL =
-    "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNzUycHQiIGhlaWdodD0iNzUycHQiIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDc1MiA3NTIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiA8ZyBmaWxsPSIjZjMwNTA1Ij4KICA8cGF0aCBkPSJtMzc2IDE4Ni41N2MtNTYuODI4IDAtMTAzLjI0IDQ2LjQxLTEwMy4yNCAxMDMuMjQgMC4wMDM5MDcgNTYuODI4IDEwMy4yNCAyNzUuNjIgMTAzLjI0IDI3NS42MnMxMDMuMjQtMjE4LjMyIDEwMy4yNC0yNzUuNjJjMC01Ny4zMDEtNDYuNDEtMTAzLjI0LTEwMy4yNC0xMDMuMjR6bTAuNDc2NTYgMTUxLjA3Yy0yOC40MTQgMC01MS42MjEtMjMuMjA3LTUxLjYyMS01MS42MjEgMC0yOC40MTQgMjIuNzMtNTIuMDk0IDUxLjYyMS01Mi4wOTQgMjguODg3IDAgNTEuNjE3IDIzLjIwNyA1MS42MTcgNTEuNjIxcy0yMy4yMDMgNTIuMDk0LTUxLjYxNyA1Mi4wOTR6Ii8+CiAgPHBhdGggZD0ibTQxMS4wNSAyODUuNTVjMCAxOS4wOTQtMTUuNDggMzQuNTctMzQuNTcgMzQuNTctMTkuMDk0IDAtMzQuNTc0LTE1LjQ3Ny0zNC41NzQtMzQuNTdzMTUuNDgtMzQuNTcgMzQuNTc0LTM0LjU3YzE5LjA5IDAgMzQuNTcgMTUuNDc3IDM0LjU3IDM0LjU3Ii8+CiA8L2c+Cjwvc3ZnPgo=";
+    "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iNzUycHQiIGhlaWdodD0iNzUycHQiIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDc1MiA3NTIiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiA8cGF0aCBkPSJtMzk2LjUxIDU2Ny41N2MtMTguNjQ4IDExLjMxMi00Mi45NDkgNS4zNzg5LTU0LjI3My0xMy4yNS02OS41OTQtMTE0LjQ4LTEwNC4zNi0xOTIuMzktMTA0LjM2LTIzNy42NiAwLTc2LjIwMyA2MS44NC0xMzcuOTggMTM4LjEyLTEzNy45OCA3Ni4yODkgMCAxMzguMTMgNjEuNzc3IDEzOC4xMyAxMzcuOTggMCA0NS4yNzctMzQuNzY2IDEyMy4xOS0xMDQuMzYgMjM3LjY2LTMuMjkzIDUuNDE0MS03LjgzOTggOS45NjA5LTEzLjI2MiAxMy4yNXptLTIwLjM1OS0xOTEuNTdjMzIuNzMgMCA1OS4yNjItMjYuNTA0IDU5LjI2Mi01OS4xOTUgMC0zMi42OTUtMjYuNTMxLTU5LjE5OS01OS4yNjItNTkuMTk5LTMyLjczIDAtNTkuMjYyIDI2LjUwNC01OS4yNjIgNTkuMTk5IDAgMzIuNjkxIDI2LjUzMSA1OS4xOTUgNTkuMjYyIDU5LjE5NXoiIGZpbGw9IiNhNjExMjIiLz4KPC9zdmc+Cg==";
 
 var markerSize = new kakao.maps.Size(MARKER_WIDTH, MARKER_HEIGHT), // 기본, 클릭 마커의 크기
   overMarkerSize = new kakao.maps.Size(OVER_MARKER_WIDTH, OVER_MARKER_HEIGHT); // 오버 마커의 크기
@@ -81,8 +83,10 @@ const Search = ({
     33.14572269165777, 127.07480227781775,
   ]);
   const [sumit, setSumit] = useState(false);
+  const [placeRender, setPlaceRender] = useState(null);
 
-  const onClick = (event) => {
+  const onClick = useCallback(() => {
+    console.log("on click");
     var bounds = map.getBounds();
     var swLatlng = bounds.getSouthWest();
     var neLatlng = bounds.getNorthEast();
@@ -92,11 +96,11 @@ const Search = ({
     // console.log(swLatlng, neLatlng);
 
     setSumit(!sumit);
-  };
+  }, [swLatlng, neLatlng, sumit]);
 
-  const handleSelect = (value) => {
+  const handleSelect = useCallback((value) => {
     setClick(value);
-  };
+  }, []);
 
   function removeMarker() {
     for (var i = 0; i < markers.length; i++) {
@@ -216,13 +220,13 @@ const Search = ({
       } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
         removeMarker();
         displayPagination(pagination);
-        alert("검색 결과가 존재하지 않습니다.");
+        Badge.fail("검색 실패", "검색 결과가 존재하지 않습니다.");
 
         return;
       } else if (status === kakao.maps.services.Status.ERROR) {
         removeMarker();
         displayPagination(pagination);
-        alert("검색 결과 중 오류가 발생했습니다.");
+        Badge.fail("검색 실패", "검색 결과 중 오류가 발생했습니다.");
 
         return;
       }
@@ -232,6 +236,27 @@ const Search = ({
       //
     });
   }, [sumit]);
+
+  useEffect(() => {
+    if (Places.length === 0) return;
+    setPlaceRender(
+      Places.map((item, i) => (
+        <SearchListRoute
+          id={"list" + i}
+          key={i}
+          itemRoutes={itemRoutes}
+          setItemRoutes={setItemRoutes}
+          projectId={projectId}
+          route={item}
+          idx={i}
+          startDate={startDate}
+          setIsAddDel={setIsAddDel}
+          selected={click === i ? true : false}
+          handleSelect={handleSelect}
+        />
+      ))
+    );
+  }, [Places, click]);
 
   return (
     <Wapper>
@@ -245,7 +270,8 @@ const Search = ({
           setNeLatlng={setNeLatlng}
         />
         <SearchUl id="searchBar">
-          {Places &&
+          {placeRender}
+          {/* {Places &&
             Places.map((item, i) => (
               <SearchListRoute
                 id={"list" + i}
@@ -260,7 +286,7 @@ const Search = ({
                 selected={click === i ? true : false}
                 handleSelect={handleSelect}
               />
-            ))}
+            ))} */}
           <div
             id="pagination"
             style={{ position: "relative", zIndex: 2 }}
@@ -268,7 +294,8 @@ const Search = ({
         </SearchUl>
       </SearchListDiv>
       <StyledMapDiv id="searchMap">
-        <Button
+        <MapSearchBtn onClick={onClick} />
+        {/* <Button
           onClick={onClick}
           type="primary"
           shape="round"
@@ -284,7 +311,7 @@ const Search = ({
           }}
         >
           현지도에서 검색
-        </Button>
+        </Button> */}
       </StyledMapDiv>
     </Wapper>
   );
@@ -311,6 +338,9 @@ const SearchUl = styled.ul`
 `;
 
 const StyledMapDiv = styled.div`
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
   height: 100vh;
   min-width: calc(100% - 340px);
   position: relative;

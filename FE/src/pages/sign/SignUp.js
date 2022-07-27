@@ -2,32 +2,10 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
-import { Modal } from "antd";
+// import { Modal } from "antd";
+import Badge from "../../atomics/Badge";
 
 function SignUp() {
-  const success = () => {
-    Modal.success({
-      content: "회원가입 완료",
-    });
-  };
-  const mailSuccess = () => {
-    Modal.success({
-      content: "이메일 전송 완료",
-    });
-  };
-
-  const certificateSuccess = () => {
-    Modal.success({
-      content: "인증번호가 확인되었습니다.",
-    });
-  };
-
-  const fail = (msg) => {
-    Modal.error({
-      title: "회원가입 실패",
-      content: msg,
-    });
-  };
   let navigate = useNavigate();
   const [id, setId] = useState("");
   const [name, setName] = useState("");
@@ -59,9 +37,10 @@ function SignUp() {
   const onClickEmail = (event) => {
     event.preventDefault();
     console.log(id);
-    if (!id) {
-      fail("이메일을 입력하라냥");
-    }
+    Badge.success("이메일이 가는 중이에요. 잠시 기다려주세요!");
+    // if (!id) {
+    //   Badge.fail("회원가입 실패", "이메일을 정확하게 입력해주세요.");
+    // }
 
     const body = {
       userEmail: id,
@@ -77,10 +56,10 @@ function SignUp() {
       .then((res) => res.json())
       .then((res) => {
         if (res.success === false) {
-          fail(res.message);
+          Badge.fail("회원가입 실패", res.message);
           return;
         }
-        mailSuccess();
+        Badge.success("이메일 전송 완료");
         console.log(res);
         setNumberFlag(true);
         setAnswer(res.answer);
@@ -93,9 +72,9 @@ function SignUp() {
     console.log(certification);
     if (answer == certification) {
       setCertificationFlag(true);
-      certificateSuccess();
+      Badge.success("인증번호가 확인되었습니다.");
     } else {
-      fail("인증번호가 틀렸습니다.");
+      Badge.fail("회원가입 실패", "인증번호가 틀렸습니다.");
     }
   };
 
@@ -104,28 +83,31 @@ function SignUp() {
   });
 
   async function singUpUser(data) {
-    await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/users/signup`, {
-      method: "post",
-      headers: {
-        "content-type": "application/json",
-      },
-      // credentials: "include",
-      body: JSON.stringify(data),
-    })
+    await fetch(
+      `https://${process.env.REACT_APP_SERVER_IP}:8443/users/signup`,
+      {
+        method: "post",
+        headers: {
+          "content-type": "application/json",
+        },
+        // credentials: "include",
+        body: JSON.stringify(data),
+      }
+    )
       .then((res) => res.json())
       .then((res) => {
         // console.log("res : ", res);
         if (res.success === true) {
-          success();
+          Badge.success("회원가입 성공");
           // console.log("Sign Up Success");
           navigate("/signin", { replace: true });
         } else {
-          fail(res.message);
+          Badge.fail("회원가입 실패", res.message);
         }
       })
       .catch((err) => {
         // ! 배포시 지워야함
-        fail(err);
+        Badge.fail("회원가입 실패", err);
         console.log(`err: ${err}`);
       });
   }
@@ -133,23 +115,23 @@ function SignUp() {
   const onSubmitSignUp = (event) => {
     event.preventDefault();
     if (id < 4) {
-      fail("이메일을 입력해주세요.");
+      Badge.fail("회원가입 실패", "이메일을 입력해주세요.");
       return;
     }
     if (certificationFlag === false) {
-      fail("인증번호를 받아주세요.");
+      Badge.fail("회원가입 실패", "인증번호를 받아주세요.");
       return;
     }
     if (name.length === 0) {
-      fail("닉네임을 입력해주세요.");
+      Badge.fail("회원가입 실패", "닉네임을 입력해주세요.");
       return;
     }
     if (password !== confirmPassword) {
-      fail("비밀번호가 일치하지 않아요.");
+      Badge.fail("회원가입 실패", "비밀번호가 일치하지 않아요.");
       return;
     }
     if (password.length < 6) {
-      fail("비밀번호를 6자 이상 입력해주세요.");
+      Badge.fail("회원가입 실패", "비밀번호를 6자 이상 입력해주세요.");
       return;
     }
 
@@ -177,8 +159,17 @@ function SignUp() {
         </Btns>
         <Form onSubmit={onSubmitSignUp}>
           <SignUpEmailDiv>
-            <SignUpEmailInput placeholder="jeju@island.com" type="email" value={id} onChange={onchangeId} />
-            {!numberFlag && <SignUpEmailBtn onClick={onClickEmail}>인증번호 받기</SignUpEmailBtn>}
+            <SignUpEmailInput
+              placeholder="jeju@island.com"
+              type="email"
+              value={id}
+              onChange={onchangeId}
+            />
+            {!numberFlag && (
+              <SignUpEmailBtn onClick={onClickEmail}>
+                인증번호 받기
+              </SignUpEmailBtn>
+            )}
           </SignUpEmailDiv>
           <SignUpEmailDiv>
             <SignUpEmailInput
@@ -187,11 +178,25 @@ function SignUp() {
               value={certification}
               onChange={onchangeCertification}
             />
-            {numberFlag && <SignUpEmailBtn onClick={onClickCertification}>인증번호 확인</SignUpEmailBtn>}
+            {numberFlag && (
+              <SignUpEmailBtn onClick={onClickCertification}>
+                인증번호 확인
+              </SignUpEmailBtn>
+            )}
           </SignUpEmailDiv>
 
-          <Input placeholder="닉네임" type="text" value={name} onChange={onchangeName} />
-          <Input placeholder="password (6자 이상)" type="password" value={password} onChange={onchangePassword} />
+          <Input
+            placeholder="닉네임"
+            type="text"
+            value={name}
+            onChange={onchangeName}
+          />
+          <Input
+            placeholder="password (6자 이상)"
+            type="password"
+            value={password}
+            onChange={onchangePassword}
+          />
           <Input
             placeholder="password 확인"
             type="password"

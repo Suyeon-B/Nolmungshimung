@@ -2,6 +2,7 @@ import * as React from "react";
 import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../components/auth/Auth";
+import Badge from "../../atomics/Badge";
 
 const qs = require("qs");
 
@@ -67,7 +68,8 @@ function KakaoSignIn(props) {
           await login({ user: data.user_email });
           // navigate("/", { replace: true });
         } else {
-          window.alert(data.message);
+          // window.alert(data.message);
+          Badge.fail("로그인 실패", data.message);
           navigate("/signin");
         }
       })

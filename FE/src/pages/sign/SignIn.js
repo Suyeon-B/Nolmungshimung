@@ -3,23 +3,12 @@ import styled from "styled-components";
 import { useMutation } from "react-query";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../components/auth/Auth";
-import { Modal } from "antd";
+// import { Modal } from "antd";
+import Badge from "../../atomics/Badge";
 
 const kauthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=2d1c91f12a4c8020dbcc39ddb0c368b0&redirect_uri=https://${process.env.REACT_APP_SERVER_IP}:3000/kakao/signin&response_type=code`;
 
 function SignIn() {
-  const success = () => {
-    Modal.success({
-      content: "로그인 완료",
-    });
-  };
-
-  const fail = (msg) => {
-    Modal.error({
-      title: "로그인 실패",
-      content: msg,
-    });
-  };
   let navigate = useNavigate();
   const location = useLocation();
   const { login } = useAuth();
@@ -70,7 +59,7 @@ function SignIn() {
             navigate("/", { replace: true });
           }
         } else {
-          fail(res.message);
+          Badge.fail("로그인 실패", res.message);
         }
       })
       .catch((err) => console.log(`err: ${err}`));
