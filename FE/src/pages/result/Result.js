@@ -15,24 +15,9 @@ const color = {
 };
 
 const randomRGB = function () {
-  // let rgb = "";
-  // rgb += (Math.floor(Math.random() * 90 + 1) + 120).toString(16);
-  // rgb += (Math.floor(Math.random() * 90 + 1) + 120).toString(16);
-  // rgb += (Math.floor(Math.random() * 90 + 1) + 120).toString(16);
   return Math.round(Math.random() * 0xffffff).toString(16);
 };
-const colorArr = [
-  // "#F6282B",
-  // "#0072BC",
-  // "rgb(255, 165, 165)",
-  // "rgb(68, 84, 255)",
-  // "#FAD700",
-  // "#4A4A4A",
-  // "#05FFCC",
-  // "#8DD664",
-  // "#FF6169",
-  // "#975FFE",
-];
+const colorArr = [];
 
 for (let i = 0; i < 10; i++) {
   colorArr.push(`#${randomRGB()}`);
