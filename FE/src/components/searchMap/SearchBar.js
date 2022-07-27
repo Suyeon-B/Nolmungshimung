@@ -30,6 +30,7 @@ const SearchBar = (props) => {
         boxShadow: "3px 3px 3px 0px lightgray",
         paddingBottom: "18px",
       }}
+      autoComplete="off"
     >
       <StyledFieldset>
         <SearchOutlined style={{ fontSize: "25px", color: "#FF8A3D" }} />
@@ -48,7 +49,6 @@ const SearchBar = (props) => {
           type="submit"
           id="search.keyword.submit"
           style={{ display: "none" }}
-          autoComplete="off"
         />
       </StyledFieldset>
     </form>
