@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 // import { Modal } from "antd";
 import Badge from "../../atomics/Badge";
 
-function SignUp() {
+function SignUpForm() {
   let navigate = useNavigate();
   const [id, setId] = useState("");
   const [name, setName] = useState("");
@@ -280,4 +280,4 @@ const SignUpEmailBtn = styled.button`
   cursor: pointer;
 `;
 
-export default SignUp;
+export default SignUpForm;
