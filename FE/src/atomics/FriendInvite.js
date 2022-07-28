@@ -78,6 +78,7 @@ function FriendInvite() {
     let data = { email: email, projectId: projectId };
     console.log(data);
     Badge.success("메일이 전송중입니다. 잠시 기다려주세요.");
+    setFriends([...friends, email]);
 
     fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/invite/mail`, {
       method: "post",
