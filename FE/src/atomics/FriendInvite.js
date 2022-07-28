@@ -101,20 +101,21 @@ function FriendInvite() {
       })
       .catch((err) => console.log(`err: ${err}`));
   };
-  const onChangeEmail = useCallback((id, value) => {
+  const onChangeEmail = (event) => {
     // console.log(`event.target.value : ${event.target.value}`);
-    setEmail(id == 858 && { value: value });
-  }, []);
+    setEmail(event.target.value);
+    // setEmail(id == 858 && { value: value });
+  };
   // const onChangeEmail = useCallback((event) => {
   //   console.log(`event.target.value : ${event.target.value}`);
   //   setEmail(event.target.value);
   // }, []);
-  const handleOnKeyPress = useCallback((event) => {
-    console.log(event.key);
+  const handleOnKeyPress = (event) => {
+    // console.log(event.key);
     if (event.key === "Enter") {
       sendInviteEmail();
     }
-  }, []);
+  };
   const text = <FriendInviteTitle>친구초대</FriendInviteTitle>;
   const content = (
     <div
@@ -123,19 +124,19 @@ function FriendInvite() {
         height: "300px",
       }}
     >
+      {/* <InviteEmailInput
+        type="text"
+        email={email}
+        onChangeEmail={onChangeEmail}
+        handleOnKeyPress={handleOnKeyPress}
+      /> */}
       <InviteForm>
         <InviteEmailText>Email</InviteEmailText>
-        {/* 텍스트 -> 이메일로 고쳐야함 */}
         <InviteEmailInput
           type="text"
           value={email}
           onChange={onChangeEmail}
           onKeyPress={handleOnKeyPress}
-          key="858"
-          id="858"
-          // email={email}
-          // onChangeEmail={onChangeEmail}
-          // handleOnKeyPress={handleOnKeyPress}
         />
         <UsergroupAddOutlined
           style={{ fontSize: "25px", color: "white" }}
