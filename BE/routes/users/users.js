@@ -338,7 +338,7 @@ router.post("/kakao", async (req, res) => {
   } catch (err) {
     return res.status(500).json({
       loginSuccess: false,
-      message: err.toString(),
+      message: err,
     });
   }
 });
