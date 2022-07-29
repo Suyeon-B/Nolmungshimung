@@ -78,7 +78,11 @@ const MemoRtc = ({ project_Id, userName }) => {
       })
         .then((res) => res.json())
         .then((res) => {
-          quillRef.setContents(res);
+          if (res != "\n") {
+            quillRef.setContents(res);
+          } else {
+            quillRef.setContents("");
+          }
         });
     }
 
@@ -113,6 +117,7 @@ const MemoRtc = ({ project_Id, userName }) => {
           }}
           modules={modulesRef}
           theme={"snow"}
+          placeholder={"친구들과 메모를 작성해보세요. :)"}
         />
       </EditorContainer>
     </StyledEditorBox>
