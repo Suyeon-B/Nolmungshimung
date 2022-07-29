@@ -128,26 +128,35 @@ userSchema.statics.generateAccessToken = function (refreshToken) {
   console.log("엑세스 토큰 새롭게 생성!!");
 
   return new Promise((resolve, reject) => {
-    User.findOne({ _id: refreshToken.data }, function (err, user) {
-      if (err) {
-        reject(err);
-      } else {
-        console.log(user);
-        if (user === null) {
-          resolve(null);
+    try {
+      User.findOne({ _id: refreshToken.data }, function (err, user) {
+        if (err) {
+          reject(err);
+        } else {
+          console.log(user);
+          if (user === null) {
+            resolve(null);
+          }
+          var AccessToken = jwt.sign(
+            { data: user._id.toHexString() },
+            "SECRET",
+            {
+              expiresIn: "1h",
+            }
+          );
+
+          user.userAccessToken = AccessToken;
+
+          user.save(function (err, user) {
+            if (err) reject(err);
+            resolve(user);
+          });
         }
-        var AccessToken = jwt.sign({ data: user._id.toHexString() }, "SECRET", {
-          expiresIn: "1h",
-        });
-
-        user.userAccessToken = AccessToken;
-
-        user.save(function (err, user) {
-          if (err) reject(err);
-          resolve(user);
-        });
-      }
-    });
+      });
+    } catch (err) {
+      console.log("user find fail in generateAccessToken");
+      resolve(null);
+    }
   });
 };
 
@@ -155,26 +164,32 @@ userSchema.statics.generateRefreshToken = function (accessToken) {
   console.log("리프레시 토큰 새롭게 생성!!");
 
   return new Promise((resolve, reject) => {
-    User.findOne({ _id: accessToken.data }, function (err, user) {
-      if (err) {
-        reject(err);
-      } else {
-        var RefreshToken = jwt.sign(
-          { data: user._id.toHexString() },
-          "SECRET",
-          {
-            expiresIn: "14d",
-          }
-        );
+    try {
+      User.findOne({ _id: accessToken.data }, function (err, user) {
+        console.log("generateRefreshToken err : ", err);
+        if (err) {
+          reject(err);
+        } else {
+          var RefreshToken = jwt.sign(
+            { data: user._id.toHexString() },
+            "SECRET",
+            {
+              expiresIn: "14d",
+            }
+          );
 
-        user.userRefreshToken = RefreshToken;
+          user.userRefreshToken = RefreshToken;
 
-        user.save(function (err, user) {
-          if (err) reject(err);
-          resolve(user);
-        });
-      }
-    });
+          user.save(function (err, user) {
+            if (err) reject(err);
+            resolve(user);
+          });
+        }
+      });
+    } catch (error) {
+      console.log("generateRefreshToken error : ", error);
+      resolve(null);
+    }
   });
 };
 

@@ -56,6 +56,7 @@ export const AuthProvider = ({ children }) => {
       const data = await fetchCallAuth();
       setUser(data.user_name);
       setLoading(data.success);
+      console.log("data : ", data);
     }
     try {
       callAuth();
@@ -91,7 +92,6 @@ export const AuthProvider = ({ children }) => {
 };
 
 export const useAuth = () => {
-
   return useContext(AuthContext);
 };
 
