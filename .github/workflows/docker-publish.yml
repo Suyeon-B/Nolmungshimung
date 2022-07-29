@@ -47,23 +47,23 @@ jobs:
           NODEMAILER_PASS: ${{ secrets.NODEMAILER_PASS }}
           REACT_APP_GOOGLE_KEY: ${{ secrets.Google_KEY }}
           CORS_SERVER_IP: https://nolmungshimung.vercel.app
-      -
-        name: Set env React
-        run: |
-          echo "REACT_APP_SERVER_IP=$REACT_APP_SERVER_IP" >> ./FE/.env
-          echo "REACT_APP_GOOGLE_KEY=$REACT_APP_GOOGLE_KEY" >> ./FE/.env
-        env:
-          REACT_APP_SERVER_IP: ${{ secrets.REACT_APP_SERVER_IP }}
-          REACT_APP_GOOGLE_KEY: ${{ secrets.Google_KEY }}
-      -
-        name: react Build and push
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          file: ./FE/Dockerfile 
-          platforms: linux/amd64
-          push: true
-          tags: wnsrb003/react-app-nolshimung:latest
+#       -
+#         name: Set env React
+#         run: |
+#           echo "REACT_APP_SERVER_IP=$REACT_APP_SERVER_IP" >> ./FE/.env
+#           echo "REACT_APP_GOOGLE_KEY=$REACT_APP_GOOGLE_KEY" >> ./FE/.env
+#         env:
+#           REACT_APP_SERVER_IP: ${{ secrets.REACT_APP_SERVER_IP }}
+#           REACT_APP_GOOGLE_KEY: ${{ secrets.Google_KEY }}
+#       -
+#         name: react Build and push
+#         uses: docker/build-push-action@v2
+#         with:
+#           context: .
+#           file: ./FE/Dockerfile 
+#           platforms: linux/amd64
+#           push: true
+#           tags: wnsrb003/react-app-nolshimung:latest
       -
         name: api-server Build and push
         uses: docker/build-push-action@v2
