@@ -235,42 +235,39 @@ router.get("/auth", authMain, async (req, res) => {
 });
 
 //유저 프로필 정보 받기?
-function getProfile(accessToken) {
-  return new Promise((resolve, reject) => {
-    request(
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
-        },
-        url: "https://kapi.kakao.com/v2/user/me",
-        method: "GET",
-      },
-      (error, response, body) => {
-        if (!error && response.statusCode === 200) {
-          resolve(body);
-        }
-        reject(error);
-      }
-    );
-  });
-}
+// function getProfile(accessToken) {
+//   return new Promise((resolve, reject) => {
+//     request(
+//       {
+//         headers: {
+//           Authorization: `Bearer ${accessToken}`,
+//           "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
+//         },
+//         url: "https://kapi.kakao.com/v2/user/me",
+//         method: "GET",
+//       },
+//       (error, response, body) => {
+//         console.log(response);
+//         if (!error && response.statusCode === 200) {
+//           resolve(body);
+//         }
+//         console.log(error);
+//         reject(error);
+//       }
+//     );
+//   });
+// }
 
 router.post("/kakao", async (req, res) => {
   try {
-    console.log("try" + JSON.stringify(req.body.token));
+    console.log("try" + JSON.stringify(req.body));
     let userEmail = "";
     let userNickName = "";
-    if (!req.body.token) {
-      //초기 로그인이 아닐경우.. 어떤경우???
-      console.log("초기로그인이 아니다....?????");
-    }
-    console.log("초기로그인");
-    const result = await getProfile(req.body.token);
-    console.log(result);
-    const kakaoUser = JSON.parse(result).kakao_account;
-    userEmail = kakaoUser.email;
-    userNickName = kakaoUser.profile.nickname;
+    console.log("데이터왔");
+    const kakaoUser = JSON.stringify(req.body);
+    userEmail = JSON.parse(kakaoUser).email;
+    userNickName = JSON.parse(kakaoUser).profile.nickname;
+    console.log(userEmail);
     if (!userEmail) {
       return res.status(400).json({
         loginSuccess: false,
