@@ -45,7 +45,7 @@ exports.inviteMail = function (email, inviteToken, projectId) {
     });
 
     //메일에 넣을 초대링크 주소
-    const url = `https://${process.env.REACT_APP_SERVER_IP}/invite/?token=${inviteToken}`;
+    const url = `https://nolmungshimung.vercel.app/invite/?token=${inviteToken}`;
 
     const message = {
       from: process.env.NODEMAILER_USER, // sender address
