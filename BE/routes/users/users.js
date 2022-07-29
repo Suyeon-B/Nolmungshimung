@@ -250,6 +250,7 @@ function getProfile(accessToken) {
         if (!error && response.statusCode === 200) {
           resolve(body);
         }
+        console.log(error);
         reject(error);
       }
     );
