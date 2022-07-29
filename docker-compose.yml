@@ -14,8 +14,6 @@ services:
         image: wnsrb003/api-server-nolshimung:latest
         restart: always
         volumes:
-            - work dir/conf.d:/etc/nginx/conf.d
-            - work dir/certbot/conf:/etc/nginx/ssl
             - work dir/certbot/data:/var/www/certbot
         ports:
             - "8443:8443"
