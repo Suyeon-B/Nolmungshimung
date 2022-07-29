@@ -87,8 +87,8 @@ function KakaoSignIn(props) {
           sessionStorage.setItem("user_email", data.user_email);
           // console.log(data.token);
 
-          window.location.href = "/";
-          await login({ user: data.user_email });
+          navigate("/", { replace: true });
+          await login(data.user);
           // navigate("/", { replace: true });
         } else {
           // window.alert(data.message);

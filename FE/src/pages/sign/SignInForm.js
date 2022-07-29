@@ -53,6 +53,7 @@ function SignInForm() {
               },
             });
           } else {
+            // console.log(res);
             await login(res.user);
             // window.location.href = "/";
             navigate("/", { replace: true });
