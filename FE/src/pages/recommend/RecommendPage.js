@@ -14,7 +14,7 @@ fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/hashtags`, {
   headers: {
     "content-type": "application/json",
   },
-  credentials: "include",
+  // credentials: "include",
 })
   .then((res) => res.json())
   .then((res) => (hashTag = res));
