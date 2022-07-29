@@ -26,11 +26,12 @@ router.get("/", async (req, res, next) => {
 router.get("/infinite", async (req, res, next) => {
   try {
     const skip = req.query.skip && /^\d+$/.test(req.query.skip) ? Number(req.query.skip) : 0;
-    // 한 번에 16개의 여행일정 정보만 load합니다.
+    // 한 번에 8개의 여행일정 정보만 load합니다.
     const uploadProjectInfo = await UploadProject.find({}, undefined, {
       skip,
-      limit: 16,
+      limit: 8,
     }).sort(res._id);
+
     res.send(uploadProjectInfo);
   } catch (e) {
     res.status(500).send();
@@ -150,7 +151,7 @@ router.get("/hashtags", async (req, res, next) => {
     const redisData = await Redis.SMEMBERS(`hashtags`, 0, -1);
     // const redisData = await Redis.LRANGE(`hashtags`, 0, -1);
     // if (redisData.length) return res.status(200).send(redisData)
-    return res.status(200).send(redisData)
+    return res.status(200).send(redisData);
   } catch (error) {
     console.log(`HashTag가 존재하지 않아유 ~`);
     return res.status(403).send({ status: 403, msg: error });

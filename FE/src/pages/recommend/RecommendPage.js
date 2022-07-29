@@ -2,7 +2,6 @@ import React, { useEffect, useState, Suspense } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { HomeFilled, SearchOutlined } from "@ant-design/icons";
 import { Select } from "antd";
-import { throttle } from "lodash";
 
 const { Option } = Select;
 
@@ -21,15 +20,13 @@ fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/hashtags`, {
   .catch((e) => console.log("왜??", e));
 
 const RecommendPage = () => {
+  const InfiniteScroll = React.lazy(() => import("../../components/recommend/InfiniteScroll"));
   const navigate = useNavigate();
   const [hashTagPJInfo, setHashTagPJInfo] = useState([]);
   const [hashtags, setHashTags] = useState([]);
   const mainText = "마음에 드는 여행코스를\n 내 여행일정으로 가져와보세요! 😆";
   const [isSearchResult, setIsSearchResult] = useState(false);
 
-  const RecommendRows = React.lazy(() =>
-    import("../../components/recommend/RecommendRows")
-  );
   const children = [];
   for (let i = 0; i < hashTag.length; i++) {
     children.push(<Option key={hashTag[i] + i}>{hashTag[i]}</Option>);
@@ -41,9 +38,7 @@ const RecommendPage = () => {
   };
 
   async function searchHashtags() {
-    let url = `https://${
-      process.env.REACT_APP_SERVER_IP
-    }:8443/recommend/hashtag?taglist=${JSON.stringify(hashtags)}`;
+    let url = `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/hashtag?taglist=${JSON.stringify(hashtags)}`;
     if (!hashtags.length) {
       url = `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend`;
     }
@@ -71,10 +66,7 @@ const RecommendPage = () => {
       <div>
         <Link to={`project/${el._id}`}>
           <RecommendItems>
-            <div
-              className="background-img"
-              style={{ backgroundImage: `url(${el.img})` }}
-            >
+            <div className="background-img" style={{ backgroundImage: `url(${el.img})` }}>
               <div className="uploadProjectInfo-title">{el.project_title}</div>
               <div className="uploadProjectInfo-hashTags">
                 {el.hashTags.length === 0
@@ -121,29 +113,39 @@ const RecommendPage = () => {
         </StyledDiv>
       </SearchBlock>
       {!isSearchResult && (
-        <RecommendBlock>
-          {mainText}
-          <div>
-            <Suspense fallback={<div>Loading...</div>}>
-              <RecommendRows />
-            </Suspense>
-          </div>
-        </RecommendBlock>
+        <div className="ScrollWrapper">
+          <MainText>{mainText}</MainText>
+          <HashtagResultTextDark>🏝 모든 여행코스</HashtagResultTextDark>
+          <RecommendBlock>
+            <div className="scrollOdd">
+              <Suspense fallback={<div>Loading...</div>}>
+                <InfiniteScroll />
+              </Suspense>
+            </div>
+            <div className="scrollEven">
+              <Suspense fallback={<div>Loading...</div>}>
+                <InfiniteScroll />
+              </Suspense>
+            </div>
+          </RecommendBlock>
+        </div>
       )}
       {isSearchResult && (
-        <RecommendBlock>
-          {mainText}
-          <div className="resultTextWrapper">
-            <HashtagResult>#{hashtags}</HashtagResult>
-            <HashtagResultText>검색 결과 🔍</HashtagResultText>
-          </div>
+        <div className="ScrollWrapper">
+          <RecommendBlock>
+            <MainText>{mainText}</MainText>
+            <div className="resultTextWrapper">
+              <HashtagResult>#{hashtags}</HashtagResult>
+              <HashtagResultText>검색 결과 🔍</HashtagResultText>
+            </div>
 
-          <RecommendContents>
-            {hashTagPJInfo.map((el, i) => {
-              return <ScrollRow key={i} el={el} />;
-            })}
-          </RecommendContents>
-        </RecommendBlock>
+            <RecommendContents>
+              {hashTagPJInfo.map((el, i) => {
+                return <ScrollRow key={i} el={el} />;
+              })}
+            </RecommendContents>
+          </RecommendBlock>
+        </div>
       )}
     </RecommendWrapper>
   );
@@ -170,14 +172,23 @@ const HashtagResult = styled.div`
   font-weight: bold;
   color: #232a3c;
   margin-right: 10px;
+  padding-top: 6vh;
 `;
 const HashtagResultText = styled(HashtagResult)`
   color: #f8f9fa;
+`;
+const HashtagResultTextDark = styled(HashtagResultText)`
+  color: #232a3c;
+  min-width: max-content;
 `;
 
 const RecommendWrapper = styled.div`
   background-color: #ff8a3d;
   width: 100%;
+
+  .ScrollWrapper {
+    padding: 6vh;
+  }
 `;
 const RecommendItems = styled.div`
   height: 200px;
@@ -225,55 +236,44 @@ const SearchBlock = styled.div`
 `;
 
 const RecommendBlock = styled.div`
+  min-width: 20vw;
+  width: 92.5vw;
+
+  .resultTextWrapper {
+    display: flex;
+  }
+`;
+
+const MainText = styled.div`
   font-size: 50px;
   white-space: pre-line;
   font-weight: 700;
   color: white;
-  padding: 5vh 10vh 0 10vh;
   letter-spacing: 1px;
   line-height: 65px;
-  min-width: 800px;
-
-  .scrollWrapper {
-    margin-top: 60px;
-  }
-  .resultTextWrapper {
-    display: flex;
-    margin-top: 6vh;
-  }
+  min-width: 500px;
 `;
 
 const RecommendContents = styled.div`
   margin-top: 20px;
   height: 206px;
   display: flex;
-  overflow-y: hidden;
-  ::-webkit-scrollbar {
-    /* width: 0px;
-    height: 7px; */
-    display: none;
-  }
 `;
 
 const RecommendHome = styled(HomeFilled)`
   color: #ff8a3d;
   font-size: 30px;
   padding: 10px;
-  // position: absolute;
 `;
 
 const SelectIcon = styled(SearchOutlined)`
   color: #ff8a3d;
   font-size: 30px;
   padding: 10px;
-  // margin-right: 0;
 `;
 
 const SelectModal = styled(Select)`
-  // width: 50%;
   width: 400px;
-  // margin-right: 100px;
-  // position: relative;
 `;
 
 export default RecommendPage;
