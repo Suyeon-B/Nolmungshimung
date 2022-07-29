@@ -68,7 +68,7 @@ function KakaoSignIn(props) {
   //발급받은 access 토큰을 서버로 넘기고, 서버에서 JWT 토큰 값(추가로 user정보)을 받아 localstorage에 저장
   const sendKakaoTokenToServer = async (token) => {
     // console.log(token);
-    let data = await getProfile(token);
+    const data = await getProfile(token);
     console.log(data);
     await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/users/kakao`, {
       method: "post",

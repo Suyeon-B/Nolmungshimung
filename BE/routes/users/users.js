@@ -309,27 +309,42 @@ router.post("/kakao", async (req, res) => {
       console.log("없어용");
       await user.save(async (err, data) => {
         if (err) {
-          console.log(`err : ${err}`);
-          console.log(err.code);
-          console.log("회원가입 시 에러 발생!");
-        }
-        data.generateToken((err, user) => {
-          if (err) {
-            return res.status(400).json({
+          if (err.code === 11000) {
+            console.log("err : " + "이미 존재하는 계정입니다!");
+            return res.status(403).json({
               loginSuccess: false,
-              message: "토큰 생성에 실패했습니다.",
+              message: "이미 존재하는 이메일입니다.",
+              type: "EXIST_USER_NICK_NAME",
+            });
+          } else {
+            console.log(`err : ${err}`);
+            console.log(err.code);
+            console.log("회원가입 시 에러 발생!");
+            return res.status(403).json({
+              loginSuccess: false,
+              message: "회원가입 실패",
+              type: "DEFAULT_ERROR",
             });
           }
-          res.cookie("w_refresh", user.userRefreshToken);
-          res.cookie("w_access", user.userAccessToken).status(200).json({
-            loginSuccess: true,
-            user_email: user.user_email,
-            user_name: user.user_name,
-            message: "성공적으로 로그인했습니다.",
-            user_projects: user.user_projects,
-            // token: user.userAccessToken,
+        } else {
+          data.generateToken((err, user) => {
+            if (err) {
+              return res.status(400).json({
+                loginSuccess: false,
+                message: "토큰 생성에 실패했습니다.",
+              });
+            }
+            res.cookie("w_refresh", user.userRefreshToken);
+            res.cookie("w_access", user.userAccessToken).status(200).json({
+              loginSuccess: true,
+              user_email: user.user_email,
+              user_name: user.user_name,
+              message: "성공적으로 로그인했습니다.",
+              user_projects: user.user_projects,
+              // token: user.userAccessToken,
+            });
           });
-        });
+        }
       });
     }
   } catch (err) {
