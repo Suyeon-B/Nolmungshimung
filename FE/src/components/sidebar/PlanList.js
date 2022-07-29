@@ -3,11 +3,13 @@ import styled from "styled-components";
 import "../../App.css";
 
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { useEffect, useContext } from "react";
+import { useContext } from "react";
+import { useParams } from "react-router-dom";
 import { ConnectuserContext } from "../../context/ConnectUserContext";
 import { useAuth } from "../auth/Auth";
 
 import TrashCanIcon from "../../atomics/Icon";
+import socket from "../../socket";
 
 const StyledDragDropContext = styled(DragDropContext)``;
 
@@ -86,6 +88,7 @@ function PlanList({
   userName,
 }) {
   const auth = useAuth();
+  const { projectId } = useParams();
   const droppableRef = useRef([]);
   const [selectedDay, setSelectedDay] = useState(0);
   const { connectUser, setConnectUser } = useContext(ConnectuserContext);
@@ -96,20 +99,11 @@ function PlanList({
   }
 
   function onDragStart(result) {
-    // console.log("drag start");
-    // console.log("사용자 색 : ", connectUser[userName].color);
-    // socket.emit("grabSpot", [projectId, userName, result.source.index]);
-    // console.log(result.source.droppableId);
-    // console.log(result.source.index);
+    console.log("drag start");
     const newState = [...[...routes]];
     const { source, destination } = result;
-    // console.log(newState);
-    // console.log(newState[result.source.droppableId][result.source.index].lock);
-    // if
-    // console.log(source);
-    // console.log(newState[source.droppableId][source.index]);
     const lockAcquire = newState[source.droppableId][source.index].userName;
-    // console.log(lockAcquire);
+
     if (
       lockAcquire === null ||
       lockAcquire === userName ||
@@ -122,15 +116,11 @@ function PlanList({
     } else {
       alert("다른 친구가 옮기고 있습니다 ! 잠시 기다려 주세요!");
     }
-    setRoutes(newState);
-    // console.log(newState);
-    setIsDrage(true);
-    // console.log(newState[result]);
+    socket.emit("changeRoute", [newState, projectId]);
   }
 
   function onDragEnd(result) {
     const { source, destination } = result;
-    // dropped outside the list
     const sInd = +source.droppableId;
     if (!destination) {
       const newState = [...[...routes]];
@@ -324,8 +314,6 @@ function PlanList({
                           {(provided, snapshot) => (
                             <PlanItemDiv
                               userColor={item.lock}
-                              // <StyleRouteDiv
-
                               ref={provided.innerRef}
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}
@@ -482,21 +470,6 @@ const ItemInnerDiv = styled.div`
   }
 `;
 
-// @keyframes color {
-//   0% {
-//     border: ${(props) => `3px solid ${props.userColor - 33}`};
-//   }
-//   33% {
-//     border: ${(props) => `3px solid ${props.userColor - 33}`};
-//   }
-//   66% {
-//     border: ${(props) => `3px solid ${props.userColor}`};
-//   }
-//   100% {
-//     border: 3px solid white;
-//   }
-// }
-// animation: color 1.5s linear;
 const PlanItemDiv = styled.div`
   height: 38px;
   box-sizing: inherit;
