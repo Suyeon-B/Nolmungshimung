@@ -129,14 +129,17 @@ function PlanList({
   }
 
   function onDragEnd(result) {
-    // console.log(result);
     const { source, destination } = result;
-
     // dropped outside the list
+    const sInd = +source.droppableId;
     if (!destination) {
+      const newState = [...[...routes]];
+
+      newState[sInd][source.index].user_name = null;
+      newState[sInd][source.index].lock = "white";
+      setRoutes(newState);
       return;
     }
-    const sInd = +source.droppableId;
     const dInd = +destination.droppableId;
 
     if (sInd === dInd) {
@@ -181,10 +184,18 @@ function PlanList({
     }
   };
 
+  const onDragOver = (event) => {
+    event.preventDefault();
+  };
+
   return (
     <div>
       <SidePlanListDiv>
-        <StyledDragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
+        <StyledDragDropContext
+          onDragEnd={onDragEnd}
+          onDragStart={onDragStart}
+          onDragOver={onDragOver}
+        >
           {[...routes].map((el, ind) => (
             <div key={ind} ref={(el) => (droppableRef.current[+ind] = el)}>
               <Droppable key={ind} droppableId={`${ind}`}>

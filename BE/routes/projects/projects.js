@@ -191,10 +191,13 @@ router.post("/routes/:id", async (req, res) => {
     res.status(404).send({ error: "project not found" });
   }
 });
-
+let num = 0;
 router.patch("/routes/:id", async (req, res) => {
   try {
     //redis
+    num++;
+
+    console.log("patch", num);
     await Redis.setEx(`routes/${req.params.id}`, 10, "");
     await Redis.set(`${req.params.id}`, JSON.stringify(req.body));
     res.status(200).send({ success: true });
