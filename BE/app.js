@@ -22,8 +22,8 @@ voiceRouter;
 var app = express();
 // [원영] 소켓 서버 추가
 
-const privateKey = fs.readFileSync("nolshimung-key.pem", "utf8");
-const certificate = fs.readFileSync("nolshimung.pem", "utf8");
+const privateKey = fs.readFileSync(process.env.keyFile || "nolshimung-key.pem", "utf8");
+const certificate = fs.readFileSync(process.env.certFile || "nolshimung.pem", "utf8");
 const credentials = {
   key: privateKey,
   cert: certificate,
@@ -224,9 +224,9 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use(
-  cors({ credentials: true, origin: process.env.CORS_SERVER_IP || true })
-); //credential은 프론트엔드의 fetch를 통해서 cookie를 넘기기 위해서 사용함. (프론트엔드에서는 "credentials:true" 설정 필요)
+
+app.use(cors({ credentials: true, origin: 'https://nolmungshimung.vercel.app' || true })); //credential은 프론트엔드의 fetch를 통해서 cookie를 넘기기 위해서 사용함. (프론트엔드에서는 "credentials:true" 설정 필요)
+
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);

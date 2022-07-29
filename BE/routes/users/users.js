@@ -235,42 +235,41 @@ router.get("/auth", authMain, async (req, res) => {
 });
 
 //유저 프로필 정보 받기?
-function getProfile(accessToken) {
-  return new Promise((resolve, reject) => {
-    request(
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
-        },
-        url: "https://kapi.kakao.com/v2/user/me",
-        method: "GET",
-      },
-      (error, response, body) => {
-        if (!error && response.statusCode === 200) {
-          resolve(body);
-        }
-        reject(error);
-      }
-    );
-  });
-}
+
+// function getProfile(accessToken) {
+//   return new Promise((resolve, reject) => {
+//     request(
+//       {
+//         headers: {
+//           Authorization: `Bearer ${accessToken}`,
+//           "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
+//         },
+//         url: "https://kapi.kakao.com/v2/user/me",
+//         method: "GET",
+//       },
+//       (error, response, body) => {
+//         console.log(response);
+//         if (!error && response.statusCode === 200) {
+//           resolve(body);
+//         }
+//         console.log(error);
+//         reject(error);
+//       }
+//     );
+//   });
+// }
+
 
 router.post("/kakao", async (req, res) => {
   try {
-    console.log("try" + JSON.stringify(req.body.token));
+    console.log("try" + JSON.stringify(req.body));
     let userEmail = "";
     let userNickName = "";
-    if (!req.body.token) {
-      //초기 로그인이 아닐경우.. 어떤경우???
-      console.log("초기로그인이 아니다....?????");
-    }
-    console.log("초기로그인");
-    const result = await getProfile(req.body.token);
-    console.log(result);
-    const kakaoUser = JSON.parse(result).kakao_account;
-    userEmail = kakaoUser.email;
-    userNickName = kakaoUser.profile.nickname;
+    console.log("데이터왔");
+    const kakaoUser = JSON.stringify(req.body);
+    userEmail = JSON.parse(kakaoUser).email;
+    userNickName = JSON.parse(kakaoUser).profile.nickname;
+    console.log(userEmail);
     if (!userEmail) {
       return res.status(400).json({
         loginSuccess: false,
@@ -312,27 +311,42 @@ router.post("/kakao", async (req, res) => {
       console.log("없어용");
       await user.save(async (err, data) => {
         if (err) {
-          console.log(`err : ${err}`);
-          console.log(err.code);
-          console.log("회원가입 시 에러 발생!");
-        }
-        data.generateToken((err, user) => {
-          if (err) {
-            return res.status(400).json({
+          if (err.code === 11000) {
+            console.log("err : " + "이미 존재하는 계정입니다!");
+            return res.status(403).json({
               loginSuccess: false,
-              message: "토큰 생성에 실패했습니다.",
+              message: "이미 존재하는 이메일입니다.",
+              type: "EXIST_USER_NICK_NAME",
+            });
+          } else {
+            console.log(`err : ${err}`);
+            console.log(err.code);
+            console.log("회원가입 시 에러 발생!");
+            return res.status(403).json({
+              loginSuccess: false,
+              message: "회원가입 실패",
+              type: "DEFAULT_ERROR",
             });
           }
-          res.cookie("w_refresh", user.userRefreshToken);
-          res.cookie("w_access", user.userAccessToken).status(200).json({
-            loginSuccess: true,
-            user_email: user.user_email,
-            user_name: user.user_name,
-            message: "성공적으로 로그인했습니다.",
-            user_projects: user.user_projects,
-            // token: user.userAccessToken,
+        } else {
+          data.generateToken((err, user) => {
+            if (err) {
+              return res.status(400).json({
+                loginSuccess: false,
+                message: "토큰 생성에 실패했습니다.",
+              });
+            }
+            res.cookie("w_refresh", user.userRefreshToken);
+            res.cookie("w_access", user.userAccessToken).status(200).json({
+              loginSuccess: true,
+              user_email: user.user_email,
+              user_name: user.user_name,
+              message: "성공적으로 로그인했습니다.",
+              user_projects: user.user_projects,
+              // token: user.userAccessToken,
+            });
           });
-        });
+        }
       });
     }
   } catch (err) {
