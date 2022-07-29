@@ -28,6 +28,8 @@ function SignUpForm() {
 
   const onchangeId = (event) => {
     setId(event.target.value);
+    setCertificationFlag(false);
+    setNumberFlag(false);
   };
   const onchangeName = (event) => {
     setName(event.target.value);
