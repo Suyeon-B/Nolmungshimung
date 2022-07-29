@@ -233,7 +233,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(
   cors({
     credentials: true,
-    origin: "https://nolmungshimung.vercel.app" || true,
+    origin: process.env.CORS_SERVER_IP || true,
   })
 ); //credential은 프론트엔드의 fetch를 통해서 cookie를 넘기기 위해서 사용함. (프론트엔드에서는 "credentials:true" 설정 필요)
 
