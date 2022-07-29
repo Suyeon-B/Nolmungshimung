@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext, Component } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import * as Y from "yjs";
 import { WebrtcProvider } from "y-webrtc";
 import { QuillBinding } from "y-quill";
@@ -64,6 +64,8 @@ const MemoRtc = ({ project_Id, userName }) => {
 
     // console.log(" ==== socket 접속자 수 : ", socket._callbacks.$deleteCurser.length);
     // const connectUsers = socket._callbacks.$deleteCurser.length;
+    const binding = new QuillBinding(ytext, quillRef, provider.awareness);
+
     const connectUsers = Object.keys(connectUser).length;
     // console.log(" @#@#@#@#@# connectuser : ", connectUsers);
     if (connectUsers < 2) {
@@ -76,20 +78,12 @@ const MemoRtc = ({ project_Id, userName }) => {
       })
         .then((res) => res.json())
         .then((res) => {
-          // console.log("===== fetch 결과 =====");
-          // console.log(res[0].insert);
-          const len = quillRef.editor.delta.ops.length;
-          for (var i = 0; i < len; i++) {
-            ytext.insert(i, res[i].insert.slice(0, -1));
-          }
+          quillRef.setContents(res);
         });
     }
 
-    // newYtext.add(ytext);
-    const binding = new QuillBinding(ytext, quillRef, provider.awareness);
-
     return () => {
-      socket.emit("save_memo", [projectID, quillRef.editor.delta.ops]);
+      socket.emit("save_memo", [projectID, quillRef.getContents()]);
       provider.destroy();
     };
   }, []);
@@ -106,8 +100,6 @@ const MemoRtc = ({ project_Id, userName }) => {
       toggleFlag: true,
     },
     history: {
-      // Local undo shouldn't undo changes
-      // from remote users
       userOnly: true,
     },
   };
