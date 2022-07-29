@@ -6,24 +6,24 @@ function authCheck(req, res) {
     let accessToken = User.verifyToken(req.cookies.w_access);
     let refreshToken = User.verifyToken(req.cookies.w_refresh);
 
-    // console.log("accessToken : " + JSON.stringify(accessToken));
-    // console.log("refreshToken : " + JSON.stringify(refreshToken));
+    console.log("accessToken : " + JSON.stringify(accessToken));
+    console.log("refreshToken : " + JSON.stringify(refreshToken));
 
     if (accessToken === null) {
       if (refreshToken === null) {
         // case1: access token과 refresh token 모두가 만료된 경우
         // 권한 없으므로, 에러 발생
-        // console.log("case 1!!!!");
+        console.log("case 1!!!!");
         // throw Error('API 사용 권한이 없습니다.');
         req.user = null;
         return resolve(false);
       } else {
         // case2: access token은 만료됐지만, refresh token은 유효한 경우
         // access 토큰을 바탕으로 해당 유저를 찾아서 토큰값 갱신
-        // console.log("case 2!!!!");
+        console.log("case 2!!!!");
         const user = await User.generateAccessToken(refreshToken);
         if (user === null) {
-          // console.log("user === null");
+          console.log("user === null");
           req.user = null;
           return resolve(null);
         }
@@ -37,7 +37,7 @@ function authCheck(req, res) {
       if (refreshToken === null) {
         // case3: access token은 유효하지만, refresh token은 만료된 경우
         // refresh 토큰을 바탕으로 해당 유저를 찾아서 토큰값 갱신
-        // console.log("case 3!!!!");
+        console.log("case 3!!!!");
         const user = await User.generateRefreshToken(accessToken);
         if (user === null) {
           req.user = null;
@@ -50,7 +50,7 @@ function authCheck(req, res) {
         return resolve(true);
       } else {
         // case4: accesss token과 refresh token 모두가 유효한 경우
-        // console.log("case 4!!!!");
+        console.log("case 4!!!!");
         const user = await User.findUserByToken(
           accessToken,
           req.cookies.w_access
@@ -71,6 +71,7 @@ function authCheck(req, res) {
 exports.authMain = async function (req, res, next) {
   // 1. 인증 정보 받아오기
   var isAuth = await authCheck(req, res);
+  console.log("isAuth : ", isAuth);
   if (isAuth === null) {
     // console.log("isAuth null;");
     return res.json({ success: false, message: "로그인 해주세요." });
@@ -83,7 +84,7 @@ exports.authMain = async function (req, res, next) {
         "로그인을 다시 해보세요. 지속적인 문제 발생 시, 다음 전화번호로 연락 부탁드립니다. ( 010 5797 6647 )",
     });
   }
-  // console.log("authMain success");
+  console.log("authMain success");
   next();
   // return res.status(400).json({ success: true, message: "인증 성공" });
   // return { success: true, message: "인증 성공" };
