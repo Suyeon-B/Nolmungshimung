@@ -168,10 +168,15 @@ function SpotList({
     const { source, destination } = result;
     // console.log("drag end");
     // dropped outside the list
+    const sInd = +source.droppableId;
     if (!destination) {
+      const newState = [...[...dayItem]];
+
+      newState[sInd][source.index].user_name = null;
+      newState[sInd][source.index].lock = "white";
+      setItemRoute(newState);
       return;
     }
-    const sInd = +source.droppableId;
     const dInd = +destination.droppableId;
     if (sInd === dInd) {
       const items = reorder(

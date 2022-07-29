@@ -16,6 +16,17 @@ import { notification } from "antd";
 
 import socket from "../../socket";
 
+const colors = {
+  // "#FF8A3D": false,
+  "#8DD664": false,
+  "#FF6169": false,
+  "#975FFE": false,
+  "#0072BC": false,
+  "#F6282B": false,
+  "#FAD700": false,
+  "#05FFCC": false,
+  "#4A4A4A": false,
+};
 async function fetchProjectById(_id) {
   const response = await fetch(
     `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`
@@ -38,17 +49,6 @@ const ProjectPage = (props) => {
   const [attentionIndex, setAttentionIndex] = useState(-1);
   // const userName = sessionStorage.getItem("myNickname");
 
-  const colors = {
-    // "#FF8A3D": false,
-    "#8DD664": false,
-    "#FF6169": false,
-    "#975FFE": false,
-    "#0072BC": false,
-    "#F6282B": false,
-    "#FAD700": false,
-    "#05FFCC": false,
-    "#4A4A4A": false,
-  };
   const getColor = () => {
     for (let color in colors) {
       if (!colors[color]) {
@@ -162,7 +162,7 @@ const ProjectPage = (props) => {
       console.log("project page unmount");
     };
   }, [projectId, auth]);
-
+  // console.log("랜더링");
   useEffect(() => {
     if (itemsRoute === null) return;
 
@@ -175,7 +175,7 @@ const ProjectPage = (props) => {
             headers: {
               "content-type": "application/json",
             },
-            credentials: "include",
+            // credentials: "include",
             body: JSON.stringify(itemsRoute),
           }
         ).then((res) => res.json());
