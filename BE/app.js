@@ -22,8 +22,8 @@ voiceRouter;
 var app = express();
 // [원영] 소켓 서버 추가
 
-const privateKey = fs.readFileSync("nolshimung-key.pem", "utf8");
-const certificate = fs.readFileSync("nolshimung.pem", "utf8");
+const privateKey = fs.readFileSync(process.env.keyFile || "nolshimung-key.pem", "utf8");
+const certificate = fs.readFileSync(process.env.certFile || "nolshimung.pem", "utf8");
 const credentials = {
   key: privateKey,
   cert: certificate,
