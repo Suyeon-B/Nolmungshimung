@@ -247,10 +247,10 @@ function getProfile(accessToken) {
         method: "GET",
       },
       (error, response, body) => {
+        console.log(response);
         if (!error && response.statusCode === 200) {
           resolve(body);
         }
-        console.log(error);
         reject(error);
       }
     );
