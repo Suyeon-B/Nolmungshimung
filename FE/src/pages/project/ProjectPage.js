@@ -172,7 +172,7 @@ const ProjectPage = (props) => {
         }
       }
       UpdateInfo();
-      console.log(itemsRoute);
+      // console.log(itemsRoute);
       socket.emit("changeRoute", [itemsRoute, projectId]);
       if (isDrage) setIsDrage(false);
       if (isAddDel) setIsAddDel(false);
