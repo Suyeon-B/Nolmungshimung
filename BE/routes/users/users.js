@@ -234,32 +234,6 @@ router.get("/auth", authMain, async (req, res) => {
   });
 });
 
-//유저 프로필 정보 받기?
-
-// function getProfile(accessToken) {
-//   return new Promise((resolve, reject) => {
-//     request(
-//       {
-//         headers: {
-//           Authorization: `Bearer ${accessToken}`,
-//           "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
-//         },
-//         url: "https://kapi.kakao.com/v2/user/me",
-//         method: "GET",
-//       },
-//       (error, response, body) => {
-//         console.log(response);
-//         if (!error && response.statusCode === 200) {
-//           resolve(body);
-//         }
-//         console.log(error);
-//         reject(error);
-//       }
-//     );
-//   });
-// }
-
-
 router.post("/kakao", async (req, res) => {
   try {
     console.log("try" + JSON.stringify(req.body));
@@ -315,7 +289,7 @@ router.post("/kakao", async (req, res) => {
             console.log("err : " + "이미 존재하는 계정입니다!");
             return res.status(403).json({
               loginSuccess: false,
-              message: "이미 존재하는 이메일입니다.",
+              message: "중복 닉네임입니다.",
               type: "EXIST_USER_NICK_NAME",
             });
           } else {

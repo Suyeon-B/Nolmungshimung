@@ -5,7 +5,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../components/auth/Auth";
 import Badge from "../../atomics/Badge";
 
-const kauthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=2d1c91f12a4c8020dbcc39ddb0c368b0&redirect_uri=https://nolmungshimung.vercel.app/kakao/signin&response_type=code`;
+const kauthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=2d1c91f12a4c8020dbcc39ddb0c368b0&redirect_uri=https://${process.env.REACT_APP_CLIENT_IP}/kakao/signin&response_type=code`;
 
 function SignInForm() {
   let navigate = useNavigate();
