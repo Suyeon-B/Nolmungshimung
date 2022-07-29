@@ -206,8 +206,9 @@ const Room = (props) => {
   }
 
   const toggleCameraAudio = useCallback(() => {
-    try{
+    let flag = true;
       setUserVideoAudio((preList) => {
+        try{
           let audioSwitch = preList["localUser"].audio;
           const userAudioTrack = userAudioRef.current.srcObject.getAudioTracks()[0];
           audioSwitch = !audioSwitch;
@@ -222,11 +223,13 @@ const Room = (props) => {
             ...preList,
             localUser: { audio: audioSwitch },
           };      
+        }catch(e){
+          flag = false
+          console.log(`VoiceToggle err : ${e}`);
+        }
       });
-    socket.emit("BE-toggle-camera-audio", { roomId, switchTarget: "audio" });
-  }catch(e){
-    console.log(`VoiceToggle err : ${e}`);
-  }
+      
+    if (flag) socket.emit("BE-toggle-camera-audio", { roomId, switchTarget: "audio" });
   }, [userVideoAudio]);
 
   const exitVoice = (e) => {
