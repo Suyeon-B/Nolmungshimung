@@ -46,7 +46,7 @@ jobs:
           NODEMAILER_USER: ${{ secrets.NODEMAILER_USER }}
           NODEMAILER_PASS: ${{ secrets.NODEMAILER_PASS }}
           REACT_APP_GOOGLE_KEY: ${{ secrets.Google_KEY }}
-          CORS_SERVER_IP: ${{ secrets.CORS_SERVER_IP }}
+          CORS_SERVER_IP: https://nolmungshimung.vercel.app
       -
         name: Set env React
         run: |
