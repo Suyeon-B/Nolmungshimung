@@ -1,23 +1,32 @@
 # 맛이 어떤데?
 version: "3"
 services: 
-    react-app-nolshimung:
-        image: wnsrb003/react-app-nolshimung:latest
+#     react-app-nolshimung:
+#         image: wnsrb003/react-app-nolshimung:latest
         # build: ./FE
-        stdin_open: true
-        ports: 
-            - "3000:3000"
-            - "443:3000"
+#         stdin_open: true
+#         ports: 
+#             - "3000:3000"
+#             - "443:3000"
         # networks: 
         #     - mern-app
     api-server-nolshimung:
         image: wnsrb003/api-server-nolshimung:latest
-        # build: ./BE
+        restart: always
+        volumes:
+            - work dir/certbot/data:/var/www/certbot
         ports:
             - "8443:8443"
             - "7889:7889"
             - "3001:3001"
             - "3003:3003"
+    certbot:
+        image: certbot/certbot:latest
+        command: certonly --webroot --webroot-path=/var/www/certbot --email wnsrb003@naver.com --agree-tos --no-eff-email -d nolmungshimung.shop
+        volumes:
+            - work dir/certbot/conf:/etc/letsencrypt
+            - work dir/certbot/logs:/var/log/letsencrypt
+            - work dir/certbot/data:/var/www/certbot
     redis_boot:
         image: redis
 #         command: redis-server --port 6379

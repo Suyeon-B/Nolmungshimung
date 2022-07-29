@@ -235,6 +235,7 @@ router.get("/auth", authMain, async (req, res) => {
 });
 
 //유저 프로필 정보 받기?
+
 // function getProfile(accessToken) {
 //   return new Promise((resolve, reject) => {
 //     request(
@@ -257,6 +258,7 @@ router.get("/auth", authMain, async (req, res) => {
 //     );
 //   });
 // }
+
 
 router.post("/kakao", async (req, res) => {
   try {
