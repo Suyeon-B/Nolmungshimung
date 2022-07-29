@@ -10,15 +10,8 @@ const KakaoSignIn = React.lazy(() => import("./components/sign/KakaoSignIn"));
 // import VoiceTalk from "./components/voiceTalk/voiceTalk";
 const VoiceTalk = React.lazy(() => import("./components/voiceTalk/voiceTalk"));
 // import InviteProject from "./components/invite/InviteProject";
-const InviteProject = React.lazy(() =>
-  import("./components/invite/InviteProject")
-);
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+const InviteProject = React.lazy(() => import("./components/invite/InviteProject"));
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 // import CreateProject from "./components/CreateProject";
 const CreateProject = React.lazy(() => import("./components/CreateProject"));
 import styled from "styled-components";
@@ -29,20 +22,12 @@ import "./reset.css";
 import { QueryClient, QueryClientProvider } from "react-query";
 // import ProjectPage from "./pages/project/ProjectPage";
 const ProjectPage = React.lazy(() => import("./pages/project/ProjectPage"));
-import {
-  AuthProvider,
-  RequireAuth,
-  NotRequireAuth,
-} from "./components/auth/Auth";
+import { AuthProvider, RequireAuth, NotRequireAuth } from "./components/auth/Auth";
 
 // import RecommendPage from "./pages/recommend/RecommendPage";
-const RecommendPage = React.lazy(() =>
-  import("./pages/recommend/RecommendPage")
-);
+const RecommendPage = React.lazy(() => import("./pages/recommend/RecommendPage"));
 // import RecommendPageDetail from "./pages/recommend/RecommendPageDetail";
-const RecommendPageDetail = React.lazy(() =>
-  import("./pages/recommend/RecommendPageDetail")
-);
+const RecommendPageDetail = React.lazy(() => import("./pages/recommend/RecommendPageDetail"));
 
 // react query devtool
 import { ReactQueryDevtools } from "react-query/devtools";
