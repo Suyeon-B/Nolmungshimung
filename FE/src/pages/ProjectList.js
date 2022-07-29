@@ -70,25 +70,23 @@ const ProjectList = ({ goProject }) => {
     // console.log(`auth.user.user_projects : ${auth.user.user.user_projects}`);
 
     async function fetchProjectList() {
-      await fetch(
-        `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/title`,
-        {
-          method: "post",
-          headers: {
-            "content-type": "application/json",
-          },
-          // credentials: "include",
-          body: JSON.stringify(projects),
-        }
-      )
-        .then((res) => res.json())
-        .then((res) => {
-          if (res.success === true) {
-            projectsInfo = res.projectInfo;
-            setItems(projectsInfo);
+      try {
+        const response = await fetch(
+          `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/title`,
+          {
+            method: "post",
+            headers: {
+              "content-type": "application/json",
+            },
+            // credentials: "include",
+            body: JSON.stringify(projects),
           }
-        })
-        .catch((err) => console.log(`err: ${err}`));
+        );
+        const data = await response.json();
+        setItems(data.projectInfo);
+      } catch (err) {
+        console.log(`err: ${err}`);
+      }
     }
     fetchProjectList();
     console.log(items);

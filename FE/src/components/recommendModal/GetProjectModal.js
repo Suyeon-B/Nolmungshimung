@@ -10,7 +10,12 @@ import SignIn from "../../pages/sign/SignIn";
 import Badge from "../../atomics/Badge";
 
 const setDay = (value) => {
-  return [value.getFullYear(), value.getMonth() + 1, value.getDate(), value.getDay()];
+  return [
+    value.getFullYear(),
+    value.getMonth() + 1,
+    value.getDate(),
+    value.getDay(),
+  ];
 };
 
 const culTripTermData = (startDate, day) => {
@@ -37,35 +42,41 @@ const GetProjectModal = ({ routes }) => {
     console.log(data);
     console.log(selectDate);
 
-    const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/selectdate`, {
-      method: "post",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+    const response = await fetch(
+      `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/selectdate`,
+      {
+        method: "post",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    );
     console.log(response);
     if (response.ok) {
-      console.log("여행일정으로 이동시키기");
       const resData = await response.json();
-      console.log(resData);
-      navigate(`/project/${resData.projectId}`, { replace: false });
+      window.location.href = `/project/${resData.projectId}`;
+      // navigate(`/project/${resData.projectId}`, { replace: false });
     }
   };
 
   const fetchAllDate = async (data) => {
-    const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/alldate`, {
-      method: "post",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+    const response = await fetch(
+      `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/alldate`,
+      {
+        method: "post",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }
+    );
     if (response.ok) {
-      console.log("여행일정으로 이동시키기");
       const resData = await response.json();
       console.log(resData);
-      navigate(`/project/${resData.projectId}`, { replace: false });
+      //이동 후 다시 목록을 불러오지 않음
+      window.location.href = `/project/${resData.projectId}`;
+      // navigate(`/project/${resData.projectId}`, { replace: false });
     }
   };
 
@@ -75,8 +86,10 @@ const GetProjectModal = ({ routes }) => {
     event.preventDefault();
     if (projectTitle.trim() === "") {
       Badge.fail("가져오기 실패", "여행 제목을 입력해주세요");
+      return;
     } else if (startDate === null) {
       Badge.fail("가져오기 실패", "여행 날짜를 선택해주세요");
+      return;
     }
     const data = {
       projectId,
@@ -125,7 +138,6 @@ const GetProjectModal = ({ routes }) => {
         okText="여행일정에 추가하기"
         cancelText="취소"
       >
-        {/* <form type="submit"> */}
         <StyledTitleInput
           type="text"
           name=""
@@ -135,10 +147,16 @@ const GetProjectModal = ({ routes }) => {
           onChange={onChange}
         />
         <StyledBtnDiv>
-          <StyledAllBtn toggleBtn={toggleBtn} onClick={() => setToggleBtn(true)}>
+          <StyledAllBtn
+            toggleBtn={toggleBtn}
+            onClick={() => setToggleBtn(true)}
+          >
             전체 가져오기
           </StyledAllBtn>
-          <StyledSelectBtn toggleBtn={toggleBtn} onClick={() => setToggleBtn(false)}>
+          <StyledSelectBtn
+            toggleBtn={toggleBtn}
+            onClick={() => setToggleBtn(false)}
+          >
             날짜 선택해서 가져오기
           </StyledSelectBtn>
         </StyledBtnDiv>
@@ -152,19 +170,26 @@ const GetProjectModal = ({ routes }) => {
         {!toggleBtn && (
           <>
             <StyledP>여행 기간 선택하기</StyledP>
-            <ModalCalendarRange setSelectDate={setSelectDate} setStartDate={setStartDate} />
+            <ModalCalendarRange
+              setSelectDate={setSelectDate}
+              setStartDate={setStartDate}
+            />
 
             {selectDate.map((el, index) => {
               return (
                 <p>
                   {culTripTermData(startDate, index)}{" "}
-                  <DropDown key={index} index={index} setSelectDate={setSelectDate} routes={routes} />
+                  <DropDown
+                    key={index}
+                    index={index}
+                    setSelectDate={setSelectDate}
+                    routes={routes}
+                  />
                 </p>
               );
             })}
           </>
         )}
-        {/* </form> */}
       </StyledModal>
     </>
   );
@@ -174,7 +199,7 @@ const StyledGetBtn = styled(Button)`
   background-color: #ff8a3d;
   border-color: #ff8a3d;
   color: white;
-  font-size: 13 px;
+  font-size: 13px;
   font-weight: 700;
 `;
 const StyledP = styled.p`

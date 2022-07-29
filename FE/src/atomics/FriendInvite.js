@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Popover, Button, Modal, Space } from "antd";
 import { UsergroupAddOutlined } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import Badge from "./Badge";
+// import InviteEmailInput from "./InviteEmailInput";
 
 function FriendInvite() {
   const { projectId } = useParams();
@@ -55,6 +56,7 @@ function FriendInvite() {
   }, []);
 
   const sendInviteEmail = () => {
+    console.log(email);
     if (friends.length > 1) {
       for (let i = 0; i < friends.length; i++) {
         if (friends[i] === email) {
@@ -76,6 +78,7 @@ function FriendInvite() {
     let data = { email: email, projectId: projectId };
     console.log(data);
     Badge.success("메일이 전송중입니다. 잠시 기다려주세요.");
+    setFriends([...friends, email]);
 
     fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/invite/mail`, {
       method: "post",
@@ -100,9 +103,16 @@ function FriendInvite() {
       .catch((err) => console.log(`err: ${err}`));
   };
   const onChangeEmail = (event) => {
+    // console.log(`event.target.value : ${event.target.value}`);
     setEmail(event.target.value);
+    // setEmail(id == 858 && { value: value });
   };
+  // const onChangeEmail = useCallback((event) => {
+  //   console.log(`event.target.value : ${event.target.value}`);
+  //   setEmail(event.target.value);
+  // }, []);
   const handleOnKeyPress = (event) => {
+    // console.log(event.key);
     if (event.key === "Enter") {
       sendInviteEmail();
     }
@@ -115,9 +125,14 @@ function FriendInvite() {
         height: "300px",
       }}
     >
+      {/* <InviteEmailInput
+        type="text"
+        email={email}
+        onChangeEmail={onChangeEmail}
+        handleOnKeyPress={handleOnKeyPress}
+      /> */}
       <InviteForm>
         <InviteEmailText>Email</InviteEmailText>
-        {/* 텍스트 -> 이메일로 고쳐야함 */}
         <InviteEmailInput
           type="text"
           value={email}

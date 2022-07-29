@@ -5,6 +5,7 @@ import ResultMap from "../../components/MarkMap/resultMap";
 import { CloseOutlined } from "@ant-design/icons";
 import ResultModal from "./ResultModal";
 import Badge from "../../atomics/Badge";
+import ShowMemoResult from "./ResultMemo";
 
 const color = {
   FD6: "#975FFE",
@@ -33,6 +34,7 @@ function Result() {
   const [routes, setRoutes] = useState(null); // routes -> [[route],[route],[route]...]
 
   const [projectInfo, setProjectInfo] = useState(null);
+
   // const colorRef = useRef([]);
 
   // route -> [{spotInfo},{spotInfo},{spotInfo}...]
@@ -54,16 +56,13 @@ function Result() {
       }
       console.log(projectInfo);
       projectInfo.hashTags = hashTags;
-      await fetch(
-        `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/upload`,
-        {
-          method: "post",
-          headers: {
-            "content-type": "application/json",
-          },
-          body: JSON.stringify(projectInfo),
-        }
-      ).then((res) => res.json());
+      await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/upload`, {
+        method: "post",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(projectInfo),
+      }).then((res) => res.json());
     }
     setVisible(false);
     setConfirmLoading(false);
@@ -80,9 +79,7 @@ function Result() {
     setVisible(false);
   };
   async function fetchProjectById(_id) {
-    const response = await fetch(
-      `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`
-    );
+    const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`);
     return response.json();
   }
 
@@ -107,24 +104,7 @@ function Result() {
 
     sDate.setDate(sDate.getDate() + day);
 
-    return `${sDate.getFullYear() - 2000}. ${
-      sDate.getMonth() + 1
-    }. ${sDate.getDate()} ${dayArr[sDate.getDay()]}`;
-  };
-
-  const ShowMemoResult = () => {
-    let text = "로딩중 ...";
-    if (projectInfo) {
-      try {
-        const textLines = projectInfo.quillRefEditor.length;
-        for (var i = 0; i < textLines; i++) {
-          text = projectInfo.quillRefEditor[i].insert;
-        }
-      } catch (err) {
-        console.log("메모 로딩에 실패했습니다.");
-      }
-    }
-    return <div className="memoText">{text}</div>;
+    return `${sDate.getFullYear() - 2000}. ${sDate.getMonth() + 1}. ${sDate.getDate()} ${dayArr[sDate.getDay()]}`;
   };
 
   return (
@@ -201,11 +181,11 @@ function Result() {
               </div>
             );
           })}
-        {/* <ResultLine />
+        <ResultLine />
         <ResultTitle>Memo</ResultTitle>
         <ResultMemoBox>
-          <ShowMemoResult />
-        </ResultMemoBox> */}
+          <ShowMemoResult project_info={projectInfo} />
+        </ResultMemoBox>
       </ResultContainer>
       <ResultMap routes={routes} colorArr={colorArr} />
     </ResultWhole>
