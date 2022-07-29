@@ -17,7 +17,8 @@ fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/hashtags`, {
   // credentials: "include",
 })
   .then((res) => res.json())
-  .then((res) => (hashTag = res));
+  .then((res) => (hashTag = res))
+  .catch((e) => console.log("왜??", e));
 
 const RecommendPage = () => {
   const navigate = useNavigate();

@@ -27,7 +27,7 @@ function KakaoSignIn(props) {
     const data = {
       grant_type: "authorization_code",
       client_id: "2d1c91f12a4c8020dbcc39ddb0c368b0",
-      redirect_uri: `https://${process.env.REACT_APP_SERVER_IP}:3000/kakao/signin`,
+      redirect_uri: `https://${process.env.REACT_APP_SERVER_IP}/kakao/signin`,
       code: code,
     };
     await fetch("https://kauth.kakao.com/oauth/token", {
