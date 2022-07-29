@@ -69,13 +69,16 @@ const MemoRtc = ({ project_Id, userName }) => {
     const connectUsers = Object.keys(connectUser).length;
     // console.log(" @#@#@#@#@# connectuser : ", connectUsers);
     if (connectUsers < 2) {
-      fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/memo/${projectID}`, {
-        method: "get",
-        headers: {
-          "content-type": "application/json",
-        },
-        credentials: "include",
-      })
+      fetch(
+        `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/memo/${projectID}`,
+        {
+          method: "get",
+          headers: {
+            "content-type": "application/json",
+          },
+          credentials: "include",
+        }
+      )
         .then((res) => res.json())
         .then((res) => {
           if (res != "\n") {
@@ -101,7 +104,13 @@ const MemoRtc = ({ project_Id, userName }) => {
     toolbar: TOOLBAR_OPTIONS,
     cursors: {
       transformOnTextChange: true,
-      toggleFlag: true,
+      // toggleFlag: false,
+      // show: true,
+      hide: false,
+      // hideDelayMs: 500,
+      // hideSpeedMs: 0,
+      selectionChangeSource: null,
+      transformOnTextChange: true,
     },
     history: {
       userOnly: true,
@@ -151,10 +160,19 @@ const EditorContainer = styled.div`
   }
   .ql-container.ql-snow {
     border-radius: 0 0 5px 5px;
-    /* height: 195px; */
   }
   .ql-editor strong {
     font-weight: bold;
+  }
+  .q1-cursor {
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+  .ql-cursor-flag {
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  .show-flag {
   }
 `;
 
