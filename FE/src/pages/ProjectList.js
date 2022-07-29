@@ -105,9 +105,11 @@ const ProjectList = ({ goProject }) => {
 
       <StyledLine></StyledLine>
       <StyledUl>
-        {items.map((el, i) => {
-          return <ProjectItem key={i} el={el} />;
-        })}
+        {items
+          ? items.map((el, i) => {
+              return <ProjectItem key={i} el={el} />;
+            })
+          : null}
       </StyledUl>
     </StyleProjectList>
   );
