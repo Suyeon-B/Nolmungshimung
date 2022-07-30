@@ -27,7 +27,8 @@ const HomeNew = () => {
   };
 
   const onClickLogOut = () => {
-    auth.logout();
+    // console.log(auth.user);
+    auth.logout(auth.user._id);
   };
   return (
     // <!--Waves Container-->

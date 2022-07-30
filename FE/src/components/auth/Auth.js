@@ -19,6 +19,25 @@ async function fetchCallAuth() {
   return response.json();
 }
 
+async function fetchLogOut(id) {
+  // console.log("fetch Log Out", id);
+  const data = {
+    _id: id,
+  };
+  const response = await fetch(
+    `https://${process.env.REACT_APP_SERVER_IP}:8443/users/signout`,
+    {
+      method: "post",
+      headers: {
+        "content-type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(data),
+    }
+  );
+  return response.json();
+}
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(null);
@@ -73,15 +92,18 @@ export const AuthProvider = ({ children }) => {
     // window.location.href = "/";
   };
 
-  const logout = async () => {
+  const logout = async (data) => {
     // cookie 삭제
+    // console.log(data);
     deleteCookie("w_access");
     deleteCookie("w_refresh");
-    await setUser(null);
+    fetchLogOut(data);
+    setUser(null);
+
     sessionStorage.clear();
-    window.location.replace("/");
-    // window.location.href = "/";
-    await setLoading(false);
+    // window.location.replace("/");
+    setLoading(false);
+    window.location.href = "/";
   };
 
   return (
