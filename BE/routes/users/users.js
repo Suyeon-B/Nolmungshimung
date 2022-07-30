@@ -24,15 +24,17 @@ const middlewares = require("../../middleware");
 // });
 
 const accessTokenOptions = {
-  domain: process.env.COOKIE_DOMAIN,
-  sameSite: "none",
+  domain: process.env.CORS_SERVER_IP,
+  // sameSite: "none",
+  sameSite: false,
   secure: true,
 };
 
 const refreshTokenOptions = {
   // httpOnly: true,
-  sameSite: "none",
-  domain: process.env.COOKIE_DOMAIN,
+  // sameSite: "none",
+  sameSite: false,
+  domain: process.env.CORS_SERVER_IP,
   secure: true,
 };
 
