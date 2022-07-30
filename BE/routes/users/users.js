@@ -5,6 +5,7 @@ const { User } = require(__base + "models/User");
 const { authMain } = require("../../middleware/auth");
 const { signupMail } = require(__base + "routes/util/mail");
 const middlewares = require("../../middleware");
+var cookie = require("cookie");
 
 //=================================
 //             User
@@ -24,22 +25,14 @@ const middlewares = require("../../middleware");
 // });
 
 const accessTokenOptions = {
-  domain: process.env.CORS_SERVER_IP,
   sameSite: "none",
-  // sameSite: false,
   secure: true,
-  signed: true,
-  maxAge: 2600000,
 };
 
 const refreshTokenOptions = {
   // httpOnly: true,
   sameSite: "none",
-  // sameSite: false,
-  domain: process.env.CORS_SERVER_IP,
   secure: true,
-  signed: true,
-  maxAge: 2600000,
 };
 
 function checkUserNickName(user_name) {
@@ -206,19 +199,44 @@ router.post("/signin", (req, res) => {
             message: "토큰 생성에 실패했습니다.",
           });
         }
-        // console.log("res : ", res.userRefreshToken);
-        res.cookie("w_refresh", user.userRefreshToken, refreshTokenOptions);
-        res
-          .cookie("w_access", user.userAccessToken, accessTokenOptions)
-          .status(200)
-          .json({
-            loginSuccess: true,
-            user: user,
-            user_email: user.user_email,
-            user_name: user.user_name,
-            user_projects: user.user_projects,
-            message: "성공적으로 로그인했습니다.",
-          });
+        console.log("Refresh res : ", user.userRefreshToken);
+        console.log("Access res : ", user.userAccessToken);
+        // res.cookie("w_refresh", user.userRefreshToken, refreshTokenOptions);
+        res.setHeader(
+          "Set-Cookie",
+          cookie.serialize(
+            "w_refresh",
+            user.userRefreshToken,
+            refreshTokenOptions
+          )
+        );
+
+        res.setHeader(
+          "Set-Cookie",
+          cookie.serialize("w_access", user.userAccessToken, accessTokenOptions)
+        );
+        res.status(200).json({
+          loginSuccess: true,
+          user: user,
+          user_email: user.user_email,
+          user_name: user.user_name,
+          user_projects: user.user_projects,
+          message: "성공적으로 로그인했습니다.",
+        });
+
+        res.end();
+        // res
+        //   .cookie("w_access", user.userAccessToken, accessTokenOptions)
+        //   .status(200)
+        //   .json({
+        //     loginSuccess: true,
+        //     user: user,
+        //     user_email: user.user_email,
+        //     user_name: user.user_name,
+        //     user_projects: user.user_projects,
+        //     message: "성공적으로 로그인했습니다.",
+        //     sameSite: "none",
+        //   });
       });
     });
   });
@@ -293,19 +311,39 @@ router.post("/kakao", async (req, res) => {
             message: "토큰 생성에 실패했습니다.",
           });
         }
-        res.cookie("w_refresh", user.userRefreshToken, refreshTokenOptions);
-        res
-          .cookie("w_access", user.userAccessToken, accessTokenOptions)
-          .status(200)
-          .json({
-            loginSuccess: true,
-            user: user,
-            user_email: user.user_email,
-            user_name: user.user_name,
-            user_projects: user.user_projects,
-            message: "성공적으로 로그인했습니다.",
-            // token: user.userAccessToken,
-          });
+        // res.cookie("w_refresh", user.userRefreshToken, refreshTokenOptions);
+        res.setHeader(
+          "Set-Cookie",
+          cookie.serialize(
+            "w_refresh",
+            user.userRefreshToken,
+            refreshTokenOptions
+          )
+        );
+        // res
+        //   .cookie("w_access", user.userAccessToken, accessTokenOptions)
+        //   .status(200)
+        //   .json({
+        //     loginSuccess: true,
+        //     user: user,
+        //     user_email: user.user_email,
+        //     user_name: user.user_name,
+        //     user_projects: user.user_projects,
+        //     message: "성공적으로 로그인했습니다.",
+        //     // token: user.userAccessToken,
+        //   });
+        res.setHeader(
+          "Set-Cookie",
+          cookie.serialize("w_access", user.userAccessToken, accessTokenOptions)
+        );
+        res.status(200).json({
+          loginSuccess: true,
+          user: user,
+          user_email: user.user_email,
+          user_name: user.user_name,
+          user_projects: user.user_projects,
+          message: "성공적으로 로그인했습니다.",
+        });
       });
     } else {
       console.log("없어용");
@@ -336,18 +374,42 @@ router.post("/kakao", async (req, res) => {
                 message: "토큰 생성에 실패했습니다.",
               });
             }
-            res.cookie("w_refresh", user.userRefreshToken, refreshTokenOptions);
-            res
-              .cookie("w_access", user.userAccessToken, accessTokenOptions)
-              .status(200)
-              .json({
-                loginSuccess: true,
-                user_email: user.user_email,
-                user_name: user.user_name,
-                message: "성공적으로 로그인했습니다.",
-                user_projects: user.user_projects,
-                // token: user.userAccessToken,
-              });
+            // res.cookie("w_refresh", user.userRefreshToken, refreshTokenOptions);
+            res.setHeader(
+              "Set-Cookie",
+              cookie.serialize(
+                "w_refresh",
+                user.userRefreshToken,
+                refreshTokenOptions
+              )
+            );
+            // res
+            //   .cookie("w_access", user.userAccessToken, accessTokenOptions)
+            //   .status(200)
+            //   .json({
+            //     loginSuccess: true,
+            //     user_email: user.user_email,
+            //     user_name: user.user_name,
+            //     message: "성공적으로 로그인했습니다.",
+            //     user_projects: user.user_projects,
+            //     // token: user.userAccessToken,
+            //   });
+            res.setHeader(
+              "Set-Cookie",
+              cookie.serialize(
+                "w_access",
+                user.userAccessToken,
+                accessTokenOptions
+              )
+            );
+            res.status(200).json({
+              loginSuccess: true,
+              user: user,
+              user_email: user.user_email,
+              user_name: user.user_name,
+              user_projects: user.user_projects,
+              message: "성공적으로 로그인했습니다.",
+            });
           });
         }
       });

@@ -1,21 +1,14 @@
 const { User } = require("../models/User");
+var cookie = require("cookie");
 
 const accessTokenOptions = {
-  // domain: `${process.env.COOKIE_DOMAIN}`,
-  domain: process.env.REACT_APP_SERVER_IP,
-  sameSite: false,
-  // sameSite: "lax",
-  //sameSite: "none",
+  sameSite: "none",
   secure: true,
 };
 
 const refreshTokenOptions = {
   // httpOnly: true,
-  sameSite: false,
-  // sameSite: "lax",
-  // sameSite: "none",
-  // domain: `${process.env.COOKIE_DOMAIN}`,
-  domain: process.env.REACT_APP_SERVER_IP,
+  sameSite: "none",
   secure: true,
 };
 
@@ -48,7 +41,11 @@ function authCheck(req, res) {
         }
 
         req.user = user;
-        res.cookie("w_access", user.userAccessToken, accessTokenOptions);
+        // res.cookie("w_access", user.userAccessToken, accessTokenOptions);
+        res.setHeader(
+          "Set-Cookie",
+          cookie.serialize("w_access", user.userAccessToken, accessTokenOptions)
+        );
         req.cookies.w_access = user.userAccessToken;
         return resolve(true);
       }
@@ -64,7 +61,15 @@ function authCheck(req, res) {
         }
 
         req.user = user;
-        res.cookie("w_refresh", user.userRefreshToken, refreshTokenOptions);
+        // res.cookie("w_refresh", user.userRefreshToken, refreshTokenOptions);
+        res.setHeader(
+          "Set-Cookie",
+          cookie.serialize(
+            "w_refresh",
+            user.userRefreshToken,
+            refreshTokenOptions
+          )
+        );
         req.cookies.w_refresh = user.userRefreshToken;
         return resolve(true);
       } else {
