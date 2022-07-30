@@ -12,9 +12,7 @@ const RecommendRows = () => {
   useEffect(() => {
     const fetchUploadProjectInfo = async () => {
       try {
-        const request = await fetch(
-          `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/infinite?skip=${skip}`
-        );
+        const request = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/infinite?skip=${skip}`);
         const uploadProjectInfoJson = await request.json();
         setUploadProjectInfo([...uploadProjectInfo, ...uploadProjectInfoJson]);
         // console.log("인피니트 스크롤 결과");
@@ -58,10 +56,7 @@ const RecommendRows = () => {
       <StyledDiv>
         <Link to={`project/${el._id}`}>
           <RecommendItems>
-            <div
-              className="background-img"
-              style={{ backgroundImage: `url(${el.img})` }}
-            >
+            <div className="background-img" style={{ backgroundImage: `url(${el.img})` }}>
               <div className="uploadProjectInfo-title">{el.project_title}</div>
               <div className="uploadProjectInfo-hashTags">
                 {el.hashTags.length === 0
@@ -88,16 +83,16 @@ const RecommendRows = () => {
   return (
     <div className="scrollWrapper">
       <HashtagResultTextDark>🏝 모든 여행코스</HashtagResultTextDark>
-      <RecommendContents onWheel={handleScroll}>
+      <div className="scrollOdd">
         {uploadProjectInfo.map((el, i) => {
-          return i % 2 === 0 ? null : <ScrollRow key={i} el={el} />;
+          return i % 2 === 0 ? null : <InfiniteScroll />;
         })}
-      </RecommendContents>
-      <RecommendContents onWheel={handleScroll}>
+      </div>
+      <div className="scrollOdd">
         {uploadProjectInfo.map((el, i) => {
-          return i % 2 === 0 ? <ScrollRow key={i} el={el} /> : null;
+          return i % 2 === 0 ? null : <InfiniteScroll />;
         })}
-      </RecommendContents>
+      </div>
     </div>
   );
 };

@@ -16,6 +16,17 @@ import { notification } from "antd";
 
 import socket from "../../socket";
 
+const colors = {
+  // "#FF8A3D": false,
+  "#8DD664": false,
+  "#FF6169": false,
+  "#975FFE": false,
+  "#0072BC": false,
+  "#F6282B": false,
+  "#FAD700": false,
+  "#05FFCC": false,
+  "#4A4A4A": false,
+};
 async function fetchProjectById(_id) {
   const response = await fetch(
     `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`
@@ -26,7 +37,6 @@ async function fetchProjectById(_id) {
 const ProjectPage = (props) => {
   const { projectId } = useParams();
   const auth = useAuth();
-
   const [items, setItems] = useState(null);
   const [itemsRoute, setItemsRoute] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -37,18 +47,10 @@ const ProjectPage = (props) => {
   const [connectUser, setConnectUser] = useState({});
   const [attentionIndex, setAttentionIndex] = useState(-1);
   // const userName = sessionStorage.getItem("myNickname");
-
-  const colors = {
-    // "#FF8A3D": false,
-    "#8DD664": false,
-    "#FF6169": false,
-    "#975FFE": false,
-    "#0072BC": false,
-    "#F6282B": false,
-    "#FAD700": false,
-    "#05FFCC": false,
-    "#4A4A4A": false,
-  };
+  console.log("랜더링");
+  // useEffect(() => {
+  //   console.log("랜더링");
+  // });
   const getColor = () => {
     for (let color in colors) {
       if (!colors[color]) {
@@ -73,9 +75,7 @@ const ProjectPage = (props) => {
 
   useEffect(() => {
     console.log(auth);
-    // if (!auth.user) {
-    //   window.location.href = "/signin";
-    // }
+
     if (projectId === null) return;
     async function fetchInfo() {
       const data = await fetchProjectById(projectId);
@@ -83,25 +83,12 @@ const ProjectPage = (props) => {
       setItems(data);
       setItemsRoute(data.routes);
 
-      // const joinVoice = new Sfu({projectId: projectId, });
-      // // import Sfu from './Sfu'
-      // // Sfu.connect()
-      // joinVoice.on("onConnected", () => {
-      //   // joinVoice.join(projectId)
-      //   // console.log('joinVoice Start')
-      //   joinVoice.connect();
-      // });
-
       if (!isFirstPage) {
         setIsFirstPage(true);
       }
     }
     fetchInfo();
-    return () => {
-      // joinVoice.onLeave();
-      // joinVoice.exitRoom();
-    };
-  }, [projectId]);
+  }, []);
 
   useEffect(() => {
     socket.on("connectUser", (connectUserInfo) => {
@@ -161,33 +148,35 @@ const ProjectPage = (props) => {
       setIsDrage(false);
       console.log("project page unmount");
     };
-  }, [projectId, auth]);
+  }, []);
 
   useEffect(() => {
     if (itemsRoute === null) return;
-
-    async function UpdateInfo() {
-      try {
-        await fetch(
-          `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${projectId}`,
-          {
-            method: "PATCH",
-            headers: {
-              "content-type": "application/json",
-            },
-            credentials: "include",
-            body: JSON.stringify(itemsRoute),
-          }
-        ).then((res) => res.json());
-      } catch (err) {
-        console.log(err);
+    if (isAddDel || isDrage) {
+      console.log("socket 이벤트");
+      async function UpdateInfo() {
+        try {
+          await fetch(
+            `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${projectId}`,
+            {
+              method: "PATCH",
+              headers: {
+                "content-type": "application/json",
+              },
+              // credentials: "include",
+              body: JSON.stringify(itemsRoute),
+            }
+          ).then((res) => res.json());
+        } catch (err) {
+          console.log(err);
+        }
       }
+      UpdateInfo();
+      // console.log(itemsRoute);
+      socket.emit("changeRoute", [itemsRoute, projectId]);
+      if (isDrage) setIsDrage(false);
+      if (isAddDel) setIsAddDel(false);
     }
-    UpdateInfo();
-
-    socket.emit("changeRoute", [itemsRoute, projectId]);
-    setIsDrage(false);
-    setIsAddDel(false);
   }, [isDrage, isAddDel]);
 
   useEffect(() => {
@@ -205,11 +194,6 @@ const ProjectPage = (props) => {
 
   useEffect(() => {
     socket.on("notify", (user_name) => {
-      // console.log("nnn");
-      // console.log(user_name);
-      // console.log("i receive notify");
-      // 모달 버전 크롬 알람안되면 이거씁시다.
-
       const openNotificationWithIcon = (type) => {
         notification[type]({
           message: "놀멍쉬멍",
@@ -217,11 +201,6 @@ const ProjectPage = (props) => {
         });
       };
       openNotificationWithIcon("success");
-      // const triggerNotif = useNotification("놀멍쉬멍", {
-      //   body: `${user_name}님이 입장했습니다.`,
-      // });
-      // triggerNotif();
-      // console.log("입장");
     });
     return () => {
       socket.removeAllListeners("notify");
@@ -271,7 +250,8 @@ const ProjectPage = (props) => {
   return (
     <ConnectuserContext.Provider value={{ connectUser, setConnectUser }}>
       <PlanSideBar
-        item={items}
+        projectTitle={items.project_title}
+        startDate={items.start_date}
         goSearchPage={goSearchPage}
         goDetailPage={goDetailPage}
         isFirstPage={isFirstPage}

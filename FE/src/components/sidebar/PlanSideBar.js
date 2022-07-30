@@ -10,7 +10,8 @@ import SearchBtn from "../../atomics/SearchBtn";
 import PlanBtns from "./PlanBtns";
 
 const PlanSideBar = ({
-  item,
+  projectTitle,
+  startDate,
   goSearchPage,
   goDetailPage,
   isFirstPage,
@@ -40,7 +41,7 @@ const PlanSideBar = ({
   return (
     <SideBar>
       {/* Component나누자 */}
-      <SideBarTitle title={item.project_title} />
+      <SideBarTitle title={projectTitle} />
       <PlanBtns
         onClickSearch={onClickSearch}
         searchColor={searchColor}
@@ -49,7 +50,7 @@ const PlanSideBar = ({
       />
       <PlanList
         goDetailPage={onClickDetail}
-        startDate={item.start_date}
+        startDate={startDate}
         routes={itemRoutes}
         setRoutes={setItemRoutes}
         setSelectedIndex={setSelectedIndex}
