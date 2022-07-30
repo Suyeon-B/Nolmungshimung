@@ -24,7 +24,7 @@ const middlewares = require("../../middleware");
 // });
 
 const accessTokenOptions = {
-  domain: process.env.CORS_SERVER_IP,
+  domain: `${process.env.CORS_SERVER_IP}:8443`,
   // sameSite: "none",
   sameSite: "lax",
   secure: true,
@@ -34,7 +34,7 @@ const refreshTokenOptions = {
   // httpOnly: true,
   // sameSite: "none",
   sameSite: "lax",
-  domain: process.env.CORS_SERVER_IP,
+  domain: `${process.env.CORS_SERVER_IP}:8443`,
   secure: true,
 };
 
