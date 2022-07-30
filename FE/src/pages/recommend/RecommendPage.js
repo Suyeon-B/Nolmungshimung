@@ -1,9 +1,10 @@
-import React, { useEffect, Suspense, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { HomeFilled, SearchOutlined } from "@ant-design/icons";
 import ScrollRow from "../../components/recommend/ScrollRow";
 import styled from "styled-components";
 import InfiniteScroll from "../../components/recommend/InfiniteScroll";
+import ScrollHorizontal from "react-scroll-horizontal";
 import { Select } from "antd";
 
 const RecommendPage = () => {
@@ -48,10 +49,11 @@ const RecommendPage = () => {
     setInputHashtags(String(value).replace(/[0-9]/g, ""));
     // console.log(value.keyCode);
     // console.log(value);
-    console.log(inputHashtags);
+    // console.log(inputHashtags);
     if (value.length === 0) {
       setIsSearched(false);
     }
+    getHashTags();
   };
 
   async function getHashTags() {
@@ -67,6 +69,7 @@ const RecommendPage = () => {
       const request = await fetch(url);
       const hashTagPJInfoJson = await request.json();
       setHashTagPJInfo([...hashTagPJInfoJson]);
+      // console.log(isSearched);
     } catch (e) {
       console.log("해시태그야 일해라 ..");
     }
@@ -97,10 +100,7 @@ const RecommendPage = () => {
       {!isSearched && (
         <div className="ScrollWrapper">
           <MainText>{mainText}</MainText>
-          <TextDark>
-            {/* 🏝 <font color="#232a3c">좌우로 밀어서 </font> 모든 여행코스 확인하기 👀 */}
-            🏝 "좌우로 밀어서" 모든 여행코스 확인하기 👀
-          </TextDark>
+          <TextDark>🏝 "옆으로 밀어서" 모든 여행코스 확인하기 👀</TextDark>
           <RecommendBlock>
             <div className="scrollOdd">
               <InfiniteScroll isOdd={true} />
@@ -119,6 +119,7 @@ const RecommendPage = () => {
               <HashtagResult>#{inputHashtags}</HashtagResult>
               <HashtagResultText>검색 결과 🔍</HashtagResultText>
             </div>
+
             <HashTagSearchResult>
               {hashTagPJInfo.length > 0 ? (
                 hashTagPJInfo.map((el, i) => {
