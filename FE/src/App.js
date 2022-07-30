@@ -10,8 +10,16 @@ const KakaoSignIn = React.lazy(() => import("./components/sign/KakaoSignIn"));
 // import VoiceTalk from "./components/voiceTalk/voiceTalk";
 const VoiceTalk = React.lazy(() => import("./components/voiceTalk/voiceTalk"));
 // import InviteProject from "./components/invite/InviteProject";
-const InviteProject = React.lazy(() => import("./components/invite/InviteProject"));
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+const InviteProject = React.lazy(() =>
+  import("./components/invite/InviteProject")
+);
+import Test from "./Test";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 // import CreateProject from "./components/CreateProject";
 const CreateProject = React.lazy(() => import("./components/CreateProject"));
 import styled from "styled-components";
@@ -21,16 +29,25 @@ import "./reset.css";
 import { QueryClient, QueryClientProvider } from "react-query";
 // import ProjectPage from "./pages/project/ProjectPage";
 const ProjectPage = React.lazy(() => import("./pages/project/ProjectPage"));
-import { AuthProvider, RequireAuth, NotRequireAuth } from "./components/auth/Auth";
+import {
+  AuthProvider,
+  RequireAuth,
+  NotRequireAuth,
+} from "./components/auth/Auth";
 
 // import RecommendPage from "./pages/recommend/RecommendPage";
-const RecommendPage = React.lazy(() => import("./pages/recommend/RecommendPage"));
+const RecommendPage = React.lazy(() =>
+  import("./pages/recommend/RecommendPage")
+);
 // import RecommendPageDetail from "./pages/recommend/RecommendPageDetail";
-const RecommendPageDetail = React.lazy(() => import("./pages/recommend/RecommendPageDetail"));
+const RecommendPageDetail = React.lazy(() =>
+  import("./pages/recommend/RecommendPageDetail")
+);
 
 // react query devtool
 import { ReactQueryDevtools } from "react-query/devtools";
 // import HomeNew from "./pages/HomeNew";
+import Loading from "./components/loading/Loading";
 const HomeNew = React.lazy(() => import("./pages/HomeNew"));
 
 const queryClient = new QueryClient(); // 인스턴스 생성
@@ -51,7 +68,7 @@ function App() {
                 path="signin/*"
                 element={
                   <NotRequireAuth>
-                    <Suspense fallback={<div>Loading...</div>}>
+                    <Suspense fallback={<Loading />}>
                       <SignIn />
                     </Suspense>
                   </NotRequireAuth>
@@ -61,7 +78,7 @@ function App() {
                 path="signup/*"
                 element={
                   <NotRequireAuth>
-                    <Suspense fallback={<div>Loading...</div>}>
+                    <Suspense fallback={<Loading />}>
                       <SignUp />
                     </Suspense>
                   </NotRequireAuth>
@@ -70,7 +87,7 @@ function App() {
               <Route
                 path="voicetalk/*"
                 element={
-                  <Suspense fallback={<div>Loading...</div>}>
+                  <Suspense fallback={<Loading />}>
                     <VoiceTalk />
                   </Suspense>
                 }
@@ -78,7 +95,7 @@ function App() {
               <Route
                 path="/"
                 element={
-                  <Suspense fallback={<div>Loading...</div>}>
+                  <Suspense fallback={<Loading />}>
                     <HomeNew />
                   </Suspense>
                 }
@@ -86,7 +103,7 @@ function App() {
               <Route
                 path="/kakao/signin"
                 element={
-                  <Suspense fallback={<div>Loading...</div>}>
+                  <Suspense fallback={<Loading />}>
                     <KakaoSignIn />
                   </Suspense>
                 }
@@ -95,7 +112,7 @@ function App() {
                 path="project/*"
                 element={
                   <RequireAuth>
-                    <Suspense fallback={<div>Loading...</div>}>
+                    <Suspense fallback={<Loading />}>
                       <CreateProject />
                     </Suspense>
                   </RequireAuth>
@@ -105,7 +122,7 @@ function App() {
                 path="project/:projectId"
                 element={
                   <RequireAuth>
-                    <Suspense fallback={<div>Loading...</div>}>
+                    <Suspense fallback={<Loading />}>
                       <ProjectPage />
                     </Suspense>
                   </RequireAuth>
@@ -115,7 +132,7 @@ function App() {
                 path="invite/*"
                 element={
                   <RequireAuth>
-                    <Suspense fallback={<div>Loading...</div>}>
+                    <Suspense fallback={<Loading />}>
                       <InviteProject />
                     </Suspense>
                   </RequireAuth>
@@ -126,7 +143,7 @@ function App() {
                 path="project/:projectId/result"
                 element={
                   <RequireAuth>
-                    <Suspense fallback={<div>Loading...</div>}>
+                    <Suspense fallback={<Loading />}>
                       <Result />
                     </Suspense>
                   </RequireAuth>
@@ -135,7 +152,7 @@ function App() {
               <Route
                 path="recommend/*"
                 element={
-                  <Suspense fallback={<div>Loading...</div>}>
+                  <Suspense fallback={<Loading />}>
                     <RecommendPage />
                   </Suspense>
                 }
@@ -143,8 +160,16 @@ function App() {
               <Route
                 path="recommend/project/:projectId"
                 element={
-                  <Suspense fallback={<div>Loading...</div>}>
+                  <Suspense fallback={<Loading />}>
                     <RecommendPageDetail />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="test/*"
+                element={
+                  <Suspense fallback={<Loading />}>
+                    <Test />
                   </Suspense>
                 }
               />
@@ -153,7 +178,7 @@ function App() {
           </BodyDiv>
         </Router>
       </AuthProvider>
-      {/* <ReactQueryDevtools /> */}
+      <ReactQueryDevtools />
     </QueryClientProvider>
   );
 }

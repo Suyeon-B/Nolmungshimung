@@ -40,6 +40,7 @@
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
     "react-scroll-horizontal": "^1.6.6",
+    "react-spinners": "^0.13.4",
     "simple-peer": "^9.11.1",
     "socket.io": "^4.5.1",
     "socket.io-client": "^4.5.1",
