@@ -220,14 +220,14 @@ app.use(
 );
 app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 app.use(bodyParser.json());
-app.use(cookieParser(process.env.COOKIE_SECRET));
+app.use(cookieParser(process.env.NODEMAILER_PASS));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(cookieParser(process.env.COOKIE_SECRET));
+app.use(cookieParser(process.env.NODEMAILER_PASS));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use(
