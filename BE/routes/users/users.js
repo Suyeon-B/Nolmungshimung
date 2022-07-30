@@ -30,7 +30,7 @@ const accessTokenOptions = {
 };
 
 const refreshTokenOptions = {
-  // httpOnly: true,
+  httpOnly: true,
   sameSite: "none",
   secure: true,
 };
