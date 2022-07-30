@@ -1,17 +1,17 @@
 const { User } = require("../models/User");
 
 const accessTokenOptions = {
-  domain: "." + process.env.CORS_SERVER_IP,
-  sameSite: false,
+  domain: process.env.CORS_SERVER_IP,
+  sameSite: "lax",
   //sameSite: "none",
   secure: true,
 };
 
 const refreshTokenOptions = {
   // httpOnly: true,
-  sameSite: false,
+  sameSite: "lax",
   // sameSite: "none",
-  domain: "." + process.env.CORS_SERVER_IP,
+  domain: process.env.CORS_SERVER_IP,
   secure: true,
 };
 
