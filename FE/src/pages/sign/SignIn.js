@@ -40,7 +40,7 @@ function SignIn() {
         console.log("res : ", res);
         if (res.loginSuccess === true) {
           // success();
-          console.log("Sign In Success");
+          // console.log("Sign In Success");
           sessionStorage.setItem("myNickname", res.user_name);
           sessionStorage.setItem("user_email", res.user_email);
           // navigate("/", { replace: true });
