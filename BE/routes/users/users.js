@@ -26,14 +26,14 @@ const middlewares = require("../../middleware");
 const accessTokenOptions = {
   domain: process.env.CORS_SERVER_IP,
   // sameSite: "none",
-  sameSite: false,
+  sameSite: "lax",
   secure: true,
 };
 
 const refreshTokenOptions = {
   // httpOnly: true,
   // sameSite: "none",
-  sameSite: false,
+  sameSite: "lax",
   domain: process.env.CORS_SERVER_IP,
   secure: true,
 };
