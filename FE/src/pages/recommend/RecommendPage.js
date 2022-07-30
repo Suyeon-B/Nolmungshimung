@@ -46,14 +46,16 @@ const RecommendPage = () => {
   }
 
   const handleChange = (value) => {
+    // getHashTags();
     setInputHashtags(String(value).replace(/[0-9]/g, ""));
     // console.log(value.keyCode);
     // console.log(value);
+    // console.log(value);
     // console.log(inputHashtags);
+
     if (value.length === 0) {
       setIsSearched(false);
     }
-    getHashTags();
   };
 
   async function getHashTags() {
@@ -61,7 +63,8 @@ const RecommendPage = () => {
       inputHashtags
     )}`;
     if (!inputHashtags.length) {
-      url = `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend`;
+      setIsSearched(false);
+      return;
     }
     try {
       setHashTagPJInfo([]);
@@ -69,7 +72,6 @@ const RecommendPage = () => {
       const request = await fetch(url);
       const hashTagPJInfoJson = await request.json();
       setHashTagPJInfo([...hashTagPJInfoJson]);
-      // console.log(isSearched);
     } catch (e) {
       console.log("해시태그야 일해라 ..");
     }
@@ -100,7 +102,7 @@ const RecommendPage = () => {
       {!isSearched && (
         <div className="ScrollWrapper">
           <MainText>{mainText}</MainText>
-          <TextDark>🏝 "옆으로 밀어서" 모든 여행코스 확인하기 👀</TextDark>
+          <TextDark>🏝 모든 여행코스 확인하기 👀</TextDark>
           <RecommendBlock>
             <div className="scrollOdd">
               <InfiniteScroll isOdd={true} />
@@ -121,6 +123,7 @@ const RecommendPage = () => {
             </div>
 
             <HashTagSearchResult>
+              {/* <ScrollHorizontal transition="0.2" reverseScroll="true"> */}
               {hashTagPJInfo.length > 0 ? (
                 hashTagPJInfo.map((el, i) => {
                   return <ScrollRow el={el} key={i} />;
@@ -128,6 +131,7 @@ const RecommendPage = () => {
               ) : (
                 <DefaultResult>{defaultResultText}</DefaultResult>
               )}
+              {/* </ScrollHorizontal> */}
             </HashTagSearchResult>
           </RecommendBlock>
         </div>
