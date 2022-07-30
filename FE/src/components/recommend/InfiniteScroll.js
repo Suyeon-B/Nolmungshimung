@@ -12,8 +12,8 @@ function Observer({ onIntersect, stopObserver }) {
     if (node !== null) {
       let options = {
         root: null,
-        routeMargin: "100px",
-        threshold: 0.5,
+        routeMargin: "200px",
+        threshold: 0.2,
       };
 
       let observer = new IntersectionObserver((entries) => {
@@ -38,8 +38,12 @@ function Observer({ onIntersect, stopObserver }) {
       ref={ref}
       id="observer-target"
       style={{
-        width: "100%",
+        right: "0px",
+        width: "200px",
         height: "200px",
+        // borderRadius: "10px",
+        // background: "#565656",
+        // position: "absolute",
       }}
     ></div>
   );
@@ -80,15 +84,22 @@ function ScrollView() {
 
   return (
     <RecommendContents>
+      {/* <Scroll_View> */}
       <ScrollViewContents>
         {uploadProjectInfo.map((el, i) => {
           return <ScrollRow el={el} key={i} />;
         })}
+
+        <Observer onIntersect={loadMore} stopObserver={stopObserver} />
       </ScrollViewContents>
-      <Observer onIntersect={loadMore} stopObserver={stopObserver} />
+      {/* </Scroll_View> */}
     </RecommendContents>
   );
 }
+const Scroll_View = styled.div`
+  display: block;
+  overflow: auto;
+`;
 
 const ScrollViewContents = styled.div`
   display: flex;
@@ -113,11 +124,6 @@ const RecommendContents = styled.div`
     /* width: 0px;
     height: 7px; */
     display: none;
-  }
-  ::-webkit-scrollbar-thumb {
-    background-color: #232a3c;
-    border-radius: 10px;
-    border: 2px solid transparent;
   }
 `;
 
