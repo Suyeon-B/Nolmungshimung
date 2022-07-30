@@ -2,7 +2,7 @@ const { User } = require("../models/User");
 
 const accessTokenOptions = {
   // domain: `${process.env.COOKIE_DOMAIN}`,
-  domain: process.env.CORS_SERVER_IP,
+  domain: process.env.REACT_APP_SERVER_IP,
   sameSite: false,
   // sameSite: "lax",
   //sameSite: "none",
@@ -15,7 +15,7 @@ const refreshTokenOptions = {
   // sameSite: "lax",
   // sameSite: "none",
   // domain: `${process.env.COOKIE_DOMAIN}`,
-  domain: process.env.CORS_SERVER_IP,
+  domain: process.env.REACT_APP_SERVER_IP,
   secure: true,
 };
 
