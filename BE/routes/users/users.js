@@ -25,8 +25,8 @@ const middlewares = require("../../middleware");
 
 const accessTokenOptions = {
   domain: process.env.CORS_SERVER_IP,
-  // sameSite: "none",
-  sameSite: false,
+  sameSite: "none",
+  // sameSite: false,
   secure: true,
   signed: true,
   maxAge: 2600000,
@@ -34,8 +34,8 @@ const accessTokenOptions = {
 
 const refreshTokenOptions = {
   // httpOnly: true,
-  // sameSite: "none",
-  sameSite: false,
+  sameSite: "none",
+  // sameSite: false,
   domain: process.env.CORS_SERVER_IP,
   secure: true,
   signed: true,
