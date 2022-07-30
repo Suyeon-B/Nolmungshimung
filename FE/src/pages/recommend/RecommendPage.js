@@ -56,6 +56,7 @@ const RecommendPage = () => {
     if (value.length === 0) {
       setIsSearched(false);
     }
+    getHashTags();
   };
 
   async function getHashTags() {
