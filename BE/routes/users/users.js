@@ -28,6 +28,7 @@ const accessTokenOptions = {
   // sameSite: "none",
   sameSite: false,
   secure: true,
+  signed: true,
 };
 
 const refreshTokenOptions = {
@@ -36,6 +37,7 @@ const refreshTokenOptions = {
   sameSite: false,
   domain: process.env.REACT_APP_SERVER_IP,
   secure: true,
+  signed: true,
 };
 
 function checkUserNickName(user_name) {
