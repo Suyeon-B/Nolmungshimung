@@ -24,7 +24,7 @@ const middlewares = require("../../middleware");
 // });
 
 const accessTokenOptions = {
-  domain: process.env.CORS_SERVER_IP,
+  domain: process.env.REACT_APP_SERVER_IP,
   // sameSite: "none",
   sameSite: false,
   secure: true,
@@ -34,7 +34,7 @@ const refreshTokenOptions = {
   // httpOnly: true,
   // sameSite: "none",
   sameSite: false,
-  domain: process.env.CORS_SERVER_IP,
+  domain: process.env.REACT_APP_SERVER_IP,
   secure: true,
 };
 
