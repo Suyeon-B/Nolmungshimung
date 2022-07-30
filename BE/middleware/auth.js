@@ -1,5 +1,20 @@
 const { User } = require("../models/User");
 
+const accessTokenOptions = {
+  domain: `${process.env.CORS_SERVER_IP}:8443`,
+  sameSite: "lax",
+  //sameSite: "none",
+  secure: true,
+};
+
+const refreshTokenOptions = {
+  // httpOnly: true,
+  sameSite: "lax",
+  // sameSite: "none",
+  domain: `${process.env.CORS_SERVER_IP}:8443`,
+  secure: true,
+};
+
 function authCheck(req, res) {
   return new Promise(async (resolve, reject) => {
     // console.log("cookies in authCheck", JSON.stringify(req));
@@ -29,7 +44,7 @@ function authCheck(req, res) {
         }
 
         req.user = user;
-        res.cookie("w_access", user.userAccessToken);
+        res.cookie("w_access", user.userAccessToken, accessTokenOptions);
         req.cookies.w_access = user.userAccessToken;
         return resolve(true);
       }
@@ -45,7 +60,7 @@ function authCheck(req, res) {
         }
 
         req.user = user;
-        res.cookie("w_refresh", user.userRefreshToken);
+        res.cookie("w_refresh", user.userRefreshToken, refreshTokenOptions);
         req.cookies.w_refresh = user.userRefreshToken;
         return resolve(true);
       } else {
