@@ -1,57 +1,73 @@
-import React, { useEffect, useState, Suspense } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import React, { useEffect, Suspense, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { HomeFilled, SearchOutlined } from "@ant-design/icons";
+import ScrollRow from "../../components/recommend/ScrollRow";
+import styled from "styled-components";
+import InfiniteScroll from "../../components/recommend/InfiniteScroll";
 import { Select } from "antd";
 
-const { Option } = Select;
-
-import styled from "styled-components";
-
-let hashTag = [];
-fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/hashtags`, {
-  method: "get",
-  headers: {
-    "content-type": "application/json",
-  },
-  // credentials: "include",
-})
-  .then((res) => res.json())
-  .then((res) => (hashTag = res))
-  .catch((e) => console.log("왜??", e));
-
 const RecommendPage = () => {
-  const InfiniteScroll = React.lazy(() => import("../../components/recommend/InfiniteScroll"));
+  // const InfiniteScroll = React.lazy(() => import("../../components/recommend/InfiniteScroll"));
   const navigate = useNavigate();
-  const [hashTagPJInfo, setHashTagPJInfo] = useState([]);
-  const [hashtags, setHashTags] = useState([]);
   const mainText = "마음에 드는 여행코스를\n 내 여행일정으로 가져와보세요! 😆";
-  const [isSearchResult, setIsSearchResult] = useState(false);
+  const [hashTag, setHashTag] = useState(null);
+  const [hashTagPJInfo, setHashTagPJInfo] = useState([]);
+  const [inputHashtags, setInputHashtags] = useState([]);
+  const [isSearched, setIsSearched] = useState(false);
+
+  useEffect(() => {
+    const loadHashTags = async () => {
+      await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/hashtags`, {
+        method: "get",
+        headers: {
+          "content-type": "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          console.log(res);
+          setHashTag(res);
+          console.log(res);
+        })
+        .catch((e) => console.log("왜??", e));
+    };
+    loadHashTags();
+  }, []);
+
+  if (hashTag === null) {
+    return <div>loading...</div>;
+  }
 
   const children = [];
-  for (let i = 0; i < hashTag.length; i++) {
-    children.push(<Option key={hashTag[i] + i}>{hashTag[i]}</Option>);
+  const { Option } = Select;
+  if (hashTag) {
+    for (let i = 0; i < hashTag.length; i++) {
+      children.push(<Option key={hashTag[i] + i}>{hashTag[i]}</Option>);
+    }
   }
 
   const handleChange = (value) => {
-    setHashTags(String(value).replace(/[0-9]/g, ""));
+    setInputHashtags(String(value).replace(/[0-9]/g, ""));
     // console.log(value.keyCode);
   };
 
-  async function searchHashtags() {
-    let url = `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/hashtag?taglist=${JSON.stringify(hashtags)}`;
-    if (!hashtags.length) {
+  async function getHashTags() {
+    let url = `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/hashtag?taglist=${JSON.stringify(
+      inputHashtags
+    )}`;
+    if (!inputHashtags.length) {
       url = `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend`;
     }
     try {
       setHashTagPJInfo([]);
-      setIsSearchResult(true);
+      setIsSearched(true);
       const request = await fetch(url);
       const hashTagPJInfoJson = await request.json();
       setHashTagPJInfo([...hashTagPJInfoJson]);
       // console.log(hashtags);
-      if (hashtags.length === 0) {
+      if (inputHashtags.length === 0) {
         // console.log("해시태그 없으니까 인피니트 나오거라");
-        setIsSearchResult(false);
+        setIsSearched(false);
       }
       // console.log("해시태그 검색해서 나온 결과");
       // console.log(hashTagPJInfo);
@@ -59,36 +75,6 @@ const RecommendPage = () => {
       console.log("해시태그야 일해라 ..");
     }
   }
-
-  const ScrollRow = ({ el }) => {
-    const defaultHashTags = ["제주도", "여행"];
-    return (
-      <div>
-        <Link to={`project/${el._id}`}>
-          <RecommendItems>
-            <div className="background-img" style={{ backgroundImage: `url(${el.img})` }}>
-              <div className="uploadProjectInfo-title">{el.project_title}</div>
-              <div className="uploadProjectInfo-hashTags">
-                {el.hashTags.length === 0
-                  ? defaultHashTags.map((hashTag, index) => (
-                      <span key={index}>
-                        {"#"}
-                        {hashTag}{" "}
-                      </span>
-                    ))
-                  : el.hashTags.map((hashTag, index) => (
-                      <span key={index}>
-                        {"#"}
-                        {hashTag}{" "}
-                      </span>
-                    ))}
-              </div>
-            </div>
-          </RecommendItems>
-        </Link>
-      </div>
-    );
-  };
 
   return (
     <RecommendWrapper>
@@ -109,41 +95,40 @@ const RecommendPage = () => {
           >
             {children}
           </SelectModal>
-          <SelectIcon onClick={searchHashtags} />
+          <SelectIcon onClick={getHashTags} />
         </StyledDiv>
       </SearchBlock>
-      {!isSearchResult && (
+      {!isSearched && (
         <div className="ScrollWrapper">
           <MainText>{mainText}</MainText>
-          <HashtagResultTextDark>🏝 모든 여행코스</HashtagResultTextDark>
+          <TextDark>🏝 모든 여행코스</TextDark>
           <RecommendBlock>
             <div className="scrollOdd">
-              <Suspense fallback={<div>Loading...</div>}>
-                <InfiniteScroll />
-              </Suspense>
+              {/* <Suspense fallback={<div>Loading...</div>}> */}
+              <InfiniteScroll />
+              {/* </Suspense> */}
             </div>
             <div className="scrollEven">
-              <Suspense fallback={<div>Loading...</div>}>
-                <InfiniteScroll />
-              </Suspense>
+              {/* <Suspense fallback={<div>Loading...</div>}> */}
+              <InfiniteScroll />
+              {/* </Suspense> */}
             </div>
           </RecommendBlock>
         </div>
       )}
-      {isSearchResult && (
+      {isSearched && (
         <div className="ScrollWrapper">
           <RecommendBlock>
             <MainText>{mainText}</MainText>
             <div className="resultTextWrapper">
-              <HashtagResult>#{hashtags}</HashtagResult>
+              <HashtagResult>#{inputHashtags}</HashtagResult>
               <HashtagResultText>검색 결과 🔍</HashtagResultText>
             </div>
-
-            <RecommendContents>
+            <HashTagSearchResult>
               {hashTagPJInfo.map((el, i) => {
-                return <ScrollRow key={i} el={el} />;
+                return <ScrollRow el={el} key={i} />;
               })}
-            </RecommendContents>
+            </HashTagSearchResult>
           </RecommendBlock>
         </div>
       )}
@@ -161,11 +146,6 @@ const Logo = styled.div`
   font-weight: bold;
   min-width: fit-content;
 `;
-const StyledDiv = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
 
 const HashtagResult = styled.div`
   font-size: 30px;
@@ -177,9 +157,10 @@ const HashtagResult = styled.div`
 const HashtagResultText = styled(HashtagResult)`
   color: #f8f9fa;
 `;
-const HashtagResultTextDark = styled(HashtagResultText)`
+const TextDark = styled(HashtagResultText)`
   color: #232a3c;
   min-width: max-content;
+  margin-bottom: 10px;
 `;
 
 const RecommendWrapper = styled.div`
@@ -189,41 +170,9 @@ const RecommendWrapper = styled.div`
   .ScrollWrapper {
     padding: 6vh;
   }
-`;
-const RecommendItems = styled.div`
-  height: 200px;
-  width: 200px;
-  border-radius: 10px;
-  background-color: white;
-  margin-right: 20px;
-  cursor: pointer;
-  background: #232a3c;
 
-  .background-img {
-    height: 200px;
-    width: 200px;
-    border-radius: 10px;
-    box-shadow: 4px 4px 4px rgb(0 0 0 / 25%);
-    background-position: center;
-    &:hover {
-      box-shadow: none;
-    }
-  }
-
-  .uploadProjectInfo-title {
-    font-size: 25px;
-    color: #f8f9fa;
-    text-align: center;
-    padding-top: 40px;
-  }
-  .uploadProjectInfo-hashTags {
-    font-size: 15px;
-    color: #7c8289;
-    text-align: center;
-    margin-top: 33px;
-    background: white;
-    border-radius: 0px 0px 10px 10px;
-    height: 62px;
+  div#searched {
+    display: none;
   }
 `;
 
@@ -236,11 +185,13 @@ const SearchBlock = styled.div`
 `;
 
 const RecommendBlock = styled.div`
+  // margin-top: 20px;
   min-width: 20vw;
   width: 92.5vw;
 
   .resultTextWrapper {
     display: flex;
+    margin-bottom: 10px;
   }
 `;
 
@@ -254,26 +205,37 @@ const MainText = styled.div`
   min-width: 500px;
 `;
 
-const RecommendContents = styled.div`
-  margin-top: 20px;
-  height: 206px;
-  display: flex;
-`;
-
 const RecommendHome = styled(HomeFilled)`
   color: #ff8a3d;
   font-size: 30px;
   padding: 10px;
 `;
 
+const StyledDiv = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+const SelectModal = styled(Select)`
+  width: 400px;
+`;
 const SelectIcon = styled(SearchOutlined)`
   color: #ff8a3d;
   font-size: 30px;
   padding: 10px;
 `;
 
-const SelectModal = styled(Select)`
-  width: 400px;
+const HashTagSearchResult = styled.div`
+  // margin-top: 20px;
+  display: flex;
+  overflow-y: hidden;
+  height: 220px;
+  align-items: flex-end;
+  ::-webkit-scrollbar {
+    /* width: 0px;
+    height: 7px; */
+    display: none;
+  }
 `;
 
-export default RecommendPage;
+export default React.memo(RecommendPage);

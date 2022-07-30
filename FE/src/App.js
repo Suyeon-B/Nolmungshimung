@@ -23,7 +23,6 @@ import {
 // import CreateProject from "./components/CreateProject";
 const CreateProject = React.lazy(() => import("./components/CreateProject"));
 import styled from "styled-components";
-// import TextEditor from "./components/shareMemo/test";
 
 import "./App.css";
 import "./reset.css";

@@ -69,16 +69,13 @@ const MemoRtc = ({ project_Id, userName }) => {
     const connectUsers = Object.keys(connectUser).length;
     // console.log(" @#@#@#@#@# connectuser : ", connectUsers);
     if (connectUsers < 2) {
-      fetch(
-        `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/memo/${projectID}`,
-        {
-          method: "get",
-          headers: {
-            "content-type": "application/json",
-          },
-          credentials: "include",
-        }
-      )
+      fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/memo/${projectID}`, {
+        method: "get",
+        headers: {
+          "content-type": "application/json",
+        },
+        credentials: "include",
+      })
         .then((res) => res.json())
         .then((res) => {
           if (res != "\n") {
@@ -104,11 +101,7 @@ const MemoRtc = ({ project_Id, userName }) => {
     toolbar: TOOLBAR_OPTIONS,
     cursors: {
       transformOnTextChange: true,
-      // toggleFlag: false,
-      // show: true,
       hide: false,
-      // hideDelayMs: 500,
-      // hideSpeedMs: 0,
       selectionChangeSource: null,
       transformOnTextChange: true,
     },
