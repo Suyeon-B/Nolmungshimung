@@ -192,7 +192,7 @@ router.post("/signin", (req, res) => {
         });
       }
 
-      user.generateToken((err, user) => {
+      user.generateToken(async (err, user) => {
         if (err) {
           return res.status(400).json({
             loginSuccess: false,
@@ -202,19 +202,30 @@ router.post("/signin", (req, res) => {
         console.log("Refresh res : ", user.userRefreshToken);
         console.log("Access res : ", user.userAccessToken);
         // res.cookie("w_refresh", user.userRefreshToken, refreshTokenOptions);
-        res.setHeader(
-          "Set-Cookie",
+        res.setHeader("Set-Cookie", [
           cookie.serialize(
             "w_refresh",
             user.userRefreshToken,
             refreshTokenOptions
-          )
-        );
+          ),
+          cookie.serialize(
+            "w_access",
+            user.userAccessToken,
+            accessTokenOptions
+          ),
+        ]);
 
-        res.setHeader(
-          "Set-Cookie",
-          cookie.serialize("w_access", user.userAccessToken, accessTokenOptions)
-        );
+        // console.log(
+        //   res.setHeader(
+        //     "Set-Cookie",
+        //     cookie.serialize(
+        //       "w_access",
+        //       user.userAccessToken,
+        //       accessTokenOptions
+        //     ),
+        //     2
+        //   )
+        // );
         res.status(200).json({
           loginSuccess: true,
           user: user,
@@ -224,7 +235,7 @@ router.post("/signin", (req, res) => {
           message: "성공적으로 로그인했습니다.",
         });
 
-        res.end();
+        // res.end();
         // res
         //   .cookie("w_access", user.userAccessToken, accessTokenOptions)
         //   .status(200)
@@ -243,9 +254,9 @@ router.post("/signin", (req, res) => {
 });
 
 router.post("/signout", (req, res) => {
-  // console.log('signout req.user : ' + JSON.stringify(req.user));
+  // console.log("signout req.user : ", req.body._id);
   User.findOneAndUpdate(
-    { _id: req.user._id },
+    { _id: req.body._id },
     { userAccessToken: "", userRefreshToken: "" },
     (err, doc) => {
       if (err)
@@ -312,14 +323,6 @@ router.post("/kakao", async (req, res) => {
           });
         }
         // res.cookie("w_refresh", user.userRefreshToken, refreshTokenOptions);
-        res.setHeader(
-          "Set-Cookie",
-          cookie.serialize(
-            "w_refresh",
-            user.userRefreshToken,
-            refreshTokenOptions
-          )
-        );
         // res
         //   .cookie("w_access", user.userAccessToken, accessTokenOptions)
         //   .status(200)
@@ -332,10 +335,31 @@ router.post("/kakao", async (req, res) => {
         //     message: "성공적으로 로그인했습니다.",
         //     // token: user.userAccessToken,
         //   });
-        res.setHeader(
-          "Set-Cookie",
-          cookie.serialize("w_access", user.userAccessToken, accessTokenOptions)
-        );
+        // res.setHeader(
+        //   "Set-Cookie",
+        //   cookie.serialize(
+        //     "w_refresh",
+        //     user.userRefreshToken,
+        //     refreshTokenOptions
+        //   )
+        // );
+
+        // res.setHeader(
+        //   "Set-Cookie",
+        //   cookie.serialize("w_access", user.userAccessToken, accessTokenOptions)
+        // );
+        res.setHeader("Set-Cookie", [
+          cookie.serialize(
+            "w_refresh",
+            user.userRefreshToken,
+            refreshTokenOptions
+          ),
+          cookie.serialize(
+            "w_access",
+            user.userAccessToken,
+            accessTokenOptions
+          ),
+        ]);
         res.status(200).json({
           loginSuccess: true,
           user: user,
@@ -375,14 +399,6 @@ router.post("/kakao", async (req, res) => {
               });
             }
             // res.cookie("w_refresh", user.userRefreshToken, refreshTokenOptions);
-            res.setHeader(
-              "Set-Cookie",
-              cookie.serialize(
-                "w_refresh",
-                user.userRefreshToken,
-                refreshTokenOptions
-              )
-            );
             // res
             //   .cookie("w_access", user.userAccessToken, accessTokenOptions)
             //   .status(200)
@@ -394,14 +410,34 @@ router.post("/kakao", async (req, res) => {
             //     user_projects: user.user_projects,
             //     // token: user.userAccessToken,
             //   });
-            res.setHeader(
-              "Set-Cookie",
+            // res.setHeader(
+            //     "Set-Cookie",
+            //     cookie.serialize(
+            //       "w_refresh",
+            //       user.userRefreshToken,
+            //       refreshTokenOptions
+            //     )
+            //   );
+            // res.setHeader(
+            //   "Set-Cookie",
+            //   cookie.serialize(
+            //     "w_access",
+            //     user.userAccessToken,
+            //     accessTokenOptions
+            //   )
+            // );
+            res.setHeader("Set-Cookie", [
+              cookie.serialize(
+                "w_refresh",
+                user.userRefreshToken,
+                refreshTokenOptions
+              ),
               cookie.serialize(
                 "w_access",
                 user.userAccessToken,
                 accessTokenOptions
-              )
-            );
+              ),
+            ]);
             res.status(200).json({
               loginSuccess: true,
               user: user,
