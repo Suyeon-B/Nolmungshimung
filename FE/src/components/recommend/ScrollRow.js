@@ -71,7 +71,13 @@ const RecommendItems = styled.div`
     font-size: 15px;
     color: #7c8289;
     text-align: center;
-    padding: 23.5px;
+    width: 190px;
+    padding: 5px;
+    margin-left: 5px;
+    padding-top: 23px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 `;
 const HashTagBackground = styled.div`

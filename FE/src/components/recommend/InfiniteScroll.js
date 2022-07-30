@@ -51,7 +51,7 @@ function Observer({ onIntersect, stopObserver }) {
 }
 
 // ScrollView
-function ScrollView() {
+function ScrollView({ isOdd }) {
   const [uploadProjectInfo, setUploadProjectInfo] = useState([]);
   const [skip, setSkip] = useState(0);
   const [stopObserver, setStopObserver] = useState(false);
@@ -85,22 +85,22 @@ function ScrollView() {
 
   return (
     <RecommendContents>
-      <ScrollHorizontal transition="0.2">
+      <ScrollHorizontal transition="0.2" reverseScroll="true">
         <ScrollViewContents>
-          {uploadProjectInfo.map((el, i) => {
-            return <ScrollRow el={el} key={i} />;
-          })}
+          {!isOdd &&
+            uploadProjectInfo.map((el, i) => {
+              return i % 2 === 0 ? null : <ScrollRow el={el} key={i} />;
+            })}
+          {isOdd &&
+            uploadProjectInfo.map((el, i) => {
+              return i % 2 !== 0 ? null : <ScrollRow el={el} key={i} />;
+            })}
           <Observer onIntersect={loadMore} stopObserver={stopObserver} />
         </ScrollViewContents>
       </ScrollHorizontal>
     </RecommendContents>
   );
 }
-const Scroll_View = styled.div`
-  display: block;
-  overflow: auto;
-`;
-
 const ScrollViewContents = styled.div`
   display: flex;
 `;
@@ -117,16 +117,10 @@ const HashtagResultText = styled(HashtagResult)`
 
 const RecommendContents = styled.div`
   display: flex;
-  // overflow-y: hidden;
   height: 220px;
   align-items: flex-end;
-  // ::-webkit-scrollbar {
-  //   /* width: 0px;
-  //   height: 7px; */
-  //   display: none;
-  // }
 `;
 
 export default function InfiniteScroll({ isOdd }) {
-  return <ScrollView></ScrollView>;
+  return <ScrollView isOdd={isOdd}></ScrollView>;
 }
