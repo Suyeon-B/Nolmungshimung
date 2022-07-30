@@ -1,9 +1,10 @@
-import React, { useEffect, Suspense, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { HomeFilled, SearchOutlined } from "@ant-design/icons";
 import ScrollRow from "../../components/recommend/ScrollRow";
 import styled from "styled-components";
 import InfiniteScroll from "../../components/recommend/InfiniteScroll";
+import ScrollHorizontal from "react-scroll-horizontal";
 import { Select } from "antd";
 
 const RecommendPage = () => {
@@ -45,13 +46,17 @@ const RecommendPage = () => {
   }
 
   const handleChange = (value) => {
+    // getHashTags();
     setInputHashtags(String(value).replace(/[0-9]/g, ""));
     // console.log(value.keyCode);
     // console.log(value);
-    console.log(inputHashtags);
+    // console.log(value);
+    // console.log(inputHashtags);
+
     if (value.length === 0) {
       setIsSearched(false);
     }
+    getHashTags();
   };
 
   async function getHashTags() {
@@ -59,7 +64,8 @@ const RecommendPage = () => {
       inputHashtags
     )}`;
     if (!inputHashtags.length) {
-      url = `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend`;
+      setIsSearched(false);
+      return;
     }
     try {
       setHashTagPJInfo([]);
@@ -97,10 +103,7 @@ const RecommendPage = () => {
       {!isSearched && (
         <div className="ScrollWrapper">
           <MainText>{mainText}</MainText>
-          <TextDark>
-            {/* 🏝 <font color="#232a3c">좌우로 밀어서 </font> 모든 여행코스 확인하기 👀 */}
-            🏝 "좌우로 밀어서" 모든 여행코스 확인하기 👀
-          </TextDark>
+          <TextDark>🏝 모든 여행코스 확인하기 👀</TextDark>
           <RecommendBlock>
             <div className="scrollOdd">
               <InfiniteScroll isOdd={true} />
@@ -119,7 +122,9 @@ const RecommendPage = () => {
               <HashtagResult>#{inputHashtags}</HashtagResult>
               <HashtagResultText>검색 결과 🔍</HashtagResultText>
             </div>
+
             <HashTagSearchResult>
+              {/* <ScrollHorizontal transition="0.2" reverseScroll="true"> */}
               {hashTagPJInfo.length > 0 ? (
                 hashTagPJInfo.map((el, i) => {
                   return <ScrollRow el={el} key={i} />;
@@ -127,6 +132,7 @@ const RecommendPage = () => {
               ) : (
                 <DefaultResult>{defaultResultText}</DefaultResult>
               )}
+              {/* </ScrollHorizontal> */}
             </HashTagSearchResult>
           </RecommendBlock>
         </div>
