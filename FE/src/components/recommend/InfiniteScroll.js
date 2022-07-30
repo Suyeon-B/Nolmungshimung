@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState } from "react";
+import ScrollHorizontal from "react-scroll-horizontal";
 import styled from "styled-components";
 import ScrollRow from "./ScrollRow";
 
@@ -84,15 +85,14 @@ function ScrollView() {
 
   return (
     <RecommendContents>
-      {/* <Scroll_View> */}
-      <ScrollViewContents>
-        {uploadProjectInfo.map((el, i) => {
-          return <ScrollRow el={el} key={i} />;
-        })}
-
-        <Observer onIntersect={loadMore} stopObserver={stopObserver} />
-      </ScrollViewContents>
-      {/* </Scroll_View> */}
+      <ScrollHorizontal transition="0.2">
+        <ScrollViewContents>
+          {uploadProjectInfo.map((el, i) => {
+            return <ScrollRow el={el} key={i} />;
+          })}
+          <Observer onIntersect={loadMore} stopObserver={stopObserver} />
+        </ScrollViewContents>
+      </ScrollHorizontal>
     </RecommendContents>
   );
 }
@@ -117,14 +117,14 @@ const HashtagResultText = styled(HashtagResult)`
 
 const RecommendContents = styled.div`
   display: flex;
-  overflow-y: hidden;
+  // overflow-y: hidden;
   height: 220px;
   align-items: flex-end;
-  ::-webkit-scrollbar {
-    /* width: 0px;
-    height: 7px; */
-    display: none;
-  }
+  // ::-webkit-scrollbar {
+  //   /* width: 0px;
+  //   height: 7px; */
+  //   display: none;
+  // }
 `;
 
 export default function InfiniteScroll({ isOdd }) {
