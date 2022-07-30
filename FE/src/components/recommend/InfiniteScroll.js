@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import ScrollHorizontal from "react-scroll-horizontal";
 import styled from "styled-components";
+import ScrollRow from "./ScrollRow";
 
 function Observer({ onIntersect, stopObserver }) {
   // console.log(stopObserver);
@@ -12,8 +13,8 @@ function Observer({ onIntersect, stopObserver }) {
     if (node !== null) {
       let options = {
         root: null,
-        routeMargin: "100px",
-        threshold: 0.5,
+        routeMargin: "200px",
+        threshold: 0.2,
       };
 
       let observer = new IntersectionObserver((entries) => {
@@ -38,8 +39,12 @@ function Observer({ onIntersect, stopObserver }) {
       ref={ref}
       id="observer-target"
       style={{
-        width: "100%",
+        right: "0px",
+        width: "200px",
         height: "200px",
+        // borderRadius: "10px",
+        // background: "#565656",
+        // position: "absolute",
       }}
     ></div>
   );
@@ -78,94 +83,28 @@ function ScrollView() {
     fetchUploadProjectInfo();
   };
 
-  const ScrollRow = ({ el }) => {
-    const defaultHashTags = ["제주도", "여행"];
-    return (
-      <StyledDiv>
-        <Link to={`project/${el._id}`}>
-          <RecommendItems>
-            <div className="background-img" style={{ backgroundImage: `url(${el.img})` }}>
-              <div className="uploadProjectInfo-title">{el.project_title}</div>
-              <HashTagBackground>
-                <div className="uploadProjectInfo-hashTags">
-                  {el.hashTags.length === 0
-                    ? defaultHashTags.map((hashTag, index) => (
-                        <span key={index}>
-                          {"#"}
-                          {hashTag}{" "}
-                        </span>
-                      ))
-                    : el.hashTags.map((hashTag, index) => (
-                        <span key={index}>
-                          {"#"}
-                          {hashTag}{" "}
-                        </span>
-                      ))}
-                </div>
-              </HashTagBackground>
-            </div>
-          </RecommendItems>
-        </Link>
-      </StyledDiv>
-    );
-  };
-
   return (
     <RecommendContents>
-      <ScrollViewContents>
-        {uploadProjectInfo.map((el, i) => {
-          return <ScrollRow key={i} el={el} />;
-        })}
-      </ScrollViewContents>
-      <Observer onIntersect={loadMore} stopObserver={stopObserver} />
+      <ScrollHorizontal transition="0.2">
+        <ScrollViewContents>
+          {uploadProjectInfo.map((el, i) => {
+            return <ScrollRow el={el} key={i} />;
+          })}
+          <Observer onIntersect={loadMore} stopObserver={stopObserver} />
+        </ScrollViewContents>
+      </ScrollHorizontal>
     </RecommendContents>
   );
 }
-
-const StyledDiv = styled.div`
-  bottom: 0px;
-  transition: bottom 0.3s;
-  margin: 10px 20px 10px 0px;
-
-  &:hover {
-    position: relative;
-    bottom: 10px;
-  }
+const Scroll_View = styled.div`
+  display: block;
+  overflow: auto;
 `;
 
 const ScrollViewContents = styled.div`
   display: flex;
 `;
 
-const RecommendItems = styled.div`
-  height: 200px;
-  width: 200px;
-  border-radius: 10px;
-  background-color: white;
-  cursor: pointer;
-  background: #232a3c;
-
-  .background-img {
-    height: 200px;
-    width: 200px;
-    border-radius: 10px;
-    box-shadow: 4px 4px 4px rgb(0 0 0 / 25%);
-    background-position: center;
-  }
-
-  .uploadProjectInfo-title {
-    font-size: 25px;
-    color: #f8f9fa;
-    text-align: center;
-    padding-top: 60px;
-  }
-  .uploadProjectInfo-hashTags {
-    font-size: 15px;
-    color: #7c8289;
-    text-align: center;
-    padding: 23.5px;
-  }
-`;
 const HashtagResult = styled.div`
   font-size: 30px;
   font-weight: bold;
@@ -176,23 +115,16 @@ const HashtagResultText = styled(HashtagResult)`
   color: #f8f9fa;
 `;
 
-const HashTagBackground = styled.div`
-  margin-top: 53px;
-  background: white;
-  border-radius: 0px 0px 10px 10px;
-  height: 62px;
-`;
-
 const RecommendContents = styled.div`
   display: flex;
-  overflow-y: hidden;
+  // overflow-y: hidden;
   height: 220px;
   align-items: flex-end;
-  ::-webkit-scrollbar {
-    /* width: 0px;
-    height: 7px; */
-    display: none;
-  }
+  // ::-webkit-scrollbar {
+  //   /* width: 0px;
+  //   height: 7px; */
+  //   display: none;
+  // }
 `;
 
 export default function InfiniteScroll({ isOdd }) {
