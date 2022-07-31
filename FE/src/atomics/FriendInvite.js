@@ -57,7 +57,7 @@ function FriendInvite() {
 
   const sendInviteEmail = () => {
     console.log(email);
-    if (friends.length > 1) {
+    if (friends.length > 0) {
       for (let i = 0; i < friends.length; i++) {
         if (friends[i] === email) {
           Modal.error({
