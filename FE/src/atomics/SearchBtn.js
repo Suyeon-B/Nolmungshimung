@@ -32,15 +32,21 @@ const Fonts = styled.div`
   margin-top: 3px;
 `;
 const SideBarBtn = styled(NoneStyleBtn)`
+  border-top: 2px solid #ebebeb;
+  border-bottom: 2px solid #ebebeb;
   width: 50%;
   height: 100%;
-
+  /* border: ${(props) =>
+    props.color === "#ebebeb" ? "inset 2px 4px 4px rgb(0 0 0 / 25%)" : ""}; */
+  box-shadow: ${(props) =>
+    props.color === "#ebebeb" ? "inset 2px 4px 4px rgb(0 0 0 / 25%)" : ""};
   font-style: normal;
   font-weight: 700;
   font-size: 20px;
   line-height: 42px;
   color: #7c8289;
   background-color: ${(props) => `${props.color}`};
+
   text-align: left;
   display: flex;
   justify-content: center;

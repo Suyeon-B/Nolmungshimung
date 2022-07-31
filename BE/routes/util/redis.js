@@ -1,21 +1,9 @@
-//redis
-// const port_redis = 6379;
-// var redis = require("redis")
-//   , subscriber = redis.createClient(port_redis, 'localhost')
-//   , red  = redis.createClient(port_redis, 'localhost');
-// red.connect();
-// subscriber.connect();
-// red.configSet("notify-keyspace-events", "Ex");
-// red.sendCommand(['CONFIG'. 'SET', ])
-// subscriber.on("pmessage", function (pattern, channel, message) {
-//     console.log("pattern : "+pattern+" channel: "+channel+" message : "+message);
-// });
-// subscriber.pSubscribe('*');
 var redis = require("redis");
+require("dotenv").config();
 const Project = require(__base + "models/Project");
 const HashTags = require(__base + "models/HashTags");
 var subscriber = redis.createClient({
-  url: `redis://redis_boot:6379`,
+  url: process.env.Redis_IP? `redis://${process.env.Redis_IP}:6379` : "redis://127.0.0.1:6379",
 });
 
 subscriber.on("reconnecting", async () => {
@@ -54,7 +42,7 @@ subscriber.connect().then(async () => {
 });
 
 var publisher = redis.createClient({
-  url: "redis://redis_boot:6379",
+  url: process.env.Redis_IP? `redis://${process.env.Redis_IP}:6379` : "redis://127.0.0.1:6379",
 });
 
 publisher.on("reconnecting", () => {
@@ -74,7 +62,7 @@ publisher.connect().then(async () => {
   ).lean();
   // await Redis.RPUSH('abc', ['1','2','3'])
   await publisher.EXPIRE("hashtags", 0);
-  await publisher.SADD("hashtags", responseData.hash_tag_names);
+  await publisher.SADD("hashtags", responseData?.hash_tag_names);
 });
 
 module.exports = { publisher, subscriber };

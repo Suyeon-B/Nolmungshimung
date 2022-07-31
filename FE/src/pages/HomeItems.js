@@ -35,8 +35,14 @@ const StyledBtn = styled.button`
   text-align: center;
 
   color: #ffffff;
+  box-shadow: 2px 2px 2px #aaaaaa;
   &:hover {
     background: rgba(255, 122, 0, 0.4);
+    transition: background 0.3s ease, color 0.1s ease;
+  }
+  &:active {
+    background: rgba(255, 122, 0, 0.3);
+    box-shadow: none;
   }
 `;
 
@@ -45,8 +51,14 @@ const StyledWhiteBtn = styled(StyledBtn)`
   border-radius: 10px;
   color: #ff7a00;
   cursor: pointer;
+  box-shadow: 2px 2px 2px #aaaaaa;
   &:hover {
     background: rgba(255, 122, 0, 0.22);
+    transition: background 0.3s ease, color 0.1s ease;
+  }
+  &:active {
+    background: rgba(255, 122, 0, 0.3);
+    box-shadow: none;
   }
 `;
 

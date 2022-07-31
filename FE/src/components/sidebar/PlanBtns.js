@@ -26,8 +26,8 @@ const SideBarBtnDIv = styled.div`
   background-color: white;
   justify-content: center;
   align-items: center;
-  border-top: 2px solid #ebebeb;
-  border-bottom: 2px solid #ebebeb;
+  /* border-top: 2px solid #ebebeb;
+  border-bottom: 2px solid #ebebeb; */
   cursor: pointer;
 `;
 
