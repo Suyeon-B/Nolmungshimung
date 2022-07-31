@@ -5,27 +5,9 @@ import { overEvent, clickEvent, outEvent } from "../../pages/search/Search";
 // import SearchDetail from "./SearchDetail";
 const SearchDetail = React.lazy(() => import("./SearchDetail"));
 import "../../App.css";
-import { PlusCircleTwoTone } from "@ant-design/icons";
+import { PlusCircleTwoTone, PrinterFilled } from "@ant-design/icons";
 import CommonBtn from "../../atomics/CommonBtn";
-
-const fetchAddTravelRoute = async (id, route) => {
-  try {
-    const response = await fetch(
-      `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${id}`,
-      {
-        method: "post",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify(route),
-      }
-    );
-    const data = await response.json();
-    // return response.json();
-  } catch (error) {
-    console.log(error);
-  }
-};
+import { spotDetail } from "../spot/SpotDetail";
 
 const culTripTermData = (startDate, day) => {
   const sDate = new Date(startDate.slice(0, 3));
@@ -61,38 +43,7 @@ const SearchListRoute = ({
   const [visible, setVisible] = useState(false);
   const [contests, setContents] = useState(null);
 
-  function FindDetailContents(props) {
-    //1. 디비에 있나 확인
-
-    fetch(
-      `https://${process.env.REACT_APP_SERVER_IP}:8443/travel/find/` +
-        props.place_id,
-      {
-        method: "POST", // 또는 'PUT'
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(props),
-      }
-    ) //get
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.status === 200) {
-          console.log(data);
-          console.log("db에 있습니다");
-          setContents(data.data);
-        } else if (data.status === 206) {
-          console.log("디비에 없음");
-          setContents(data.data);
-        } else {
-          console.log("여긴다", data.message);
-        }
-        setVisible(true);
-      })
-      .catch((error) => console.log(error));
-  }
-
-  const showDrawer = () => {
+  const showDrawer = async () => {
     const data = {
       input: route.road_address_name + "" + route.place_name,
       place_id: route.id,
@@ -105,7 +56,12 @@ const SearchListRoute = ({
       place_url: route.place_url,
     };
 
-    FindDetailContents(data);
+    var detail = await spotDetail(data);
+
+    if (detail) {
+      setContents(detail);
+      setVisible(true);
+    }
   };
 
   const onClose = useCallback(() => {

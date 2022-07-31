@@ -5,6 +5,7 @@ import { CloseOutlined } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
 import GetProjectModal from "../../components/recommendModal/GetProjectModal";
 import SearchDetail from "../../components/searchMap/SearchDetail";
+import { spotDetail } from "../../components/spot/SpotDetail";
 
 const randomRGB = function () {
   return Math.round(Math.random() * 0xffffff).toString(16);
@@ -23,7 +24,7 @@ const RecommendPageDetail = () => {
   const [visible, setVisible] = useState(false);
   const [contents, setContents] = useState(null);
 
-  const showDrawer = (route) => {
+  const showDrawer = async (route) => {
     const data = {
       input: route.road_address_name + "" + route.place_name,
       place_id: route.id,
@@ -36,39 +37,14 @@ const RecommendPageDetail = () => {
       place_url: route.place_url,
     };
 
-    FindDetailContents(data);
+    var detail = await spotDetail(data);
+
+    if (detail) {
+      setContents(detail);
+      setVisible(true);
+    }
   };
 
-  function FindDetailContents(props) {
-    //1. 디비에 있나 확인
-
-    fetch(
-      `https://${process.env.REACT_APP_SERVER_IP}:8443/travel/find/` +
-        props.place_id,
-      {
-        method: "POST", // 또는 'PUT'
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(props),
-      }
-    ) //get
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.status === 200) {
-          console.log(data);
-          console.log("db에 있습니다");
-          setContents(data.data);
-        } else if (data.status === 206) {
-          console.log("디비에 없음");
-          setContents(data.data);
-        } else {
-          console.log("여긴다", data.message);
-        }
-        setVisible(true);
-      })
-      .catch((error) => console.log(error));
-  }
   console.log(projectId);
   console.log("여기는 추천 여행일정 디테일이지롱~~");
 

@@ -137,8 +137,11 @@ userSchema.statics.generateAccessToken = function (refreshToken) {
           if (user === null) {
             resolve(null);
           }
+          if (user._id === null) {
+            resolve(null);
+          }
           var AccessToken = jwt.sign(
-            { data: user._id.toHexString() },
+            { data: user?._id.toHexString() },
             "SECRET",
             {
               expiresIn: "1h",
