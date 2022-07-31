@@ -10,7 +10,7 @@ exports.signupMail = function (certificationNumber, receive) {
       from: "<tonguek8@gmail.com>",
       to: receive,
       subject: "놀멍 쉬멍 회원가입 안내",
-      html: `<div style="width : 550px; height : 700px; display: flex; flex-direction: column; align-items: center;">
+      html: `<div style="width : 550px; height : 700px; text-align: center;">
       <h1>WelCome 놀멍쉬멍</h1>
       <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fb9TqMa%2FbtrIkowSQj7%2F4MgsPytZRxkgN8NrgUejvK%2Fimg.png" style="width :547px; height : 300px" />
       <h2>회원가입해주셔서 감사합니다.</h2>
@@ -51,7 +51,7 @@ exports.inviteMail = function (email, inviteToken, projectId) {
       from: process.env.NODEMAILER_USER, // sender address
       to: `${email}`, // list of receivers
       subject: "놀멍쉬멍 여행일정 초대 메일입니다.", // Subject line
-      html: `<div style="width : 550px; height : 700px; display: flex; flex-direction: column; align-items: center;">
+      html: `<div style="width : 550px; height : 700px; text-align: center;">
       <h1>WelCome 놀멍쉬멍</h1>
       <img src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fb9TqMa%2FbtrIkowSQj7%2F4MgsPytZRxkgN8NrgUejvK%2Fimg.png" style="width :547px; height : 300px" />
       <h2>"${projectName}" 여행일정에서 당신을 초대하였습니다.</h2>

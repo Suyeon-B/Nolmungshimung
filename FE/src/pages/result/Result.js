@@ -308,10 +308,13 @@ const UploadBtn = styled.button`
   border-radius: 5px;
   padding: 3px 8px 3px 8px;
   transition-duration: 0.3s;
-  box-shadow: 3px 3px 3px #aaaaaa;
+  box-shadow: 2px 2px 2px #aaaaaa;
+  &:hover {
+    background: rgba(255, 122, 0, 0.4);
+    transition: background 0.3s ease, color 0.1s ease;
+  }
   &:active {
     box-shadow: none;
-    transition-duration: 0.3s;
   }
 `;
 

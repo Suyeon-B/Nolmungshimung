@@ -1,11 +1,14 @@
 var express = require("express");
 var fs = require("fs");
 const path = require("path");
+require("dotenv").config();
 
 var app = express();
 
 const privateKey = fs.readFileSync(process.env.keyFile || "nolshimung-key.pem", "utf8");
 const certificate = fs.readFileSync(process.env.certFile || "nolshimung.pem", "utf8");
+console.log('인증서 : ', process.env.keyFile);
+
 const credentials = {
   key: privateKey,
   cert: certificate,
