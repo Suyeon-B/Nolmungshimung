@@ -23,6 +23,7 @@ const RecommendPageDetail = () => {
   const [routes, setRoutes] = useState(null); // routes -> [[route],[route],[route]...]
   const [visible, setVisible] = useState(false);
   const [contents, setContents] = useState(null);
+  const [hashtags, setHashtags] = useState(null);
 
   const showDrawer = async (route) => {
     const data = {
@@ -43,9 +44,6 @@ const RecommendPageDetail = () => {
     }
   };
 
-  console.log(projectId);
-  console.log("여기는 추천 여행일정 디테일이지롱~~");
-
   async function fetchProjectById(_id) {
     const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/projects/${_id}`);
     return response.json();
@@ -60,14 +58,14 @@ const RecommendPageDetail = () => {
     if (projectId === null) return;
     async function fetchInfo() {
       const data = await fetchProjectById(projectId);
+      setHashtags(data.hashTags);
       setRoutes(data.routes);
-
       setTitle(data.project_title);
     }
     fetchInfo();
     return () => {};
   }, [projectId]);
-
+  console.log(hashtags);
   return (
     <ResultWhole>
       <ResultContainer>
@@ -92,6 +90,19 @@ const RecommendPageDetail = () => {
         </div>
         <br />
         <br />
+        <Hashtags>
+          <div className="hashtagsWrapper">
+            {hashtags &&
+              hashtags.map((hashtag, idx) => {
+                return (
+                  <span key={idx}>
+                    {" #"}
+                    {hashtag}
+                  </span>
+                );
+              })}
+          </div>
+        </Hashtags>
         <ResultProjectTitle>{title}</ResultProjectTitle>
         {routes &&
           routes.map((route, idx) => {
@@ -182,6 +193,29 @@ const ResultRoute = styled.li`
   font-size: 17px;
   line-height: 29px;
   marign-bottom: 9px;
+`;
+const Hashtags = styled.div`
+  display: flex;
+  width: 100%;
+  height: 3.5vh;
+
+  align-items: center;
+
+  background: whitesmoke;
+  margin-bottom: 2vh;
+  border-radius: 3px;
+
+  .hashtagsWrapper {
+    text-overflow: ellipsis;
+    font-weight: 700;
+    height: inherit;
+    white-space: nowrap;
+    color: #565656;
+    word-wrap: normal;
+    width: 100%;
+    overflow: hidden;
+    padding: 1vh;
+  }
 `;
 
 export default RecommendPageDetail;

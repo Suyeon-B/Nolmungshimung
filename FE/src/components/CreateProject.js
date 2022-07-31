@@ -8,7 +8,12 @@ import { useAuth } from "../components/auth/Auth";
 import Badge from "../atomics/Badge";
 
 const setDay = (value) => {
-  return [value.getFullYear(), value.getMonth() + 1, value.getDate(), value.getDay()];
+  return [
+    value.getFullYear(),
+    value.getMonth() + 1,
+    value.getDate(),
+    value.getDay(),
+  ];
 };
 
 const CreateProject = () => {
@@ -84,19 +89,35 @@ const CreateProject = () => {
         <CreateBtns>
           <CalendarBtnContainer>
             <CalendarBtn onClick={() => setShowCalendar(!showCalendar)}>
-              <img width={"50px"} alt="" src="/statics/images/calender_start.png" />
-              <CalendarBtnDay>{startDate ? `${startDate[1]}월 ${startDate[2]}일` : "여행 시작 날짜"}</CalendarBtnDay>
+              <img
+                width={"50px"}
+                alt=""
+                src="/statics/images/calender_start.png"
+              />
+              <CalendarBtnDay>
+                {startDate
+                  ? `${startDate[1]}월 ${startDate[2]}일`
+                  : "여행 시작 날짜"}
+              </CalendarBtnDay>
             </CalendarBtn>
             <CalendarBtn onClick={() => setShowCalendar(!showCalendar)}>
-              <img width={"50px"} alt="" src="/statics/images/calender_end.png" />
-              <CalendarBtnDay>{endDate ? `${endDate[1]}월 ${endDate[2]}일` : "여행 종료 날짜"}</CalendarBtnDay>
+              <img
+                width={"50px"}
+                alt=""
+                src="/statics/images/calender_end.png"
+              />
+              <CalendarBtnDay>
+                {endDate ? `${endDate[1]}월 ${endDate[2]}일` : "여행 종료 날짜"}
+              </CalendarBtnDay>
             </CalendarBtn>
           </CalendarBtnContainer>
           <CreateProjectSubmit type="submit">
             여행일정<br></br> 생성
           </CreateProjectSubmit>
         </CreateBtns>
-        <CalendarContainer>{showCalendar && <CalendarTwo settedDate={settedDate} />}</CalendarContainer>
+        <CalendarContainer>
+          {showCalendar && <CalendarTwo settedDate={settedDate} />}
+        </CalendarContainer>
       </CalenderForm>
     </PageContainer>
   );
@@ -183,11 +204,18 @@ const CreateProjectSubmit = styled.button`
   line-height: 37px;
   text-align: center;
   color: #ffffff;
+  &:hover {
+    background: rgb(255, 170, 117);
+    transition: background 0.3s ease, color 0.1s ease;
+  }
+  &:active {
+    box-shadow: none;
+  }
 `;
 
 const CreateBtns = styled.div`
   display: flex;
-  flex-direciont: row;
+  /* flex-direction: row; */
   align-items: center;
   width: 810px;
   justify-content: space-between;
