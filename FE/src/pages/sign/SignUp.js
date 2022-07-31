@@ -21,54 +21,6 @@ function SignUp() {
           <SignUpBtn>Sign Up</SignUpBtn>
         </Btns>
         <SignUpForm />
-        {/* <Form onSubmit={onSubmitSignUp}>
-          <SignUpEmailDiv>
-            <SignUpEmailInput
-              placeholder="jeju@island.com"
-              type="email"
-              value={id}
-              onChange={onchangeId}
-            />
-            {!numberFlag && (
-              <SignUpEmailBtn onClick={onClickEmail}>
-                인증번호 받기
-              </SignUpEmailBtn>
-            )}
-          </SignUpEmailDiv>
-          <SignUpEmailDiv>
-            <SignUpEmailInput
-              placeholder="이메일 인증번호"
-              type="text"
-              value={certification}
-              onChange={onchangeCertification}
-            />
-            {numberFlag && (
-              <SignUpEmailBtn onClick={onClickCertification}>
-                인증번호 확인
-              </SignUpEmailBtn>
-            )}
-          </SignUpEmailDiv>
-
-          <Input
-            placeholder="닉네임"
-            type="text"
-            value={name}
-            onChange={onchangeName}
-          />
-          <Input
-            placeholder="password (6자 이상)"
-            type="password"
-            value={password}
-            onChange={onchangePassword}
-          />
-          <Input
-            placeholder="password 확인"
-            type="password"
-            value={confirmPassword}
-            onChange={onchangeConfirmPassword}
-          />
-          <SubmitInput value="회원가입" type="submit" />
-        </Form> */}
       </Box>
     </Container>
   );

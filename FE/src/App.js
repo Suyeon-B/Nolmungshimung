@@ -31,6 +31,7 @@ function App() {
                 if (auth) {
                   return (
                     <Route
+                      key={path}
                       path={path}
                       element={
                         <RequireAuth>
@@ -42,6 +43,7 @@ function App() {
                 } else if (auth === null) {
                   return (
                     <Route
+                      key={path}
                       path={path}
                       element={
                         <Suspense fallback={<Loading />}>{element}</Suspense>
@@ -51,6 +53,7 @@ function App() {
                 } else {
                   return (
                     <Route
+                      key={path}
                       path={path}
                       element={
                         <NotRequireAuth>
