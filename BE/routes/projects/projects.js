@@ -268,6 +268,23 @@ router.post("/:id", async (req, res, next) => {
   }
 });
 
+router.patch("/:id", async (req, res, next) => {
+  const projectTitle = req.body.projectTitle;
+  const startDate = req.body.startDate;
+  try {
+    const projectInuser = await Project.updateOne(
+      { _id: req.params.id },
+      { project_title: projectTitle, start_date: startDate }
+    );
+    res.status(200).send({
+      success: true,
+      message: "수정 완료",
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 router.post("/friends/:id", async (req, res, next) => {
   const { id } = req.params;
   // console.log("프로젝트", id);
