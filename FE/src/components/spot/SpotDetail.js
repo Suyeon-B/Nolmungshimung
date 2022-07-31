@@ -88,11 +88,19 @@ function GetGoogleID(props) {
     "&key=" +
     api_key;
 
-  // console.log(url);
+  console.log(url);
   return new Promise(async (resolve, reject) => {
-    fetch(url)
-      .then((response) => response.json())
+    fetch(url, {
+      headers: {
+        "content-type": "application/json",
+      },
+    })
+      .then((response) => {
+        console.log(response);
+        return response.json();
+      })
       .then((data) => {
+        console.log(data);
         if (data.status === "OK") {
           const place = data.candidates[0].place_id;
           console.log(place);
@@ -111,7 +119,11 @@ function GetGooglePlace(id, props) {
     "/place-api/details/json?fields=name,rating,formatted_phone_number,photo,type,opening_hours,price_level,review,user_ratings_total&language=kr&place_id=";
   url = url + id + "&key=" + api_key;
   return new Promise((resolve, reject) => {
-    fetch(url)
+    fetch(url, {
+      headers: {
+        "content-type": "application/json",
+      },
+    })
       .then((response) => response.json())
       .then((data) => {
         data = data.result;
