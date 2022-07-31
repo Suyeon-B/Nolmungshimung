@@ -15,9 +15,7 @@ const RecommendPage = () => {
   const [hashTag, setHashTag] = useState(null);
   const [hashTagPJInfo, setHashTagPJInfo] = useState([]);
   const [inputHashtags, setInputHashtags] = useState([]);
-  const [isLoaded, setIsLoaded] = useState(0);
   const [isSearched, setIsSearched] = useState(false);
-  // const [children, setChildren] = useState([]);
 
   useEffect(() => {
     const loadHashTags = async () => {
@@ -44,7 +42,6 @@ const RecommendPage = () => {
   if (hashTag) {
     for (let i = 0; i < hashTag.length; i++) {
       children.push(<Option key={hashTag[i] + i}>{hashTag[i]}</Option>);
-      // setChildren((arr) => [...arr, <Option key={hashTag[i] + i}>{hashTag[i]}</Option>]);
     }
   }
 
@@ -57,39 +54,27 @@ const RecommendPage = () => {
     }
   };
 
-  async function getHashTags(inputTest = inputHashtags) {
-    console.log("get hash tags >> ", inputHashtags);
-    let url = `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/hashtag?taglist=${JSON.stringify(inputTest)}`;
-    if (!inputTest.length) {
+  const getHashTags = async (InputHashtags = inputHashtags) => {
+    if (!InputHashtags.length) {
       setIsSearched(false);
       return;
     }
-    try {
-      // setHashTagPJInfo([]);
-      setIsSearched(true);
-      const request = await fetch(url);
-      const hashTagPJInfoJson = await request.json();
-      setHashTagPJInfo(hashTagPJInfoJson);
-      // setHashTagPJInfo([...hashTagPJInfoJson]);
-      // setHashTagPJInfo([...hashTagPJInfo, hashTagPJInfoJson]);
-      // setHashTagPJInfo((prev) => {
-      //   console.log("prev: ", prev);
-      //   return [...prev, ...hashTagPJInfoJson];
-      // });
-      // console.log("########### hashTagPJInfo 셋팅 후 ###########");
-      console.log("이거랑 같아서 더이상 안 찍히면 좋겠어ㅜㅜ", hashTagPJInfo.length);
-      setIsLoaded(hashTagPJInfo.length);
-    } catch (e) {
-      console.log("해시태그야 일해라 ..");
-    }
-  }
-
-  if (hashTagPJInfo.length !== isLoaded) {
-    // console.log(isLoaded);
-    console.log("오쓋 ㅜ", hashTagPJInfo.length);
-    // console.log("inputHashtags", inputHashtags.split(","));
-    // return <Loading />;
-  }
+    await fetch(
+      `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/hashtag?taglist=${JSON.stringify(InputHashtags)}`,
+      {
+        method: "get",
+        headers: {
+          "content-type": "application/json",
+        },
+      }
+    )
+      .then((res) => res.json())
+      .then((res) => {
+        setIsSearched(true);
+        setHashTagPJInfo(res);
+      })
+      .catch((e) => console.log("해시태그야 일해라 .."));
+  };
 
   return (
     <RecommendWrapper>
