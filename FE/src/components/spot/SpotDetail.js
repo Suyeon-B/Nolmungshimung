@@ -97,6 +97,7 @@ function GetGoogleID(props) {
     })
       .then((response) => response.json())
       .then((data) => {
+        console.log(data);
         if (data.status === "OK") {
           const place = data.candidates[0].place_id;
           console.log(place);
