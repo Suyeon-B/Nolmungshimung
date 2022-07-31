@@ -95,7 +95,10 @@ function GetGoogleID(props) {
         "content-type": "application/json",
       },
     })
-      .then((response) => response.json())
+      .then((response) => {
+        console.log(response);
+        return response.json();
+      })
       .then((data) => {
         console.log(data);
         if (data.status === "OK") {
