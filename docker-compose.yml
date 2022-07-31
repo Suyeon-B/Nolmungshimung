@@ -14,7 +14,7 @@ services:
         image: wnsrb003/api-server-nolshimung:latest
         restart: always
         volumes:
-            - ./nolmungshimung.shop:./ssl
+            - ./nolmungshimung.shop:app/ssl
         ports:
             - "8443:8443"
             - "7889:7889"
