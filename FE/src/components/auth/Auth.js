@@ -68,7 +68,7 @@ export const AuthProvider = ({ children }) => {
     // console.log(data);
     // deleteCookie("w_access");
     // deleteCookie("w_refresh");
-    fetchLogOut(data);
+    await fetchLogOut(data);
     setUser(null);
 
     sessionStorage.clear();

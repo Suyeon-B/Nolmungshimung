@@ -46,7 +46,7 @@ function authCheck(req, res) {
           "Set-Cookie",
           cookie.serialize("w_access", user.userAccessToken, accessTokenOptions)
         );
-        req.cookies.w_access = user.userAccessToken;
+        // req.cookies.w_access = user.userAccessToken;
         return resolve(true);
       }
     } else {
@@ -70,7 +70,7 @@ function authCheck(req, res) {
             refreshTokenOptions
           )
         );
-        req.cookies.w_refresh = user.userRefreshToken;
+        // req.cookies.w_refresh = user.userRefreshToken;
         return resolve(true);
       } else {
         // case4: accesss token과 refresh token 모두가 유효한 경우
