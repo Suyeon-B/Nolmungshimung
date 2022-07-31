@@ -189,7 +189,7 @@ const Search = ({
     ps = new kakao.maps.services.Places();
 
     var zoomControl = new kakao.maps.ZoomControl();
-    map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+    map.addControl(zoomControl, kakao.maps.ControlPosition.LEFT);
     map.setMaxLevel(10);
   }, []);
 
