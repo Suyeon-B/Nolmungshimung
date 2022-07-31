@@ -1,4 +1,5 @@
 const api_key = process.env.REACT_APP_GOOGLE_KEY;
+const axios = require("axios");
 export function spotDetail(props) {
   return new Promise(async (resolve, reject) => {
     fetch(
@@ -90,15 +91,12 @@ function GetGoogleID(props) {
 
   console.log(url);
   return new Promise(async (resolve, reject) => {
-    fetch(url, {
-      headers: {
-        "content-type": "application/json",
-      },
-    })
-      .then((response) => {
-        console.log(response);
-        return response.json();
-      })
+    axios
+      .get(url)
+      // .then((response) => {
+      //   console.log(response);
+      //   return response.json();
+      // })
       .then((data) => {
         console.log(data);
         if (data.status === "OK") {
