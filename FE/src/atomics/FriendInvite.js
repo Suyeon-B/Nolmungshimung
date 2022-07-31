@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { Popover, Button, Modal, Space } from "antd";
 import { UsergroupAddOutlined, CloseOutlined } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
@@ -100,16 +100,9 @@ function FriendInvite() {
       .catch((err) => console.log(`err: ${err}`));
   };
   const onChangeEmail = (event) => {
-    // console.log(`event.target.value : ${event.target.value}`);
     setEmail(event.target.value);
-    // setEmail(id == 858 && { value: value });
   };
-  // const onChangeEmail = useCallback((event) => {
-  //   console.log(`event.target.value : ${event.target.value}`);
-  //   setEmail(event.target.value);
-  // }, []);
   const handleOnKeyPress = (event) => {
-    // console.log(event.key);
     if (event.key === "Enter") {
       sendInviteEmail();
     }
@@ -149,12 +142,6 @@ function FriendInvite() {
         height: "300px",
       }}
     >
-      {/* <InviteEmailInput
-        type="text"
-        email={email}
-        onChangeEmail={onChangeEmail}
-        handleOnKeyPress={handleOnKeyPress}
-      /> */}
       <InviteForm>
         <InviteEmailText>Email</InviteEmailText>
         <InviteEmailInput
@@ -162,7 +149,11 @@ function FriendInvite() {
           value={email}
           onChange={onChangeEmail}
           onKeyPress={handleOnKeyPress}
+<<<<<<< HEAD
           placeholder="이메일을 적어주세요."
+=======
+          autoFocus="autofocus"
+>>>>>>> 450012fe9a0ca08d10c0edb42ab664f65b166068
         />
         <UsergroupAddOutlined style={{ fontSize: "25px", color: "white" }} onClick={sendInviteEmail} />
       </InviteForm>

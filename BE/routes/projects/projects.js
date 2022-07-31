@@ -52,7 +52,7 @@ router.post("/upload", async (req, res) => {
     // console.log(travelId);
     let travel = await Travel.findOne({ place_id: travelId });
     delete info.travelId;
-    if (travel.photos.length > 0) {
+    if (travel && travel.photos.length > 0) {
       const api_key = process.env.REACT_APP_GOOGLE_KEY;
       let img = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${travel.photos[0]["photo_reference"]}&sensor=false&key=${api_key}`;
       // console.log(img);
@@ -183,13 +183,18 @@ router.post("/routes/:id", async (req, res) => {
     res.status(404).send({ error: "project not found" });
   }
 });
-let num = 0;
+
 router.patch("/routes/:id", async (req, res) => {
   try {
     //redis
-    num++;
+    // console.log(req.body);
+    req.body.map((day) => {
+      day.map((route) => {
+        route.user_name = null;
+        route.lock = "white";
+      });
+    });
 
-    console.log("patch", num);
     await Redis.setEx(`routes/${req.params.id}`, 10, "");
     await Redis.set(`${req.params.id}`, JSON.stringify(req.body));
     res.status(200).send({ success: true });
@@ -249,6 +254,23 @@ router.post("/:id", async (req, res, next) => {
   } catch (error) {
     console.log(`project find id: ${error}`);
     res.status(404).send({ error: "project not found" });
+  }
+});
+
+router.patch("/:id", async (req, res, next) => {
+  const projectTitle = req.body.projectTitle;
+  const startDate = req.body.startDate;
+  try {
+    const projectInuser = await Project.updateOne(
+      { _id: req.params.id },
+      { project_title: projectTitle, start_date: startDate }
+    );
+    res.status(200).send({
+      success: true,
+      message: "수정 완료",
+    });
+  } catch (error) {
+    console.log(error);
   }
 });
 

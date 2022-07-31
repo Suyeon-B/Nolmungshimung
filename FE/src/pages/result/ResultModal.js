@@ -1,7 +1,19 @@
 import { Button, Modal, Select } from "antd";
 import React, { useState } from "react";
 const { Option } = Select;
-
+const hashTag = [
+  "우도",
+  "한라산",
+  "맛집",
+  "카페",
+  "등산",
+  "바다",
+  "드라이빙",
+  "데이트",
+  "코스",
+  "스쿠버",
+  "다이빙",
+];
 const ResultModal = ({
   visible,
   onOk,
@@ -10,7 +22,6 @@ const ResultModal = ({
   setHashTags,
 }) => {
   const children = [];
-  const hashTag = ["우도"];
 
   for (let i = 0; i < hashTag.length; i++) {
     children.push(<Option key={i + 1}>{hashTag[i]}</Option>);

@@ -2,17 +2,21 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { HomeFilled } from "@ant-design/icons";
 import styled from "styled-components";
+import ModifyModal from "../components/projectModal/ModifyModal";
 
 function SideBarTitle(props) {
   const navigate = useNavigate();
   return (
     <PlanTitleWrap>
-      <PlanHome
-        onClick={() => {
-          navigate("/");
-        }}
-      />
-      <PlanTitle>{props.title}</PlanTitle>
+      <div>
+        <PlanHome
+          onClick={() => {
+            navigate("/");
+          }}
+        />
+        <PlanTitle>{props.title}</PlanTitle>
+      </div>
+      <ModifyModal title={props.title} />
     </PlanTitleWrap>
   );
 }
@@ -31,6 +35,7 @@ const PlanTitleWrap = styled.div`
   align-items: flex-end;
   padding-left: 15px;
   padding-right: 15px;
+  justify-content: space-between;
 `;
 const PlanTitle = styled.h1`
   display: inline-flex;

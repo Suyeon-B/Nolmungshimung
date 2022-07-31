@@ -230,14 +230,6 @@ function PlanList({
                           }
                         })}
                       </DateDetailBtn>
-                      <DateDetailBtn data-idx={ind} onClick={onClick}>
-                        <img
-                          data-idx={ind}
-                          onClick={onClick}
-                          style={{ width: "15px", height: "8.3px" }}
-                          src="\statics\images\date_arrow.png"
-                        />
-                      </DateDetailBtn>
                     </DateDetailBtnDiv>
                     {el.map((item, index) =>
                       item.user_name === null || item.user_name === userName ? (
