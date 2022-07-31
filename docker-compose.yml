@@ -14,46 +14,31 @@ services:
         image: wnsrb003/api-server-nolshimung:latest
         restart: always
         volumes:
-            - work dir/certbot/data:/var/www/certbot
+            - ./nolmungshimung.shop:/app/ssl
         ports:
             - "8443:8443"
             - "7889:7889"
             - "3001:3001"
             - "3003:3003"
-    certbot:
-        image: certbot/certbot:latest
-        command: certonly --webroot --webroot-path=/var/www/certbot --email wnsrb003@naver.com --agree-tos --no-eff-email -d nolmungshimung.shop
-        volumes:
-            - work dir/certbot/conf:/etc/letsencrypt
-            - work dir/certbot/logs:/var/log/letsencrypt
-            - work dir/certbot/data:/var/www/certbot
+
     redis_boot:
         image: redis
-#         command: redis-server --port 6379
-#         container_name: redis_boot
-#         hostname: redis_boot
-#         labels: 
-#             - "name=redis"
-#             - "mode=standalone"
-#         ports: 
-#             - 6379:6379
-        # links: 
-        #     - mongo
-        # depends_on: 
-        #     - mongo
-        # networks: 
-        #     - mern-app    
-    # mongo:
-    #     image: mongo
-    #     ports: 
-    #         - "27017:27017"
+        restart: always
+ 
+    mongo:
+       image: mongo
+       restart: always
+       ports:
+           - "20003:20003"
+       command: mongod --port 20003
         # networks: 
         #     - mern-app
-        # volumes: 
-        #     - mongo-data:/Users/gyu/Documents/db
+       volumes:
+           - ./mongo-data:/data/db
+#        environment:
+# #         # MongoDB 계정 및 패스워드 설정 옵션
+#          MONGO_INITDB_ROOT_USERNAME: ${mongo_user}
+#          MONGO_INITDB_ROOT_PASSWORD: ${mongo_passwd}
     # networks: 
     #     mern-app:
     #         driver: bridge
-    # volumes: 
-    #     mongo-data:
-    #         driver: local

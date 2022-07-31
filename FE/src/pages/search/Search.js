@@ -238,7 +238,10 @@ const Search = ({
   }, [sumit]);
 
   useEffect(() => {
-    if (Places.length === 0) return;
+    if (Places.length === 0) {
+      setPlaceRender(null);
+      return;
+    }
     setPlaceRender(
       Places.map((item, i) => (
         <SearchListRoute

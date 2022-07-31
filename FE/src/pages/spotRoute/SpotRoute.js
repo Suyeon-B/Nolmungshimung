@@ -8,6 +8,7 @@ import Cursor from "../shareMemo/Cursor";
 const SearchDetail = React.lazy(() =>
   import("../../components/searchMap/SearchDetail")
 );
+import { spotDetail } from "../../components/spot/SpotDetail";
 // import { AlertFilled } from "@ant-design/icons";
 import socket from "../../socket";
 import { useNavigate } from "react-router-dom";
@@ -49,33 +50,9 @@ function SpotRoute({
         place_url: value.place_url,
       };
 
-      fetch(
-        `https://${process.env.REACT_APP_SERVER_IP}:8443/travel/find/` +
-          value.id,
-        {
-          method: "POST", // 또는 'PUT'
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      ) //get
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.status === 200) {
-            console.log(data);
-            console.log("db에 있습니다");
-            setContents(data.data);
-          } else if (data.status === 206) {
-            console.log("디비에 없음");
-            setContents(data.data);
-          } else {
-            console.log(data.message);
-          }
-        })
-        .catch((error) => console.log(error));
-      // console.log(value.id);
-      // setContents(value);
+      spotDetail(data).then(function (detail) {
+        setContents(detail);
+      });
     },
     [contents]
   );

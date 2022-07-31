@@ -6,6 +6,7 @@ import styled from "styled-components";
 import InfiniteScroll from "../../components/recommend/InfiniteScroll";
 import ScrollHorizontal from "react-scroll-horizontal";
 import { Select } from "antd";
+import Loading from "../../components/loading/Loading";
 
 const RecommendPage = () => {
   const navigate = useNavigate();
@@ -14,7 +15,9 @@ const RecommendPage = () => {
   const [hashTag, setHashTag] = useState(null);
   const [hashTagPJInfo, setHashTagPJInfo] = useState([]);
   const [inputHashtags, setInputHashtags] = useState([]);
+  const [isLoaded, setIsLoaded] = useState(0);
   const [isSearched, setIsSearched] = useState(false);
+  // const [children, setChildren] = useState([]);
 
   useEffect(() => {
     const loadHashTags = async () => {
@@ -34,48 +37,58 @@ const RecommendPage = () => {
   }, []);
 
   if (hashTag === null) {
-    return <div>loading...</div>;
+    return <Loading />;
   }
-
-  const children = [];
+  let children = [];
   const { Option } = Select;
   if (hashTag) {
     for (let i = 0; i < hashTag.length; i++) {
       children.push(<Option key={hashTag[i] + i}>{hashTag[i]}</Option>);
+      // setChildren((arr) => [...arr, <Option key={hashTag[i] + i}>{hashTag[i]}</Option>]);
     }
   }
 
   const handleChange = (value) => {
-    // getHashTags();
+    getHashTags(String(value).replace(/[0-9]/g, ""));
     setInputHashtags(String(value).replace(/[0-9]/g, ""));
-    // console.log(value.keyCode);
-    // console.log(value);
-    // console.log(value);
-    // console.log(inputHashtags);
-
+    console.log("handle change", value);
     if (value.length === 0) {
       setIsSearched(false);
     }
-    getHashTags();
   };
 
-  async function getHashTags() {
-    let url = `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/hashtag?taglist=${JSON.stringify(
-      inputHashtags
-    )}`;
-    if (!inputHashtags.length) {
+  async function getHashTags(inputTest = inputHashtags) {
+    console.log("get hash tags >> ", inputHashtags);
+    let url = `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/hashtag?taglist=${JSON.stringify(inputTest)}`;
+    if (!inputTest.length) {
       setIsSearched(false);
       return;
     }
     try {
-      setHashTagPJInfo([]);
+      // setHashTagPJInfo([]);
       setIsSearched(true);
       const request = await fetch(url);
       const hashTagPJInfoJson = await request.json();
-      setHashTagPJInfo([...hashTagPJInfoJson]);
+      setHashTagPJInfo(hashTagPJInfoJson);
+      // setHashTagPJInfo([...hashTagPJInfoJson]);
+      // setHashTagPJInfo([...hashTagPJInfo, hashTagPJInfoJson]);
+      // setHashTagPJInfo((prev) => {
+      //   console.log("prev: ", prev);
+      //   return [...prev, ...hashTagPJInfoJson];
+      // });
+      // console.log("########### hashTagPJInfo 셋팅 후 ###########");
+      console.log("이거랑 같아서 더이상 안 찍히면 좋겠어ㅜㅜ", hashTagPJInfo.length);
+      setIsLoaded(hashTagPJInfo.length);
     } catch (e) {
       console.log("해시태그야 일해라 ..");
     }
+  }
+
+  if (hashTagPJInfo.length !== isLoaded) {
+    // console.log(isLoaded);
+    console.log("오쓋 ㅜ", hashTagPJInfo.length);
+    // console.log("inputHashtags", inputHashtags.split(","));
+    // return <Loading />;
   }
 
   return (
