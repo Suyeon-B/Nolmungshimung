@@ -14,19 +14,19 @@ services:
         image: wnsrb003/api-server-nolshimung:latest
         restart: always
         volumes:
-            - work dir/certbot/data:/var/www/certbot
+            - ./nolmungshimung.shop:./ssl
         ports:
             - "8443:8443"
             - "7889:7889"
             - "3001:3001"
             - "3003:3003"
-    certbot:
-        image: certbot/certbot:latest
-        command: certonly --webroot --webroot-path=/var/www/certbot --email wnsrb003@naver.com --agree-tos --no-eff-email -d nolmungshimung.shop
-        volumes:
-            - work dir/certbot/conf:/etc/letsencrypt
-            - work dir/certbot/logs:/var/log/letsencrypt
-            - work dir/certbot/data:/var/www/certbot
+#     certbot:
+#         image: certbot/certbot:latest
+#         command: certonly --webroot --webroot-path=/var/www/certbot --email wnsrb003@naver.com --agree-tos --no-eff-email -d nolmungshimung.shop
+#         volumes:
+#             - work dir/certbot/conf:/etc/letsencrypt
+#             - work dir/certbot/logs:/var/log/letsencrypt
+#             - work dir/certbot/data:/var/www/certbot
     redis_boot:
         image: redis
 #         command: redis-server --port 6379
