@@ -3,7 +3,8 @@ require("dotenv").config();
 const Project = require(__base + "models/Project");
 const HashTags = require(__base + "models/HashTags");
 var subscriber = redis.createClient({
-  url: process.env.Redis_IP? `redis://${process.env.Redis_IP}:6379` : "redis://127.0.0.1:6379",
+  url: process.env.Redis_IP? `redis://${process.env.Redis_IP}:6379` :
+  "redis://127.0.0.1:6379",
 });
 
 subscriber.on("reconnecting", async () => {
@@ -42,7 +43,8 @@ subscriber.connect().then(async () => {
 });
 
 var publisher = redis.createClient({
-  url: process.env.Redis_IP? `redis://${process.env.Redis_IP}:6379` : "redis://127.0.0.1:6379",
+  url: process.env.Redis_IP? `redis://${process.env.Redis_IP}:6379` :
+  "redis://127.0.0.1:6379",
 });
 
 publisher.on("reconnecting", () => {
