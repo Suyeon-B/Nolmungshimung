@@ -20,6 +20,8 @@ services:
             - "7889:7889"
             - "3001:3001"
             - "3003:3003"
+
+    redis_boot:
         image: redis
  
     mongo:
