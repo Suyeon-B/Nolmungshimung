@@ -92,7 +92,9 @@ function GetGoogleID(props) {
   // console.log(url);
   return new Promise(async (resolve, reject) => {
     axios
-      .get(url)
+      .get(url, {
+        dataType: "json",
+      })
       // .then((response) => {
       //   console.log(response);
       //   return response.json();
@@ -119,7 +121,9 @@ function GetGooglePlace(id, props) {
   url = url + id + "&key=" + api_key;
   return new Promise((resolve, reject) => {
     axios
-      .get(url)
+      .get(url, {
+        dataType: "json",
+      })
       .then((data) => {
         console.log(data);
         data = data.data.result;
