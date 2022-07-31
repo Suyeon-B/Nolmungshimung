@@ -141,6 +141,18 @@ const StyledBtn = styled.button`
 const StyledUl = styled.ul`
   margin-top: 20px;
   width: 100%;
+  overflow-x: auto;
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-thumb {
+    height: 30%;
+    background: #d9d9d9;
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #ffffff69;
+  }
 `;
 
 const StyledLi = styled.li`
