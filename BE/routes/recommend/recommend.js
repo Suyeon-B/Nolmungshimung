@@ -25,7 +25,10 @@ router.get("/", async (req, res, next) => {
 // infinite scroll
 router.get("/infinite", async (req, res, next) => {
   try {
-    const skip = req.query.skip && /^\d+$/.test(req.query.skip) ? Number(req.query.skip) : 0;
+    const skip =
+      req.query.skip && /^\d+$/.test(req.query.skip)
+        ? Number(req.query.skip)
+        : 0;
     // 한 번에 8개의 여행일정 정보만 load합니다.
     const uploadProjectInfo = await UploadProject.find({}, undefined, {
       skip,
@@ -40,7 +43,8 @@ router.get("/infinite", async (req, res, next) => {
 
 router.post("/alldate", async (req, res, next) => {
   try {
-    const { projectId, userId, startDate, projectTitle, userName, userEmail } = req.body;
+    const { projectId, userId, startDate, projectTitle, userName, userEmail } =
+      req.body;
 
     const getProject = await UploadProject.findById(projectId);
     const user = await User.findById(userId);
@@ -62,7 +66,9 @@ router.post("/alldate", async (req, res, next) => {
     user["user_projects"].push(response._id.toString());
     await user.save();
 
-    res.status(200).send({ success: "여행일정 가져오기 성공!", projectId: response._id });
+    res
+      .status(200)
+      .send({ success: "여행일정 가져오기 성공!", projectId: response._id });
   } catch (error) {
     console.log(error);
     res.status(404).send({ error: "여행일정 가져오기 실패!" });
@@ -72,7 +78,15 @@ router.post("/alldate", async (req, res, next) => {
 router.post("/selectdate", async (req, res, next) => {
   try {
     console.log(req.body);
-    const { projectId, userId, startDate, projectTitle, userName, userEmail, selectDate } = req.body;
+    const {
+      projectId,
+      userId,
+      startDate,
+      projectTitle,
+      userName,
+      userEmail,
+      selectDate,
+    } = req.body;
 
     const getProject = await UploadProject.findById(projectId);
     const user = await User.findById(userId);
@@ -104,7 +118,9 @@ router.post("/selectdate", async (req, res, next) => {
     user["user_projects"].push(response._id.toString());
     await user.save();
 
-    res.status(200).send({ success: "여행일정 가져오기 성공!", projectId: response._id });
+    res
+      .status(200)
+      .send({ success: "여행일정 가져오기 성공!", projectId: response._id });
   } catch (error) {
     console.log(error);
     res.status(404).send({ error: "여행일정 가져오기 실패!" });
