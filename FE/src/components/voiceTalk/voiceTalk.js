@@ -148,14 +148,15 @@ const Room = (props) => {
           );
         });
       });
-
     return () => {
       socket.emit("BE-leave-room", { roomId, leaver: currentUser });
-      socket.disconnect();
+      socket.off("disconnect")
+      // socket.disconnect();
+      socket.removeAllListeners()
     };
     // eslint-disable-next-line
   }, []);
-
+  // console.log(socket)
   function createPeer(userId, caller, stream) {
     const peer = new Peer({
       initiator: true,
