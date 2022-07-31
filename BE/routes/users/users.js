@@ -35,6 +35,12 @@ const refreshTokenOptions = {
   secure: true,
 };
 
+const deleteCookie = {
+  maxAge: 0,
+  sameSite: "none",
+  secure: true,
+};
+
 function checkUserNickName(user_name) {
   return new Promise((resolve, reject) => {
     User.findOne({ user_name: user_name }, function (err, data) {
@@ -259,12 +265,16 @@ router.post("/signout", (req, res) => {
     { _id: req.body._id },
     { userAccessToken: "", userRefreshToken: "" },
     (err, doc) => {
-      if (err)
+      if (err) {
         return res.json({
           success: false,
           message: "로그아웃 시, 에러 발생했습니다",
         });
-
+      }
+      res.setHeader("Set-Cookie", [
+        cookie.serialize("w_refresh", "tt", deleteCookie),
+        cookie.serialize("w_access", "tt", deleteCookie),
+      ]);
       return res.status(200).send({
         success: true,
       });

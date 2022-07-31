@@ -52,9 +52,6 @@ function SignUpForm() {
       return;
     }
     Badge.success("이메일이 가는 중이에요. 잠시 기다려주세요!");
-    // if (!id) {
-    //   Badge.fail("회원가입 실패", "이메일을 정확하게 입력해주세요.");
-    // }
 
     const body = {
       userEmail: id,
@@ -154,23 +151,10 @@ function SignUpForm() {
       user_name: name,
       password: password,
     };
-    // console.log(`id : ${id}`);
-    // console.log(`name : ${name}`);
-    // console.log(`password : ${password}`);
     mutate(userForm);
-  };
-  const onClickSignIn = () => {
-    navigate("/signin", { replace: true });
   };
 
   return (
-    // <Container>
-    //   <Title src="/statics/images/signUpTitle.png" />
-    //   <Box>
-    //     <Btns>
-    //       <LogInBtn onClick={onClickSignIn}>Log in</LogInBtn>
-    //       <SignUpBtn>Sign Up</SignUpBtn>
-    //     </Btns>
     <Form onSubmit={onSubmitSignUp}>
       <SignUpEmailDiv>
         <SignUpEmailInput
@@ -217,8 +201,6 @@ function SignUpForm() {
       />
       <SubmitInput value="회원가입" type="submit" />
     </Form>
-    //   </Box>
-    // </Container>
   );
 }
 

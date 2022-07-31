@@ -1,15 +1,16 @@
-import React, { useEffect, Suspense, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { HomeFilled, SearchOutlined } from "@ant-design/icons";
 import ScrollRow from "../../components/recommend/ScrollRow";
 import styled from "styled-components";
 import InfiniteScroll from "../../components/recommend/InfiniteScroll";
+import ScrollHorizontal from "react-scroll-horizontal";
 import { Select } from "antd";
 
 const RecommendPage = () => {
-  // const InfiniteScroll = React.lazy(() => import("../../components/recommend/InfiniteScroll"));
   const navigate = useNavigate();
   const mainText = "마음에 드는 여행코스를\n 내 여행일정으로 가져와보세요! 😆";
+  const defaultResultText = "검색 결과가 없어요.🥲";
   const [hashTag, setHashTag] = useState(null);
   const [hashTagPJInfo, setHashTagPJInfo] = useState([]);
   const [inputHashtags, setInputHashtags] = useState([]);
@@ -25,9 +26,7 @@ const RecommendPage = () => {
       })
         .then((res) => res.json())
         .then((res) => {
-          console.log(res);
           setHashTag(res);
-          console.log(res);
         })
         .catch((e) => console.log("왜??", e));
     };
@@ -47,8 +46,17 @@ const RecommendPage = () => {
   }
 
   const handleChange = (value) => {
+    // getHashTags();
     setInputHashtags(String(value).replace(/[0-9]/g, ""));
     // console.log(value.keyCode);
+    // console.log(value);
+    // console.log(value);
+    // console.log(inputHashtags);
+
+    if (value.length === 0) {
+      setIsSearched(false);
+    }
+    getHashTags();
   };
 
   async function getHashTags() {
@@ -56,7 +64,8 @@ const RecommendPage = () => {
       inputHashtags
     )}`;
     if (!inputHashtags.length) {
-      url = `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend`;
+      setIsSearched(false);
+      return;
     }
     try {
       setHashTagPJInfo([]);
@@ -64,13 +73,6 @@ const RecommendPage = () => {
       const request = await fetch(url);
       const hashTagPJInfoJson = await request.json();
       setHashTagPJInfo([...hashTagPJInfoJson]);
-      // console.log(hashtags);
-      if (inputHashtags.length === 0) {
-        // console.log("해시태그 없으니까 인피니트 나오거라");
-        setIsSearched(false);
-      }
-      // console.log("해시태그 검색해서 나온 결과");
-      // console.log(hashTagPJInfo);
     } catch (e) {
       console.log("해시태그야 일해라 ..");
     }
@@ -101,17 +103,13 @@ const RecommendPage = () => {
       {!isSearched && (
         <div className="ScrollWrapper">
           <MainText>{mainText}</MainText>
-          <TextDark>🏝 모든 여행코스</TextDark>
+          <TextDark>🏝 모든 여행코스 확인하기 👀</TextDark>
           <RecommendBlock>
             <div className="scrollOdd">
-              {/* <Suspense fallback={<div>Loading...</div>}> */}
-              <InfiniteScroll />
-              {/* </Suspense> */}
+              <InfiniteScroll isOdd={true} />
             </div>
             <div className="scrollEven">
-              {/* <Suspense fallback={<div>Loading...</div>}> */}
-              <InfiniteScroll />
-              {/* </Suspense> */}
+              <InfiniteScroll isOdd={false} />
             </div>
           </RecommendBlock>
         </div>
@@ -124,10 +122,17 @@ const RecommendPage = () => {
               <HashtagResult>#{inputHashtags}</HashtagResult>
               <HashtagResultText>검색 결과 🔍</HashtagResultText>
             </div>
+
             <HashTagSearchResult>
-              {hashTagPJInfo.map((el, i) => {
-                return <ScrollRow el={el} key={i} />;
-              })}
+              {/* <ScrollHorizontal transition="0.2" reverseScroll="true"> */}
+              {hashTagPJInfo.length > 0 ? (
+                hashTagPJInfo.map((el, i) => {
+                  return <ScrollRow el={el} key={i} />;
+                })
+              ) : (
+                <DefaultResult>{defaultResultText}</DefaultResult>
+              )}
+              {/* </ScrollHorizontal> */}
             </HashTagSearchResult>
           </RecommendBlock>
         </div>
@@ -140,11 +145,19 @@ const Home = styled.div`
   display: flex;
   align-items: center;
 `;
+
 const Logo = styled.div`
   color: #ff8a3d;
   font-size: 20px;
   font-weight: bold;
   min-width: fit-content;
+`;
+
+const DefaultResult = styled.div`
+  font-size: 23px;
+  font-weight: normal;
+  color: #232a3c;
+  height: 200px;
 `;
 
 const HashtagResult = styled.div`
@@ -158,17 +171,21 @@ const HashtagResultText = styled(HashtagResult)`
   color: #f8f9fa;
 `;
 const TextDark = styled(HashtagResultText)`
+  // color: #f8f9fa;
+
   color: #232a3c;
   min-width: max-content;
   margin-bottom: 10px;
 `;
 
 const RecommendWrapper = styled.div`
+  white-space: pre-line;
   background-color: #ff8a3d;
   width: 100%;
 
   .ScrollWrapper {
-    padding: 6vh;
+    padding: 10vh;
+    background: #ff8a3d;
   }
 
   div#searched {
@@ -187,7 +204,7 @@ const SearchBlock = styled.div`
 const RecommendBlock = styled.div`
   // margin-top: 20px;
   min-width: 20vw;
-  width: 92.5vw;
+  width: 88.5vw;
 
   .resultTextWrapper {
     display: flex;
@@ -197,7 +214,7 @@ const RecommendBlock = styled.div`
 
 const MainText = styled.div`
   font-size: 50px;
-  white-space: pre-line;
+  // white-space: pre-line;
   font-weight: 700;
   color: white;
   letter-spacing: 1px;
