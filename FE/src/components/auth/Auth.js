@@ -42,35 +42,6 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(null);
   useEffect(() => {
-    // console.log("auth auth");
-    //To know my current status, send Auth request
-    // async function callAuth() {
-    //   await fetch(
-    //     `https://${process.env.REACT_APP_SERVER_IP}:8443/users/auth`,
-    //     {
-    //       method: "get",
-    //       headers: {
-    //         "content-type": "application/json",
-    //       },
-    //       credentials: "include",
-    //     }
-    //   )
-    //     .then((response) => response.json())
-    //     .then((response) => {
-    //       // console.log("response : " + JSON.stringify(response));
-    //       //Not Loggined in Status
-    //       if (!response.isAuth) {
-    //         console.log("로그인 해주세요");
-    //         // window.location.replace("/signin");
-    //         navigate("/signin", { replace: true });
-    //         //Loggined in Status
-    //       } else {
-    //         const userAuth = response.user_name;
-    //         setUser(response.user_name); // isAuth가 true임이 증명되어야 화면을 나타내도록 처리
-    //         console.log(response.user_name);
-    //       }
-    //     });
-    // }
     async function callAuth() {
       const data = await fetchCallAuth();
       setUser(data.user_name);
@@ -82,28 +53,28 @@ export const AuthProvider = ({ children }) => {
     } catch {
       console.log("WTF");
     }
-    console.log(user);
+    // console.log(user);
     // setUser(userAuth);
   }, []);
 
   const login = async (user) => {
-    await setUser(user);
-    await setLoading(true);
+    setUser(user);
+    setLoading(true);
     // window.location.href = "/";
   };
 
   const logout = async (data) => {
     // cookie 삭제
     // console.log(data);
-    deleteCookie("w_access");
-    deleteCookie("w_refresh");
+    // deleteCookie("w_access");
+    // deleteCookie("w_refresh");
     fetchLogOut(data);
     setUser(null);
 
     sessionStorage.clear();
-    // window.location.replace("/");
     setLoading(false);
-    window.location.href = "/";
+    window.location.replace("/");
+    // window.location.href = "/";
   };
 
   return (

@@ -9,71 +9,6 @@ import SignInForm from "./SignInForm";
 
 function SignIn() {
   let navigate = useNavigate();
-  const location = useLocation();
-  const { login } = useAuth();
-  const [id, setId] = useState("");
-  const [password, setPassword] = useState("");
-  const onchangeId = (event) => {
-    setId(event.target.value);
-  };
-  const onchangePassword = (event) => {
-    setPassword(event.target.value);
-  };
-  const { isLoading, isError, error, mutate } = useMutation(singInUser, {
-    retry: 1,
-  });
-
-  async function singInUser(data) {
-    await fetch(
-      `https://${process.env.REACT_APP_SERVER_IP}:8443/users/signin`,
-      {
-        method: "post",
-        headers: {
-          "content-type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify(data),
-      }
-    )
-      .then((res) => res.json())
-      .then(async (res) => {
-        console.log("res : ", res);
-        if (res.loginSuccess === true) {
-          // success();
-          // console.log("Sign In Success");
-          sessionStorage.setItem("myNickname", res.user_name);
-          sessionStorage.setItem("user_email", res.user_email);
-          // navigate("/", { replace: true });
-          // console.log(location);
-          // console.log(res.user);
-          if (location.state?.page === "recommend") {
-            navigate(-1, {
-              state: {
-                page: "signin",
-              },
-            });
-          } else {
-            await login(res.user);
-            // window.location.href = "/";
-            navigate("/", { replace: true });
-          }
-        } else {
-          Badge.fail("로그인 실패", res.message);
-        }
-      })
-      .catch((err) => console.log(`err: ${err}`));
-  }
-
-  const onSubmitSignUp = (event) => {
-    event.preventDefault();
-
-    let userForm = {
-      user_email: id,
-      password: password,
-    };
-    mutate(userForm);
-    // window.location.href = "/";
-  };
   const onClickSignUp = () => {
     // window.location.href = "/signup";
     navigate("/signup", { replace: true });
@@ -88,35 +23,6 @@ function SignIn() {
           <SignUpBtn onClick={onClickSignUp}>Sign Up</SignUpBtn>
         </Btns>
         <SignInForm />
-        {/* <Form onSubmit={onSubmitSignUp}>
-          <Input
-            placeholder="jeju@island.com"
-            type="text"
-            value={id}
-            onChange={onchangeId}
-            required
-          />
-          <Input
-            placeholder="password"
-            type="password"
-            value={password}
-            onChange={onchangePassword}
-            required
-          />
-          <SubmitInput value="로그인" type="submit" />
-          <br />
-          <a href={kauthUrl}>
-            <img
-              src="/statics/images/kakao_login_medium_wide.png"
-              style={{
-                width: "420px",
-                height: "64px",
-                borderRadius: "30px",
-                objectFit: "contain",
-              }}
-            />
-          </a>
-        </Form> */}
       </Box>
     </Container>
   );

@@ -56,36 +56,35 @@ function Result() {
       }
       console.log(projectInfo);
       projectInfo.hashTags = hashTags;
-      await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/upload`, {
-        method: "post",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify(projectInfo),
-      }).then((res) => res.json());
+      await fetch(
+        `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/upload`,
+        {
+          method: "post",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(projectInfo),
+        }
+      ).then((res) => res.json());
     }
     setVisible(false);
     setConfirmLoading(false);
-    // alert("Complete");
     Badge.success("업로드 성공");
     window.location.replace("/recommend");
-    // setTimeout(() => {
-    //   alert("완료되었다냥");
-    // }, 2000);
   };
 
   const handleCancel = () => {
-    // console.log("Clicked cancel button");
     setVisible(false);
   };
   async function fetchProjectById(_id) {
-    const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`);
+    const response = await fetch(
+      `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`
+    );
     return response.json();
   }
 
   useEffect(() => {
     if (projectId === null) return;
-    // console.log(projectId);
     async function fetchInfo() {
       const data = await fetchProjectById(projectId);
       setRoutes(data.routes);
@@ -104,7 +103,9 @@ function Result() {
 
     sDate.setDate(sDate.getDate() + day);
 
-    return `${sDate.getFullYear() - 2000}. ${sDate.getMonth() + 1}. ${sDate.getDate()} ${dayArr[sDate.getDay()]}`;
+    return `${sDate.getFullYear() - 2000}. ${
+      sDate.getMonth() + 1
+    }. ${sDate.getDate()} ${dayArr[sDate.getDay()]}`;
   };
 
   return (
@@ -142,7 +143,7 @@ function Result() {
         {routes &&
           routes.map((route, idx) => {
             return route.length !== 0 ? (
-              <div key={idx + 1}>
+              <div key={route[0].uid}>
                 <ResultLine />
                 <ResultTitle>
                   DAY {idx + 1}
@@ -150,7 +151,7 @@ function Result() {
                   <br />
                 </ResultTitle>
                 {route.map((el, index) => (
-                  <StyledTitleContainer>
+                  <StyledTitleContainer key={el.uid + "1"}>
                     <StyledTitlecircle
                       // randomRGB={colorArr[idx]}
                       style={{
@@ -159,7 +160,7 @@ function Result() {
                     >
                       {index + 1}
                     </StyledTitlecircle>
-                    <ResultRoute key={el.uid}>
+                    <ResultRoute>
                       {el.place_name}
                       <br />
                     </ResultRoute>
@@ -167,14 +168,14 @@ function Result() {
                 ))}
               </div>
             ) : (
-              <div key={idx + 1}>
+              <div key={route[0].uid}>
                 <ResultLine />
                 <ResultTitle>
                   DAY {idx + 1}
                   <StyledSpan>{culTripTermData(startDate, idx)}</StyledSpan>
                   <br />
                 </ResultTitle>
-                <ResultRoute key={idx + 991}>
+                <ResultRoute>
                   쉬는 날 🌱
                   <br />
                 </ResultRoute>
