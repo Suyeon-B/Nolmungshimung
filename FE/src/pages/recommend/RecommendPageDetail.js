@@ -29,9 +29,7 @@ const RecommendPageDetail = () => {
       input: route.road_address_name + "" + route.place_name,
       place_id: route.id,
       place_name: route.place_name,
-      road_address_name: route.road_address_name
-        ? route.road_address_name
-        : route.address_name,
+      road_address_name: route.road_address_name ? route.road_address_name : route.address_name,
       category_group_name: route.category_group_name,
       phone: route.phone,
       place_url: route.place_url,
@@ -49,9 +47,7 @@ const RecommendPageDetail = () => {
   console.log("여기는 추천 여행일정 디테일이지롱~~");
 
   async function fetchProjectById(_id) {
-    const response = await fetch(
-      `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/projects/${_id}`
-    );
+    const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/projects/${_id}`);
     return response.json();
   }
 
@@ -127,13 +123,7 @@ const RecommendPageDetail = () => {
               </div>
             );
           })}
-        {contents !== null && (
-          <SearchDetail
-            onClose={onClose}
-            visible={visible}
-            contents={contents}
-          />
-        )}
+        {contents !== null && <SearchDetail onClose={onClose} visible={visible} contents={contents} />}
       </ResultContainer>
       <ResultMap routes={routes} colorArr={colorArr} />
     </ResultWhole>
