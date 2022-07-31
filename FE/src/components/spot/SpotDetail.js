@@ -79,7 +79,8 @@ export function spotDetail(props) {
 }
 
 function GetGoogleID(props) {
-  let url = "/place-api/findplacefromtext/json?";
+  let url =
+    "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?";
   url =
     url +
     "input=" +
@@ -108,7 +109,7 @@ function GetGoogleID(props) {
 
 function GetGooglePlace(id, props) {
   let url =
-    "/place-api/details/json?fields=name,rating,formatted_phone_number,photo,type,opening_hours,price_level,review,user_ratings_total&language=kr&place_id=";
+    "https://maps.googleapis.com/maps/api/place/details/json?fields=name,rating,formatted_phone_number,photo,type,opening_hours,price_level,review,user_ratings_total&language=kr&place_id=";
   url = url + id + "&key=" + api_key;
   return new Promise((resolve, reject) => {
     fetch(url)
