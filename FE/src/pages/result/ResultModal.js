@@ -10,7 +10,7 @@ const ResultModal = ({
   setHashTags,
 }) => {
   const children = [];
-  const hashTag = [];
+  const hashTag = ["우도"];
 
   for (let i = 0; i < hashTag.length; i++) {
     children.push(<Option key={i + 1}>{hashTag[i]}</Option>);
