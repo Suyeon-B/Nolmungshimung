@@ -149,14 +149,19 @@ const Search = ({
     while (paginationEl.hasChildNodes()) {
       paginationEl.removeChild(paginationEl.lastChild);
     }
+    paginationEl.style = "text-align:center; margin-top:10px; ";
 
     for (i = 1; i <= pagination.last; i++) {
       var el = document.createElement("a");
       el.href = "#";
       el.innerHTML = " " + i;
+      el.style =
+        "  padding:2px; text-align:center; font-weight:600; color:#232a3c";
 
       if (i === pagination.current) {
         el.className = "on";
+        el.style =
+          "  padding:2px; text-align:center; font-weight:900; font-size:23px; color:#ff8a3d;";
       } else {
         el.onclick = (function (i) {
           return function () {

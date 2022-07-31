@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { Popover, Button, Modal, Space } from "antd";
 import { UsergroupAddOutlined } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
@@ -103,16 +103,9 @@ function FriendInvite() {
       .catch((err) => console.log(`err: ${err}`));
   };
   const onChangeEmail = (event) => {
-    // console.log(`event.target.value : ${event.target.value}`);
     setEmail(event.target.value);
-    // setEmail(id == 858 && { value: value });
   };
-  // const onChangeEmail = useCallback((event) => {
-  //   console.log(`event.target.value : ${event.target.value}`);
-  //   setEmail(event.target.value);
-  // }, []);
   const handleOnKeyPress = (event) => {
-    // console.log(event.key);
     if (event.key === "Enter") {
       sendInviteEmail();
     }
@@ -125,12 +118,6 @@ function FriendInvite() {
         height: "300px",
       }}
     >
-      {/* <InviteEmailInput
-        type="text"
-        email={email}
-        onChangeEmail={onChangeEmail}
-        handleOnKeyPress={handleOnKeyPress}
-      /> */}
       <InviteForm>
         <InviteEmailText>Email</InviteEmailText>
         <InviteEmailInput
@@ -138,6 +125,7 @@ function FriendInvite() {
           value={email}
           onChange={onChangeEmail}
           onKeyPress={handleOnKeyPress}
+          autoFocus="autofocus"
         />
         <UsergroupAddOutlined
           style={{ fontSize: "25px", color: "white" }}
