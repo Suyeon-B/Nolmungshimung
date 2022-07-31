@@ -100,6 +100,7 @@ function GetGoogleID(props) {
       // })
       .then((data) => {
         console.log(data);
+        data = data.data;
         if (data.status === "OK") {
           const place = data.candidates[0].place_id;
           console.log(place);
@@ -121,8 +122,9 @@ function GetGooglePlace(id, props) {
     axios
       .get(url)
       .then((data) => {
-        data = data.result;
         console.log(data);
+        data = data.data.result;
+        // console.log(data);
         let insertForm = {
           provider: 1,
           place_id: props.place_id,
