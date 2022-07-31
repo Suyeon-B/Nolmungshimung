@@ -95,7 +95,7 @@ function GetGoogleID(props) {
       .then((data) => {
         if (data.status === "OK") {
           const place = data.candidates[0].place_id;
-          // console.log(place);
+          console.log(place);
           resolve(place);
         } else resolve(null);
       })
@@ -115,6 +115,7 @@ function GetGooglePlace(id, props) {
       .then((response) => response.json())
       .then((data) => {
         data = data.result;
+        console.log(data);
         let insertForm = {
           provider: 1,
           place_id: props.place_id,
