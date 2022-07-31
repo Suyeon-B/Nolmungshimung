@@ -37,7 +37,9 @@ jobs:
           echo "NODEMAILER_USER=$NODEMAILER_USER" >> ./BE/.env
           echo "NODEMAILER_PASS=$NODEMAILER_PASS" >> ./BE/.env
           echo "REACT_APP_GOOGLE_KEY=$REACT_APP_GOOGLE_KEY" >> ./BE/.env
-          echo "CORS_SERVER_IP=$CORS_SERVER_IP" >> ./BE/.env          
+          echo "CORS_SERVER_IP=$CORS_SERVER_IP" >> ./BE/.env  
+          echo "keyFile=$keyFile" >> ./BE/.env
+          echo "certFile=$certFile" >> ./BE/.env
         env:
           MONGO_URI: ${{ secrets.MONGO_URI }}
           NODE_TLS_REJECT_UNAUTHORIZED: ${{ secrets.NODE_TLS_REJECT_UNAUTHORIZED }}
@@ -47,6 +49,8 @@ jobs:
           NODEMAILER_PASS: ${{ secrets.NODEMAILER_PASS }}
           REACT_APP_GOOGLE_KEY: ${{ secrets.Google_KEY }}
           CORS_SERVER_IP: https://nolmungshimung.vercel.app
+          keyFile: ${{ secrets.keyFile }}
+          certFile: ${{ secrets.certFile }}
 #       -
 #         name: Set env React
 #         run: |
