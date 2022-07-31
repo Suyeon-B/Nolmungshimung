@@ -48,7 +48,6 @@ const RecommendPage = () => {
   const handleChange = (value) => {
     getHashTags(String(value).replace(/[0-9]/g, ""));
     setInputHashtags(String(value).replace(/[0-9]/g, ""));
-    console.log("handle change", value);
     if (value.length === 0) {
       setIsSearched(false);
     }
@@ -71,7 +70,8 @@ const RecommendPage = () => {
       .then((res) => res.json())
       .then((res) => {
         setIsSearched(true);
-        setHashTagPJInfo(res);
+        setHashTagPJInfo([...new Set(res.map(JSON.stringify))].map(JSON.parse));
+        // console.log([...new Set(res.map(JSON.stringify))].map(JSON.parse));
       })
       .catch((e) => console.log("해시태그야 일해라 .."));
   };
