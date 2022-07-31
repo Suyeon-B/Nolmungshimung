@@ -168,7 +168,7 @@ function Result() {
                 ))}
               </div>
             ) : (
-              <div key={route[0].uid}>
+              <div key={idx + 999}>
                 <ResultLine />
                 <ResultTitle>
                   DAY {idx + 1}
