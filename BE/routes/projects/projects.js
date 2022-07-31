@@ -22,11 +22,7 @@ router.post("/", async (req, res) => {
   const project = new Project(req.body[1]);
 
   // project["people"].push(user_date._id.toString());
-  project["people"].push([
-    user_date._id.toString(),
-    user_date.user_name,
-    user_date.user_email,
-  ]);
+  project["people"].push([user_date._id.toString(), user_date.user_name, user_date.user_email]);
 
   // 여행지 경로에 배열 추가하기
   for (let i = 0; i <= project["term"]; i++) {
@@ -109,9 +105,7 @@ router.post("/upload", async (req, res) => {
           await hashTable.save();
         } catch (error) {
           console.log(`Hash table ${i}번째 error : ${error}`);
-          return res
-            .send(404)
-            .send({ error: `hash table ${i}번째 upload Fail` });
+          return res.send(404).send({ error: `hash table ${i}번째 upload Fail` });
         }
         try {
           // category save
@@ -122,9 +116,7 @@ router.post("/upload", async (req, res) => {
           // console.log(hashTags[0].hash_tag_names);
           await hashTags[0].save();
         } catch (error) {
-          console.log(
-            `Hash tag ${i}번째 error : ${error} hashtags DataBase를 만들어 주세요.`
-          );
+          console.log(`Hash tag ${i}번째 error : ${error} hashtags DataBase를 만들어 주세요.`);
           return res.send(404).send({ error: `hash tag ${i}번째 save Fail` });
         }
       }
@@ -243,16 +235,13 @@ router.post("/:id", async (req, res, next) => {
     const userInfo = await User.findById({ _id: body._id });
 
     // console.log(projectInfo);
-
     for (let i = 0; i < projectInfo.people.length; i++) {
       if (projectInfo.people[i][0] === body._id) {
         projectInfo.people.splice(i, 1);
       }
     }
 
-    userInfo.user_projects = userInfo.user_projects.filter(
-      (projectId) => projectId !== id
-    );
+    userInfo.user_projects = userInfo.user_projects.filter((projectId) => projectId !== id);
 
     await userInfo.save();
 
@@ -333,6 +322,36 @@ router.get("/friends/:id", async (req, res, next) => {
   }
 });
 
+// 초대된 친구 삭제
+router.post("/memberFriend/:id", async (req, res, next) => {
+  const body = req.body;
+  const { id } = req.params;
+
+  try {
+    const projectInfo = await Project.findById({ _id: id });
+    // console.log(projectInfo.people);
+
+    if (projectInfo.people.length === 1 || projectInfo.people[0][2] === body.email) {
+      return res.status(202).send({ success: "요청을 수신하였지만, 그에 응하여 행동할 수 없습니다." });
+    }
+
+    for (let i = 1; i < projectInfo.people.length; i++) {
+      if (projectInfo.people[i][2] === body.email) {
+        projectInfo.people.splice(i);
+        console.log(projectInfo.people);
+      }
+    }
+    console.log(projectInfo.people);
+
+    await projectInfo.save();
+
+    return res.status(200).send({ success: "deleteSuccess" });
+  } catch (error) {
+    console.log(`project find id: ${error}`);
+    res.status(404).send({ error: "project not found" });
+  }
+});
+
 router.get("/memo/:id", async (req, res, next) => {
   const { id } = req.params;
   try {
@@ -347,5 +366,4 @@ router.get("/memo/:id", async (req, res, next) => {
 // User.findOne({ user_email: "a" }).then((data) => {
 //   console.log(data);
 // });
-
 module.exports = router;
