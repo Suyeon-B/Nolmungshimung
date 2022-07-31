@@ -31,9 +31,14 @@ const Fonts = styled.div`
   margin-top: 3px;
 `;
 const SideBarBtn = styled(NoneStyleBtn)`
+  border-top: 2px solid #ebebeb;
+  border-bottom: 2px solid #ebebeb;
   width: 50%;
   height: 100%;
-
+  /* border: ${(props) =>
+    props.color === "#ebebeb" ? "3px solid #7C828A" : ""}; */
+  box-shadow: ${(props) =>
+    props.color === "#ebebeb" ? "inset 2px 4px 4px rgb(0 0 0 / 25%)" : ""};
   font-style: normal;
   font-weight: 700;
   font-size: 20px;

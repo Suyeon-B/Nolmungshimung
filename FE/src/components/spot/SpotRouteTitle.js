@@ -62,17 +62,18 @@ const AlertBtnWrapper = styled.section`
   color: white;
   font-weight: 800;
   cursor: pointer;
-  box-shadow: 3px 3px 3px #aaaaaa;
   -ms-user-select: none;
   -moz-user-select: -moz-none;
   -khtml-user-select: none;
   -webkit-user-select: none;
   user-select: none;
+
+  box-shadow: 2px 2px 2px #aaaaaa;
   &:hover {
     background: rgba(255, 122, 0, 0.4);
+    transition: background 0.3s ease, color 0.1s ease;
   }
   &:active {
-    background: #ff8a3d;
     box-shadow: none;
   }
 
@@ -120,8 +121,13 @@ const SpotRouteTitleBtn = styled.button`
   font-weight: 800;
   cursor: pointer;
   height: 40px;
+  box-shadow: 2px 2px 2px #aaaaaa;
   &:hover {
     background: rgba(255, 122, 0, 0.4);
+    transition: background 0.3s ease, color 0.1s ease;
+  }
+  &:active {
+    box-shadow: none;
   }
 `;
 
