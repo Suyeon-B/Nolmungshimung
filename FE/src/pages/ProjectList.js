@@ -37,9 +37,11 @@ const ProjectList = ({ goProject }) => {
   const ProjectItem = ({ el }) => {
     console.log("ProjectItem");
     return (
-      <StyledLi>
-        <Link to={`project/${el._id}`}>
-          <h1 style={{ fontSize: "25px" }}> {el.project_title}</h1>
+      <StyeldTitleDiv>
+        <Link to={`project/${el._id}`} style={{ width: "100%" }}>
+          <StyledLi>
+            <h1 style={{ fontSize: "25px" }}> {el.project_title}</h1>
+          </StyledLi>
         </Link>
         <StyledBtn data-id={el._id} onClick={onDelete}>
           <svg
@@ -56,7 +58,7 @@ const ProjectList = ({ goProject }) => {
             />
           </svg>
         </StyledBtn>
-      </StyledLi>
+      </StyeldTitleDiv>
     );
   };
 
@@ -96,11 +98,7 @@ const ProjectList = ({ goProject }) => {
     <StyleProjectList>
       <TitleWrapper>
         <StyledTitle>내 여행계획 목록</StyledTitle>
-        <PlusCircleTwoTone
-          onClick={goProject}
-          style={{ fontSize: "30px" }}
-          twoToneColor="#FF8A3D"
-        />
+        <StyledTowTone onClick={goProject} twoToneColor="#FF8A3D" />
       </TitleWrapper>
 
       <StyledLine></StyledLine>
@@ -114,6 +112,24 @@ const ProjectList = ({ goProject }) => {
     </StyleProjectList>
   );
 };
+
+const StyeldTitleDiv = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  &:hover {
+    background: gainsboro;
+    border-radius: 5px;
+  }
+`;
+
+const StyledTowTone = styled(PlusCircleTwoTone)`
+  font-size: 30px;
+  &:hover {
+    /* background: rgba(255, 122, 0, 0.22); */
+    font-size: 33px;
+  }
+`;
 
 const StyledBtn = styled.button`
   outline: 0;
@@ -133,13 +149,7 @@ const StyledLi = styled.li`
   font-weight: 700;
   font-size: 28px;
   line-height: 45px;
-  margin-bottom: 10px;
   padding: 0px 10px;
-
-  &:hover {
-    background: gainsboro;
-    border-radius: 5px;
-  }
 
   color: #000000;
 `;

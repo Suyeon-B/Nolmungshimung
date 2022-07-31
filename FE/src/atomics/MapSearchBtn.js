@@ -2,10 +2,11 @@ import React from "react";
 // import NomalMarker from "../../../public/statics/images/location-dot-solid.svg";
 import { Button } from "antd";
 import { RedoOutlined } from "@ant-design/icons";
+import styled from "styled-components";
 
 function MapSearchBtn(props) {
   return (
-    <Button
+    <StyledBtn
       onClick={props.onClick}
       type="primary"
       shape="round"
@@ -22,8 +23,14 @@ function MapSearchBtn(props) {
       }}
     >
       현지도에서 검색
-    </Button>
+    </StyledBtn>
   );
 }
+const StyledBtn = styled(Button)`
+  &:hover {
+    background: rgb(252, 154, 93) !important;
+    transition: background 0.3s ease, color 0.1s ease;
+  }
+`;
 
 export default React.memo(MapSearchBtn);

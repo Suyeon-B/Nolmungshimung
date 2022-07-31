@@ -194,13 +194,24 @@ const GetProjectModal = ({ routes }) => {
     </>
   );
 };
-const StyledGetBtn = styled(Button)`
+const StyledGetBtn = styled.button`
   border-radius: 5px;
   background-color: #ff8a3d;
-  border-color: #ff8a3d;
+  border: none;
   color: white;
   font-size: 13px;
   font-weight: 700;
+  width: 84px;
+  height: 32px;
+  cursor: pointer;
+  box-shadow: 2px 2px 2px #aaaaaa;
+  &:hover {
+    background: rgba(255, 122, 0, 0.4);
+    transition: background 0.3s ease, color 0.1s ease;
+  }
+  &:active {
+    box-shadow: none;
+  }
 `;
 const StyledP = styled.p`
   font-size: 22px;
@@ -233,7 +244,14 @@ const StyledModal = styled(Modal)`
   }
   .ant-btn-primary {
     background-color: #ff8a3d;
-    border-color: #ff8a3d;
+    border: none;
+    &:hover {
+      background: rgba(255, 122, 0, 0.4);
+      transition: background 0.3s ease, color 0.1s ease;
+    }
+    &:active {
+      box-shadow: none;
+    }
   }
   .ant-btn {
     border-radius: 5px;
@@ -258,10 +276,16 @@ const StyledAllBtn = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
+  border-top: 2px solid #ebebeb;
+  border-bottom: 2px solid #ebebeb;
+  box-shadow: ${(props) =>
+    props.toggleBtn ? "inset 2px 4px 4px rgb(0 0 0 / 25%)" : ""};
 `;
 
 const StyledSelectBtn = styled(StyledAllBtn)`
   background-color: ${(props) => (props.toggleBtn ? "white" : "#ebebeb")};
+  box-shadow: ${(props) =>
+    props.toggleBtn ? "none" : "inset 2px 4px 4px rgb(0 0 0 / 25%)"};
 `;
 
 const StyledBtnDiv = styled.div`
@@ -271,8 +295,8 @@ const StyledBtnDiv = styled.div`
   background-color: white;
   justify-content: center;
   align-items: center;
-  border-top: 2px solid #ebebeb;
-  border-bottom: 2px solid #ebebeb;
+  /* border-top: 2px solid #ebebeb;
+  border-bottom: 2px solid #ebebeb; */
 `;
 
 export default GetProjectModal;
