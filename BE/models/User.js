@@ -135,10 +135,10 @@ userSchema.statics.generateAccessToken = function (refreshToken) {
         } else {
           console.log(user);
           if (user === null) {
-            resolve(null);
+            return resolve(null);
           }
           if (user?._id === null) {
-            resolve(null);
+            return resolve(null);
           }
           var AccessToken = jwt.sign(
             { data: user?._id.toHexString() },
