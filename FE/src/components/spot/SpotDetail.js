@@ -79,8 +79,7 @@ export function spotDetail(props) {
 }
 
 function GetGoogleID(props) {
-  let url =
-    "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?";
+  let url = "/place-api/findplacefromtext/json?";
   url =
     url +
     "input=" +
@@ -96,7 +95,7 @@ function GetGoogleID(props) {
       .then((data) => {
         if (data.status === "OK") {
           const place = data.candidates[0].place_id;
-          // console.log(place);
+          console.log(place);
           resolve(place);
         } else resolve(null);
       })
@@ -109,13 +108,14 @@ function GetGoogleID(props) {
 
 function GetGooglePlace(id, props) {
   let url =
-    "https://maps.googleapis.com/maps/api/place/details/json?fields=name,rating,formatted_phone_number,photo,type,opening_hours,price_level,review,user_ratings_total&language=kr&place_id=";
+    "/place-api/details/json?fields=name,rating,formatted_phone_number,photo,type,opening_hours,price_level,review,user_ratings_total&language=kr&place_id=";
   url = url + id + "&key=" + api_key;
   return new Promise((resolve, reject) => {
     fetch(url)
       .then((response) => response.json())
       .then((data) => {
         data = data.result;
+        console.log(data);
         let insertForm = {
           provider: 1,
           place_id: props.place_id,

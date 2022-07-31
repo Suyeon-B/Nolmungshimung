@@ -137,7 +137,7 @@ userSchema.statics.generateAccessToken = function (refreshToken) {
           if (user === null) {
             resolve(null);
           }
-          if (user._id === null) {
+          if (user?._id === null) {
             resolve(null);
           }
           var AccessToken = jwt.sign(
