@@ -162,7 +162,7 @@ const StyledDropDown = styled.div`
 
   position: relative;
   top: -7px;
-  left: -30px;
+  left: -15px;
   width: 20px;
 
   .dropDownMenu {
