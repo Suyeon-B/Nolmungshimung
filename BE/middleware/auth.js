@@ -15,7 +15,6 @@ const refreshTokenOptions = {
 function authCheck(req, res) {
   return new Promise(async (resolve, reject) => {
     // console.log("cookies in authCheck", JSON.stringify(req));
-    console.log("COOKIE IN authCheck", req.cookies);
     let accessToken = User.verifyToken(req.cookies.w_access);
     let refreshToken = User.verifyToken(req.cookies.w_refresh);
 
@@ -28,7 +27,7 @@ function authCheck(req, res) {
         // 권한 없으므로, 에러 발생
         console.log("case 1!!!!");
         // throw Error('API 사용 권한이 없습니다.');
-        // req.user = null;
+        req.user = null;
         return resolve(false);
       } else {
         // case2: access token은 만료됐지만, refresh token은 유효한 경우
@@ -37,11 +36,11 @@ function authCheck(req, res) {
         const user = await User.generateAccessToken(refreshToken);
         if (user === null) {
           console.log("user === null");
-          // req.user = null;
+          req.user = null;
           return resolve(null);
         }
 
-        // req.user = user;
+        req.user = user;
         // res.cookie("w_access", user.userAccessToken, accessTokenOptions);
         res.setHeader(
           "Set-Cookie",
@@ -57,11 +56,11 @@ function authCheck(req, res) {
         console.log("case 3!!!!");
         const user = await User.generateRefreshToken(accessToken);
         if (user === null) {
-          // req.user = null;
+          req.user = null;
           return resolve(null);
         }
 
-        // req.user = user;
+        req.user = user;
         // res.cookie("w_refresh", user.userRefreshToken, refreshTokenOptions);
         res.setHeader(
           "Set-Cookie",
@@ -82,10 +81,10 @@ function authCheck(req, res) {
         );
         if (user === null) {
           // console.log("case 4 user is null");
-          // req.user = null;
+          req.user = null;
           return resolve(null);
         }
-        // req.user = user;
+        req.user = user;
         // console.log("case 4 user is not null");
         return resolve(true);
       }
