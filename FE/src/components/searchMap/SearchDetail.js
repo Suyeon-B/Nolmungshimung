@@ -41,8 +41,7 @@ function SearchDetail(props) {
             style={{
               fontSize: "15px",
               fontStyle: "normal",
-              color: "gray",
-              marginLeft: "10px",
+              color: "#8f8f8f",
             }}
           >
             {props.contents.category_group_name}
@@ -84,7 +83,7 @@ function SearchDetail(props) {
               style={{
                 fontSize: "15px",
                 fontStyle: "normal",
-                color: "gray",
+                color: "#8f8f8f",
                 marginLeft: "10px",
               }}
             >
@@ -210,12 +209,9 @@ const StyledImg = styled.img`
 `;
 
 const StyledTitle = styled.span`
-  text-align: center;
   font-style: normal;
   font-weight: 700;
-  font-size: 21px;
-  margin-bottom: 14px;
-  margin-top: 14px;
+  font-size: 25px;
 `;
 
 const StyleText = styled.span`
@@ -233,9 +229,12 @@ const StyleIcon = styled.span`
 const SearchDetailSection = styled.section`
   width: 100%;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
+  margin-top: 10px;
+  margin-bottom: 10px;
 `;
+// align-items: center;
+// justify-content: center;
 const SearchDetailInfoSection = styled.section`
   width: 100%;
   display: flex;
