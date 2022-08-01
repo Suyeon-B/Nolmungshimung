@@ -15,67 +15,83 @@ export function spotDetail(props) {
     ) //get
       .then((response) => response.json())
       .then((data) => {
-        if (data.status === 200) {
-          console.log(data);
-          console.log("db에 있습니다");
-          // setContents(data.data);
-          resolve(data.data);
-        } else {
-          GetGoogleID(props)
-            .then(function (res) {
-              let insertForm;
-              console.log(res);
-              if (res) {
-                GetGooglePlace(res, props).then(function (data) {
-                  resolve(data);
-                });
-              } else {
-                insertForm = {
-                  provider: 2,
-                  place_id: props.place_id,
-                  place_name: props.place_name,
-                  road_address_name: props.road_address_name,
-                  category_group_name: props.category_group_name,
-                  phone: props.phone,
-                  place_url: props.place_url,
-                  photo: null,
-                  rating: 0,
-                  reviews: null,
-                  user_ratings_total: null,
-                  opening_hours: null,
-                };
-                console.log(insertForm);
-                fetch(
-                  `https://${process.env.REACT_APP_SERVER_IP}:8443/travel/save`,
-                  {
-                    method: "POST", // 또는 'PUT'
-                    headers: {
-                      "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(insertForm),
-                  }
-                ) //get
-                  .then((response) => response.json())
-                  .then((data) => {
-                    console.log(data);
-                    resolve(data.data);
-                  })
-                  .catch((error) => {
-                    console.log(error);
-                    reject(error);
-                  });
-              }
-            })
-            .catch((e) => {
-              console.log(e);
-              reject(e);
-            });
-        }
+        console.log(`id : `, data)
+        return resolve(data)
       })
-      .catch((error) => {
-        console.log(error);
-        reject(error);
-      });
+  //   fetch(
+  //     `https://${process.env.REACT_APP_SERVER_IP}:8443/travel/find/` +
+  //       props.place_id,
+  //     {
+  //       method: "POST", // 또는 'PUT'
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(props),
+  //     }
+  //   ) //get
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       if (data.status === 200) {
+  //         console.log(data);
+  //         console.log("db에 있습니다");
+  //         // setContents(data.data);
+  //         resolve(data.data);
+  //       } else {
+  //         GetGoogleID(props)
+  //           .then(function (res) {
+  //             let insertForm;
+  //             console.log(res);
+  //             if (res) {
+  //               GetGooglePlace(res, props).then(function (data) {
+  //                 resolve(data);
+  //               });
+  //             } else {
+  //               insertForm = {
+  //                 provider: 2,
+  //                 place_id: props.place_id,
+  //                 place_name: props.place_name,
+  //                 road_address_name: props.road_address_name,
+  //                 category_group_name: props.category_group_name,
+  //                 phone: props.phone,
+  //                 place_url: props.place_url,
+  //                 photo: null,
+  //                 rating: 0,
+  //                 reviews: null,
+  //                 user_ratings_total: null,
+  //                 opening_hours: null,
+  //               };
+  //               console.log(insertForm);
+  //               fetch(
+  //                 `https://${process.env.REACT_APP_SERVER_IP}:8443/travel/save`,
+  //                 {
+  //                   method: "POST", // 또는 'PUT'
+  //                   headers: {
+  //                     "Content-Type": "application/json",
+  //                   },
+  //                   body: JSON.stringify(insertForm),
+  //                 }
+  //               ) //get
+  //                 .then((response) => response.json())
+  //                 .then((data) => {
+  //                   console.log(data);
+  //                   resolve(data.data);
+  //                 })
+  //                 .catch((error) => {
+  //                   console.log(error);
+  //                   reject(error);
+  //                 });
+  //             }
+  //           })
+  //           .catch((e) => {
+  //             console.log(e);
+  //             reject(e);
+  //           });
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       reject(error);
+  //     });
   });
 }
 
@@ -90,7 +106,7 @@ function GetGoogleID(props) {
     "&key=" +
     api_key;
 
-  // console.log(url);
+  console.log(url);
   return new Promise(async (resolve, reject) => {
     axios
       .get(url)
