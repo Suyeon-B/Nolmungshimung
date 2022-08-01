@@ -400,7 +400,7 @@ function SpotList({
 const NoneStyleBtn = styled.button`
   outline: 0;
   border: none;
-  background-color: white;
+  background-color: #ffffff00;
   cursor: pointer;
 `;
 
