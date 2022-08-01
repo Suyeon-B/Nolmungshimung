@@ -6,7 +6,7 @@ import styled from "styled-components";
 import Badge from "./Badge";
 // import InviteEmailInput from "./InviteEmailInput";
 
-function FriendInvite() {
+function FriendInvite({ currentUser }) {
   const { projectId } = useParams();
   const [email, setEmail] = useState("");
   const [friends, setFriends] = useState([
@@ -115,8 +115,12 @@ function FriendInvite() {
 
   const onDelete = async (event) => {
     if (confirm("프로젝트 멤버에서 삭제하시겠어요?")) {
+      if (currentUser === event) {
+        alert("셀프 삭제는 할 수 없어요 🥲");
+        return;
+      }
+
       deleteFriendDiv(event);
-      console.log(projectId);
       const data = {
         email: event,
       };
@@ -149,11 +153,8 @@ function FriendInvite() {
           value={email}
           onChange={onChangeEmail}
           onKeyPress={handleOnKeyPress}
-<<<<<<< HEAD
           placeholder="이메일을 적어주세요."
-=======
           autoFocus="autofocus"
->>>>>>> 450012fe9a0ca08d10c0edb42ab664f65b166068
         />
         <UsergroupAddOutlined style={{ fontSize: "25px", color: "white" }} onClick={sendInviteEmail} />
       </InviteForm>
