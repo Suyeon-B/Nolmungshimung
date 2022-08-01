@@ -234,12 +234,8 @@ const ResultTitle = styled.section`
   line-height: 36px;
   margin-bottom: 12px;
 `;
-<<<<<<< HEAD
+
 const ResultRoute = styled.div`
-  font-family: "Inter";
-=======
-const ResultRoute = styled.li`
->>>>>>> d412fb13ff021a00dfa8a308dc6311cea9a4f888
   font-style: normal;
   font-weight: 700;
   font-size: 17px;
