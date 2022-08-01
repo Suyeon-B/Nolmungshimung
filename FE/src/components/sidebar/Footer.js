@@ -61,7 +61,8 @@ function Footer(props) {
         <CommonBtn
           icon={AudioFilled}
           onClickEvent={onClickMic}
-          style={{ fontSize: "30px" }}
+          // style={{ fontSize: "30px" }}
+          fontSize="30"
         />
       );
     } else {
@@ -69,7 +70,8 @@ function Footer(props) {
         <CommonBtn
           icon={AudioMutedOutlined}
           onClickEvent={onClickMic}
-          style={{ fontSize: "30px" }}
+          // style={{ fontSize: "30px" }}
+          fontSize="30"
         />
       );
     }
