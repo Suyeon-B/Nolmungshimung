@@ -121,6 +121,7 @@ const ModifyModal = ({ routes, title }) => {
           // placeholder="기존 title 가져오기"
           value={projectTitle}
           onChange={onChange}
+          autoFocus="autoFocus"
         />
         <StyledP>여행 시작 날짜를 선택해주세요</StyledP>
         <ModalCalender startDate={startDate} setStartDate={setStartDate} />
