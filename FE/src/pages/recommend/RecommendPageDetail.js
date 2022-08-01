@@ -211,13 +211,11 @@ const StyledTitlecircle = styled.div`
 `;
 
 const ResultXTitle = styled.span`
-  font-family: "Inter";
   font-style: normal;
   font-weight: 700;
   font-size: 20px;
 `;
 const ResultProjectTitle = styled.span`
-  font-family: "Inter";
   font-style: normal;
   font-weight: 900;
   font-size: 35px;
@@ -230,15 +228,18 @@ const ResultLine = styled.div`
   margin-top: 20px;
 `;
 const ResultTitle = styled.section`
-  font-family: "Inter";
   font-style: normal;
   font-weight: 800;
   font-size: 25px;
   line-height: 36px;
   margin-bottom: 12px;
 `;
+<<<<<<< HEAD
 const ResultRoute = styled.div`
   font-family: "Inter";
+=======
+const ResultRoute = styled.li`
+>>>>>>> d412fb13ff021a00dfa8a308dc6311cea9a4f888
   font-style: normal;
   font-weight: 700;
   font-size: 17px;

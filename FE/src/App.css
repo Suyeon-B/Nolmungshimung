@@ -1,24 +1,13 @@
 @import "~antd/dist/antd.css";
 
-element.style {
-  font-family: Happiness-Sans-Regular;
-}
-
 .main {
   display: flex;
   flex-direction: row;
 }
 
 @font-face {
-  font-family: "Happiness-Sans-Title";
-  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2205@1.0/Happiness-Sans-Title.woff2") format("woff2");
+  font-family: "GangwonEdu_OTFBoldA";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2201-2@1.0/GangwonEdu_OTFBoldA.woff") format("woff");
   font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "Happiness-Sans-Regular";
-  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2205@1.0/Happiness-Sans-Regular.woff2") format("woff2");
-  font-weight: 400;
   font-style: normal;
 }
