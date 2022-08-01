@@ -6,7 +6,7 @@ import styled from "styled-components";
 import Badge from "./Badge";
 // import InviteEmailInput from "./InviteEmailInput";
 
-function FriendInvite() {
+function FriendInvite({ currentUser }) {
   const { projectId } = useParams();
   const [email, setEmail] = useState("");
   const [friends, setFriends] = useState([
@@ -38,16 +38,13 @@ function FriendInvite() {
   };
 
   useEffect(() => {
-    fetch(
-      `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/friends/${projectId}`,
-      {
-        method: "get",
-        headers: {
-          "content-type": "application/json",
-        },
-        credentials: "include",
-      }
-    )
+    fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/friends/${projectId}`, {
+      method: "get",
+      headers: {
+        "content-type": "application/json",
+      },
+      credentials: "include",
+    })
       .then((res) => res.json())
       .then((res) => {
         setFriends(res.map((el) => el[2]));
@@ -118,8 +115,12 @@ function FriendInvite() {
 
   const onDelete = async (event) => {
     if (confirm("프로젝트 멤버에서 삭제하시겠어요?")) {
+      if (currentUser === event) {
+        alert("셀프 삭제는 할 수 없어요 🥲");
+        return;
+      }
+
       deleteFriendDiv(event);
-      console.log(projectId);
       const data = {
         email: event,
       };
@@ -155,10 +156,7 @@ function FriendInvite() {
           placeholder="이메일을 적어주세요."
           autoFocus="autofocus"
         />
-        <UsergroupAddOutlined
-          style={{ fontSize: "25px", color: "white" }}
-          onClick={sendInviteEmail}
-        />
+        <UsergroupAddOutlined style={{ fontSize: "25px", color: "white" }} onClick={sendInviteEmail} />
       </InviteForm>
       <InvitedFriends>
         {friends.map((el, i) => (
@@ -176,12 +174,7 @@ function FriendInvite() {
   );
 
   return (
-    <Popover
-      placement="rightBottom"
-      title={text}
-      content={content}
-      trigger="click"
-    >
+    <Popover placement="rightBottom" title={text} content={content} trigger="click">
       <UsergroupAddOutlined style={{ fontSize: "28px" }} />
     </Popover>
   );
