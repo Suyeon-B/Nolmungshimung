@@ -20,12 +20,29 @@ router.post("/find/:id", async function (req, res, next) {
       })
     );
   } else {
+    console.log('데이터 없다.');
+    let url =
+    "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?";
+  url =
+    url +
+    "input=" +
+    encodeURI(req.body.input) +
+    "&inputtype=textquery" +
+    "&key=" +
+    process.env.REACT_APP_GOOGLE_KEY;
+
+  console.log(`url 은 : `, url);
+  request({url: url, method: "GET"}, function (err, response, body){
+    console.log(body)
     return res.send(
       JSON.stringify({
         status: 400,
+        data: body,
         message: "fail",
       })
     );
+  })
+    
   }
 });
 
