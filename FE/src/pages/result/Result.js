@@ -175,7 +175,11 @@ function Result() {
                   <StyledSpan>{culTripTermData(startDate, idx)}</StyledSpan>
                   <br />
                 </ResultTitle>
-                <ResultRoute>
+                <ResultRoute
+                  style={{
+                    color: "gray",
+                  }}
+                >
                   쉬는 날 🌱
                   <br />
                 </ResultRoute>
