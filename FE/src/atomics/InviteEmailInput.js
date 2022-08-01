@@ -2,28 +2,15 @@ import React from "react";
 import styled from "styled-components";
 import { UsergroupAddOutlined } from "@ant-design/icons";
 
-function InviteEmailInput({
-  onChangeEmail,
-  handleOnKeyPress,
-  email,
-  sendInviteEmail,
-}) {
+function InviteEmailInput({ onChangeEmail, handleOnKeyPress, email, sendInviteEmail }) {
   // const [email, setEmail] = useState("");
 
   return (
     <InviteForm>
       <InviteEmailText>Email</InviteEmailText>
       {/* 텍스트 -> 이메일로 고쳐야함 */}
-      <InviteEmailInputTag
-        type="text"
-        value={email}
-        onChange={onChangeEmail}
-        onKeyPress={handleOnKeyPress}
-      />
-      <UsergroupAddOutlined
-        style={{ fontSize: "25px", color: "white" }}
-        onClick={sendInviteEmail}
-      />
+      <InviteEmailInputTag type="text" value={email} onChange={onChangeEmail} onKeyPress={handleOnKeyPress} />
+      <UsergroupAddOutlined style={{ fontSize: "25px", color: "white" }} onClick={sendInviteEmail} />
     </InviteForm>
   );
 }
@@ -43,7 +30,6 @@ const InviteForm = styled.div`
 
 const InviteEmailText = styled.span`
   color: white;
-  font-family: "Rounded Mplus 1c Bold";
   font-style: normal;
   font-weight: 700;
   font-size: 15px;

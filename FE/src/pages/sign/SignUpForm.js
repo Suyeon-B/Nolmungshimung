@@ -94,17 +94,14 @@ function SignUpForm() {
   });
 
   async function singUpUser(data) {
-    await fetch(
-      `https://${process.env.REACT_APP_SERVER_IP}:8443/users/signup`,
-      {
-        method: "post",
-        headers: {
-          "content-type": "application/json",
-        },
-        // credentials: "include",
-        body: JSON.stringify(data),
-      }
-    )
+    await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/users/signup`, {
+      method: "post",
+      headers: {
+        "content-type": "application/json",
+      },
+      // credentials: "include",
+      body: JSON.stringify(data),
+    })
       .then((res) => res.json())
       .then((res) => {
         // console.log("res : ", res);
@@ -157,15 +154,8 @@ function SignUpForm() {
   return (
     <Form onSubmit={onSubmitSignUp}>
       <SignUpEmailDiv>
-        <SignUpEmailInput
-          placeholder="jeju@island.com"
-          type="email"
-          value={id}
-          onChange={onchangeId}
-        />
-        {!numberFlag && (
-          <SignUpEmailBtn onClick={onClickEmail}>인증번호 받기</SignUpEmailBtn>
-        )}
+        <SignUpEmailInput placeholder="jeju@island.com" type="email" value={id} onChange={onchangeId} />
+        {!numberFlag && <SignUpEmailBtn onClick={onClickEmail}>인증번호 받기</SignUpEmailBtn>}
       </SignUpEmailDiv>
       <SignUpEmailDiv>
         <SignUpEmailInput
@@ -174,31 +164,12 @@ function SignUpForm() {
           value={certification}
           onChange={onchangeCertification}
         />
-        {numberFlag && (
-          <SignUpEmailBtn onClick={onClickCertification}>
-            인증번호 확인
-          </SignUpEmailBtn>
-        )}
+        {numberFlag && <SignUpEmailBtn onClick={onClickCertification}>인증번호 확인</SignUpEmailBtn>}
       </SignUpEmailDiv>
 
-      <Input
-        placeholder="닉네임"
-        type="text"
-        value={name}
-        onChange={onchangeName}
-      />
-      <Input
-        placeholder="password (6자 이상)"
-        type="password"
-        value={password}
-        onChange={onchangePassword}
-      />
-      <Input
-        placeholder="password 확인"
-        type="password"
-        value={confirmPassword}
-        onChange={onchangeConfirmPassword}
-      />
+      <Input placeholder="닉네임" type="text" value={name} onChange={onchangeName} />
+      <Input placeholder="password (6자 이상)" type="password" value={password} onChange={onchangePassword} />
+      <Input placeholder="password 확인" type="password" value={confirmPassword} onChange={onchangeConfirmPassword} />
       <SubmitInput value="회원가입" type="submit" />
     </Form>
   );
@@ -228,7 +199,6 @@ const SubmitInput = styled.input`
   border-radius: 30px;
   background: linear-gradient(90deg, #47b5ff 0%, #7ecbff 50%, #b3e0ff 100%);
   border: 0;
-  font-family: Rounded Mplus 1c Bold;
   font-style: normal;
   font-weight: 700;
   font-size: 20px;

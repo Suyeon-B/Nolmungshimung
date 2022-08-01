@@ -146,13 +146,8 @@ function SpotList({
     // console.log(newState[selectedIndex][result.source.index].user_name);
     const lockAcquire = newState[selectedIndex][result.source.index].user_name;
     // if username === 자기랑 다르면 못움직이게 alert
-    if (
-      lockAcquire === null ||
-      lockAcquire === userName ||
-      lockAcquire == undefined
-    ) {
-      newState[selectedIndex][result.source.index].lock =
-        connectUser[userName].color;
+    if (lockAcquire === null || lockAcquire === userName || lockAcquire == undefined) {
+      newState[selectedIndex][result.source.index].lock = connectUser[userName].color;
       newState[selectedIndex][result.source.index].user_name = userName;
     } else {
       alert("다른 친구가 옮기고 있습니다 ! 잠시 기다려주세요!");
@@ -197,12 +192,7 @@ function SpotList({
       setItemRoute(newState);
     } else {
       console.log("spot list else 여기오면ㅇ ㅏㄴ됨");
-      const result = move(
-        [...dayItem][sInd],
-        [...dayItem][dInd],
-        source,
-        destination
-      );
+      const result = move([...dayItem][sInd], [...dayItem][dInd], source, destination);
       const newState = [...[...dayItem]];
       newState[sInd] = result[sInd];
       // console.log("drag end IN newState[sInd] : ", newState[sInd]);
@@ -233,11 +223,7 @@ function SpotList({
         {[dayItem[selectedIndex]].map((el, ind) => (
           <Droppable key={ind} droppableId={`${ind}`}>
             {(provided, snapshot) => (
-              <div
-                ref={provided.innerRef}
-                style={getListStyle(snapshot.isDragging)}
-                {...provided.droppableProps}
-              >
+              <div ref={provided.innerRef} style={getListStyle(snapshot.isDragging)} {...provided.droppableProps}>
                 {el.map((item, index) =>
                   item.user_name === null || item.user_name === userName ? (
                     <Draggable
@@ -281,16 +267,10 @@ function SpotList({
                                 >
                                   {index + 1}
                                 </SpotItemIndex>
-                                {item.place_name.length > 10
-                                  ? item.place_name.slice(0, 11) + " ..."
-                                  : item.place_name}
+                                {item.place_name.length > 10 ? item.place_name.slice(0, 11) + " ..." : item.place_name}
                                 {/* {item.place_name} */}
                               </SpotTitle>
-                              <SpotCategory>
-                                {item.category_group_name
-                                  ? item.category_group_name
-                                  : "-"}
-                              </SpotCategory>
+                              <SpotCategory>{item.category_group_name ? item.category_group_name : "-"}</SpotCategory>
                             </SpotItemDiv>
                             {item.user_name && (
                               <div
@@ -368,16 +348,10 @@ function SpotList({
                                 >
                                   {index + 1}
                                 </SpotItemIndex>
-                                {item.place_name.length > 10
-                                  ? item.place_name.slice(0, 11) + " ..."
-                                  : item.place_name}
+                                {item.place_name.length > 10 ? item.place_name.slice(0, 11) + " ..." : item.place_name}
                                 {/* {item.place_name} */}
                               </SpotTitle>
-                              <SpotCategory>
-                                {item.category_group_name
-                                  ? item.category_group_name
-                                  : "-"}
-                              </SpotCategory>
+                              <SpotCategory>{item.category_group_name ? item.category_group_name : "-"}</SpotCategory>
                             </SpotItemDiv>
                             {item.user_name && (
                               <div
@@ -452,13 +426,11 @@ const SpotItemDiv = styled.div`
 `;
 
 const SpotTitle = styled.span`
-  font-family: Inter;
   font-style: normal;
   font-weight: 700;
   font-size: 20px;
 `;
 const SpotCategory = styled.span`
-  font-family: Rounded Mplus 1c Bold;
   font-style: normal;
   color: #adadad;
   font-weight: 700;
