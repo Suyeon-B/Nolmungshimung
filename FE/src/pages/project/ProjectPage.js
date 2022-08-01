@@ -52,18 +52,7 @@ const ProjectPage = (props) => {
       .padStart(2, "0");
     return "#" + rgb;
   };
-  console.log(randomRGB());
-  const colors = {
-    // "#FF8A3D": false,
-    "#8DD664": false,
-    "#FF6169": false,
-    "#975FFE": false,
-    "#0072BC": false,
-    "#F6282B": false,
-    "#FAD700": false,
-    "#05FFCC": false,
-    "#4A4A4A": false,
-  };
+
   const getColor = () => {
     for (let color in colors) {
       if (!colors[color]) {
@@ -86,6 +75,7 @@ const ProjectPage = (props) => {
   }, []);
   let userName = auth?.user?.user_name;
 
+  console.log(connectUser);
   useEffect(() => {
     console.log(auth);
 
@@ -105,13 +95,14 @@ const ProjectPage = (props) => {
 
   useEffect(() => {
     socket.on("connectUser", (connectUserInfo) => {
-      // console.log("connectUser", connectUserInfo);
+      console.log("connectUser", connectUserInfo);
       // console.log(colors);
       setConnectUser((prev) => {
+        console.log(prev);
         let newUser = { ...prev };
         const newUserArr = Object.keys(newUser);
         const currentArr = Object.keys(connectUserInfo);
-
+        console.log(newUserArr, currentArr);
         let diff;
         //유저가 나간 경유
         if (newUserArr.length > currentArr.length) {
@@ -123,9 +114,12 @@ const ProjectPage = (props) => {
           for (let user in newUser) {
             newUser[user].selectedIndex = connectUserInfo[user].selectedIndex;
           }
+          console.log(newUser);
+          return newUser;
         }
         // 기존 정보가 아닌 다른 정보
         diff = currentArr.filter((el) => !newUserArr.includes(el));
+        console.log(diff);
         for (let user of diff) {
           newUser = {
             ...newUser,

@@ -8,12 +8,7 @@ import { useAuth } from "../components/auth/Auth";
 import Badge from "../atomics/Badge";
 
 const setDay = (value) => {
-  return [
-    value.getFullYear(),
-    value.getMonth() + 1,
-    value.getDate(),
-    value.getDay(),
-  ];
+  return [value.getFullYear(), value.getMonth() + 1, value.getDate(), value.getDay()];
 };
 
 const CreateProject = () => {
@@ -77,51 +72,57 @@ const CreateProject = () => {
   };
 
   return (
-    <PageContainer>
-      <CreateHomeImg src="\statics\images\main_logo.png" onClick={goHome} />
-      <CalenderForm onSubmit={onSubmit}>
-        <TitleInput
-          maxLength="10"
-          placeholder="여행 제목을 입력해주세요"
-          value={projectTitle}
-          onChange={onChangeProjectTitle}
-        />
-        <CreateBtns>
-          <CalendarBtnContainer>
-            <CalendarBtn onClick={() => setShowCalendar(!showCalendar)}>
-              <img
-                width={"50px"}
-                alt=""
-                src="/statics/images/calender_start.png"
-              />
-              <CalendarBtnDay>
-                {startDate
-                  ? `${startDate[1]}월 ${startDate[2]}일`
-                  : "여행 시작 날짜"}
-              </CalendarBtnDay>
-            </CalendarBtn>
-            <CalendarBtn onClick={() => setShowCalendar(!showCalendar)}>
-              <img
-                width={"50px"}
-                alt=""
-                src="/statics/images/calender_end.png"
-              />
-              <CalendarBtnDay>
-                {endDate ? `${endDate[1]}월 ${endDate[2]}일` : "여행 종료 날짜"}
-              </CalendarBtnDay>
-            </CalendarBtn>
-          </CalendarBtnContainer>
-          <CreateProjectSubmit type="submit">
-            여행일정<br></br> 생성
-          </CreateProjectSubmit>
-        </CreateBtns>
-        <CalendarContainer>
-          {showCalendar && <CalendarTwo settedDate={settedDate} />}
-        </CalendarContainer>
-      </CalenderForm>
-    </PageContainer>
+    <>
+      <Home onClick={goHome}>
+        <img src="\statics\images\main_logo.png" style={{ width: "auto", height: "auto" }} />
+        <Logo>놀멍쉬멍</Logo>
+      </Home>
+      <PageContainer>
+        <CalenderForm onSubmit={onSubmit}>
+          <TitleInput
+            maxLength="10"
+            placeholder="여행 제목을 입력해주세요"
+            value={projectTitle}
+            onChange={onChangeProjectTitle}
+          />
+          <CreateBtns>
+            <CalendarBtnContainer>
+              <CalendarBtn onClick={() => setShowCalendar(!showCalendar)}>
+                <img width={"50px"} alt="" src="/statics/images/calender_start.png" />
+                <CalendarBtnDay>{startDate ? `${startDate[1]}월 ${startDate[2]}일` : "여행 시작 날짜"}</CalendarBtnDay>
+              </CalendarBtn>
+              <CalendarBtn onClick={() => setShowCalendar(!showCalendar)}>
+                <img width={"50px"} alt="" src="/statics/images/calender_end.png" />
+                <CalendarBtnDay>{endDate ? `${endDate[1]}월 ${endDate[2]}일` : "여행 종료 날짜"}</CalendarBtnDay>
+              </CalendarBtn>
+            </CalendarBtnContainer>
+            <CreateProjectSubmit type="submit">
+              여행일정<br></br> 생성
+            </CreateProjectSubmit>
+          </CreateBtns>
+          <CalendarContainer>{showCalendar && <CalendarTwo settedDate={settedDate} />}</CalendarContainer>
+        </CalenderForm>
+      </PageContainer>
+    </>
   );
 };
+const Home = styled.div`
+  display: flex;
+  align-items: center;
+  position: absolute;
+  left: 25px;
+  top: 15px;
+  z-index: 2;
+  cursor: pointer;
+`;
+
+const Logo = styled.div`
+  color: #ff8a3d;
+  font-size: 28px;
+  font-weight: bold;
+  min-width: fit-content;
+  margin-left: 10px;
+`;
 
 const PageContainer = styled.div`
   width: 100vw;

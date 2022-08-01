@@ -6,6 +6,7 @@ import MousePointerUsers from "./MousePointerUsers";
 import socket from "../../socket";
 import { ConnectuserContext } from "../../context/ConnectUserContext";
 import { useAuth } from "../../components/auth/Auth";
+import { useCallback } from "react";
 
 function Cursor({ project_Id, selectedIndex }) {
   const auth = useAuth();
@@ -63,10 +64,13 @@ function Cursor({ project_Id, selectedIndex }) {
   }, []);
 
   // 다른 유저의 마우스 커서 정보를 받아 온다.
-  useEffect(() => {
+  const mouseUpdateEvent = useCallback(() => {
     socket.on("mouse_update", (mouseInfo) => {
       const user = Object.keys(mouseInfo)[0];
+
       if (mouseInfo[user].color === undefined) {
+        // console.log(mouseInfo[user].color);
+        // console.log(connectUser[user].color);
         mouseInfo[user].color = connectUser[user].color;
       }
 
@@ -75,10 +79,14 @@ function Cursor({ project_Id, selectedIndex }) {
         return newState;
       });
     });
+  }, [connectUser]);
+  console.log(socket);
+  useEffect(() => {
+    mouseUpdateEvent();
     return () => {
       socket.removeAllListeners("mouse_update");
     };
-  }, []);
+  }, [connectUser]);
 
   return (
     <>
