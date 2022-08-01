@@ -141,6 +141,7 @@ const CalenderForm = styled.form`
   align-items: center;
 `;
 const TitleInput = styled.input`
+  outline: none;
   margin-bottom: 20px;
   width: 812px;
   height: 80px;

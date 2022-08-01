@@ -161,6 +161,7 @@ const StyledP = styled.p`
 `;
 
 const StyledTitleInput = styled.input`
+  outline: none;
   width: 100%;
   font-size: 24px;
   text-align: center;
