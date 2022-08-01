@@ -43,13 +43,7 @@ function Footer(props) {
         {Object.keys(connectUser).map((userName, idx) => {
           if (props.myNickName === userName) return;
 
-          return (
-            <FriendProfile
-              key={idx + 100}
-              nickName={userName}
-              color={connectUser[userName].color}
-            />
-          );
+          return <FriendProfile key={idx + 100} nickName={userName} color={connectUser[userName].color} />;
         })}
       </FooterFriendsDiv>
     );
@@ -87,7 +81,7 @@ function Footer(props) {
     <FooterContainer>
       {micState}
       {profiles}
-      <FriendInvite />
+      <FriendInvite currentUser={props.currentUser} />
     </FooterContainer>
   );
 }
