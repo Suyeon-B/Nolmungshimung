@@ -33,7 +33,7 @@ router.post("/find/:id", async function (req, res, next) {
 
   console.log(`url 은 : `, url);
   request({url: url, method: "GET"}, function (err, response, body){
-    console.log(body)
+    console.log('응답은 : ', err, response, body)
     return res.send(
       JSON.stringify({
         status: 400,
