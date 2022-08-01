@@ -96,7 +96,8 @@ const SearchListRoute = ({
           /> */}
           <CommonBtn
             icon={PlusCircleTwoTone}
-            style={{ fontSize: "30px" }}
+            // style={{ fontSize: "30px" }}
+            fontSize="30"
             twoToneColor="#FF8A3D"
           />
           <div className={"dropDownMenu"}>

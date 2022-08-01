@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Popover, Button, Modal, Space } from "antd";
-import { UsergroupAddOutlined } from "@ant-design/icons";
+import { UsergroupAddOutlined, CloseOutlined } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import Badge from "./Badge";
 // import InviteEmailInput from "./InviteEmailInput";
 
-function FriendInvite() {
+function FriendInvite({ currentUser }) {
   const { projectId } = useParams();
   const [email, setEmail] = useState("");
   const [friends, setFriends] = useState([
@@ -38,16 +38,13 @@ function FriendInvite() {
   };
 
   useEffect(() => {
-    fetch(
-      `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/friends/${projectId}`,
-      {
-        method: "get",
-        headers: {
-          "content-type": "application/json",
-        },
-        credentials: "include",
-      }
-    )
+    fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/friends/${projectId}`, {
+      method: "get",
+      headers: {
+        "content-type": "application/json",
+      },
+      credentials: "include",
+    })
       .then((res) => res.json())
       .then((res) => {
         setFriends(res.map((el) => el[2]));
@@ -110,7 +107,38 @@ function FriendInvite() {
       sendInviteEmail();
     }
   };
+
+  const deleteFriendDiv = (el) => {
+    const deleteDiv = document.getElementById(el);
+    deleteDiv.remove();
+  };
+
+  const onDelete = async (event) => {
+    if (confirm("프로젝트 멤버에서 삭제하시겠어요?")) {
+      if (currentUser === event) {
+        alert("셀프 삭제는 할 수 없어요 🥲");
+        return;
+      }
+
+      deleteFriendDiv(event);
+      const data = {
+        email: event,
+      };
+      const response = await fetch(
+        `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/memberFriend/${projectId}`,
+        {
+          method: "post",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+    }
+  };
+
   const text = <FriendInviteTitle>친구초대</FriendInviteTitle>;
+
   const content = (
     <div
       style={{
@@ -125,26 +153,28 @@ function FriendInvite() {
           value={email}
           onChange={onChangeEmail}
           onKeyPress={handleOnKeyPress}
+          placeholder="이메일을 적어주세요."
           autoFocus="autofocus"
         />
-        <UsergroupAddOutlined
-          style={{ fontSize: "25px", color: "white" }}
-          onClick={sendInviteEmail}
-        />
+        <UsergroupAddOutlined style={{ fontSize: "25px", color: "white" }} onClick={sendInviteEmail} />
       </InviteForm>
-      {friends.map((el, i) => (
-        <p key={i}>{el}</p>
-      ))}
+      <InvitedFriends>
+        {friends.map((el, i) => (
+          <div className="friend" key={i} id={el}>
+            {el}
+            <DeleteBtn
+              onClick={() => {
+                onDelete(el);
+              }}
+            />
+          </div>
+        ))}
+      </InvitedFriends>
     </div>
   );
 
   return (
-    <Popover
-      placement="rightBottom"
-      title={text}
-      content={content}
-      trigger="click"
-    >
+    <Popover placement="rightBottom" title={text} content={content} trigger="click">
       <UsergroupAddOutlined style={{ fontSize: "28px" }} />
     </Popover>
   );
@@ -157,6 +187,38 @@ const FriendInviteTitle = styled.span`
   font-size: 20px;
   line-height: 59px;
   margin-left: 40%;
+`;
+
+CloseOutlined;
+const InvitedFriends = styled.div`
+  .friend {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 80%;
+    margin-left: 10%;
+    padding: 0px 5px 0px 5px;
+  }
+  .friend:hover {
+    background: #ebebeb;
+    border-radius: 5px;
+    transition: background 0.3s ease, color 0.1s ease;
+  }
+`;
+
+const DeleteBtn = styled(CloseOutlined)`
+  color: black;
+  fontweight: normal;
+  font-size: 10px;
+
+  &:hover {
+    color: red;
+    transition: color 0.3s ease, color 0.1s ease;
+  }
+  &:active {
+    font-size: 11px;
+    transition: font-size 0.3s ease, color 0.1s ease;
+  }
 `;
 
 const InviteForm = styled.div`
