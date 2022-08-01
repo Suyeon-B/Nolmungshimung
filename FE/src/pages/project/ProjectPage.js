@@ -39,6 +39,20 @@ const ProjectPage = (props) => {
   const [connectUser, setConnectUser] = useState({});
   const [attentionIndex, setAttentionIndex] = useState(-1);
 
+  const randomRGB = function () {
+    let rgb = "";
+    rgb += (Math.floor(Math.random() * 90 + 1) + 130)
+      .toString(16)
+      .padStart(2, "0");
+    rgb += (Math.floor(Math.random() * 90 + 1) + 130)
+      .toString(16)
+      .padStart(2, "0");
+    rgb += (Math.floor(Math.random() * 90 + 1) + 130)
+      .toString(16)
+      .padStart(2, "0");
+    return "#" + rgb;
+  };
+  console.log(randomRGB());
   const colors = {
     // "#FF8A3D": false,
     "#8DD664": false,
@@ -102,7 +116,7 @@ const ProjectPage = (props) => {
         //유저가 나간 경유
         if (newUserArr.length > currentArr.length) {
           diff = newUserArr.filter((el) => !currentArr.includes(el));
-          colors[newUser[diff[0]].color] = false;
+          // colors[newUser[diff[0]].color] = false;
           delete newUser[diff[0]];
           return newUser;
         } else if (newUserArr.length === currentArr.length) {
@@ -116,7 +130,7 @@ const ProjectPage = (props) => {
           newUser = {
             ...newUser,
             [user]: {
-              color: getColor(),
+              color: randomRGB(),
               selectedIndex: connectUserInfo[user].selectedIndex,
             },
           };
