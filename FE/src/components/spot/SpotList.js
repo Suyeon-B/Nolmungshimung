@@ -175,6 +175,7 @@ function SpotList({
       newState[sInd][source.index].user_name = null;
       newState[sInd][source.index].lock = "white";
       setItemRoute(newState);
+      setIsDrage(true);
       return;
     }
     const dInd = +destination.droppableId;
