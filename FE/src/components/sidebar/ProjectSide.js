@@ -97,12 +97,7 @@ function ProjectSide() {
 
   return (
     <>
-      <StyledMenu
-        theme="Light"
-        mode="inline"
-        defaultSelectedKeys={["1"]}
-        items={[LogoObj, ...items]}
-      />
+      <StyledMenu theme="Light" mode="inline" defaultSelectedKeys={["1"]} items={[LogoObj, ...items]} />
       <Profile />
     </>
   );
@@ -136,7 +131,6 @@ const ProfileCircle = styled(ProfileDetailComponent)`
   align-items: center;
   color: white;
   cursor: pointer;
-  font-family: "Rounded Mplus 1c Bold";
   font-style: normal;
   font-weight: 700;
   font-size: 25px;

@@ -17,7 +17,6 @@ const Button = styled.button`
   border-radius: 30px;
   border: 0;
   cursor: pointer;
-  font-family: "Rounded Mplus 1c Bold";
   font-style: normal;
   font-weight: 700;
   font-size: 20px;

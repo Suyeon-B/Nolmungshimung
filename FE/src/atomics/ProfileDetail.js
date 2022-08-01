@@ -47,7 +47,6 @@ const ProfileHoverBtn = styled.div`
   align-items: center;
   color: white;
   cursor: pointer;
-  font-family: "Rounded Mplus 1c Bold";
   font-style: normal;
   font-weight: 700;
   font-size: 25px;

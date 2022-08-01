@@ -48,9 +48,7 @@ const SearchListRoute = ({
       input: route.road_address_name + "" + route.place_name,
       place_id: route.id,
       place_name: route.place_name,
-      road_address_name: route.road_address_name
-        ? route.road_address_name
-        : route.address_name,
+      road_address_name: route.road_address_name ? route.road_address_name : route.address_name,
       category_group_name: route.category_group_name,
       phone: route.phone,
       place_url: route.place_url,
@@ -114,9 +112,7 @@ const SearchListRoute = ({
       <StyledP>{route.category_group_name}</StyledP>
       {route.road_address_name ? (
         <div>
-          <p title={route.road_address_name}>
-            {route.road_address_name.substr(8)}
-          </p>
+          <p title={route.road_address_name}>{route.road_address_name.substr(8)}</p>
           {/* <p title = {route.address_name}>{route.address_name}</p> */}
         </div>
       ) : (
@@ -134,11 +130,7 @@ const SearchListRoute = ({
       </a>
       {contests !== null && (
         <Suspense fallback={<div>Loading...</div>}>
-          <SearchDetail
-            onClose={onClose}
-            visible={visible}
-            contents={contests}
-          />
+          <SearchDetail onClose={onClose} visible={visible} contents={contests} />
         </Suspense>
       )}
     </StyledLi>
@@ -171,9 +163,7 @@ const StyledLi = styled.li`
 `;
 
 const StyledTile = styled.h2`
-  font-style: normal;
-  font-weight: 700;
-  font-size: 18px;
+  font-size: 20px;
   color: #232a3c;
 
   /* margin-bottom: 14px; */

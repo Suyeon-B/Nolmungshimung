@@ -24,17 +24,14 @@ function SignInForm() {
   });
 
   async function singInUser(data) {
-    await fetch(
-      `https://${process.env.REACT_APP_SERVER_IP}:8443/users/signin`,
-      {
-        method: "post",
-        headers: {
-          "content-type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify(data),
-      }
-    )
+    await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/users/signin`, {
+      method: "post",
+      headers: {
+        "content-type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(data),
+    })
       .then((res) => res.json())
       .then(async (res) => {
         console.log("res : ", res);
@@ -78,20 +75,8 @@ function SignInForm() {
 
   return (
     <Form onSubmit={onSubmitSignUp}>
-      <Input
-        placeholder="jeju@island.com"
-        type="text"
-        value={id}
-        onChange={onchangeId}
-        required
-      />
-      <Input
-        placeholder="password"
-        type="password"
-        value={password}
-        onChange={onchangePassword}
-        required
-      />
+      <Input placeholder="jeju@island.com" type="text" value={id} onChange={onchangeId} required />
+      <Input placeholder="password" type="password" value={password} onChange={onchangePassword} required />
       <SubmitInput value="로그인" type="submit" />
       <br />
       <a href={kauthUrl}>
@@ -133,7 +118,6 @@ const SubmitInput = styled.input`
   border-radius: 30px;
   background: linear-gradient(90deg, #ff7a00 0%, #ffa149 50%, #febc7f 100%);
   border: 0;
-  font-family: Rounded Mplus 1c Bold;
   font-style: normal;
   font-weight: 700;
   font-size: 20px;
