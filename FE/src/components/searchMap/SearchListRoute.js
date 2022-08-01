@@ -70,9 +70,7 @@ const SearchListRoute = ({
   return (
     <StyledLi
       id={id}
-      style={{
-        backgroundColor: selected ? "#ebebeb" : "",
-      }}
+      selected={selected}
       key={idx}
       onMouseOver={() => {
         overEvent(idx);
@@ -111,6 +109,7 @@ const SearchListRoute = ({
           </div>
         </StyledDropDown>
       </StyledRouteDiv>
+      <StyledP>{route.category_group_name}</StyledP>
       {route.road_address_name ? (
         <div>
           <p title={route.road_address_name}>{route.road_address_name.substr(8)}</p>
@@ -119,10 +118,14 @@ const SearchListRoute = ({
       ) : (
         <p>{route.address_name.substr(8)}</p>
       )}
-      <p>{route.category_group_name}</p>
+
       <p>{route.phone}</p>
       {/* <a target="_blank" href={route.place_url} onClick={showDrawer}> */}
-      <a target="_blank" onClick={showDrawer} style={{ color: "#FF8A3D" }}>
+      <a
+        target="_blank"
+        onClick={showDrawer}
+        style={{ color: "#FF8A3D", fontSize: "13px" }}
+      >
         상세보기
       </a>
       {contests !== null && (
@@ -133,17 +136,37 @@ const SearchListRoute = ({
     </StyledLi>
   );
 };
+
+const StyledP = styled.p`
+  display: inline-block;
+  /* vertical-align: top; */
+  font-size: 14px;
+  color: #8f8f8f;
+  margin-bottom: 12px;
+`;
 const StyledLi = styled.li`
-  border-bottom: 2px solid #ebebeb;
   padding-top: 20px;
   padding-bottom: 15px;
   padding-left: 25px;
+  border: ${(props) =>
+    props.selected ? "2px solid #a5a5a5" : "2px solid white"};
+
+  border-bottom: ${(props) =>
+    props.selected ? "2px solid #a5a5a5" : "2px solid #ebebeb"};
+
+  background-color: ${(props) => (props.selected ? "#ebebeb" : "")};
+
+  &:hover {
+    background-color: #ebebeb;
+    border: 2px solid #ebebeb;
+  }
 `;
 
 const StyledTile = styled.h2`
   font-size: 20px;
   color: #232a3c;
-  margin-bottom: 14px;
+
+  /* margin-bottom: 14px; */
 `;
 
 const StyledDropDown = styled.div`
@@ -181,6 +204,7 @@ const StyledRouteDiv = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
+  height: 20px;
 `;
 const StyledBtn = styled.button`
   outline: 0;
