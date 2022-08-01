@@ -120,7 +120,7 @@ function SpotList({
     // webkitBoxSizing: "border-box",
 
     // border: `4px solid ${color}`,
-    boxShadow: `inset 0px 0px 0px 3px ${color}`,
+    boxShadow: color === "white" ? "none" : `inset 0px 0px 0px 3px ${color}`,
     // border: `3px solid ${color}`,
     // outline: `2px solid ${color}`,
     // outlineOffset: "-5px",

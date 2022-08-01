@@ -81,6 +81,7 @@ const StyledImgDiv = styled.div`
   left: 25px;
   top: 15px;
   z-index: 2;
+  cursor: pointer;
 `;
 const Logo = styled.div`
   color: #ff8a3d;

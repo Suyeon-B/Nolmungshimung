@@ -104,14 +104,9 @@ function PlanList({
     const { source, destination } = result;
     const lockAcquire = newState[source.droppableId][source.index].userName;
 
-    if (
-      lockAcquire === null ||
-      lockAcquire === userName ||
-      lockAcquire === undefined
-    ) {
+    if (lockAcquire === null || lockAcquire === userName || lockAcquire === undefined) {
       // console.log(newState[source.droppableId][source.index].lock);
-      newState[source.droppableId][source.index].lock =
-        connectUser[userName].color;
+      newState[source.droppableId][source.index].lock = connectUser[userName].color;
       newState[source.droppableId][source.index].user_name = userName;
     } else {
       alert("다른 친구가 옮기고 있습니다 ! 잠시 기다려 주세요!");
@@ -143,12 +138,7 @@ function PlanList({
 
       setRoutes(newState);
     } else {
-      const result = move(
-        [...routes][sInd],
-        [...routes][dInd],
-        source,
-        destination
-      );
+      const result = move([...routes][sInd], [...routes][dInd], source, destination);
       const newState = [...[...routes]];
       newState[sInd] = result[sInd];
       newState[dInd] = result[dInd];
@@ -182,20 +172,12 @@ function PlanList({
   return (
     <div>
       <SidePlanListDiv>
-        <StyledDragDropContext
-          onDragEnd={onDragEnd}
-          onDragStart={onDragStart}
-          onDragOver={onDragOver}
-        >
+        <StyledDragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart} onDragOver={onDragOver}>
           {[...routes].map((el, ind) => (
             <div key={ind} ref={(el) => (droppableRef.current[+ind] = el)}>
               <Droppable key={ind} droppableId={`${ind}`}>
                 {(provided, snapshot) => (
-                  <div
-                    ref={provided.innerRef}
-                    style={getListStyle(snapshot.isDragging)}
-                    {...provided.droppableProps}
-                  >
+                  <div ref={provided.innerRef} style={getListStyle(snapshot.isDragging)} {...provided.droppableProps}>
                     <DateDetailBtnDiv
                       data-idx={ind}
                       onClick={onClick}
@@ -220,12 +202,7 @@ function PlanList({
                                 aria-hidden="true"
                                 title="fontSize small"
                               >
-                                <circle
-                                  data-idx={ind}
-                                  cx="5"
-                                  cy="5"
-                                  r="5"
-                                ></circle>
+                                <circle data-idx={ind} cx="5" cy="5" r="5"></circle>
                               </svg>
                             );
                           }
@@ -234,11 +211,7 @@ function PlanList({
                     </DateDetailBtnDiv>
                     {el.map((item, index) =>
                       item.user_name === null || item.user_name === userName ? (
-                        <Draggable
-                          key={item.uid}
-                          draggableId={item.uid}
-                          index={index}
-                        >
+                        <Draggable key={item.uid} draggableId={item.uid} index={index}>
                           {(provided, snapshot) => (
                             <PlanItemDiv
                               userColor={item.lock}
@@ -255,9 +228,7 @@ function PlanList({
                               )}
                             >
                               <ItemInnerDiv>
-                                {item.place_name.length > 11
-                                  ? item.place_name.slice(0, 12) + " ..."
-                                  : item.place_name}
+                                {item.place_name.length > 11 ? item.place_name.slice(0, 12) + " ..." : item.place_name}
                                 <div
                                   type="button"
                                   onClick={() => {
@@ -318,9 +289,7 @@ function PlanList({
                               )}
                             >
                               <ItemInnerDiv>
-                                {item.place_name.length > 11
-                                  ? item.place_name.slice(0, 12) + " ..."
-                                  : item.place_name}
+                                {item.place_name.length > 11 ? item.place_name.slice(0, 12) + " ..." : item.place_name}
                                 <div
                                   type="button"
                                   onClick={() => {
@@ -405,11 +374,9 @@ const DateDetailBtnDiv = styled.div`
 
   border-radius: 5px;
 
-  background-color: ${(props) =>
-    props.selected === props["data-idx"] && "#ebebeb"};
+  background-color: ${(props) => props.selected === props["data-idx"] && "#ebebeb"};
 
-  background-color: ${(props) =>
-    props.attention === props["data-idx"] && "yellow"};
+  background-color: ${(props) => props.attention === props["data-idx"] && "yellow"};
 
   cursor: pointer;
   /* transition: all ease 2s 0s; */
