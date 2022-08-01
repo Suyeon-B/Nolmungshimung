@@ -27,7 +27,6 @@ const FriendProfileContainer = styled.div`
   border: 1.5px solid #e7e7e7;
 `;
 const FriendNameText = styled.span`
-  font-family: "Rounded Mplus 1c Bold";
   font-style: normal;
   font-weight: 700;
   font-size: 15px;

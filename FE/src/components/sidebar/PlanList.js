@@ -446,7 +446,6 @@ const ItemInnerDiv = styled.div`
   // margin-right: 10px;
   // margin-left: 10px;
 
-  font-family: "Inter";
   font-style: normal;
   font-weight: 700;
   font-size: 16px;

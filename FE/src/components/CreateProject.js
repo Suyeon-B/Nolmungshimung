@@ -197,7 +197,6 @@ const CreateProjectSubmit = styled.button`
   border: 0;
   background: #ff8a3d;
   border-radius: 20px;
-  font-family: "Rounded Mplus 1c Bold";
   font-style: normal;
   font-weight: 700;
   font-size: 25px;

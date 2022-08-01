@@ -238,7 +238,6 @@ const ResultImage = styled.img`
 `;
 
 const ResultProjectTitle = styled.span`
-  font-family: "Inter";
   font-style: normal;
   font-weight: 900;
   font-size: 35px;
@@ -247,14 +246,12 @@ const ResultProjectTitle = styled.span`
 `;
 
 const ResultXTitle = styled.span`
-  font-family: "Inter";
   font-style: normal;
   font-weight: 700;
   font-size: 20px;
 `;
 
 const ResultTitle = styled.section`
-  font-family: "Inter";
   font-style: normal;
   font-weight: 800;
   font-size: 25px;
@@ -270,8 +267,6 @@ const ResultLine = styled.div`
 
 const ResultRoute = styled.li`
   list-style: none;
-
-  font-family: "Inter";
   font-style: normal;
   font-weight: 700;
   font-size: 17px;
@@ -299,7 +294,6 @@ const UploadBtn = styled.button`
   line-height: 36px; */
   height: 40px;
   border: 0;
-  font-family: "Inter";
   font-weight: 600;
   font-size: 17px;
   color: #f8f9fa;

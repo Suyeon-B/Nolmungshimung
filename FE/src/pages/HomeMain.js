@@ -57,7 +57,6 @@ const StyledWhiteBtn = styled(StyledBtn)`
 `;
 
 const StyledTitle = styled.h1`
-  /* font-family: 'Rounded Mplus 1c Bold'; */
   font-style: normal;
   font-weight: 900;
   font-size: 60px;
@@ -65,7 +64,7 @@ const StyledTitle = styled.h1`
   /* line-height: 89px; */
   text-align: center;
 
-  color: #000000;
+  color: #232a3c;
 `;
 
 const StyledHomeMain = styled.div`
