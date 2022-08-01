@@ -12,13 +12,7 @@ function SpotRouteTitle(props) {
   useEffect(() => {
     if (notifyFlag === false) return;
     // console.log(notifyFlag);
-    socket.emit(
-      "attention",
-      props.date,
-      props.selectedIndex,
-      props.projectId,
-      props.userName
-    );
+    socket.emit("attention", props.date, props.selectedIndex, props.projectId, props.userName);
     setNotifyFlag(false);
     // console.log("attention");
   }, [notifyFlag]);
@@ -78,7 +72,6 @@ const AlertBtnWrapper = styled.section`
   }
 
   .alertBtnText {
-    margin-top: 3px;
     margin-left: 5px;
   }
 `;
@@ -116,7 +109,7 @@ const SpotRouteTitleBtn = styled.button`
   background-color: #ff8a3d;
   border: 0;
   border-radius: 5px;
-  padding: 14px;
+  padding: 12px 14px 14px 14px;
   color: #f8f9fa;
   font-weight: 800;
   cursor: pointer;

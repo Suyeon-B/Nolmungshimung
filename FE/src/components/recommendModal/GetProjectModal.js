@@ -199,7 +199,7 @@ const StyledGetBtn = styled.button`
   background-color: #ff8a3d;
   border: none;
   color: white;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 700;
   width: 84px;
   height: 32px;

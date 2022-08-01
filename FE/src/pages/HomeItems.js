@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import "../App.css";
 
 const HomeItems = ({ onClickLogOut, goRecommend }) => {
   return (
@@ -68,8 +69,7 @@ const StyledTitle = styled.h1`
   font-size: 50px;
   margin-bottom: 24px;
   text-align: center;
-
-  color: #000000;
+  color: #232a3c;
 `;
 
 const StyledHomeItems = styled.div`

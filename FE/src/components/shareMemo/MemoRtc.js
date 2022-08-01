@@ -131,17 +131,18 @@ const StyledEditorBox = styled.div`
   justify-content: center;
   align-items: center;
   height: 47%;
-  /* background-color: red; */
-
   width: 58vw;
+  font-size: medium;
 `;
 
 const EditorContainer = styled.div`
-  /* background-color: blue; */
   width: 100%;
   height: 100%;
   .quill {
     height: 84%;
+  }
+  .ql-editor {
+    font-size: medium;
   }
   div#container {
     height: 35vh;
@@ -164,8 +165,6 @@ const EditorContainer = styled.div`
   .ql-cursor-flag {
     visibility: visible !important;
     opacity: 1 !important;
-  }
-  .show-flag {
   }
 `;
 
