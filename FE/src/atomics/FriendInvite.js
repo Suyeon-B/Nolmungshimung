@@ -38,13 +38,16 @@ function FriendInvite() {
   };
 
   useEffect(() => {
-    fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/friends/${projectId}`, {
-      method: "get",
-      headers: {
-        "content-type": "application/json",
-      },
-      credentials: "include",
-    })
+    fetch(
+      `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/friends/${projectId}`,
+      {
+        method: "get",
+        headers: {
+          "content-type": "application/json",
+        },
+        credentials: "include",
+      }
+    )
       .then((res) => res.json())
       .then((res) => {
         setFriends(res.map((el) => el[2]));
@@ -149,13 +152,13 @@ function FriendInvite() {
           value={email}
           onChange={onChangeEmail}
           onKeyPress={handleOnKeyPress}
-<<<<<<< HEAD
           placeholder="이메일을 적어주세요."
-=======
           autoFocus="autofocus"
->>>>>>> 450012fe9a0ca08d10c0edb42ab664f65b166068
         />
-        <UsergroupAddOutlined style={{ fontSize: "25px", color: "white" }} onClick={sendInviteEmail} />
+        <UsergroupAddOutlined
+          style={{ fontSize: "25px", color: "white" }}
+          onClick={sendInviteEmail}
+        />
       </InviteForm>
       <InvitedFriends>
         {friends.map((el, i) => (
@@ -173,7 +176,12 @@ function FriendInvite() {
   );
 
   return (
-    <Popover placement="rightBottom" title={text} content={content} trigger="click">
+    <Popover
+      placement="rightBottom"
+      title={text}
+      content={content}
+      trigger="click"
+    >
       <UsergroupAddOutlined style={{ fontSize: "28px" }} />
     </Popover>
   );
