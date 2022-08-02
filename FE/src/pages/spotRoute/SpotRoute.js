@@ -5,9 +5,7 @@ import MarkMap from "../../components/MarkMap/MarkMap";
 import MemoRtc from "../../components/shareMemo/MemoRtc";
 import Cursor from "../shareMemo/Cursor";
 // import SearchDetail from "../../components/searchMap/SearchDetail";
-const SearchDetail = React.lazy(() =>
-  import("../../components/searchMap/SearchDetail")
-);
+const SearchDetail = React.lazy(() => import("../../components/searchMap/SearchDetail"));
 import { spotDetail } from "../../components/spot/SpotDetail";
 // import { AlertFilled } from "@ant-design/icons";
 import socket from "../../socket";
@@ -42,9 +40,7 @@ function SpotRoute({
         input: value.road_address_name + "" + value.place_name,
         place_id: value.id,
         place_name: value.place_name,
-        road_address_name: value.road_address_name
-          ? value.road_address_name
-          : value.address_name,
+        road_address_name: value.road_address_name ? value.road_address_name : value.address_name,
         category_group_name: value.category_group_name,
         phone: value.phone,
         place_url: value.place_url,
@@ -71,13 +67,7 @@ function SpotRoute({
   useEffect(() => {
     if (notifyFlag === false) return;
     // console.log(notifyFlag);
-    socket.emit(
-      "attention",
-      culTripTermData(startDate, selectedIndex),
-      selectedIndex,
-      projectId,
-      userName
-    );
+    socket.emit("attention", culTripTermData(startDate, selectedIndex), selectedIndex, projectId, userName);
     setNotifyFlag(false);
     // console.log("attention");
   }, [notifyFlag]);
@@ -104,34 +94,41 @@ function SpotRoute({
         selectedIndex={selectedIndex}
         userName={userName}
       />
+      <SpotRouteWrapper>
+        <SpotRouteSection>
+          <SpotList
+            selectedIndex={selectedIndex}
+            dayItem={item}
+            setItemRoute={setItemRoute}
+            setIsDrage={setIsDrage}
+            setIsAddDel={setIsAddDel}
+            handleVisible={handleVisible}
+            handleContents={handleContents}
+            userName={userName}
+          />
+          <SpotRouteMap id="myMap" />
+        </SpotRouteSection>
+        <MemoRtc project_Id={itemId} userName={userName} />
+      </SpotRouteWrapper>
 
-      <SpotRouteSection>
-        <SpotList
-          selectedIndex={selectedIndex}
-          dayItem={item}
-          setItemRoute={setItemRoute}
-          setIsDrage={setIsDrage}
-          setIsAddDel={setIsAddDel}
-          handleVisible={handleVisible}
-          handleContents={handleContents}
-          userName={userName}
-        />
-        <SpotRouteMap id="myMap" />
-      </SpotRouteSection>
       <Cursor project_Id={itemId} selectedIndex={selectedIndex} />
-      <MemoRtc project_Id={itemId} userName={userName} />
+
       {contents !== null && (
         <Suspense fallback={<div>Loading...</div>}>
-          <SearchDetail
-            onClose={onClose}
-            visible={visible}
-            contents={contents}
-          />
+          <SearchDetail onClose={onClose} visible={visible} contents={contents} />
         </Suspense>
       )}
     </SpotRouteContainer>
   );
 }
+
+const SpotRouteWrapper = styled.div`
+  height: 100vh;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 
 // width: calc(100% - 100px);
 const SpotRouteContainer = styled.div`
@@ -143,7 +140,7 @@ const SpotRouteContainer = styled.div`
 `;
 
 const SpotRouteMap = styled.div`
-  width: 47%;
+  width: 48vw;
   height: 100%;
   margin-left: 19px;
   border-radius: 15px;
@@ -156,7 +153,7 @@ const SpotRouteSection = styled.section`
   flex-direction: row;
   width: 100%;
   height: calc(50% - 37px);
-  justify-content: center;
+  justify-content: space-between;
   margin-bottom: 20px;
 `;
 

@@ -10,6 +10,7 @@ import TrashCanIcon from "../../atomics/Icon";
 
 const SidePlanListDiv = styled.div`
   height: 100%;
+  width: 24vw;
 `;
 const StyledDragDropContext = styled(DragDropContext)``;
 
@@ -87,7 +88,7 @@ const getListStyle = (isDraggingOver) => ({
   borderRadius: "15px",
   padding: grid,
   height: "99%",
-  width: 343,
+  width: "24vw",
   overflow: "scroll",
 });
 
