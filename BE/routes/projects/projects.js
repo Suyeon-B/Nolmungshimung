@@ -107,18 +107,6 @@ router.post("/upload", async (req, res) => {
           console.log(`Hash table ${i}번째 error : ${error}`);
           return res.send(404).send({ error: `hash table ${i}번째 upload Fail` });
         }
-        try {
-          // category save
-          // find -> push -> save
-          const hashTags = await HashTags.find();
-          // console.log(hashTags[0].hash_tag_names);
-          hashTags[0].hash_tag_names.push(reqHashTags[i]);
-          // console.log(hashTags[0].hash_tag_names);
-          await hashTags[0].save();
-        } catch (error) {
-          console.log(`Hash tag ${i}번째 error : ${error} hashtags DataBase를 만들어 주세요.`);
-          return res.send(404).send({ error: `hash tag ${i}번째 save Fail` });
-        }
       }
     }
 
