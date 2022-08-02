@@ -19,9 +19,7 @@ import Loading from "../../components/loading/Loading";
 import socket from "../../socket";
 
 async function fetchProjectById(_id) {
-  const response = await fetch(
-    `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`
-  );
+  const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`);
   console.log(response);
   return response.json();
 }
@@ -52,9 +50,9 @@ const ProjectPage = (props) => {
   }, []);
   let userName = auth?.user?.user_name;
 
-  console.log(connectUser);
+  // console.log(connectUser);
   useEffect(() => {
-    console.log(auth);
+    // console.log(auth);
 
     if (projectId === null) return;
     async function fetchInfo() {
@@ -82,14 +80,8 @@ const ProjectPage = (props) => {
 
   useEffect(() => {
     // 접속한 유저에 대한 정보 저장하기
-    if (
-      auth === null ||
-      auth === undefined ||
-      auth.user === undefined ||
-      auth.user === null
-    )
-      return;
-    console.log("projectJoin");
+    if (auth === null || auth === undefined || auth.user === undefined || auth.user === null) return;
+    // console.log("projectJoin");
     socket.emit("projectJoin", [projectId, auth.user.user_name]);
     return () => {
       socket.emit("projectLeave", [projectId, userName]);
@@ -106,17 +98,14 @@ const ProjectPage = (props) => {
       console.log("socket 이벤트");
       async function UpdateInfo() {
         try {
-          await fetch(
-            `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${projectId}`,
-            {
-              method: "PATCH",
-              headers: {
-                "content-type": "application/json",
-              },
-              // credentials: "include",
-              body: JSON.stringify(itemsRoute),
-            }
-          ).then((res) => res.json());
+          await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${projectId}`, {
+            method: "PATCH",
+            headers: {
+              "content-type": "application/json",
+            },
+            // credentials: "include",
+            body: JSON.stringify(itemsRoute),
+          }).then((res) => res.json());
         } catch (err) {
           console.log(err);
         }

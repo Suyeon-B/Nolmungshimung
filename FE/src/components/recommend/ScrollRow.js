@@ -10,7 +10,7 @@ const ScrollRow = ({ el, i }) => {
         <RecommendItems>
           <div
             className="background-img"
-            style={{ backgroundImage: `linear-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),url(${el.img})` }}
+            style={{ backgroundImage: `linear-gradient( rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),url(${el.img})` }}
           >
             <div className="uploadProjectInfo-title">{el.project_title}</div>
             <HashTagBackground>
