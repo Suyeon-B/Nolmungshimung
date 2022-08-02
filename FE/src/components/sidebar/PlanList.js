@@ -98,7 +98,7 @@ function PlanList({
     return <div>Loading...</div>;
   }
 
-  async function onDragStart(result) {
+  function onDragStart(result) {
     console.log("drag start");
     const newState = [...[...routes]];
     const { source, destination } = result;
