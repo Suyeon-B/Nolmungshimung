@@ -67,9 +67,9 @@ const ProjectPage = (props) => {
   }, []);
   let userName = auth?.user?.user_name;
 
-  console.log(connectUser);
+  // console.log(connectUser);
   useEffect(() => {
-    console.log(auth);
+    // console.log(auth);
 
     if (projectId === null) return;
     async function fetchInfo() {
@@ -87,14 +87,14 @@ const ProjectPage = (props) => {
 
   useEffect(() => {
     socket.on("connectUser", (connectUserInfo) => {
-      console.log("connectUser", connectUserInfo);
+      // console.log("connectUser", connectUserInfo);
       // console.log(colors);
       setConnectUser((prev) => {
-        console.log(prev);
+        // console.log(prev);
         let newUser = { ...prev };
         const newUserArr = Object.keys(newUser);
         const currentArr = Object.keys(connectUserInfo);
-        console.log(newUserArr, currentArr);
+        // console.log(newUserArr, currentArr);
         let diff;
         //유저가 나간 경유
         if (newUserArr.length > currentArr.length) {
@@ -111,7 +111,7 @@ const ProjectPage = (props) => {
         }
         // 기존 정보가 아닌 다른 정보
         diff = currentArr.filter((el) => !newUserArr.includes(el));
-        console.log(diff);
+        // console.log(diff);
         for (let user of diff) {
           newUser = {
             ...newUser,
@@ -132,7 +132,7 @@ const ProjectPage = (props) => {
   useEffect(() => {
     // 접속한 유저에 대한 정보 저장하기
     if (auth === null || auth === undefined || auth.user === undefined || auth.user === null) return;
-    console.log("projectJoin");
+    // console.log("projectJoin");
     socket.emit("projectJoin", [projectId, auth.user.user_name]);
     return () => {
       socket.emit("projectLeave", [projectId, userName]);

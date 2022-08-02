@@ -435,7 +435,7 @@ const SpotCategory = styled.span`
   font-style: normal;
   color: #adadad;
   font-weight: 700;
-  font-size: 10px;
+  font-size: 12px;
   margin-left: 35px;
   margin-top: 3px;
 `;
