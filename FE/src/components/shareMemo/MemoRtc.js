@@ -139,6 +139,7 @@ const EditorContainer = styled.div`
   }
   .ql-toolbar.ql-snow {
     border-radius: 5px 5px 0px 0px;
+    display: flex;
   }
   .ql-container.ql-snow {
     border-radius: 0 0 5px 5px;
