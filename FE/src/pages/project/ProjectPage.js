@@ -19,7 +19,9 @@ import Loading from "../../components/loading/Loading";
 import socket from "../../socket";
 
 async function fetchProjectById(_id) {
-  const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`);
+  const response = await fetch(
+    `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`
+  );
   console.log(response);
   return response.json();
 }
@@ -36,23 +38,6 @@ const ProjectPage = (props) => {
   const [isAddDel, setIsAddDel] = useState(false);
   const [connectUser, setConnectUser] = useState({});
   const [attentionIndex, setAttentionIndex] = useState(-1);
-
-  const randomRGB = function () {
-    let rgb = "";
-    rgb += (Math.floor(Math.random() * 90 + 1) + 130).toString(16).padStart(2, "0");
-    rgb += (Math.floor(Math.random() * 90 + 1) + 130).toString(16).padStart(2, "0");
-    rgb += (Math.floor(Math.random() * 90 + 1) + 130).toString(16).padStart(2, "0");
-    return "#" + rgb;
-  };
-
-  const getColor = () => {
-    for (let color in colors) {
-      if (!colors[color]) {
-        colors[color] = true;
-        return color;
-      }
-    }
-  };
 
   useEffect(() => {
     window.addEventListener("beforeunload", (event) => {
@@ -87,43 +72,9 @@ const ProjectPage = (props) => {
 
   useEffect(() => {
     socket.on("connectUser", (connectUserInfo) => {
-      console.log("connectUser", connectUserInfo);
-      // console.log(colors);
-      setConnectUser((prev) => {
-        console.log(prev);
-        let newUser = { ...prev };
-        const newUserArr = Object.keys(newUser);
-        const currentArr = Object.keys(connectUserInfo);
-        console.log(newUserArr, currentArr);
-        let diff;
-        //유저가 나간 경유
-        if (newUserArr.length > currentArr.length) {
-          diff = newUserArr.filter((el) => !currentArr.includes(el));
-          // colors[newUser[diff[0]].color] = false;
-          delete newUser[diff[0]];
-          return newUser;
-        } else if (newUserArr.length === currentArr.length) {
-          for (let user in newUser) {
-            newUser[user].selectedIndex = connectUserInfo[user].selectedIndex;
-          }
-          console.log(newUser);
-          return newUser;
-        }
-        // 기존 정보가 아닌 다른 정보
-        diff = currentArr.filter((el) => !newUserArr.includes(el));
-        console.log(diff);
-        for (let user of diff) {
-          newUser = {
-            ...newUser,
-            [user]: {
-              color: randomRGB(),
-              selectedIndex: connectUserInfo[user].selectedIndex,
-            },
-          };
-        }
-        return newUser;
-      });
+      setConnectUser(connectUserInfo);
     });
+
     return () => {
       socket.removeAllListeners("connectUser");
     };
@@ -131,7 +82,13 @@ const ProjectPage = (props) => {
 
   useEffect(() => {
     // 접속한 유저에 대한 정보 저장하기
-    if (auth === null || auth === undefined || auth.user === undefined || auth.user === null) return;
+    if (
+      auth === null ||
+      auth === undefined ||
+      auth.user === undefined ||
+      auth.user === null
+    )
+      return;
     console.log("projectJoin");
     socket.emit("projectJoin", [projectId, auth.user.user_name]);
     return () => {
@@ -149,14 +106,17 @@ const ProjectPage = (props) => {
       console.log("socket 이벤트");
       async function UpdateInfo() {
         try {
-          await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${projectId}`, {
-            method: "PATCH",
-            headers: {
-              "content-type": "application/json",
-            },
-            // credentials: "include",
-            body: JSON.stringify(itemsRoute),
-          }).then((res) => res.json());
+          await fetch(
+            `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${projectId}`,
+            {
+              method: "PATCH",
+              headers: {
+                "content-type": "application/json",
+              },
+              // credentials: "include",
+              body: JSON.stringify(itemsRoute),
+            }
+          ).then((res) => res.json());
         } catch (err) {
           console.log(err);
         }
