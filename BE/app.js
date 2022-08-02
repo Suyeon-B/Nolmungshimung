@@ -48,6 +48,21 @@ server.listen(3001, function () {
   console.log("Socket IO server listening on port 3001");
 });
 
+// 프로젝트에 유저 등록시 랜덤 색상
+const randomRGB = function () {
+  let rgb = "";
+  rgb += (Math.floor(Math.random() * 90 + 1) + 130)
+    .toString(16)
+    .padStart(2, "0");
+  rgb += (Math.floor(Math.random() * 90 + 1) + 130)
+    .toString(16)
+    .padStart(2, "0");
+  rgb += (Math.floor(Math.random() * 90 + 1) + 130)
+    .toString(16)
+    .padStart(2, "0");
+  return "#" + rgb;
+};
+
 const projectSocketRoom = {};
 const projectSchema = require("./models/Project");
 
@@ -86,24 +101,15 @@ io.on("connection", (socket) => {
   */
   socket.on("projectJoin", ([projectId, userName, selectedIndex]) => {
     try {
-      console.log("projectJoin", projectId);
       projectSocketRoom[projectId] = {
         ...projectSocketRoom[projectId],
         [userName]: {
           selectedIndex,
+          color: randomRGB(),
         },
       };
       socket.join(projectId);
       io.to(projectId).emit("connectUser", projectSocketRoom[projectId]);
-
-      // io.of("/").adapter.on("create-room", (room) => {
-      //   console.log(`room ${room} was created`);
-      // });
-
-      // io.of("/").adapter.on("join-room", (room, id) => {
-      //   console.log(`socket ${id} has joined room ${room}`);
-      // });
-      // console.log(socket);
     } catch (error) {
       console.log(error);
     }
