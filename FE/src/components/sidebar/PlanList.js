@@ -98,7 +98,7 @@ function PlanList({
     return <div>Loading...</div>;
   }
 
-  function onDragStart(result) {
+  async function onDragStart(result) {
     console.log("drag start");
     const newState = [...[...routes]];
     const { source, destination } = result;
@@ -116,7 +116,10 @@ function PlanList({
     } else {
       alert("다른 친구가 옮기고 있습니다 ! 잠시 기다려 주세요!");
     }
+    // console.log(newState);
     socket.emit("changeRoute", [newState, projectId]);
+    setRoutes(newState);
+    // setIsDrage(true);
   }
 
   function onDragEnd(result) {
