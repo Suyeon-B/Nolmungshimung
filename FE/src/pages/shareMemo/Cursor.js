@@ -80,7 +80,7 @@ function Cursor({ project_Id, selectedIndex }) {
       });
     });
   }, [connectUser]);
-  console.log(socket);
+  // console.log(socket);
   useEffect(() => {
     mouseUpdateEvent();
     return () => {
