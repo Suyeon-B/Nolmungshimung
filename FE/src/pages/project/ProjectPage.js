@@ -19,9 +19,7 @@ import Loading from "../../components/loading/Loading";
 import socket from "../../socket";
 
 async function fetchProjectById(_id) {
-  const response = await fetch(
-    `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`
-  );
+  const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`);
   console.log(response);
   return response.json();
 }
@@ -41,15 +39,9 @@ const ProjectPage = (props) => {
 
   const randomRGB = function () {
     let rgb = "";
-    rgb += (Math.floor(Math.random() * 90 + 1) + 130)
-      .toString(16)
-      .padStart(2, "0");
-    rgb += (Math.floor(Math.random() * 90 + 1) + 130)
-      .toString(16)
-      .padStart(2, "0");
-    rgb += (Math.floor(Math.random() * 90 + 1) + 130)
-      .toString(16)
-      .padStart(2, "0");
+    rgb += (Math.floor(Math.random() * 90 + 1) + 130).toString(16).padStart(2, "0");
+    rgb += (Math.floor(Math.random() * 90 + 1) + 130).toString(16).padStart(2, "0");
+    rgb += (Math.floor(Math.random() * 90 + 1) + 130).toString(16).padStart(2, "0");
     return "#" + rgb;
   };
 
@@ -139,13 +131,7 @@ const ProjectPage = (props) => {
 
   useEffect(() => {
     // 접속한 유저에 대한 정보 저장하기
-    if (
-      auth === null ||
-      auth === undefined ||
-      auth.user === undefined ||
-      auth.user === null
-    )
-      return;
+    if (auth === null || auth === undefined || auth.user === undefined || auth.user === null) return;
     console.log("projectJoin");
     socket.emit("projectJoin", [projectId, auth.user.user_name]);
     return () => {
@@ -163,17 +149,14 @@ const ProjectPage = (props) => {
       console.log("socket 이벤트");
       async function UpdateInfo() {
         try {
-          await fetch(
-            `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${projectId}`,
-            {
-              method: "PATCH",
-              headers: {
-                "content-type": "application/json",
-              },
-              // credentials: "include",
-              body: JSON.stringify(itemsRoute),
-            }
-          ).then((res) => res.json());
+          await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${projectId}`, {
+            method: "PATCH",
+            headers: {
+              "content-type": "application/json",
+            },
+            // credentials: "include",
+            body: JSON.stringify(itemsRoute),
+          }).then((res) => res.json());
         } catch (err) {
           console.log(err);
         }
