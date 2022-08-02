@@ -21,16 +21,12 @@ const TOOLBAR_OPTIONS = [
   ["link", "blockquote"],
 ];
 
-let newYtext = new Set();
-
 const MemoRtc = ({ project_Id, userName }) => {
-  // const auth = useAuth();
   let quillRef = null;
   let reactQuillRef = null;
   Quill.register("modules/cursors", QuillCursors);
   const [projectID, setProjectId] = useState(project_Id);
   const { connectUser, setConnectUser } = useContext(ConnectuserContext);
-  // const userName = sessionStorage.getItem("myNickname");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -40,34 +36,26 @@ const MemoRtc = ({ project_Id, userName }) => {
   useEffect(() => {
     attachQuillRefs();
 
-    // try {
     const ydoc = new Y.Doc();
     const provider = new WebrtcProvider(`${projectID}`, ydoc);
     const ytext = ydoc.getText(`${projectID}`);
-    // console.log("##@#@$@#$@#$@#@#");
-    // console.log(quillRef);
-    // console.log(quillRef.root.innerHTML);
-    // } catch (err) {
-    // alert("비정상적인 접근입니다.");
-    // navigate("/");
-    // }
 
     try {
       provider.awareness.setLocalStateField("user", {
         name: userName,
         color: connectUser[userName].color,
       });
+      // console.log(userName);
+      // console.log(connectUser[userName].color);
+      // console.log(provider.awareness);
     } catch (err) {
       alert("로그인을 해주세요.");
       navigate("/");
     }
 
-    // console.log(" ==== socket 접속자 수 : ", socket._callbacks.$deleteCurser.length);
-    // const connectUsers = socket._callbacks.$deleteCurser.length;
     const binding = new QuillBinding(ytext, quillRef, provider.awareness);
-
     const connectUsers = Object.keys(connectUser).length;
-    // console.log(" @#@#@#@#@# connectuser : ", connectUsers);
+
     if (connectUsers < 2) {
       fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/memo/${projectID}`, {
         method: "get",
@@ -90,7 +78,7 @@ const MemoRtc = ({ project_Id, userName }) => {
       socket.emit("save_memo", [projectID, quillRef.getContents()]);
       provider.destroy();
     };
-  }, []);
+  }, [connectUser]);
 
   const attachQuillRefs = () => {
     if (typeof reactQuillRef.getEditor !== "function") return;
@@ -131,7 +119,7 @@ const StyledEditorBox = styled.div`
   justify-content: center;
   align-items: center;
   height: 47%;
-  width: 58vw;
+  width: 100%;
   font-size: medium;
 `;
 
@@ -151,9 +139,11 @@ const EditorContainer = styled.div`
   }
   .ql-toolbar.ql-snow {
     border-radius: 5px 5px 0px 0px;
+    display: flex;
   }
   .ql-container.ql-snow {
     border-radius: 0 0 5px 5px;
+    max-height: 35vh;
   }
   .ql-editor strong {
     font-weight: bold;
@@ -165,6 +155,10 @@ const EditorContainer = styled.div`
   .ql-cursor-flag {
     visibility: visible !important;
     opacity: 1 !important;
+  }
+  .ql-snow .ql-formats {
+    display: flex;
+    vertical-align: middle;
   }
 `;
 
