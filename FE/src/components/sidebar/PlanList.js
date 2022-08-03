@@ -99,7 +99,6 @@ function PlanList({
   }
 
   function onDragStart(result) {
-    console.log("drag start");
     const newState = [...[...routes]];
     const { source, destination } = result;
     const lockAcquire = newState[source.droppableId][source.index].userName;
