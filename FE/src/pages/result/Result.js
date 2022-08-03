@@ -54,7 +54,11 @@ function Result() {
         // console.log(routes[0][0].id);
         projectInfo.travelId = routes[0][0].id;
       }
-      console.log(projectInfo);
+      // console.log(projectInfo);
+      Object.keys(hashTags).forEach((k) => {
+        hashTags[k] = hashTags[k].replaceAll("#", "").trim();
+      });
+      // console.log(hashTags);
       projectInfo.hashTags = hashTags;
       await fetch(
         `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/upload`,

@@ -1,19 +1,7 @@
 import { Button, Modal, Select } from "antd";
 import React, { useState } from "react";
 const { Option } = Select;
-const hashTag = [
-  "우도",
-  "한라산",
-  "맛집",
-  "카페",
-  "등산",
-  "바다",
-  "드라이빙",
-  "데이트",
-  "코스",
-  "스쿠버",
-  "다이빙",
-];
+const hashTag = [];
 const ResultModal = ({
   visible,
   onOk,
@@ -28,9 +16,8 @@ const ResultModal = ({
   }
 
   const handleChange = (value) => {
-    console.log(`selected ${value}`);
     setHashTags(value);
-    console.log(value.length);
+    // console.log(value.length);
   };
   return (
     <>
