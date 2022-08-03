@@ -264,7 +264,7 @@ const Search = ({
         />
       ))
     );
-  }, [Places, click]);
+  }, [Places, click, itemRoutes]);
 
   const onClcikResult = () => {
     navigate(`/project/${projectId}/result`, { replace: false });
