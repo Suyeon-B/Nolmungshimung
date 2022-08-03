@@ -39,7 +39,7 @@ const MemoRtc = ({ project_Id, userName }) => {
     const ydoc = new Y.Doc();
     const provider = new WebrtcProvider(`${projectID}`, ydoc);
     const ytext = ydoc.getText(`${projectID}`);
-
+    console.log(connectUser);
     try {
       provider.awareness.setLocalStateField("user", {
         name: userName,
@@ -49,21 +49,27 @@ const MemoRtc = ({ project_Id, userName }) => {
       // console.log(connectUser[userName].color);
       // console.log(provider.awareness);
     } catch (err) {
-      alert("로그인을 해주세요.");
-      navigate("/");
+      console.log(err);
+      console.log(connectUser);
+
+      alert(`"로그인을 해주세요." ${JSON.parse(connectUser)}`);
+      // navigate("/");
     }
 
     const binding = new QuillBinding(ytext, quillRef, provider.awareness);
     const connectUsers = Object.keys(connectUser).length;
-
+    console.log(binding);
     if (connectUsers < 2) {
-      fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/memo/${projectID}`, {
-        method: "get",
-        headers: {
-          "content-type": "application/json",
-        },
-        credentials: "include",
-      })
+      fetch(
+        `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/memo/${projectID}`,
+        {
+          method: "get",
+          headers: {
+            "content-type": "application/json",
+          },
+          credentials: "include",
+        }
+      )
         .then((res) => res.json())
         .then((res) => {
           if (res != "\n") {
@@ -78,11 +84,13 @@ const MemoRtc = ({ project_Id, userName }) => {
       socket.emit("save_memo", [projectID, quillRef.getContents()]);
       provider.destroy();
     };
-  }, [connectUser]);
+  }, []);
 
   const attachQuillRefs = () => {
     if (typeof reactQuillRef.getEditor !== "function") return;
     quillRef = reactQuillRef.getEditor();
+    console.log(quillRef.editor.delta.ops[0].insert);
+    console.log(quillRef.editor.delta.ops[0].insert === "\n");
   };
 
   const modulesRef = {

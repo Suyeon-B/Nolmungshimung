@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useCallback, Suspense } from "react";
 import { useParams } from "react-router-dom";
 import PlanSideBar from "../../components/sidebar/PlanSideBar";
-// import Search from "../search/Search";
-const Search = React.lazy(() => import("../search/Search"));
+import Search from "../search/Search";
+// const Search = React.lazy(() => import("../search/Search"));
 // import Sfu from "./Sfu";
 // import SpotRoute from "../spotRoute/SpotRoute";
 const SpotRoute = React.lazy(() => import("../spotRoute/SpotRoute"));
@@ -52,7 +52,7 @@ const ProjectPage = (props) => {
   }, []);
   let userName = auth?.user?.user_name;
 
-  console.log(connectUser);
+  // console.log(connectUser);
   useEffect(() => {
     console.log(auth);
 
@@ -89,7 +89,7 @@ const ProjectPage = (props) => {
       auth.user === null
     )
       return;
-    console.log("projectJoin");
+    // console.log("projectJoin");
     socket.emit("projectJoin", [projectId, auth.user.user_name]);
     return () => {
       socket.emit("projectLeave", [projectId, userName]);
@@ -101,6 +101,7 @@ const ProjectPage = (props) => {
   }, []);
 
   useEffect(() => {
+    console.log(itemsRoute);
     if (itemsRoute === null) return;
     if (isAddDel || isDrage) {
       console.log("socket 이벤트");
@@ -131,6 +132,7 @@ const ProjectPage = (props) => {
 
   useEffect(() => {
     socket.on("updateRoute", (resItemsRoute) => {
+      console.log("updateRoute", resItemsRoute);
       setItemsRoute(resItemsRoute);
     });
     return () => {
@@ -227,19 +229,19 @@ const ProjectPage = (props) => {
           </Suspense>
         )}
         {!isFirstPage && (
-          <Suspense fallback={<Loading />}>
-            <SpotRoute
-              projectId={projectId}
-              startDate={items.start_date}
-              selectedIndex={selectedIndex}
-              item={itemsRoute}
-              setItemRoute={setItemsRoute}
-              itemId={items._id}
-              setIsDrage={setIsDrage}
-              setIsAddDel={setIsAddDel}
-              userName={userName}
-            />
-          </Suspense>
+          // <Suspense fallback={<Loading />}>
+          <SpotRoute
+            projectId={projectId}
+            startDate={items.start_date}
+            selectedIndex={selectedIndex}
+            item={itemsRoute}
+            setItemRoute={setItemsRoute}
+            itemId={items._id}
+            setIsDrage={setIsDrage}
+            setIsAddDel={setIsAddDel}
+            userName={userName}
+          />
+          // </Suspense>
         )}
       </PlanSection>
       {auth.user && <Voicetalk projectId={projectId} auth={auth.user} />}
