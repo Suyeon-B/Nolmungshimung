@@ -136,13 +136,9 @@ const SearchListRoute = ({
         상세보기
       </a>
       {contests !== null && (
-        <Suspense fallback={<div>Loading...</div>}>
-          <SearchDetail
-            onClose={onClose}
-            visible={visible}
-            contents={contests}
-          />
-        </Suspense>
+        // <Suspense fallback={<div>Loading...</div>}>
+        <SearchDetail onClose={onClose} visible={visible} contents={contests} />
+        // </Suspense>
       )}
     </StyledLi>
   );

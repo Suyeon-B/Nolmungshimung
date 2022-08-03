@@ -54,7 +54,7 @@ const ProjectPage = (props) => {
 
   // console.log(connectUser);
   useEffect(() => {
-    console.log(auth);
+    // console.log(auth);
 
     if (projectId === null) return;
     async function fetchInfo() {

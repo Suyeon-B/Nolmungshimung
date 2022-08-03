@@ -39,26 +39,17 @@ const MemoRtc = ({ project_Id, userName }) => {
     const ydoc = new Y.Doc();
     const provider = new WebrtcProvider(`${projectID}`, ydoc);
     const ytext = ydoc.getText(`${projectID}`);
-    console.log(connectUser);
-    try {
-      provider.awareness.setLocalStateField("user", {
-        name: userName,
-        color: connectUser[userName].color,
-      });
-      // console.log(userName);
-      // console.log(connectUser[userName].color);
-      // console.log(provider.awareness);
-    } catch (err) {
-      console.log(err);
-      console.log(connectUser);
+    // console.log("userName >>> ", userName);
+    // console.log("ytext >>> ", ytext);
 
-      alert(`"로그인을 해주세요." ${JSON.parse(connectUser)}`);
-      // navigate("/");
-    }
+    provider.awareness.setLocalStateField("user", {
+      name: userName,
+      color: connectUser[userName].color,
+    });
 
     const binding = new QuillBinding(ytext, quillRef, provider.awareness);
     const connectUsers = Object.keys(connectUser).length;
-    console.log(binding);
+    // console.log(connectUsers);
     if (connectUsers < 2) {
       fetch(
         `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/memo/${projectID}`,
@@ -72,6 +63,7 @@ const MemoRtc = ({ project_Id, userName }) => {
       )
         .then((res) => res.json())
         .then((res) => {
+          // console.log("res >>> ", res);
           if (res != "\n") {
             quillRef.setContents(res);
           } else {
@@ -79,7 +71,6 @@ const MemoRtc = ({ project_Id, userName }) => {
           }
         });
     }
-
     return () => {
       socket.emit("save_memo", [projectID, quillRef.getContents()]);
       provider.destroy();
@@ -170,4 +161,4 @@ const EditorContainer = styled.div`
   }
 `;
 
-export default React.memo(MemoRtc);
+export default MemoRtc;

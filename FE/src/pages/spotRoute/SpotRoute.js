@@ -124,13 +124,9 @@ function SpotRoute({
       <Cursor project_Id={itemId} selectedIndex={selectedIndex} />
 
       {contents !== null && (
-        <Suspense fallback={<div>Loading...</div>}>
-          <SearchDetail
-            onClose={onClose}
-            visible={visible}
-            contents={contents}
-          />
-        </Suspense>
+        // <Suspense fallback={<div>Loading...</div>}>
+        <SearchDetail onClose={onClose} visible={visible} contents={contents} />
+        // </Suspense>
       )}
     </SpotRouteContainer>
   );
