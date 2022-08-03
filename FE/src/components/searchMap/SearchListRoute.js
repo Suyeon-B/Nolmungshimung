@@ -27,18 +27,21 @@ const SearchListRoute = ({
   selected,
   handleSelect,
 }) => {
-  const onClickAddRoute = (event) => {
-    const uRoute = { ...route };
-    uRoute["uid"] = uuidV4();
-    // fetchAddTravelRoute(projectId, uRoute);
-    // console.log(uRoute);
-    uRoute.lock = null; // 색들어감 (락기능)
-    uRoute.user_name = null; // 잡고있는 유저의 닉네임이 들어갈것임 (락 푸는 기능)
-    // console.log(uRoute);
-    itemRoutes[event.target.dataset.idx].push(uRoute);
-    setItemRoutes([...itemRoutes]);
-    setIsAddDel(true);
-  };
+  const onClickAddRoute = useCallback(
+    (event) => {
+      const uRoute = { ...route };
+      uRoute["uid"] = uuidV4();
+      // fetchAddTravelRoute(projectId, uRoute);
+      // console.log(uRoute);
+      uRoute.lock = null; // 색들어감 (락기능)
+      uRoute.user_name = null; // 잡고있는 유저의 닉네임이 들어갈것임 (락 푸는 기능)
+      itemRoutes[event.target.dataset.idx].push(uRoute);
+      // console.log(uRoute);
+      setItemRoutes([...itemRoutes]);
+      setIsAddDel(true);
+    },
+    [itemRoutes]
+  );
 
   const [visible, setVisible] = useState(false);
   const [contests, setContents] = useState(null);
@@ -48,7 +51,9 @@ const SearchListRoute = ({
       input: route.road_address_name + "" + route.place_name,
       place_id: route.id,
       place_name: route.place_name,
-      road_address_name: route.road_address_name ? route.road_address_name : route.address_name,
+      road_address_name: route.road_address_name
+        ? route.road_address_name
+        : route.address_name,
       category_group_name: route.category_group_name,
       phone: route.phone,
       place_url: route.place_url,
@@ -112,7 +117,9 @@ const SearchListRoute = ({
       <StyledP>{route.category_group_name}</StyledP>
       {route.road_address_name ? (
         <div>
-          <p title={route.road_address_name}>{route.road_address_name.substr(8)}</p>
+          <p title={route.road_address_name}>
+            {route.road_address_name.substr(8)}
+          </p>
           {/* <p title = {route.address_name}>{route.address_name}</p> */}
         </div>
       ) : (
@@ -129,9 +136,9 @@ const SearchListRoute = ({
         상세보기
       </a>
       {contests !== null && (
-        <Suspense fallback={<div>Loading...</div>}>
-          <SearchDetail onClose={onClose} visible={visible} contents={contests} />
-        </Suspense>
+        // <Suspense fallback={<div>Loading...</div>}>
+        <SearchDetail onClose={onClose} visible={visible} contents={contests} />
+        // </Suspense>
       )}
     </StyledLi>
   );

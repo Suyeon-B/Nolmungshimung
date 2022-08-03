@@ -5,7 +5,9 @@ import MarkMap from "../../components/MarkMap/MarkMap";
 import MemoRtc from "../../components/shareMemo/MemoRtc";
 import Cursor from "../shareMemo/Cursor";
 // import SearchDetail from "../../components/searchMap/SearchDetail";
-const SearchDetail = React.lazy(() => import("../../components/searchMap/SearchDetail"));
+const SearchDetail = React.lazy(() =>
+  import("../../components/searchMap/SearchDetail")
+);
 import { spotDetail } from "../../components/spot/SpotDetail";
 // import { AlertFilled } from "@ant-design/icons";
 import socket from "../../socket";
@@ -40,7 +42,9 @@ function SpotRoute({
         input: value.road_address_name + "" + value.place_name,
         place_id: value.id,
         place_name: value.place_name,
-        road_address_name: value.road_address_name ? value.road_address_name : value.address_name,
+        road_address_name: value.road_address_name
+          ? value.road_address_name
+          : value.address_name,
         category_group_name: value.category_group_name,
         phone: value.phone,
         place_url: value.place_url,
@@ -67,7 +71,13 @@ function SpotRoute({
   useEffect(() => {
     if (notifyFlag === false) return;
     // console.log(notifyFlag);
-    socket.emit("attention", culTripTermData(startDate, selectedIndex), selectedIndex, projectId, userName);
+    socket.emit(
+      "attention",
+      culTripTermData(startDate, selectedIndex),
+      selectedIndex,
+      projectId,
+      userName
+    );
     setNotifyFlag(false);
     // console.log("attention");
   }, [notifyFlag]);
@@ -114,9 +124,9 @@ function SpotRoute({
       <Cursor project_Id={itemId} selectedIndex={selectedIndex} />
 
       {contents !== null && (
-        <Suspense fallback={<div>Loading...</div>}>
-          <SearchDetail onClose={onClose} visible={visible} contents={contents} />
-        </Suspense>
+        // <Suspense fallback={<div>Loading...</div>}>
+        <SearchDetail onClose={onClose} visible={visible} contents={contents} />
+        // </Suspense>
       )}
     </SpotRouteContainer>
   );
