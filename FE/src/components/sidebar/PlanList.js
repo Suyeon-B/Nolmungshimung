@@ -119,7 +119,7 @@ function PlanList({
     // console.log(newState);
     socket.emit("changeRoute", [newState, projectId]);
     setRoutes(newState);
-    // setIsDrage(true);
+    setIsDrage(true);
   }
 
   function onDragEnd(result) {

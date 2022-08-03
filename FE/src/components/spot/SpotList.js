@@ -160,7 +160,7 @@ function SpotList({
     }
     // newState[selectedIndex][resuslt.source.index].user_name = null;
     setItemRoute(newState);
-    // setIsDrage(true);
+    setIsDrage(true);
     socket.emit("changeRoute", [newState, projectId]);
 
     // socket.emit("grabSpot", [projectId, userName, result.source.index]);
