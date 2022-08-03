@@ -8,16 +8,15 @@ const ResultModal = ({
   confirmLoading,
   onCancel,
   setHashTags,
+  hashTags,
 }) => {
   const children = [];
 
   for (let i = 0; i < hashTag.length; i++) {
     children.push(<Option key={i + 1}>{hashTag[i]}</Option>);
   }
-
   const handleChange = (value) => {
     setHashTags(value);
-    // console.log(value.length);
   };
   return (
     <>
