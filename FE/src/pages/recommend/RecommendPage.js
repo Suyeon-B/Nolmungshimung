@@ -182,7 +182,8 @@ const RecommendWrapper = styled.div`
   width: 100%;
 
   .ScrollWrapper {
-    padding: 10vh;
+    padding: 5vh;
+    // padding: 10vh;
     background: #ff8a3d;
   }
 
@@ -202,7 +203,8 @@ const SearchBlock = styled.div`
 const RecommendBlock = styled.div`
   // margin-top: 20px;
   min-width: 20vw;
-  width: 88.5vw;
+  // width: 88.5vw;
+  width: 94.5vw;
 
   .resultTextWrapper {
     display: flex;
