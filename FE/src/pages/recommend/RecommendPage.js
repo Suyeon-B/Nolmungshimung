@@ -76,6 +76,20 @@ const RecommendPage = () => {
       .catch((e) => console.log("해시태그야 일해라 .."));
   };
 
+  const hashTagResultScroll = (hashTagPJInfo) => {
+    return (
+      <>
+        {hashTagPJInfo.length > 0 ? (
+          hashTagPJInfo.map((el, i) => {
+            return <ScrollRow el={el} key={i} />;
+          })
+        ) : (
+          <DefaultResult>{defaultResultText}</DefaultResult>
+        )}
+      </>
+    );
+  };
+
   return (
     <RecommendWrapper>
       <SearchBlock>
@@ -121,17 +135,15 @@ const RecommendPage = () => {
               <HashtagResultText>검색 결과 🔍</HashtagResultText>
             </div>
 
-            <HashTagSearchResult>
-              {/* <ScrollHorizontal transition="0.2" reverseScroll="true"> */}
-              {hashTagPJInfo.length > 0 ? (
-                hashTagPJInfo.map((el, i) => {
-                  return <ScrollRow el={el} key={i} />;
-                })
-              ) : (
-                <DefaultResult>{defaultResultText}</DefaultResult>
-              )}
-              {/* </ScrollHorizontal> */}
-            </HashTagSearchResult>
+            {hashTagPJInfo.length > 7 ? (
+              <HashTagSearchResult>
+                <ScrollHorizontal transition="0.2" reverseScroll="true">
+                  {hashTagResultScroll(hashTagPJInfo)}
+                </ScrollHorizontal>
+              </HashTagSearchResult>
+            ) : (
+              <HashTagSearchResult>{hashTagResultScroll(hashTagPJInfo)}</HashTagSearchResult>
+            )}
           </RecommendBlock>
         </div>
       )}
