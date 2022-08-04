@@ -98,6 +98,7 @@ const Room = (props) => {
       });
 
       socket.on("FE-receive-call", ({ signal, from, info }) => {
+        console.log(`FE-receive-call 시작`)
         let { userName, nickName, audio } = info;
         const peerIdx = findPeer(from);
 
@@ -120,6 +121,7 @@ const Room = (props) => {
             };
           });
         }
+        console.log(`FE-receive-call 끝`)
       });
 
       socket.on("FE-call-accepted", ({ signal, answerId }) => {
@@ -130,12 +132,14 @@ const Room = (props) => {
       socket.on("FE-user-leave", ({ userId, userName }) => {
         console.log("FE-usr-leave ok", JSON.stringify(userName));
         const peerIdx = findPeer(userId);
-        peerIdx.peer.destroy();
-        setPeers((users) => {
-          users = users.filter((user) => user.peerID !== peerIdx.peer.peerID);
-          return [...users];
-        });
-        peersRef.current = peersRef.current.filter(({ peerID }) => peerID !== userId);
+        if (peerIdx){
+          peerIdx.peer.destroy();
+          setPeers((users) => {
+            users = users.filter((user) => user.peerID !== peerIdx.peer.peerID);
+            return [...users];
+          });
+          peersRef.current = peersRef.current.filter(({ peerID }) => peerID !== userId);
+        }
       });
     });
     return () => {
