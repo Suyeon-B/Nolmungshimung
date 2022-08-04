@@ -161,16 +161,16 @@ const Room = (props) => {
       initiator: true,
       trickle: false,
       stream,
-      config: { 
-        iceServers: [
-          { urls: 'turn:3.36.66.43', username: 'admin', credential: 'admin'},
-          { urls: 'stun:stun.l.google.com:19302' },
-          { urls: 'stun:stun1.l.google.com:19302' },
-          { urls: 'stun:stun2.l.google.com:19302' },
-          { urls: 'stun:stun3.l.google.com:19302' },
-          { urls: 'stun:stun4.l.google.com:19302' },
-          { urls: 'stun:global.stun.twilio.com:3478?transport=udp' }
-      ]},
+      // config: { 
+      //   iceServers: [
+      //     { urls: 'stun:stun.l.google.com:19302' },
+      //     { urls: 'stun:stun1.l.google.com:19302' },
+      //     { urls: 'stun:stun2.l.google.com:19302' },
+      //     { urls: 'stun:stun3.l.google.com:19302' },
+      //     { urls: 'stun:stun4.l.google.com:19302' },
+      //     { urls: 'stun:global.stun.twilio.com:3478?transport=udp' },
+      //     { url: 'turn:3.36.66.43:3478', username: 'admin', credential: 'admin'},
+      // ]},
     });
 
     peer.on("signal", (signal) => {
@@ -195,13 +195,13 @@ const Room = (props) => {
       stream,
       config: { 
         iceServers: [
-          { urls: 'turn:3.36.66.43', username: 'admin', credential: 'admin'},
           { urls: 'stun:stun.l.google.com:19302' },
           { urls: 'stun:stun1.l.google.com:19302' },
           { urls: 'stun:stun2.l.google.com:19302' },
           { urls: 'stun:stun3.l.google.com:19302' },
           { urls: 'stun:stun4.l.google.com:19302' },
-          { urls: 'stun:global.stun.twilio.com:3478?transport=udp' }
+          { urls: 'stun:global.stun.twilio.com:3478?transport=udp' },
+          { url: 'turn:3.36.66.43:56902', username: 'admin', credential: 'admin'},
       ]},
     });
 

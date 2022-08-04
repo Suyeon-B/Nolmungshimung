@@ -76,7 +76,8 @@ io.on("connection", (socket) => {
         users.push({ userId: client, info: socketList[client] });
       });
       console.log(`users 는 : ${JSON.stringify(users)}`)
-      socket.broadcast.to(roomId).emit("FE-user-join", users);
+      // socket.broadcast.to(roomId).emit("FE-user-join", users);
+      socket.to(roomId).emit("FE-user-join", users);
       // io.sockets.in(roomId).emit('FE-user-join', users);
     } catch (e) {
       console.log(`BE-join-room Err ${e}`);
