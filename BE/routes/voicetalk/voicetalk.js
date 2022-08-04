@@ -59,7 +59,8 @@ io.on("connection", (socket) => {
   socket.on("BE-join-room", async({ roomId, userName, nickName }) => {
     // Socket Join RoomName
     await socket.join(roomId);
-    console.log(`룸아이디 : ${roomId}`)
+    console.log(`BE-join-room!!! , 룸아이디 : ${roomId}, userName : ${userName}, nickName: ${nickName}`)
+    if (userName && nickName)
     socketList[socket.id] = { userName, nickName, audio: true };
     console.log(`입장, 소켓아이디 : ${socket.id}, 소켓리스트: ${JSON.stringify(socketList[socket.id])}`);
 

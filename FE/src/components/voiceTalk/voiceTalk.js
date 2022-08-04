@@ -55,9 +55,11 @@ const Room = (props) => {
     //   }
     // });
     // Connect Camera & Mic
+    console.log('유즈이펙트!!!!!!!!', currentNick, currentUser);
     navigator.mediaDevices.getUserMedia({ video: false, audio: true }).then((stream) => {
       userAudioRef.current.srcObject = stream;
       userStream.current = stream;
+      console.log('BE-join-room 직전!!!!!!!!', currentNick, currentUser);
       socket.emit("BE-join-room", {
         roomId,
         userName: currentUser,
