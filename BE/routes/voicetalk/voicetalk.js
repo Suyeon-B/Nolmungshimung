@@ -77,7 +77,7 @@ io.on("connection", (socket) => {
       });
       console.log(`users 는 : ${JSON.stringify(users)}`)
 //       socket.broadcast.to(roomId).emit("FE-user-join", users);
-      io.to(roomId).emit("FE-user-join", users);
+      socket.to(roomId).emit("FE-user-join", users);
       // io.sockets.in(roomId).emit('FE-user-join', users);
     } catch (e) {
       console.log(`BE-join-room Err ${e}`);
