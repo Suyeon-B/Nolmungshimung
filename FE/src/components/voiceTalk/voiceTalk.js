@@ -150,7 +150,7 @@ const Room = (props) => {
       socket.emit("BE-leave-room", { roomId, leaver: currentUser });
       socket.off("disconnect");
       // socket.disconnect();
-      socket.removeAllListeners();
+//       socket.removeAllListeners();
     };
     // eslint-disable-next-line
   }, []);
