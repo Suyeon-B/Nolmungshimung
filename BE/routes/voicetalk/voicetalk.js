@@ -40,25 +40,26 @@ io.on("connection", (socket) => {
     console.log("보이스톡 User disconnected!");
   });
 
-  socket.on("BE-check-user", async ({ roomId, userName }) => {
-    let error = false;
+  // socket.on("BE-check-user", async ({ roomId, userName }) => {
+  //   let error = false;
 
-    await io.sockets.in(roomId).allSockets((err, clients) => {
-      clients.forEach((client) => {
-        if (socketList[client] == userName) {
-          error = true;
-        }
-      });
-      socket.emit("FE-error-user-exist", { error });
-    });
-  });
+  //   await io.sockets.in(roomId).allSockets((err, clients) => {
+  //     clients.forEach((client) => {
+  //       if (socketList[client] == userName) {
+  //         error = true;
+  //       }
+  //     });
+  //     socket.emit("FE-error-user-exist", { error });
+  //   });
+  // });
 
   /**
    * Join Room
    */
-  socket.on("BE-join-room", async ({ roomId, userName, nickName }) => {
+  socket.on("BE-join-room", async({ roomId, userName, nickName }) => {
     // Socket Join RoomName
     await socket.join(roomId);
+    console.log(`룸아이디 : ${roomId}`)
     socketList[socket.id] = { userName, nickName, audio: true };
     console.log(`입장 : ${JSON.stringify(socketList)}`);
 
@@ -68,6 +69,7 @@ io.on("connection", (socket) => {
     try {
       const users = [];
       const clients = await io.sockets.in(roomId).allSockets();
+      console.log(clients)
       clients.forEach((client) => {
         // Add User List
         users.push({ userId: client, info: socketList[client] });

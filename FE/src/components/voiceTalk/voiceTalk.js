@@ -8,7 +8,7 @@ import Footer from "../sidebar/Footer";
 const Room = (props) => {
   const currentUser = props.auth.user_email;
   const currentNick = props.auth.user_name;
-
+  console.log('보이스톡 랜더링!!!!!!!!');
   if (!props.auth) {
     window.location.replace("/signin");
   }
@@ -22,6 +22,7 @@ const Room = (props) => {
   const userStream = useRef();
   // const roomId = props.match.params.roomId;
   const roomId = props.projectId;
+  console.log(`룸이름 : ${roomId}`)
   // const currentUser = u
 
   // useEffect(() => {
@@ -39,20 +40,20 @@ const Room = (props) => {
   // );
   // })
   useEffect(() => {
-    socket.emit("BE-check-user", { roomId: roomId, currentUser });
-    socket.on("FE-error-user-exist", ({ error }) => {
-      if (!error) {
-        // const roomName = roomRef.current.value;
-        // const userName = userRef.current.value;
+    // socket.emit("BE-check-user", { roomId: roomId, currentUser });
+    // socket.on("FE-error-user-exist", ({ error }) => {
+    //   if (!error) {
+    //     // const roomName = roomRef.current.value;
+    //     // const userName = userRef.current.value;
 
-        sessionStorage.setItem("user", currentUser);
-        // props.history.push(`/room/${roomName}`);
-      } else {
-        console.log("User name already exist");
-        // setErr(error);
-        // setErrMsg('User name already exist');
-      }
-    });
+    //     sessionStorage.setItem("user", currentUser);
+    //     // props.history.push(`/room/${roomName}`);
+    //   } else {
+    //     console.log("User name already exist");
+    //     // setErr(error);
+    //     // setErrMsg('User name already exist');
+    //   }
+    // });
     // Connect Camera & Mic
     navigator.mediaDevices.getUserMedia({ video: false, audio: true }).then((stream) => {
       userAudioRef.current.srcObject = stream;
@@ -64,7 +65,7 @@ const Room = (props) => {
       });
 
       socket.on("FE-user-join", (users) => {
-        console.log(`FE-user-join ${users}`);
+        console.log(`FE-user-join: ${JSON.stringify(users)}`);
 
         // all users
         const peers = [];
