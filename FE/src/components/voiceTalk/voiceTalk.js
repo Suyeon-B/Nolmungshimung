@@ -8,7 +8,7 @@ import Footer from "../sidebar/Footer";
 const Room = (props) => {
   const currentUser = props.auth.user_email;
   const currentNick = props.auth.user_name;
-  console.log('보이스톡 랜더링!!!!!!!!');
+  console.log('보이스톡 랜더링!!!!!!!!', currentNick, currentUser);
   if (!props.auth) {
     window.location.replace("/signin");
   }
@@ -71,7 +71,7 @@ const Room = (props) => {
         const peers = [];
         users.forEach(({ userId, info }) => {
           let { userName, nickName, audio } = info;
-
+          console.log(`내 이름 : ${currentUser}, 상대 이름 : ${userName}`);
           if (userName !== currentUser) {
             const peer = createPeer(userId, socket.id, stream);
             peer.userName = userName;
@@ -125,12 +125,14 @@ const Room = (props) => {
       });
 
       socket.on("FE-call-accepted", ({ signal, answerId }) => {
+        console.log(`FE-call-accepted 시작`, signal, answerId);
         const peerIdx = findPeer(answerId);
         peerIdx.peer.signal(signal);
+        console.log(`FE-call-accepted 끝`, signal, answerId);
       });
 
       socket.on("FE-user-leave", ({ userId, userName }) => {
-        console.log("FE-usr-leave ok", JSON.stringify(userName));
+        console.log("FE-usr-leave ok", JSON.stringify(userId), JSON.stringify(userName));
         const peerIdx = findPeer(userId);
         if (peerIdx){
           peerIdx.peer.destroy();
@@ -158,8 +160,12 @@ const Room = (props) => {
       stream,
       config: { 
         iceServers: [
-          { urls: 'turn:3.36.66.43:3478?transport=udp', username: 'admin', credential: 'admin'},
+          { urls: 'turn:3.36.66.43', username: 'admin', credential: 'admin'},
           { urls: 'stun:stun.l.google.com:19302' },
+          { urls: 'stun:stun1.l.google.com:19302' },
+          { urls: 'stun:stun2.l.google.com:19302' },
+          { urls: 'stun:stun3.l.google.com:19302' },
+          { urls: 'stun:stun4.l.google.com:19302' },
           { urls: 'stun:global.stun.twilio.com:3478?transport=udp' }
       ]},
     });
@@ -185,8 +191,12 @@ const Room = (props) => {
       stream,
       config: { 
         iceServers: [
-          { urls: 'turn:3.36.66.43:3478?transport=udp', username: 'admin', credential: 'admin'},
+          { urls: 'turn:3.36.66.43', username: 'admin', credential: 'admin'},
           { urls: 'stun:stun.l.google.com:19302' },
+          { urls: 'stun:stun1.l.google.com:19302' },
+          { urls: 'stun:stun2.l.google.com:19302' },
+          { urls: 'stun:stun3.l.google.com:19302' },
+          { urls: 'stun:stun4.l.google.com:19302' },
           { urls: 'stun:global.stun.twilio.com:3478?transport=udp' }
       ]},
     });

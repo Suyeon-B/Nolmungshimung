@@ -61,7 +61,7 @@ io.on("connection", (socket) => {
     await socket.join(roomId);
     console.log(`룸아이디 : ${roomId}`)
     socketList[socket.id] = { userName, nickName, audio: true };
-    console.log(`입장 : ${JSON.stringify(socketList)}`);
+    console.log(`입장, 소켓아이디 : ${socket.id}, 소켓리스트: ${JSON.stringify(socketList[socket.id])}`);
 
     // Set User List
     // await io.sockets.in(roomId).allSockets((err, clients) => {
@@ -74,7 +74,7 @@ io.on("connection", (socket) => {
         // Add User List
         users.push({ userId: client, info: socketList[client] });
       });
-
+      console.log(`users 는 : ${JSON.stringify(users)}`)
       socket.broadcast.to(roomId).emit("FE-user-join", users);
       // io.sockets.in(roomId).emit('FE-user-join', users);
     } catch (e) {
