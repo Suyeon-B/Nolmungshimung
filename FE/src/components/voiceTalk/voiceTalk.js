@@ -154,7 +154,8 @@ const Room = (props) => {
   }, []);
   // console.log(socket)
   function createPeer(userId, caller, stream) {
-    const peer = new Peer({
+    // const peer = new Peer({
+      const peer = new window.SimplePeer({
       initiator: true,
       trickle: false,
       stream,
@@ -185,7 +186,8 @@ const Room = (props) => {
   }
 
   function addPeer(incomingSignal, callerId, stream) {
-    const peer = new Peer({
+    // const peer = new Peer({
+      const peer = new window.SimplePeer({
       initiator: false,
       trickle: false,
       stream,
