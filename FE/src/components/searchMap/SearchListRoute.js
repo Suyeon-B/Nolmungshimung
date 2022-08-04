@@ -40,7 +40,7 @@ const SearchListRoute = ({
       setItemRoutes([...itemRoutes]);
       setIsAddDel(true);
     },
-    [itemRoutes]
+    [itemRoutes, route]
   );
 
   const [visible, setVisible] = useState(false);
