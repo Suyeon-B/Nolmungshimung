@@ -1,6 +1,4 @@
-// import { randomUUID } from 'crypto';
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { useBeforeunload } from "react-beforeunload";
 import Peer from "simple-peer";
 import styled from "styled-components";
 import socket from "./voiceSocket";
@@ -8,21 +6,16 @@ import NewAudio from "./NewAudio";
 import Footer from "../sidebar/Footer";
 
 const Room = (props) => {
-  // const currentUser = sessionStorage.getItem("user_email");
-  // const currentNick = sessionStorage.getItem("myNickname");
   const currentUser = props.auth.user_email;
   const currentNick = props.auth.user_name;
 
-  // console.log(props.auth);
   if (!props.auth) {
     window.location.replace("/signin");
   }
-  // if (!currentUser) {
-  //   alert("로그인하세요");
-  // }
+
   const [peers, setPeers] = useState([]);
   const [userVideoAudio, setUserVideoAudio] = useState({
-    localUser: { video: true, audio: true },
+    localUser: { video: false, audio: true },
   });
   const peersRef = useRef([]);
   const userAudioRef = useRef();
@@ -71,7 +64,7 @@ const Room = (props) => {
       });
 
       socket.on("FE-user-join", (users) => {
-        // console.log(`FE-user-join ${users}`);
+        console.log(`FE-user-join ${users}`);
 
         // all users
         const peers = [];
@@ -134,7 +127,7 @@ const Room = (props) => {
       });
 
       socket.on("FE-user-leave", ({ userId, userName }) => {
-        // console.log("FE-usr-leave ok", JSON.stringify(userName));
+        console.log("FE-usr-leave ok", JSON.stringify(userName));
         const peerIdx = findPeer(userId);
         peerIdx.peer.destroy();
         setPeers((users) => {
@@ -158,6 +151,12 @@ const Room = (props) => {
       initiator: true,
       trickle: false,
       stream,
+      config: { 
+        iceServers: [
+          { urls: 'turn:3.36.66.43', username: 'admin', credential: 'admin'},
+          { urls: 'stun:stun.l.google.com:19302' },
+          { urls: 'stun:global.stun.twilio.com:3478?transport=udp' }
+      ]},
     });
 
     peer.on("signal", (signal) => {
@@ -179,6 +178,12 @@ const Room = (props) => {
       initiator: false,
       trickle: false,
       stream,
+      config: { 
+        iceServers: [
+          { urls: 'turn:3.36.66.43', username: 'admin', credential: 'admin'},
+          { urls: 'stun:stun.l.google.com:19302' },
+          { urls: 'stun:global.stun.twilio.com:3478?transport=udp' }
+      ]},
     });
 
     peer.on("signal", (signal) => {

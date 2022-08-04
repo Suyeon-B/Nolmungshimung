@@ -8,7 +8,7 @@ const NewAudio = (props) => {
     peer.on("stream", (stream) => {
       ref.current.srcObject = stream;
     });
-    peer.on("track", (track, stream) => {});
+    // peer.on("track", (track, stream) => {});
   }, [peer]);
 
   return <Audio playsInline autoPlay ref={ref} />;
