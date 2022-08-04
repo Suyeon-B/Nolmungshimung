@@ -73,7 +73,7 @@ function SpotList({
   // const [state, setState] = useState([testItem, testItem2]);
   const { projectId } = useParams();
   const { connectUser, setConnectUser } = useContext(ConnectuserContext);
-  const lockRef = useRef({});
+  // const lockRef = useRef({});
   // const userName = sessionStorage.getItem("myNickname");
   const getItemStyle = (isDragging, draggableStyle, color, userName) => ({
     // some basic styles to make the items look a bit nicer
@@ -105,18 +105,18 @@ function SpotList({
     const newState = [...[...dayItem]];
 
     const lockAcquire = newState[selectedIndex][result.source.index].user_name;
-    lockRef.current = newState[selectedIndex][result.source.index];
+    // lockRef.current = newState[selectedIndex][result.source.index];
 
     if (
       lockAcquire === null ||
       lockAcquire === userName ||
       lockAcquire == undefined
     ) {
-      // newState[selectedIndex][result.source.index].lock =
-      //   connectUser[userName].color;
-      // newState[selectedIndex][result.source.index].user_name = userName;
-      lockRef.current.lock = connectUser[userName].color;
-      lockRef.current.user_name = userName;
+      newState[selectedIndex][result.source.index].lock =
+        connectUser[userName].color;
+      newState[selectedIndex][result.source.index].user_name = userName;
+      // lockRef.current.lock = connectUser[userName].color;
+      // lockRef.current.user_name = userName;
     } else {
       alert("다른 친구가 옮기고 있습니다 ! 잠시 기다려주세요!");
     }
@@ -136,10 +136,10 @@ function SpotList({
     if (!destination) {
       const newState = [...[...dayItem]];
 
-      // newState[sInd][source.index].user_name = null;
-      // newState[sInd][source.index].lock = "white";
-      lockRef.current.lock = "white";
-      lockRef.current.user_name = null;
+      newState[sInd][source.index].user_name = null;
+      newState[sInd][source.index].lock = "white";
+      // lockRef.current.lock = "white";
+      // lockRef.current.user_name = null;
 
       setItemRoute(newState);
       setIsDrage(true);
@@ -157,10 +157,10 @@ function SpotList({
       const newState = [...[...dayItem]];
       newState[selectedIndex] = items;
       // console.log(newState[selectedIndex][result.destination.index].color);
-      // newState[selectedIndex][result.destination.index].user_name = null;
-      // newState[selectedIndex][result.destination.index].lock = "white"; //수정 예쩡
-      lockRef.current.lock = "white";
-      lockRef.current.user_name = null;
+      newState[selectedIndex][result.destination.index].user_name = null;
+      newState[selectedIndex][result.destination.index].lock = "white"; //수정 예쩡
+      // lockRef.current.lock = "white";
+      // lockRef.current.user_name = null;
 
       // console.log("drag end IN newState[selectedIndex] : ", newState);
       setItemRoute(newState);
