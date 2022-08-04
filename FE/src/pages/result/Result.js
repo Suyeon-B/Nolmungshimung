@@ -43,7 +43,16 @@ function Result() {
   };
   const handleOk = async () => {
     setConfirmLoading(true);
-    // console.log(hashTags.length);
+    const reg = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi;
+
+    Object.keys(hashTags).forEach((k) => {
+      hashTags[k] = hashTags[k].replaceAll(reg, "").trim();
+      if (hashTags[k].length === 0) {
+        hashTags[k] === null;
+      }
+    });
+    // console.log(Object.keys(hashTags).length);
+    // console.log(hashTags);
     // console.log(projectInfo);
     if (hashTags.length > 5) {
       Badge.fail("업로드 실패", "5개 이하로 입력바랍니다.");
@@ -54,7 +63,11 @@ function Result() {
         // console.log(routes[0][0].id);
         projectInfo.travelId = routes[0][0].id;
       }
-      console.log(projectInfo);
+      // console.log(projectInfo);
+      // Object.keys(hashTags).forEach((k) => {
+      //   hashTags[k] = hashTags[k].replaceAll("#", "").trim();
+      // });
+      // console.log(hashTags);
       projectInfo.hashTags = hashTags;
       await fetch(
         `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/upload`,
@@ -65,7 +78,11 @@ function Result() {
           },
           body: JSON.stringify(projectInfo),
         }
-      ).then((res) => res.json());
+      )
+        .then((res) => res.json())
+        .catch((err) => {
+          console.log(err);
+        });
     }
     setVisible(false);
     setConfirmLoading(false);
@@ -135,6 +152,7 @@ function Result() {
             confirmLoading={confirmLoading}
             onCancel={handleCancel}
             setHashTags={setHashTags}
+            hashTags={hashTags}
           />
         </div>
         <br />
