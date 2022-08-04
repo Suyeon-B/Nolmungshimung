@@ -92,8 +92,8 @@ function PlanList({
   const droppableRef = useRef([]);
   const [selectedDay, setSelectedDay] = useState(0);
   const { connectUser, setConnectUser } = useContext(ConnectuserContext);
-  // const userName = sessionStorage.getItem("myNickname");
-  // const userName = auth.user.user_name;
+  const lockRef = useRef({});
+
   if (!routes) {
     return <div>Loading...</div>;
   }
@@ -101,7 +101,11 @@ function PlanList({
   function onDragStart(result) {
     const newState = [...[...routes]];
     const { source, destination } = result;
+
     const lockAcquire = newState[source.droppableId][source.index].userName;
+    lockRef.current = newState[source.droppableId][source.index];
+
+    console.log(lockRef);
 
     if (
       lockAcquire === null ||
@@ -109,9 +113,11 @@ function PlanList({
       lockAcquire === undefined
     ) {
       // console.log(newState[source.droppableId][source.index].lock);
-      newState[source.droppableId][source.index].lock =
-        connectUser[userName].color;
-      newState[source.droppableId][source.index].user_name = userName;
+      // newState[source.droppableId][source.index].lock =
+      //   connectUser[userName].color;
+      // newState[source.droppableId][source.index].user_name = userName;
+      lockRef.current.lock = connectUser[userName].color;
+      lockRef.current.user_name = userName;
     } else {
       alert("다른 친구가 옮기고 있습니다 ! 잠시 기다려 주세요!");
     }
@@ -127,8 +133,11 @@ function PlanList({
     if (!destination) {
       const newState = [...[...routes]];
 
-      newState[sInd][source.index].user_name = null;
-      newState[sInd][source.index].lock = "white";
+      // newState[sInd][source.index].user_name = null;
+      // newState[sInd][source.index].lock = "white";
+      lockRef.current.lock = "white";
+      lockRef.current.user_name = null;
+
       setRoutes(newState);
       setIsDrage(true);
       return;
@@ -140,8 +149,11 @@ function PlanList({
       const newState = [...[...routes]];
       newState[sInd] = items;
 
-      newState[sInd][result.destination.index].user_name = null;
-      newState[sInd][result.destination.index].lock = "white";
+      // newState[sInd][result.destination.index].user_name = null;
+      // newState[sInd][result.destination.index].lock = "white";
+      // console.log(lockObj);
+      lockRef.current.lock = "white";
+      lockRef.current.user_name = null;
 
       setRoutes(newState);
     } else {
@@ -154,10 +166,12 @@ function PlanList({
       const newState = [...[...routes]];
       newState[sInd] = result[sInd];
       newState[dInd] = result[dInd];
-      // console.log(newState[dInd][destination.index]);
-      newState[dInd][destination.index].user_name = null;
-      newState[dInd][destination.index].lock = "white"; // 수정예쩡
-      // console.log(newState[dInd][destination.droppableId].user_name);
+
+      // newState[dInd][destination.index].user_name = null;
+      // newState[dInd][destination.index].lock = "white"; // 수정예쩡
+      lockRef.current.lock = "white";
+      lockRef.current.user_name = null;
+
       setRoutes(newState);
     }
     // console.log(`selectIdx: ${selectIdx}`);
