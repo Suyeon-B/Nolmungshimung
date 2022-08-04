@@ -7,7 +7,7 @@ var app = express();
 
 const privateKey = fs.readFileSync(process.env.keyFile || "nolshimung-key.pem", "utf8");
 const certificate = fs.readFileSync(process.env.certFile || "nolshimung.pem", "utf8");
-console.log('인증서 : ', process.env.keyFile);
+// console.log('인증서 : ', process.env.keyFile);
 
 const credentials = {
   key: privateKey,
@@ -33,11 +33,11 @@ server.listen(3003, function () {
 
 // Socket
 io.on("connection", (socket) => {
-  // console.log(`New User connected: ${socket.id}`);
+  console.log(`보이스톡 New User connected: ${socket.id}`);
 
   socket.on("disconnect", () => {
     socket.disconnect();
-    // console.log("User disconnected!");
+    console.log("보이스톡 User disconnected!");
   });
 
   socket.on("BE-check-user", async ({ roomId, userName }) => {
@@ -60,7 +60,7 @@ io.on("connection", (socket) => {
     // Socket Join RoomName
     await socket.join(roomId);
     socketList[socket.id] = { userName, nickName, audio: true };
-    // console.log(`입장 : ${JSON.stringify(socketList)}`);
+    console.log(`입장 : ${JSON.stringify(socketList)}`);
 
     // Set User List
     // await io.sockets.in(roomId).allSockets((err, clients) => {
@@ -102,9 +102,9 @@ io.on("connection", (socket) => {
   });
 
   socket.on("BE-leave-room", ({ roomId, leaver }) => {
-    // console.log(`퇴장전 : ${JSON.stringify(socketList)}`);
+    console.log(`퇴장전 : ${JSON.stringify(socketList)}`);
     delete socketList[socket.id];
-    // console.log(`퇴장후 : ${JSON.stringify(socketList)}`);
+    console.log(`퇴장후 : ${JSON.stringify(socketList)}`);
     socket.broadcast
       .to(roomId)
       .emit("FE-user-leave", { userId: socket.id, userName: leaver });
