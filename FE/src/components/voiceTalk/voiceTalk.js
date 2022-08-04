@@ -93,8 +93,8 @@ const Room = (props) => {
             });
           }
         });
-
-        setPeers(peers);
+        console.log(`peers는 : ${JSON.stringify(peers)}`)
+        setPeers(peers);        
       });
 
       socket.on("FE-receive-call", ({ signal, from, info }) => {
@@ -154,7 +154,7 @@ const Room = (props) => {
       stream,
       config: { 
         iceServers: [
-          { urls: 'turn:3.36.66.43', username: 'admin', credential: 'admin'},
+          { urls: 'turn:3.36.66.43:3478?transport=udp', username: 'admin', credential: 'admin'},
           { urls: 'stun:stun.l.google.com:19302' },
           { urls: 'stun:global.stun.twilio.com:3478?transport=udp' }
       ]},
@@ -181,7 +181,7 @@ const Room = (props) => {
       stream,
       config: { 
         iceServers: [
-          { urls: 'turn:3.36.66.43', username: 'admin', credential: 'admin'},
+          { urls: 'turn:3.36.66.43:3478?transport=udp', username: 'admin', credential: 'admin'},
           { urls: 'stun:stun.l.google.com:19302' },
           { urls: 'stun:global.stun.twilio.com:3478?transport=udp' }
       ]},
