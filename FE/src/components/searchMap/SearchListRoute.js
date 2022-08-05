@@ -27,18 +27,21 @@ const SearchListRoute = ({
   selected,
   handleSelect,
 }) => {
-  const onClickAddRoute = (event) => {
-    const uRoute = { ...route };
-    uRoute["uid"] = uuidV4();
-    // fetchAddTravelRoute(projectId, uRoute);
-    // console.log(uRoute);
-    uRoute.lock = null; // 색들어감 (락기능)
-    uRoute.user_name = null; // 잡고있는 유저의 닉네임이 들어갈것임 (락 푸는 기능)
-    // console.log(uRoute);
-    itemRoutes[event.target.dataset.idx].push(uRoute);
-    setItemRoutes([...itemRoutes]);
-    setIsAddDel(true);
-  };
+  const onClickAddRoute = useCallback(
+    (event) => {
+      const uRoute = { ...route };
+      uRoute["uid"] = uuidV4();
+      // fetchAddTravelRoute(projectId, uRoute);
+      // console.log(uRoute);
+      uRoute.lock = null; // 색들어감 (락기능)
+      uRoute.user_name = null; // 잡고있는 유저의 닉네임이 들어갈것임 (락 푸는 기능)
+      itemRoutes[event.target.dataset.idx].push(uRoute);
+      // console.log(uRoute);
+      setItemRoutes([...itemRoutes]);
+      setIsAddDel(true);
+    },
+    [itemRoutes, route]
+  );
 
   const [visible, setVisible] = useState(false);
   const [contests, setContents] = useState(null);
