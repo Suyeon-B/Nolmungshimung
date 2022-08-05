@@ -8,7 +8,7 @@ import Footer from "../sidebar/Footer";
 const Room = (props) => {
   const currentUser = props.auth.user_email;
   const currentNick = props.auth.user_name;
-  console.log('보이스톡 랜더링!!!!!!!!', currentNick, currentUser);
+  // console.log('보이스/톡 랜더링!!!!!!!!', currentNick, currentUser);
   if (!props.auth) {
     window.location.replace("/signin");
   }
