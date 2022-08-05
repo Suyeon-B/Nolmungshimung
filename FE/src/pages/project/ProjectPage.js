@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useCallback, Suspense } from "react";
 import { useParams } from "react-router-dom";
 import PlanSideBar from "../../components/sidebar/PlanSideBar";
-// import Search from "../search/Search";
-const Search = React.lazy(() => import("../search/Search"));
+import Search from "../search/Search";
+// const Search = React.lazy(() => import("../search/Search"));
 // import Sfu from "./Sfu";
 // import SpotRoute from "../spotRoute/SpotRoute";
 const SpotRoute = React.lazy(() => import("../spotRoute/SpotRoute"));
@@ -19,7 +19,9 @@ import Loading from "../../components/loading/Loading";
 import socket from "../../socket";
 
 async function fetchProjectById(_id) {
-  const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`);
+  const response = await fetch(
+    `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/${_id}`
+  );
   console.log(response);
   return response.json();
 }
@@ -80,7 +82,13 @@ const ProjectPage = (props) => {
 
   useEffect(() => {
     // 접속한 유저에 대한 정보 저장하기
-    if (auth === null || auth === undefined || auth.user === undefined || auth.user === null) return;
+    if (
+      auth === null ||
+      auth === undefined ||
+      auth.user === undefined ||
+      auth.user === null
+    )
+      return;
     // console.log("projectJoin");
     socket.emit("projectJoin", [projectId, auth.user.user_name]);
     return () => {
@@ -93,19 +101,23 @@ const ProjectPage = (props) => {
   }, []);
 
   useEffect(() => {
+    console.log(itemsRoute);
     if (itemsRoute === null) return;
     if (isAddDel || isDrage) {
       console.log("socket 이벤트");
       async function UpdateInfo() {
         try {
-          await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${projectId}`, {
-            method: "PATCH",
-            headers: {
-              "content-type": "application/json",
-            },
-            // credentials: "include",
-            body: JSON.stringify(itemsRoute),
-          }).then((res) => res.json());
+          await fetch(
+            `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/routes/${projectId}`,
+            {
+              method: "PATCH",
+              headers: {
+                "content-type": "application/json",
+              },
+              // credentials: "include",
+              body: JSON.stringify(itemsRoute),
+            }
+          ).then((res) => res.json());
         } catch (err) {
           console.log(err);
         }
@@ -120,6 +132,7 @@ const ProjectPage = (props) => {
 
   useEffect(() => {
     socket.on("updateRoute", (resItemsRoute) => {
+      console.log("updateRoute", resItemsRoute);
       setItemsRoute(resItemsRoute);
     });
     return () => {
@@ -216,19 +229,19 @@ const ProjectPage = (props) => {
           </Suspense>
         )}
         {!isFirstPage && (
-          <Suspense fallback={<Loading />}>
-            <SpotRoute
-              projectId={projectId}
-              startDate={items.start_date}
-              selectedIndex={selectedIndex}
-              item={itemsRoute}
-              setItemRoute={setItemsRoute}
-              itemId={items._id}
-              setIsDrage={setIsDrage}
-              setIsAddDel={setIsAddDel}
-              userName={userName}
-            />
-          </Suspense>
+          // <Suspense fallback={<Loading />}>
+          <SpotRoute
+            projectId={projectId}
+            startDate={items.start_date}
+            selectedIndex={selectedIndex}
+            item={itemsRoute}
+            setItemRoute={setItemsRoute}
+            itemId={items._id}
+            setIsDrage={setIsDrage}
+            setIsAddDel={setIsAddDel}
+            userName={userName}
+          />
+          // </Suspense>
         )}
       </PlanSection>
       {auth.user && <Voicetalk projectId={projectId} auth={auth.user} />}

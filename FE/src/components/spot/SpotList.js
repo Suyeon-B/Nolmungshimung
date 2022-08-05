@@ -1,4 +1,4 @@
-import React, { useState, useContext, useCallback } from "react";
+import React, { useState, useContext, useCallback, useRef } from "react";
 import styled from "styled-components";
 import { DeleteOutlined } from "@ant-design/icons";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
@@ -14,32 +14,6 @@ const SidePlanListDiv = styled.div`
 `;
 const StyledDragDropContext = styled(DragDropContext)``;
 
-const testItem = [
-  { id: "item-1", title: "제주 공항", category: "제주 공항" },
-  { id: "item-2", title: "장소2", category: "음식점 · 제주 제주시" },
-  { id: "item-3", title: "장소3", category: "음식점 · 제주 제주시" },
-  { id: "item-4", title: "장소4", category: "관광명소 · 제주 제주시" },
-  { id: "item-5", title: "장소5", category: "카페 · 제주 제주시" },
-  { id: "item-6", title: "장소6", category: "관광명소 · 제주 제주시" },
-  { id: "item-7", title: "장소7", category: "숙소" },
-  { id: "item-11", title: "장소1", category: "관광명소 · 제주 제주시" },
-  { id: "item-21", title: "장소2", category: "관광명소 · 제주 제주시" },
-  { id: "item-31", title: "장소3", category: "관광명소 · 제주 제주시" },
-  { id: "item-41", title: "장소4", category: "관광명소 · 제주 제주시" },
-  { id: "item-51", title: "장소5", category: "음식점 · 제주 제주시" },
-  { id: "item-61", title: "장소6", category: "카페 · 제주 제주시" },
-  { id: "item-71", title: "장소7", category: "음식점 · 제주 제주시" },
-];
-// const testItem2 = [
-//   { id: "item-11", title: "장소1" },
-//   { id: "item-21", title: "장소2" },
-//   { id: "item-31", title: "장소3" },
-//   { id: "item-41", title: "장소4" },
-//   { id: "item-51", title: "장소5" },
-//   { id: "item-61", title: "장소6" },
-//   { id: "item-71", title: "장소7" },
-// ];
-
 let color = {
   FD6: "#975FFE",
   AT4: "#FF8A3D", // 관광, 명소
@@ -47,12 +21,6 @@ let color = {
   AD5: "#8DD664", // 숙박
   "": "#CFCFCF",
 };
-
-const getItems = (count, offset = 0) =>
-  Array.from({ length: count }, (v, k) => k).map((k) => ({
-    id: `item-${k + offset}-${new Date().getTime()}`,
-    content: `item ${k + offset}`,
-  }));
 
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
@@ -92,8 +60,6 @@ const getListStyle = (isDraggingOver) => ({
   overflow: "scroll",
 });
 
-const transDayItem = (dayItem, selectedIndex) => {};
-
 function SpotList({
   handleVisible,
   handleContents,
@@ -107,6 +73,7 @@ function SpotList({
   // const [state, setState] = useState([testItem, testItem2]);
   const { projectId } = useParams();
   const { connectUser, setConnectUser } = useContext(ConnectuserContext);
+  // const lockRef = useRef({});
   // const userName = sessionStorage.getItem("myNickname");
   const getItemStyle = (isDragging, draggableStyle, color, userName) => ({
     // some basic styles to make the items look a bit nicer
@@ -134,19 +101,12 @@ function SpotList({
     ...draggableStyle,
   });
 
-  const [state, setState] = useState([dayItem[selectedIndex]]);
-
   function onDragStart(result) {
-    // console.log(result);
-    // console.log("drag start");
-    // console.log(dayItem[selectedIndex][result.source.index]);
-    // console.log("사용자 색 : ", connectUser[userName].color);
-    // console.log("사용자 닉네임 : ", userName);
     const newState = [...[...dayItem]];
-    // console.log(newState[selectedIndex][result.source.index].lock);
-    // console.log(newState[selectedIndex][result.source.index].user_name);
+
     const lockAcquire = newState[selectedIndex][result.source.index].user_name;
-    // if username === 자기랑 다르면 못움직이게 alert
+    // lockRef.current = newState[selectedIndex][result.source.index];
+
     if (
       lockAcquire === null ||
       lockAcquire === userName ||
@@ -155,6 +115,8 @@ function SpotList({
       newState[selectedIndex][result.source.index].lock =
         connectUser[userName].color;
       newState[selectedIndex][result.source.index].user_name = userName;
+      // lockRef.current.lock = connectUser[userName].color;
+      // lockRef.current.user_name = userName;
     } else {
       alert("다른 친구가 옮기고 있습니다 ! 잠시 기다려주세요!");
     }
@@ -176,6 +138,9 @@ function SpotList({
 
       newState[sInd][source.index].user_name = null;
       newState[sInd][source.index].lock = "white";
+      // lockRef.current.lock = "white";
+      // lockRef.current.user_name = null;
+
       setItemRoute(newState);
       setIsDrage(true);
       return;
@@ -194,6 +159,8 @@ function SpotList({
       // console.log(newState[selectedIndex][result.destination.index].color);
       newState[selectedIndex][result.destination.index].user_name = null;
       newState[selectedIndex][result.destination.index].lock = "white"; //수정 예쩡
+      // lockRef.current.lock = "white";
+      // lockRef.current.user_name = null;
 
       // console.log("drag end IN newState[selectedIndex] : ", newState);
       setItemRoute(newState);

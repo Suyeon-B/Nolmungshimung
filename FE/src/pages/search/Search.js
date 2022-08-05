@@ -242,29 +242,29 @@ const Search = ({
     });
   }, [sumit]);
 
-  useEffect(() => {
-    if (Places.length === 0) {
-      setPlaceRender(null);
-      return;
-    }
-    setPlaceRender(
-      Places.map((item, i) => (
-        <SearchListRoute
-          id={"list" + i}
-          key={i}
-          itemRoutes={itemRoutes}
-          setItemRoutes={setItemRoutes}
-          projectId={projectId}
-          route={item}
-          idx={i}
-          startDate={startDate}
-          setIsAddDel={setIsAddDel}
-          selected={click === i ? true : false}
-          handleSelect={handleSelect}
-        />
-      ))
-    );
-  }, [Places, click]);
+  // useEffect(() => {
+  //   if (Places.length === 0) {
+  //     setPlaceRender(null);
+  //     return;
+  //   }
+  //   setPlaceRender(
+  //     Places.map((item, i) => (
+  //       <SearchListRoute
+  //         id={"list" + i}
+  //         key={i}
+  //         itemRoutes={itemRoutes}
+  //         setItemRoutes={setItemRoutes}
+  //         projectId={projectId}
+  //         route={item}
+  //         idx={i}
+  //         startDate={startDate}
+  //         setIsAddDel={setIsAddDel}
+  //         selected={click === i ? true : false}
+  //         handleSelect={handleSelect}
+  //       />
+  //     ))
+  //   );
+  // }, [Places, click, itemRoutes]);
 
   const onClcikResult = () => {
     navigate(`/project/${projectId}/result`, { replace: false });
@@ -282,8 +282,8 @@ const Search = ({
           setNeLatlng={setNeLatlng}
         />
         <SearchUl id="searchBar">
-          {placeRender}
-          {/* {Places &&
+          {/* {placeRender} */}
+          {Places &&
             Places.map((item, i) => (
               <SearchListRoute
                 id={"list" + i}
@@ -298,7 +298,7 @@ const Search = ({
                 selected={click === i ? true : false}
                 handleSelect={handleSelect}
               />
-            ))} */}
+            ))}
           <div
             id="pagination"
             style={{ position: "relative", zIndex: 2 }}

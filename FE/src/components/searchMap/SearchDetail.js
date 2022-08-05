@@ -105,7 +105,9 @@ function SearchDetail(props) {
             </svg>
           </StyleIcon>
           <StyleText>
-            <a href={props.contents.place_url}>{props.contents.place_url}</a>
+            <a href={props.contents.place_url} target="_blank">
+              {props.contents.place_url}
+            </a>
           </StyleText>
         </SearchDetailInfoSection>
         <br />

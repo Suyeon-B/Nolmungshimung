@@ -51,13 +51,16 @@ const MemoRtc = ({ project_Id, userName }) => {
     const connectUsers = Object.keys(connectUser).length;
     // console.log(connectUsers);
     if (connectUsers < 2) {
-      fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/memo/${projectID}`, {
-        method: "get",
-        headers: {
-          "content-type": "application/json",
-        },
-        credentials: "include",
-      })
+      fetch(
+        `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/memo/${projectID}`,
+        {
+          method: "get",
+          headers: {
+            "content-type": "application/json",
+          },
+          credentials: "include",
+        }
+      )
         .then((res) => res.json())
         .then((res) => {
           // console.log("res >>> ", res);
@@ -77,6 +80,8 @@ const MemoRtc = ({ project_Id, userName }) => {
   const attachQuillRefs = () => {
     if (typeof reactQuillRef.getEditor !== "function") return;
     quillRef = reactQuillRef.getEditor();
+    console.log(quillRef.editor.delta.ops[0].insert);
+    console.log(quillRef.editor.delta.ops[0].insert === "\n");
   };
 
   const modulesRef = {
