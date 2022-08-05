@@ -164,20 +164,20 @@ const Room = (props) => {
       stream,
       config: {
         iceServers: [
+          { url: 'turn:3.35.208.112', username: 'admin', credential: 'admin'},
           {
             urls: ["turn:eu-0.turn.peerjs.com:3478", "turn:us-0.turn.peerjs.com:3478"],
             username: "peerjs",
             credential: "peerjsp",
           },
-          { urls: "stun:stun.l.google.com:19302" },
-          { urls: "stun:stun1.l.google.com:19302" },
-          { urls: "stun:stun2.l.google.com:19302" },
-          { urls: "stun:stun3.l.google.com:19302" },
-          { urls: "stun:stun4.l.google.com:19302" },
-          { urls: "stun:global.stun.twilio.com:3478?transport=udp" },
-          { url: "turn:3.36.66.43:3478?transport=udp", username: "admin", credential: "admin" },
-        ],
-      },
+          { urls: 'stun:stun.l.google.com:19302' },
+          { urls: 'stun:stun1.l.google.com:19302' },
+          { urls: 'stun:stun2.l.google.com:19302' },
+          { urls: 'stun:stun3.l.google.com:19302' },
+          { urls: 'stun:stun4.l.google.com:19302' },
+          { urls: 'stun:global.stun.twilio.com:3478?transport=udp' },
+          { url: 'turn:3.35.208.112:3478?transport=udp', username: 'admin', credential: 'admin'},
+      ]},
     });
 
     peer.on("signal", (signal) => {
@@ -202,6 +202,7 @@ const Room = (props) => {
       stream,
       config: {
         iceServers: [
+          { url: 'turn:3.35.208.112', username: 'admin', credential: 'admin'},
           {
             urls: ["turn:eu-0.turn.peerjs.com:3478", "turn:us-0.turn.peerjs.com:3478"],
             username: "peerjs",
