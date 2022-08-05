@@ -8,11 +8,9 @@ import NewAudio from './NewAudio';
 import Footer from '../sidebar/Footer'
 
 const Room = (props) => {
-  const currentUser = sessionStorage.getItem('user_email');
-  const currentNick = sessionStorage.getItem('myNickname');
-  if (!currentUser){
-    alert('로그인하세요')
-  }
+  const currentUser = sessionStorage.getItem('user_email') || 'None';
+  const currentNick = sessionStorage.getItem('myNickname') || 'None';
+
   const [peers, setPeers] = useState([]);
   const [userVideoAudio, setUserVideoAudio] = useState({
     localUser: { video: true, audio: true },
