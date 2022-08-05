@@ -8,8 +8,10 @@ import NewAudio from './NewAudio';
 import Footer from '../sidebar/Footer'
 
 const Room = (props) => {
-  const currentUser = sessionStorage.getItem('user_email') || 'King';
-  const currentNick = sessionStorage.getItem('myNickname') || 'King';
+  const person = ["영지", "윤혁", "원영", "준규", "박서준규", "남주혁", "공주", "왕자", "강동원영", "놀멍쉬멍", "쉬멍놀멍"];
+  const man = person[parseInt(Math.random()*10)];
+  const currentUser = sessionStorage.getItem('user_email') ? sessionStorage.getItem('user_email') : man;
+  const currentNick = sessionStorage.getItem('myNickname') ?sessionStorage.getItem('myNickname') : man;
 
   const [peers, setPeers] = useState([]);
   const [userVideoAudio, setUserVideoAudio] = useState({
