@@ -163,6 +163,7 @@ const Room = (props) => {
       stream,
       config: { 
         iceServers: [
+          { url: 'turn:3.35.208.112', username: 'admin', credential: 'admin'},
           {
             urls: [
               "turn:eu-0.turn.peerjs.com:3478",
@@ -177,7 +178,7 @@ const Room = (props) => {
           { urls: 'stun:stun3.l.google.com:19302' },
           { urls: 'stun:stun4.l.google.com:19302' },
           { urls: 'stun:global.stun.twilio.com:3478?transport=udp' },
-          { url: 'turn:3.36.66.43:3478?transport=udp', username: 'admin', credential: 'admin'},
+          { url: 'turn:3.35.208.112:3478?transport=udp', username: 'admin', credential: 'admin'},
       ]},
     });
 
@@ -203,6 +204,7 @@ const Room = (props) => {
       stream,
       config: { 
         iceServers: [
+          { url: 'turn:3.35.208.112', username: 'admin', credential: 'admin'},
           {
             urls: [
               "turn:eu-0.turn.peerjs.com:3478",
