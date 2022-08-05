@@ -8,8 +8,8 @@ import NewAudio from './NewAudio';
 import Footer from '../sidebar/Footer'
 
 const Room = (props) => {
-  const currentUser = sessionStorage.getItem('user_email') || 'None';
-  const currentNick = sessionStorage.getItem('myNickname') || 'None';
+  const currentUser = sessionStorage.getItem('user_email') || 'King';
+  const currentNick = sessionStorage.getItem('myNickname') || 'King';
 
   const [peers, setPeers] = useState([]);
   const [userVideoAudio, setUserVideoAudio] = useState({
