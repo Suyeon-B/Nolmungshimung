@@ -148,7 +148,7 @@ const Room = (props) => {
     });
     return () => {
       socket.emit("BE-leave-room", { roomId, leaver: currentUser });
-      socket.off("disconnect");
+      // socket.off("disconnect");
       // socket.disconnect();
 //       socket.removeAllListeners();
     };
