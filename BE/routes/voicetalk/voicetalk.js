@@ -56,26 +56,26 @@ io.on("connection", (socket) => {
   /**
    * Join Room
    */
-  socket.on("BE-join-room", async({ roomId, userName, nickName }) => {
+  socket.on("BE-join-room", async ({ roomId, userName, nickName }) => {
     // Socket Join RoomName
     await socket.join(roomId);
-    console.log(`BE-join-room!!! , 룸아이디 : ${roomId}, userName : ${userName}, nickName: ${nickName}`)
-    if (userName && nickName)
-    socketList[socket.id] = { userName, nickName, audio: true };
+    console.log(`BE-join-room!!! , 룸아이디 : ${roomId}, userName : ${userName}, nickName: ${nickName}`);
+    if (userName && nickName) {
+      socketList[socket.id] = { userName, nickName, audio: true };
+    }
     console.log(`입장, 소켓아이디 : ${socket.id}, 소켓리스트: ${JSON.stringify(socketList[socket.id])}`);
-
     // Set User List
     // await io.sockets.in(roomId).allSockets((err, clients) => {
     //   console.log('clients:::::: ', clients)
     try {
       const users = [];
       const clients = await io.sockets.in(roomId).allSockets();
-      console.log(clients)
+      console.log(clients);
       clients.forEach((client) => {
         // Add User List
         users.push({ userId: client, info: socketList[client] });
       });
-      console.log(`users 는 : ${JSON.stringify(users)}`)
+      console.log(`users 는 : ${JSON.stringify(users)}`);
       // socket.broadcast.to(roomId).emit("FE-user-join", users);
       socket.to(roomId).emit("FE-user-join", users);
       // io.sockets.in(roomId).emit('FE-user-join', users);
@@ -109,9 +109,7 @@ io.on("connection", (socket) => {
     console.log(`퇴장전 : ${JSON.stringify(socketList)}`);
     delete socketList[socket.id];
     console.log(`퇴장후 : ${JSON.stringify(socketList)}`);
-    socket.broadcast
-      .to(roomId)
-      .emit("FE-user-leave", { userId: socket.id, userName: leaver });
+    socket.broadcast.to(roomId).emit("FE-user-leave", { userId: socket.id, userName: leaver });
     // io.sockets.sockets[socket.id].leave(roomId);
     // io.scokets.in(roomId).allSockets()[socket.id].le
   });
@@ -128,9 +126,7 @@ io.on("connection", (socket) => {
     } else {
       socketList[socket.id].audio = !socketList[socket.id].audio;
     }
-    socket.broadcast
-      .to(roomId)
-      .emit("FE-toggle-camera", { userId: socket.id, switchTarget });
+    socket.broadcast.to(roomId).emit("FE-toggle-camera", { userId: socket.id, switchTarget });
   });
 });
 
