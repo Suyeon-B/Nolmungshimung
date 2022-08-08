@@ -22,7 +22,11 @@ router.post("/", async (req, res) => {
   const project = new Project(req.body[1]);
 
   // project["people"].push(user_date._id.toString());
-  project["people"].push([user_date._id.toString(), user_date.user_name, user_date.user_email]);
+  project["people"].push([
+    user_date._id.toString(),
+    user_date.user_name,
+    user_date.user_email,
+  ]);
 
   // 여행지 경로에 배열 추가하기
   for (let i = 0; i <= project["term"]; i++) {
@@ -59,12 +63,15 @@ router.post("/upload", async (req, res) => {
       info.img = img;
     }
   }
-  console.log("INFO", info);
+  // console.log("INFO", info);
   // const projectId = req.body._id;
   delete info._id;
-  // console.log("?????", info.hashTags);
-  // console.log("?!", projectId);
-  const reqHashTags = info.hashTags;
+  let originHashTags = info.hashTags;
+  const reqHashTags = [...new Set([...originHashTags])];
+  // console.log(reqHashTags);
+  reqHashTags.map((el) => el.value !== "");
+  info.hashTags = reqHashTags;
+
   //redis
   if (reqHashTags.length) await Redis.SADD("hashtags", reqHashTags);
   // console.log("hashtags", hashTags);
@@ -105,19 +112,9 @@ router.post("/upload", async (req, res) => {
           await hashTable.save();
         } catch (error) {
           console.log(`Hash table ${i}번째 error : ${error}`);
-          return res.send(404).send({ error: `hash table ${i}번째 upload Fail` });
-        }
-        try {
-          // category save
-          // find -> push -> save
-          const hashTags = await HashTags.find();
-          // console.log(hashTags[0].hash_tag_names);
-          hashTags[0].hash_tag_names.push(reqHashTags[i]);
-          // console.log(hashTags[0].hash_tag_names);
-          await hashTags[0].save();
-        } catch (error) {
-          console.log(`Hash tag ${i}번째 error : ${error} hashtags DataBase를 만들어 주세요.`);
-          return res.send(404).send({ error: `hash tag ${i}번째 save Fail` });
+          return res
+            .send(404)
+            .send({ error: `hash table ${i}번째 upload Fail` });
         }
       }
     }
@@ -246,7 +243,9 @@ router.post("/:id", async (req, res, next) => {
       }
     }
 
-    userInfo.user_projects = userInfo.user_projects.filter((projectId) => projectId !== id);
+    userInfo.user_projects = userInfo.user_projects.filter(
+      (projectId) => projectId !== id
+    );
 
     await userInfo.save();
 
@@ -353,8 +352,13 @@ router.post("/memberFriend/:id", async (req, res, next) => {
     const projectInfo = await Project.findById({ _id: id });
     // console.log(projectInfo.people);
 
-    if (projectInfo.people.length === 1 || projectInfo.people[0][2] === body.email) {
-      return res.status(202).send({ success: "요청을 수신하였지만, 그에 응하여 행동할 수 없습니다." });
+    if (
+      projectInfo.people.length === 1 ||
+      projectInfo.people[0][2] === body.email
+    ) {
+      return res.status(202).send({
+        success: "요청을 수신하였지만, 그에 응하여 행동할 수 없습니다.",
+      });
     }
 
     for (let i = 1; i < projectInfo.people.length; i++) {

@@ -10,12 +10,7 @@ import SignIn from "../../pages/sign/SignIn";
 import Badge from "../../atomics/Badge";
 
 const setDay = (value) => {
-  return [
-    value.getFullYear(),
-    value.getMonth() + 1,
-    value.getDate(),
-    value.getDay(),
-  ];
+  return [value.getFullYear(), value.getMonth() + 1, value.getDate(), value.getDay()];
 };
 
 const culTripTermData = (startDate, day) => {
@@ -42,16 +37,13 @@ const GetProjectModal = ({ routes }) => {
     console.log(data);
     console.log(selectDate);
 
-    const response = await fetch(
-      `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/selectdate`,
-      {
-        method: "post",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }
-    );
+    const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/selectdate`, {
+      method: "post",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
     console.log(response);
     if (response.ok) {
       const resData = await response.json();
@@ -61,16 +53,13 @@ const GetProjectModal = ({ routes }) => {
   };
 
   const fetchAllDate = async (data) => {
-    const response = await fetch(
-      `https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/alldate`,
-      {
-        method: "post",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify(data),
-      }
-    );
+    const response = await fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/recommend/alldate`, {
+      method: "post",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
     if (response.ok) {
       const resData = await response.json();
       console.log(resData);
@@ -139,6 +128,7 @@ const GetProjectModal = ({ routes }) => {
         cancelText="취소"
       >
         <StyledTitleInput
+          autoFocus="autofocus"
           type="text"
           name=""
           id=""
@@ -147,16 +137,10 @@ const GetProjectModal = ({ routes }) => {
           onChange={onChange}
         />
         <StyledBtnDiv>
-          <StyledAllBtn
-            toggleBtn={toggleBtn}
-            onClick={() => setToggleBtn(true)}
-          >
+          <StyledAllBtn toggleBtn={toggleBtn} onClick={() => setToggleBtn(true)}>
             전체 가져오기
           </StyledAllBtn>
-          <StyledSelectBtn
-            toggleBtn={toggleBtn}
-            onClick={() => setToggleBtn(false)}
-          >
+          <StyledSelectBtn toggleBtn={toggleBtn} onClick={() => setToggleBtn(false)}>
             날짜 선택해서 가져오기
           </StyledSelectBtn>
         </StyledBtnDiv>
@@ -170,21 +154,13 @@ const GetProjectModal = ({ routes }) => {
         {!toggleBtn && (
           <>
             <StyledP>여행 기간 선택하기</StyledP>
-            <ModalCalendarRange
-              setSelectDate={setSelectDate}
-              setStartDate={setStartDate}
-            />
+            <ModalCalendarRange setSelectDate={setSelectDate} setStartDate={setStartDate} />
 
             {selectDate.map((el, index) => {
               return (
                 <p>
                   {culTripTermData(startDate, index)}{" "}
-                  <DropDown
-                    key={index}
-                    index={index}
-                    setSelectDate={setSelectDate}
-                    routes={routes}
-                  />
+                  <DropDown key={index} index={index} setSelectDate={setSelectDate} routes={routes} />
                 </p>
               );
             })}
@@ -199,7 +175,7 @@ const StyledGetBtn = styled.button`
   background-color: #ff8a3d;
   border: none;
   color: white;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 700;
   width: 84px;
   height: 32px;
@@ -221,6 +197,7 @@ const StyledP = styled.p`
 `;
 
 const StyledTitleInput = styled.input`
+  outline: none;
   width: 100%;
   font-size: 24px;
   text-align: center;
@@ -278,14 +255,12 @@ const StyledAllBtn = styled.button`
   align-items: center;
   border-top: 2px solid #ebebeb;
   border-bottom: 2px solid #ebebeb;
-  box-shadow: ${(props) =>
-    props.toggleBtn ? "inset 2px 4px 4px rgb(0 0 0 / 25%)" : ""};
+  box-shadow: ${(props) => (props.toggleBtn ? "inset 2px 4px 4px rgb(0 0 0 / 25%)" : "")};
 `;
 
 const StyledSelectBtn = styled(StyledAllBtn)`
   background-color: ${(props) => (props.toggleBtn ? "white" : "#ebebeb")};
-  box-shadow: ${(props) =>
-    props.toggleBtn ? "none" : "inset 2px 4px 4px rgb(0 0 0 / 25%)"};
+  box-shadow: ${(props) => (props.toggleBtn ? "none" : "inset 2px 4px 4px rgb(0 0 0 / 25%)")};
 `;
 
 const StyledBtnDiv = styled.div`

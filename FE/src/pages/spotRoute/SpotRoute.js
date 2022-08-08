@@ -104,34 +104,41 @@ function SpotRoute({
         selectedIndex={selectedIndex}
         userName={userName}
       />
-
-      <SpotRouteSection>
-        <SpotList
-          selectedIndex={selectedIndex}
-          dayItem={item}
-          setItemRoute={setItemRoute}
-          setIsDrage={setIsDrage}
-          setIsAddDel={setIsAddDel}
-          handleVisible={handleVisible}
-          handleContents={handleContents}
-          userName={userName}
-        />
-        <SpotRouteMap id="myMap" />
-      </SpotRouteSection>
-      <Cursor project_Id={itemId} selectedIndex={selectedIndex} />
-      <MemoRtc project_Id={itemId} userName={userName} />
-      {contents !== null && (
-        <Suspense fallback={<div>Loading...</div>}>
-          <SearchDetail
-            onClose={onClose}
-            visible={visible}
-            contents={contents}
+      <SpotRouteWrapper>
+        <SpotRouteSection>
+          <SpotList
+            selectedIndex={selectedIndex}
+            dayItem={item}
+            setItemRoute={setItemRoute}
+            setIsDrage={setIsDrage}
+            setIsAddDel={setIsAddDel}
+            handleVisible={handleVisible}
+            handleContents={handleContents}
+            userName={userName}
           />
-        </Suspense>
+          <SpotRouteMap id="myMap" />
+        </SpotRouteSection>
+        <MemoRtc project_Id={itemId} userName={userName} />
+      </SpotRouteWrapper>
+
+      <Cursor project_Id={itemId} selectedIndex={selectedIndex} />
+
+      {contents !== null && (
+        // <Suspense fallback={<div>Loading...</div>}>
+        <SearchDetail onClose={onClose} visible={visible} contents={contents} />
+        // </Suspense>
       )}
     </SpotRouteContainer>
   );
 }
+
+const SpotRouteWrapper = styled.div`
+  height: 100vh;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 
 // width: calc(100% - 100px);
 const SpotRouteContainer = styled.div`
@@ -143,7 +150,7 @@ const SpotRouteContainer = styled.div`
 `;
 
 const SpotRouteMap = styled.div`
-  width: 47%;
+  width: 48vw;
   height: 100%;
   margin-left: 19px;
   border-radius: 15px;
@@ -156,7 +163,7 @@ const SpotRouteSection = styled.section`
   flex-direction: row;
   width: 100%;
   height: calc(50% - 37px);
-  justify-content: center;
+  justify-content: space-between;
   margin-bottom: 20px;
 `;
 

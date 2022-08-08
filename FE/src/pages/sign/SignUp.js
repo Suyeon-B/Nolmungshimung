@@ -68,7 +68,6 @@ const LogInBtn = styled.button`
   background: #ebebeb;
   border-radius: 30px 0px 0px 30px;
   border: 0;
-  font-family: Rounded Mplus 1c Bold;
   font-style: normal;
   font-weight: 700;
   font-size: 20px;
@@ -83,7 +82,6 @@ const SignUpBtn = styled.button`
   background: linear-gradient(90deg, #bde5ff 0%, #41c0ff 100%);
   border-radius: 0px 30px 30px 0px;
   border: 0;
-  font-family: Rounded Mplus 1c Bold;
   font-style: normal;
   font-weight: 700;
   font-size: 20px;

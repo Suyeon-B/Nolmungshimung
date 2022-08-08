@@ -34,25 +34,18 @@ const HomeNew = () => {
     // <!--Waves Container-->
     <>
       <StyledImgDiv>
-        <img
-          src="\statics\images\main_logo.png"
-          style={{ width: "auto", height: "auto" }}
-        />
+        <img src="\statics\images\main_logo.png" style={{ width: "auto", height: "auto" }} />
+        <Logo>놀멍쉬멍</Logo>
       </StyledImgDiv>
       <StyleHomeDiv>
         {/* {auth === null && <h1>LOADING</h1>} */}
         {auth.user && (
           <>
-            <HomeItems
-              onClickLogOut={onClickLogOut}
-              goRecommend={goRecommend}
-            />
+            <HomeItems onClickLogOut={onClickLogOut} goRecommend={goRecommend} />
             <ProjectList goProject={goProject} />
           </>
         )}
-        {auth.user === undefined && (
-          <HomeMain goRecommend={goRecommend} goSignIn={goSignIn} />
-        )}
+        {auth.user === undefined && <HomeMain goRecommend={goRecommend} goSignIn={goSignIn} />}
 
         <StyleWaveDiv>
           <svg
@@ -64,36 +57,13 @@ const HomeNew = () => {
             shapeRendering="auto"
           >
             <defs>
-              <path
-                id="gentle-wave"
-                d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"
-              />
+              <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
             </defs>
             <g className="parallax">
-              <use
-                xlinkHref="#gentle-wave"
-                x="48"
-                y="0"
-                fill="rgba(115, 209, 255,0.7)"
-              />
-              <use
-                xlinkHref="#gentle-wave"
-                x="48"
-                y="3"
-                fill="rgba(115, 209, 255,0.5)"
-              />
-              <use
-                xlinkHref="#gentle-wave"
-                x="48"
-                y="5"
-                fill="rgba(115, 209, 255,0.3)"
-              />
-              <use
-                xlinkHref="#gentle-wave"
-                x="48"
-                y="7"
-                fill="rgba(115, 209, 255,0.2)"
-              />
+              <use xlinkHref="#gentle-wave" x="48" y="0" fill="rgba(115, 209, 255,0.7)" />
+              <use xlinkHref="#gentle-wave" x="48" y="3" fill="rgba(115, 209, 255,0.5)" />
+              <use xlinkHref="#gentle-wave" x="48" y="5" fill="rgba(115, 209, 255,0.3)" />
+              <use xlinkHref="#gentle-wave" x="48" y="7" fill="rgba(115, 209, 255,0.2)" />
             </g>
           </svg>
         </StyleWaveDiv>
@@ -105,12 +75,21 @@ const HomeNew = () => {
 };
 
 const StyledImgDiv = styled.div`
+  display: flex;
+  align-items: center;
   position: absolute;
   left: 25px;
   top: 15px;
   z-index: 2;
+  cursor: pointer;
 `;
-
+const Logo = styled.div`
+  color: #ff8a3d;
+  font-size: 28px;
+  font-weight: bold;
+  min-width: fit-content;
+  margin-left: 10px;
+`;
 const StyleWaveDiv = styled.div`
   position: absolute;
   width: 100vw;

@@ -41,11 +41,10 @@ const PlanTitle = styled.h1`
   display: inline-flex;
   font-style: normal;
   font-weight: 700;
-  font-size: 2.5vh;
+  font-size: 2.8vh;
   line-height: 48px;
   color: #ff8a3d;
   margin-left: 10px;
-  /* color: #000000; */
 `;
 
 export default React.memo(SideBarTitle);

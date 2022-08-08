@@ -50,6 +50,7 @@ const randomRGB = function () {
   rgb += (Math.floor(Math.random() * 90 + 1) + 130).toString(16).padStart(2, "0");
   return "#" + rgb;
 };
+
 const projectSocketRoom = {};
 const projectSchema = require("./models/Project");
 
@@ -88,7 +89,6 @@ io.on("connection", (socket) => {
   */
   socket.on("projectJoin", ([projectId, userName, userEmail, selectedIndex]) => {
     try {
-      console.log("projectJoin", projectId);
       projectSocketRoom[projectId] = {
         ...projectSocketRoom[projectId],
         [userName]: {
@@ -99,15 +99,6 @@ io.on("connection", (socket) => {
       };
       socket.join(projectId);
       io.to(projectId).emit("connectUser", projectSocketRoom[projectId]);
-
-      // io.of("/").adapter.on("create-room", (room) => {
-      //   console.log(`room ${room} was created`);
-      // });
-
-      // io.of("/").adapter.on("join-room", (room, id) => {
-      //   console.log(`socket ${id} has joined room ${room}`);
-      // });
-      // console.log(socket);
     } catch (error) {
       console.log(error);
     }

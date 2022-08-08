@@ -187,7 +187,6 @@ function FriendInvite({ userEmail }) {
 }
 
 const FriendInviteTitle = styled.span`
-  font-family: "Rounded Mplus 1c Bold";
   font-style: normal;
   font-weight: 700;
   font-size: 20px;
@@ -242,7 +241,6 @@ const InviteForm = styled.div`
 
 const InviteEmailText = styled.span`
   color: white;
-  font-family: "Rounded Mplus 1c Bold";
   font-style: normal;
   font-weight: 700;
   font-size: 15px;

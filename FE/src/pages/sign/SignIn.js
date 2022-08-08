@@ -70,7 +70,6 @@ const LogInBtn = styled.button`
   background: linear-gradient(90deg, #ff7a00 0%, #ffbd80 100%);
   border-radius: 30px 0px 0px 30px;
   border: 0;
-  font-family: Rounded Mplus 1c Bold;
   font-style: normal;
   font-weight: 700;
   font-size: 20px;
@@ -85,7 +84,6 @@ const SignUpBtn = styled.button`
   background: #ebebeb;
   border-radius: 0px 30px 30px 0px;
   border: 0;
-  font-family: Rounded Mplus 1c Bold;
   font-style: normal;
   font-weight: 700;
   font-size: 20px;
@@ -118,7 +116,6 @@ const SubmitInput = styled.input`
   border-radius: 30px;
   background: linear-gradient(90deg, #ff7a00 0%, #ffa149 50%, #febc7f 100%);
   border: 0;
-  font-family: Rounded Mplus 1c Bold;
   font-style: normal;
   font-weight: 700;
   font-size: 20px;

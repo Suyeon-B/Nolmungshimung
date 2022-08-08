@@ -7,7 +7,7 @@ var app = express();
 
 const privateKey = fs.readFileSync(process.env.keyFile || "nolshimung-key.pem", "utf8");
 const certificate = fs.readFileSync(process.env.certFile || "nolshimung.pem", "utf8");
-console.log('인증서 : ', process.env.keyFile);
+// console.log('인증서 : ', process.env.keyFile);
 
 const credentials = {
   key: privateKey,
@@ -33,34 +33,36 @@ server.listen(3003, function () {
 
 // Socket
 io.on("connection", (socket) => {
-  // console.log(`New User connected: ${socket.id}`);
+  console.log(`보이스톡 New User connected: ${socket.id}`);
 
   socket.on("disconnect", () => {
     socket.disconnect();
-    // console.log("User disconnected!");
+    console.log("보이스톡 User disconnected!");
   });
 
-  socket.on("BE-check-user", async ({ roomId, userName }) => {
-    let error = false;
+  // socket.on("BE-check-user", async ({ roomId, userName }) => {
+  //   let error = false;
 
-    await io.sockets.in(roomId).allSockets((err, clients) => {
-      clients.forEach((client) => {
-        if (socketList[client] == userName) {
-          error = true;
-        }
-      });
-      socket.emit("FE-error-user-exist", { error });
-    });
-  });
+  //   await io.sockets.in(roomId).allSockets((err, clients) => {
+  //     clients.forEach((client) => {
+  //       if (socketList[client] == userName) {
+  //         error = true;
+  //       }
+  //     });
+  //     socket.emit("FE-error-user-exist", { error });
+  //   });
+  // });
 
   /**
    * Join Room
    */
-  socket.on("BE-join-room", async ({ roomId, userName, nickName }) => {
+  socket.on("BE-join-room", async({ roomId, userName, nickName }) => {
     // Socket Join RoomName
     await socket.join(roomId);
+    console.log(`BE-join-room!!! , 룸아이디 : ${roomId}, userName : ${userName}, nickName: ${nickName}`)
+    if (userName && nickName)
     socketList[socket.id] = { userName, nickName, audio: true };
-    // console.log(`입장 : ${JSON.stringify(socketList)}`);
+    console.log(`입장, 소켓아이디 : ${socket.id}, 소켓리스트: ${JSON.stringify(socketList[socket.id])}`);
 
     // Set User List
     // await io.sockets.in(roomId).allSockets((err, clients) => {
@@ -68,12 +70,14 @@ io.on("connection", (socket) => {
     try {
       const users = [];
       const clients = await io.sockets.in(roomId).allSockets();
+      console.log(clients)
       clients.forEach((client) => {
         // Add User List
         users.push({ userId: client, info: socketList[client] });
       });
-
-      socket.broadcast.to(roomId).emit("FE-user-join", users);
+      console.log(`users 는 : ${JSON.stringify(users)}`)
+      // socket.broadcast.to(roomId).emit("FE-user-join", users);
+      socket.to(roomId).emit("FE-user-join", users);
       // io.sockets.in(roomId).emit('FE-user-join', users);
     } catch (e) {
       console.log(`BE-join-room Err ${e}`);
@@ -102,9 +106,9 @@ io.on("connection", (socket) => {
   });
 
   socket.on("BE-leave-room", ({ roomId, leaver }) => {
-    // console.log(`퇴장전 : ${JSON.stringify(socketList)}`);
+    console.log(`퇴장전 : ${JSON.stringify(socketList)}`);
     delete socketList[socket.id];
-    // console.log(`퇴장후 : ${JSON.stringify(socketList)}`);
+    console.log(`퇴장후 : ${JSON.stringify(socketList)}`);
     socket.broadcast
       .to(roomId)
       .emit("FE-user-leave", { userId: socket.id, userName: leaver });

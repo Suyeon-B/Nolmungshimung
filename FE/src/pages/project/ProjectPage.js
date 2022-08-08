@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useCallback, Suspense } from "react";
 import { useParams } from "react-router-dom";
 import PlanSideBar from "../../components/sidebar/PlanSideBar";
-// import Search from "../search/Search";
-const Search = React.lazy(() => import("../search/Search"));
+import Search from "../search/Search";
+// const Search = React.lazy(() => import("../search/Search"));
 // import Sfu from "./Sfu";
 // import SpotRoute from "../spotRoute/SpotRoute";
 const SpotRoute = React.lazy(() => import("../spotRoute/SpotRoute"));
@@ -37,26 +37,6 @@ const ProjectPage = (props) => {
   const [connectUser, setConnectUser] = useState({});
   const [attentionIndex, setAttentionIndex] = useState(-1);
 
-  const colors = {
-    // "#FF8A3D": false,
-    "#8DD664": false,
-    "#FF6169": false,
-    "#975FFE": false,
-    "#0072BC": false,
-    "#F6282B": false,
-    "#FAD700": false,
-    "#05FFCC": false,
-    "#4A4A4A": false,
-  };
-  const getColor = () => {
-    for (let color in colors) {
-      if (!colors[color]) {
-        colors[color] = true;
-        return color;
-      }
-    }
-  };
-
   useEffect(() => {
     window.addEventListener("beforeunload", (event) => {
       socket.emit("projectLeave", [projectId, auth.user.user_name]);
@@ -70,8 +50,9 @@ const ProjectPage = (props) => {
   }, []);
   let userName = auth?.user?.user_name;
 
+  // console.log(connectUser);
   useEffect(() => {
-    console.log(auth);
+    // console.log(auth);
 
     if (projectId === null) return;
     async function fetchInfo() {
@@ -89,39 +70,9 @@ const ProjectPage = (props) => {
 
   useEffect(() => {
     socket.on("connectUser", (connectUserInfo) => {
-      // console.log("connectUser", connectUserInfo);
-      // console.log(colors);
-      setConnectUser((prev) => {
-        let newUser = { ...prev };
-        const newUserArr = Object.keys(newUser);
-        const currentArr = Object.keys(connectUserInfo);
-
-        let diff;
-        //유저가 나간 경유
-        if (newUserArr.length > currentArr.length) {
-          diff = newUserArr.filter((el) => !currentArr.includes(el));
-          colors[newUser[diff[0]].color] = false;
-          delete newUser[diff[0]];
-          return newUser;
-        } else if (newUserArr.length === currentArr.length) {
-          for (let user in newUser) {
-            newUser[user].selectedIndex = connectUserInfo[user].selectedIndex;
-          }
-        }
-        // 기존 정보가 아닌 다른 정보
-        diff = currentArr.filter((el) => !newUserArr.includes(el));
-        for (let user of diff) {
-          newUser = {
-            ...newUser,
-            [user]: {
-              color: getColor(),
-              selectedIndex: connectUserInfo[user].selectedIndex,
-            },
-          };
-        }
-        return newUser;
-      });
+      setConnectUser(connectUserInfo);
     });
+
     return () => {
       socket.removeAllListeners("connectUser");
     };
@@ -133,7 +84,6 @@ const ProjectPage = (props) => {
     // console.log("projectJoin");
     // [수연] userContext에 userEmail 추가
     socket.emit("projectJoin", [projectId, auth.user.user_name, auth.user.user_email]);
-
     return () => {
       socket.emit("projectLeave", [projectId, userName]);
       socket.off("connect");
@@ -145,6 +95,7 @@ const ProjectPage = (props) => {
 
   useEffect(() => {
     // console.log(itemsRoute);
+
     if (itemsRoute === null) return;
     if (isAddDel || isDrage) {
       console.log("socket 이벤트");
@@ -172,6 +123,7 @@ const ProjectPage = (props) => {
 
   useEffect(() => {
     socket.on("updateRoute", (resItemsRoute) => {
+      console.log("updateRoute", resItemsRoute);
       setItemsRoute(resItemsRoute);
     });
     return () => {
@@ -268,19 +220,19 @@ const ProjectPage = (props) => {
           </Suspense>
         )}
         {!isFirstPage && (
-          <Suspense fallback={<Loading />}>
-            <SpotRoute
-              projectId={projectId}
-              startDate={items.start_date}
-              selectedIndex={selectedIndex}
-              item={itemsRoute}
-              setItemRoute={setItemsRoute}
-              itemId={items._id}
-              setIsDrage={setIsDrage}
-              setIsAddDel={setIsAddDel}
-              userName={userName}
-            />
-          </Suspense>
+          // <Suspense fallback={<Loading />}>
+          <SpotRoute
+            projectId={projectId}
+            startDate={items.start_date}
+            selectedIndex={selectedIndex}
+            item={itemsRoute}
+            setItemRoute={setItemsRoute}
+            itemId={items._id}
+            setIsDrage={setIsDrage}
+            setIsAddDel={setIsAddDel}
+            userName={userName}
+          />
+          // </Suspense>
         )}
       </PlanSection>
       {auth.user && <Voicetalk projectId={projectId} auth={auth.user} />}

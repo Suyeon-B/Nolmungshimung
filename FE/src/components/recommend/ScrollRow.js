@@ -8,7 +8,10 @@ const ScrollRow = ({ el, i }) => {
     <StyledDiv>
       <Link to={`project/${el._id}`}>
         <RecommendItems>
-          <div className="background-img" style={{ backgroundImage: `url(${el.img})` }}>
+          <div
+            className="background-img"
+            style={{ backgroundImage: `linear-gradient( rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),url(${el.img})` }}
+          >
             <div className="uploadProjectInfo-title">{el.project_title}</div>
             <HashTagBackground>
               <div className="uploadProjectInfo-hashTags">

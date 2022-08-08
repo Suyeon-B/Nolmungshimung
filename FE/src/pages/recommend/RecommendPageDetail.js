@@ -7,6 +7,14 @@ import GetProjectModal from "../../components/recommendModal/GetProjectModal";
 import SearchDetail from "../../components/searchMap/SearchDetail";
 import { spotDetail } from "../../components/spot/SpotDetail";
 
+const color = {
+  FD6: "#975FFE",
+  AT4: "#FF8A3D", // 관광, 명소
+  CE7: "#FF6169", // 음식점>카페
+  AD5: "#8DD664", // 숙박
+  "": "#CFCFCF",
+};
+
 const randomRGB = function () {
   return Math.round(Math.random() * 0xffffff).toString(16);
 };
@@ -114,10 +122,20 @@ const RecommendPageDetail = () => {
                   <br />
                 </ResultTitle>{" "}
                 {route.map((el, index) => (
-                  <ResultRoute key={el.uid} onClick={() => showDrawer(el)}>
-                    {el.place_name}
-                    <br />
-                  </ResultRoute>
+                  <StyledTitleContainer key={el.uid}>
+                    <StyledTitlecircle
+                      // randomRGB={colorArr[idx]}
+                      style={{
+                        background: color[el.category_group_code],
+                      }}
+                    >
+                      {index + 1}
+                    </StyledTitlecircle>
+                    <ResultRoute onClick={() => showDrawer(el)}>
+                      {el.place_name}
+                      <br />
+                    </ResultRoute>
+                  </StyledTitleContainer>
                 ))}
               </div>
             ) : (
@@ -127,7 +145,7 @@ const RecommendPageDetail = () => {
                   DAY {idx + 1} |
                   <br />
                 </ResultTitle>
-                <ResultRoute key={idx + 991}>
+                <ResultRoute key={idx + 991} style={{ color: "gray" }}>
                   쉬는 날 🌱
                   <br />
                 </ResultRoute>
@@ -159,14 +177,39 @@ const ResultContainer = styled.div`
     width: 0;
   }
 `;
+
+const StyledTitleContainer = styled.div`
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  margin-bottom: 11px;
+  /* border-bottom: 1px solid black; */
+  &:hover {
+    background: whitesmoke;
+  }
+`;
+
+const StyledTitlecircle = styled.div`
+  display: inline-flex;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  text-align: center;
+  font-size: 12px;
+  margin-right: 10px;
+  color: white;
+  justify-content: center;
+  align-items: center;
+  border: ${(props) => `2px solid ${props.randomRGB}`};
+  /* 2px solid red; */
+`;
+
 const ResultXTitle = styled.span`
-  font-family: "Inter";
   font-style: normal;
   font-weight: 700;
   font-size: 20px;
 `;
 const ResultProjectTitle = styled.span`
-  font-family: "Inter";
   font-style: normal;
   font-weight: 900;
   font-size: 35px;
@@ -179,15 +222,14 @@ const ResultLine = styled.div`
   margin-top: 20px;
 `;
 const ResultTitle = styled.section`
-  font-family: "Inter";
   font-style: normal;
   font-weight: 800;
   font-size: 25px;
   line-height: 36px;
   margin-bottom: 12px;
 `;
-const ResultRoute = styled.li`
-  font-family: "Inter";
+
+const ResultRoute = styled.div`
   font-style: normal;
   font-weight: 700;
   font-size: 17px;

@@ -3,8 +3,7 @@ import SearchListRoute from "../../components/searchMap/SearchListRoute";
 import SearchBar from "../../components/searchMap/SearchBar";
 import styled from "styled-components";
 // import NomalMarker from "../../../public/statics/images/location-dot-solid.svg";
-import { Button } from "antd";
-import { RedoOutlined } from "@ant-design/icons";
+import { useNavigate, useParams } from "react-router-dom";
 import MapSearchBtn from "../../atomics/MapSearchBtn";
 import Badge from "../../atomics/Badge";
 
@@ -72,6 +71,7 @@ const Search = ({
   startDate,
   setIsAddDel,
 }) => {
+  const navigate = useNavigate();
   const [searchPlace, setSearchPlace] = useState("");
   // 검색결과 배열에 담아줌
   const [Places, setPlaces] = useState([]);
@@ -242,29 +242,33 @@ const Search = ({
     });
   }, [sumit]);
 
-  useEffect(() => {
-    if (Places.length === 0) {
-      setPlaceRender(null);
-      return;
-    }
-    setPlaceRender(
-      Places.map((item, i) => (
-        <SearchListRoute
-          id={"list" + i}
-          key={i}
-          itemRoutes={itemRoutes}
-          setItemRoutes={setItemRoutes}
-          projectId={projectId}
-          route={item}
-          idx={i}
-          startDate={startDate}
-          setIsAddDel={setIsAddDel}
-          selected={click === i ? true : false}
-          handleSelect={handleSelect}
-        />
-      ))
-    );
-  }, [Places, click]);
+  // useEffect(() => {
+  //   if (Places.length === 0) {
+  //     setPlaceRender(null);
+  //     return;
+  //   }
+  //   setPlaceRender(
+  //     Places.map((item, i) => (
+  //       <SearchListRoute
+  //         id={"list" + i}
+  //         key={i}
+  //         itemRoutes={itemRoutes}
+  //         setItemRoutes={setItemRoutes}
+  //         projectId={projectId}
+  //         route={item}
+  //         idx={i}
+  //         startDate={startDate}
+  //         setIsAddDel={setIsAddDel}
+  //         selected={click === i ? true : false}
+  //         handleSelect={handleSelect}
+  //       />
+  //     ))
+  //   );
+  // }, [Places, click, itemRoutes]);
+
+  const onClcikResult = () => {
+    navigate(`/project/${projectId}/result`, { replace: false });
+  };
 
   return (
     <Wapper>
@@ -278,8 +282,8 @@ const Search = ({
           setNeLatlng={setNeLatlng}
         />
         <SearchUl id="searchBar">
-          {placeRender}
-          {/* {Places &&
+          {/* {placeRender} */}
+          {Places &&
             Places.map((item, i) => (
               <SearchListRoute
                 id={"list" + i}
@@ -294,7 +298,7 @@ const Search = ({
                 selected={click === i ? true : false}
                 handleSelect={handleSelect}
               />
-            ))} */}
+            ))}
           <div
             id="pagination"
             style={{ position: "relative", zIndex: 2 }}
@@ -302,6 +306,7 @@ const Search = ({
         </SearchUl>
       </SearchListDiv>
       <StyledMapDiv id="searchMap">
+        <StyledBtn onClick={onClcikResult}>작성완료</StyledBtn>
         <MapSearchBtn onClick={onClick} />
         {/* <Button
           onClick={onClick}
@@ -325,6 +330,25 @@ const Search = ({
   );
 };
 
+const StyledBtn = styled.button`
+  outline: 0;
+  background-color: rgb(255, 138, 61);
+  border: none;
+  color: #fff;
+  position: relative;
+  height: 40px;
+  width: 90px;
+  z-index: 2;
+  left: 40%;
+  top: 4%;
+  border-radius: 40px;
+  cursor: pointer;
+  &:hover {
+    background: rgb(252, 154, 93) !important;
+    transition: background 0.3s ease, color 0.1s ease;
+  }
+`;
+
 const Wapper = styled.div`
   display: flex;
 `;
@@ -347,8 +371,11 @@ const SearchUl = styled.ul`
 
 const StyledMapDiv = styled.div`
   display: flex;
-  align-items: flex-end;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+  /* align-items: flex-end;
+  justify-content: center; */
   height: 100vh;
   min-width: calc(100% - 340px);
   position: relative;
