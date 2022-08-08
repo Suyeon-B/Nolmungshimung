@@ -37,7 +37,7 @@ function MarkMap(item, selectedIndex) {
         draggable: false,
         level: 3, // 지도의 확대 레벨
       };
-    console.log("렌더링ㄴ");
+    // console.log("렌더링ㄴ");
     map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
     polyline = new kakao.maps.Polyline({
       // path: line, // 선을 구성하는 좌표배열 입니다
