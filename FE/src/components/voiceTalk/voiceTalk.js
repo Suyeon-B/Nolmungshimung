@@ -22,7 +22,7 @@ const Room = (props) => {
   const userStream = useRef();
   // const roomId = props.match.params.roomId;
   const roomId = props.projectId;
-  console.log(`룸이름 : ${roomId}`)
+  console.log(`룸이름 : ${roomId}`);
   // const currentUser = u
 
   // useEffect(() => {
@@ -55,11 +55,11 @@ const Room = (props) => {
     //   }
     // });
     // Connect Camera & Mic
-    console.log('유즈이펙트!!!!!!!!', currentNick, currentUser);
+    console.log("유즈이펙트!!!!!!!!", currentNick, currentUser);
     navigator.mediaDevices.getUserMedia({ video: false, audio: true }).then((stream) => {
       userAudioRef.current.srcObject = stream;
       userStream.current = stream;
-      console.log('BE-join-room 직전!!!!!!!!', currentNick, currentUser);
+      console.log("BE-join-room 직전!!!!!!!!", currentNick, currentUser);
       socket.emit("BE-join-room", {
         roomId,
         userName: currentUser,
@@ -95,12 +95,12 @@ const Room = (props) => {
             });
           }
         });
-        console.log(`peers는 : ${JSON.stringify(peers)}`)
-        setPeers(peers);        
+        console.log(`peers는 : ${JSON.stringify(peers)}`);
+        setPeers(peers);
       });
 
       socket.on("FE-receive-call", ({ signal, from, info }) => {
-        console.log(`FE-receive-call 시작`)
+        console.log(`FE-receive-call 시작`);
         let { userName, nickName, audio } = info;
         const peerIdx = findPeer(from);
 
@@ -123,7 +123,7 @@ const Room = (props) => {
             };
           });
         }
-        console.log(`FE-receive-call 끝`)
+        console.log(`FE-receive-call 끝`);
       });
 
       socket.on("FE-call-accepted", ({ signal, answerId }) => {
@@ -136,7 +136,7 @@ const Room = (props) => {
       socket.on("FE-user-leave", ({ userId, userName }) => {
         console.log("FE-usr-leave ok", JSON.stringify(userId), JSON.stringify(userName));
         const peerIdx = findPeer(userId);
-        if (peerIdx){
+        if (peerIdx) {
           peerIdx.peer.destroy();
           setPeers((users) => {
             users = users.filter((user) => user.peerID !== peerIdx.peer.peerID);
@@ -150,27 +150,28 @@ const Room = (props) => {
       socket.emit("BE-leave-room", { roomId, leaver: currentUser });
       // socket.off("disconnect");
       // socket.disconnect();
-//       socket.removeAllListeners();
+      //       socket.removeAllListeners();
     };
     // eslint-disable-next-line
   }, []);
   // console.log(socket)
   function createPeer(userId, caller, stream) {
     // const peer = new Peer({
-      const peer = new window.SimplePeer({
+    const peer = new window.SimplePeer({
       initiator: true,
       trickle: true,
       stream,
-      config: { 
+      config: {
         iceServers: [
-          { urls: 'stun:stun.l.google.com:19302' },
-          { urls: 'stun:stun1.l.google.com:19302' },
-          { urls: 'stun:stun2.l.google.com:19302' },
-          { urls: 'stun:stun3.l.google.com:19302' },
-          { urls: 'stun:stun4.l.google.com:19302' },
-          { urls: 'stun:global.stun.twilio.com:3478?transport=udp' },
-          { url: 'turn:3.36.66.43:3478?transport=udp', username: 'admin', credential: 'admin'},
-      ]},
+          { urls: "stun:stun.l.google.com:19302" },
+          { urls: "stun:stun1.l.google.com:19302" },
+          { urls: "stun:stun2.l.google.com:19302" },
+          { urls: "stun:stun3.l.google.com:19302" },
+          { urls: "stun:stun4.l.google.com:19302" },
+          { urls: "stun:global.stun.twilio.com:3478?transport=udp" },
+          { url: "turn:3.36.66.43:3478?transport=udp", username: "admin", credential: "admin" },
+        ],
+      },
     });
 
     peer.on("signal", (signal) => {
@@ -189,20 +190,21 @@ const Room = (props) => {
 
   function addPeer(incomingSignal, callerId, stream) {
     // const peer = new Peer({
-      const peer = new window.SimplePeer({
+    const peer = new window.SimplePeer({
       initiator: false,
       trickle: true,
       stream,
-      config: { 
+      config: {
         iceServers: [
-          { urls: 'stun:stun.l.google.com:19302' },
-          { urls: 'stun:stun1.l.google.com:19302' },
-          { urls: 'stun:stun2.l.google.com:19302' },
-          { urls: 'stun:stun3.l.google.com:19302' },
-          { urls: 'stun:stun4.l.google.com:19302' },
-          { urls: 'stun:global.stun.twilio.com:3478?transport=udp' },
-          { url: 'turn:3.36.66.43:3478?transport=udp', username: 'admin', credential: 'admin'},
-      ]},
+          { urls: "stun:stun.l.google.com:19302" },
+          { urls: "stun:stun1.l.google.com:19302" },
+          { urls: "stun:stun2.l.google.com:19302" },
+          { urls: "stun:stun3.l.google.com:19302" },
+          { urls: "stun:stun4.l.google.com:19302" },
+          { urls: "stun:global.stun.twilio.com:3478?transport=udp" },
+          { url: "turn:3.36.66.43:3478?transport=udp", username: "admin", credential: "admin" },
+        ],
+      },
     });
 
     peer.on("signal", (signal) => {
