@@ -95,6 +95,8 @@ const MemoRtc = ({ project_Id, userName }) => {
   const attachQuillRefs = () => {
     if (typeof reactQuillRef.getEditor !== "function") return;
     quillRef = reactQuillRef.getEditor();
+    // console.log(quillRef.editor.delta.ops[0].insert);
+    // console.log(quillRef.editor.delta.ops[0].insert === "\n");
   };
 
   const modulesRef = {

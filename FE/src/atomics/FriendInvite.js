@@ -6,7 +6,7 @@ import styled from "styled-components";
 import Badge from "./Badge";
 // import InviteEmailInput from "./InviteEmailInput";
 
-function FriendInvite({ currentUser }) {
+function FriendInvite({ userEmail }) {
   const { projectId } = useParams();
   const [email, setEmail] = useState("");
   const [friends, setFriends] = useState([
@@ -114,12 +114,18 @@ function FriendInvite({ currentUser }) {
   };
 
   const onDelete = async (event) => {
-    if (confirm("프로젝트 멤버에서 삭제하시겠어요?")) {
-      if (currentUser === event) {
-        alert("셀프 삭제는 할 수 없어요 🥲");
-        return;
-      }
-
+    // console.log("userEmail >>> ", userEmail);
+    // console.log(event);
+    if (userEmail === event) {
+      Modal.error({
+        content: "셀프 삭제는 할 수 없어요 🥲",
+      });
+      return;
+    } else if (
+      Modal.confirm({
+        content: "프로젝트 멤버에서 삭제하시겠어요?",
+      })
+    ) {
       deleteFriendDiv(event);
       const data = {
         email: event,

@@ -22,14 +22,8 @@ voiceRouter;
 var app = express();
 // [원영] 소켓 서버 추가
 
-const privateKey = fs.readFileSync(
-  process.env.keyFile || "nolshimung-key.pem",
-  "utf8"
-);
-const certificate = fs.readFileSync(
-  process.env.certFile || "nolshimung.pem",
-  "utf8"
-);
+const privateKey = fs.readFileSync(process.env.keyFile || "nolshimung-key.pem", "utf8");
+const certificate = fs.readFileSync(process.env.certFile || "nolshimung.pem", "utf8");
 const credentials = {
   key: privateKey,
   cert: certificate,
@@ -48,6 +42,14 @@ server.listen(3001, function () {
   console.log("Socket IO server listening on port 3001");
 });
 
+// 프로젝트에 유저 등록시 랜덤 색상
+const randomRGB = function () {
+  let rgb = "";
+  rgb += (Math.floor(Math.random() * 90 + 1) + 130).toString(16).padStart(2, "0");
+  rgb += (Math.floor(Math.random() * 90 + 1) + 130).toString(16).padStart(2, "0");
+  rgb += (Math.floor(Math.random() * 90 + 1) + 130).toString(16).padStart(2, "0");
+  return "#" + rgb;
+};
 const projectSocketRoom = {};
 const projectSchema = require("./models/Project");
 
@@ -84,13 +86,15 @@ io.on("connection", (socket) => {
   /* 프로젝트에 입장시 입장한 유저 projectSocketRoom에 저장
     프로젝트에 접속한 모든 유저에게 socket 이벤트 전송
   */
-  socket.on("projectJoin", ([projectId, userName, selectedIndex]) => {
+  socket.on("projectJoin", ([projectId, userName, userEmail, selectedIndex]) => {
     try {
       console.log("projectJoin", projectId);
       projectSocketRoom[projectId] = {
         ...projectSocketRoom[projectId],
         [userName]: {
           selectedIndex,
+          color: randomRGB(),
+          userEmail: userEmail,
         },
       };
       socket.join(projectId);
@@ -119,9 +123,7 @@ io.on("connection", (socket) => {
       console.log("attention", projectId);
       try {
         // console.log("ooooo");
-        socket.broadcast
-          .to(projectId)
-          .emit("attentionPlease", [date, userName], selectedIndex);
+        socket.broadcast.to(projectId).emit("attentionPlease", [date, userName], selectedIndex);
       } catch (error) {
         console.log(error);
       }
@@ -156,9 +158,7 @@ io.on("connection", (socket) => {
   });
   socket.on("detail_date_leave", ([project_Id, userName, selectedIndex]) => {
     console.log("detail_date_leave", selectedIndex);
-    socket.broadcast
-      .to(project_Id + selectedIndex)
-      .emit("deleteCurser", userName);
+    socket.broadcast.to(project_Id + selectedIndex).emit("deleteCurser", userName);
 
     socket.leave(project_Id + selectedIndex);
   });
@@ -170,9 +170,7 @@ io.on("connection", (socket) => {
   socket.on("mouse_move", ([projectId, mouseInfo, selectedIndex, userName]) => {
     // console.log(projectId, mouseInfo, selectedIndex, userName);
     try {
-      socket.broadcast
-        .to(projectId + selectedIndex)
-        .emit("mouse_update", mouseInfo);
+      socket.broadcast.to(projectId + selectedIndex).emit("mouse_update", mouseInfo);
     } catch (error) {
       // console.log(error);
     }
@@ -181,9 +179,7 @@ io.on("connection", (socket) => {
   socket.on("updateUserIndex", ([projectId, userName, selectedIndex]) => {
     try {
       projectSocketRoom[projectId][userName].selectedIndex = selectedIndex;
-      socket.broadcast
-        .to(projectId)
-        .emit("connectUser", projectSocketRoom[projectId]);
+      socket.broadcast.to(projectId).emit("connectUser", projectSocketRoom[projectId]);
     } catch (error) {
       // console.log(error);
     }
