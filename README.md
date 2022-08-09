@@ -59,7 +59,7 @@
 
 ## 3️⃣ 포스터
 
-<img src="https://user-images.githubusercontent.com/78828589/183707359-a5a1712e-2554-4031-aa69-e7cd80a40b5e.png"  width="60%">
+<img src="https://user-images.githubusercontent.com/78828589/183707359-a5a1712e-2554-4031-aa69-e7cd80a40b5e.png"  width="80%">
 
 <br/>
 <br/>
