@@ -11,7 +11,8 @@ function SideBarTitle(props) {
       <div>
         <PlanHome
           onClick={() => {
-            navigate("/");
+            // navigate("/");
+            window.location.href ="/";
           }}
         />
         <PlanTitle>{props.title}</PlanTitle>
