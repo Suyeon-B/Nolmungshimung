@@ -1,4 +1,6 @@
 import React from "react";
+import { useAuth } from "../auth/Auth";
+
 const _EVENTS = {
     onLeave: "onLeave",
     onJoin: "onJoin",
@@ -63,6 +65,10 @@ const _EVENTS = {
       this.localUUID = null;
       this.localStream = null;
       this.projectId = options; 
+      
+      const auth = useAuth();
+      console.log(JSON.stringify(auth.user))
+      this.username = auth.user.username;
 
       Object.keys(_EVENTS).forEach((event) => {
         this.eventListeners.set(event, []);
@@ -121,7 +127,7 @@ const _EVENTS = {
         audio.id = `remote_${username}`;
         audio.srcObject = stream;
         audio.autoplay = true;
-        audio.muted = username == sessionStorage.getItem("myNickname");
+        audio.muted = username == this.username;
         audio.hidden = true;
         // const div = document.createElement("div");
         // div.id = `user_${username}`;
@@ -285,7 +291,7 @@ const _EVENTS = {
     //   this.handleRemoteTrack(stream, username.value);
       // console.log('------', sessionStorage.getItem("myNickname"));
       
-      this.handleRemoteTrack(stream, sessionStorage.getItem("myNickname"));
+      this.handleRemoteTrack(stream, this.username);
   
       this.localStream = stream;
   
@@ -334,7 +340,7 @@ const _EVENTS = {
           // projectId: this.localUUID,
           sdp: this.localPeer.localDescription,
           uqid: this.localUUID,
-          username: sessionStorage.getItem("myNickname") || this.localUUID,
+          username: this.username || this.localUUID,
         })
       );
     }
