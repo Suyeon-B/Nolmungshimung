@@ -109,7 +109,6 @@ const wss = new WebSocketServer({ server: webServer },
   {
     cors: {
       origin: "*",
-      credentials: true,
     },
   });
 
@@ -147,31 +146,36 @@ wss.on('connection', function (ws) {
         switch (body.type) {
             case 'connect':
                 // peers.set(body.uqid, { socket: ws });
-                let peers = new Map()
-                if (!rooms.get(body.projectId)) rooms.set(body.projectId, peers.set(body.uqid, { socket: ws }));
-                else rooms.get(body.projectId).set(body.uqid, { socket: ws })
-                const peer = createPeer();
-                // peers.get(body.uqid).username = body.username;
-                rooms.get(body.projectId).get(body.uqid).username = body.username;
-                // peers.get(body.uqid).peer = peer;
-                rooms.get(body.projectId).get(body.uqid).peer = peer;
-                peer.ontrack = (e) => { handleTrackEvent(e, body.uqid, ws, body.projectId) };
-                const desc = new webrtc.RTCSessionDescription(body.sdp);
-                await peer.setRemoteDescription(desc);
-                const answer = await peer.createAnswer();
-                await peer.setLocalDescription(answer);
-                console.log(`conn id : ${body.uqid}, conn projectId : ${body.projectId}`);
-                console.log(`connected, rooms : ${!rooms.get(body.projectId).get(body.uqid)}`)
+                try{
+                  let peers = new Map()
+                  if (!rooms.get(body.projectId)) rooms.set(body.projectId, peers.set(body.uqid, { socket: ws }));
+                  else rooms.get(body.projectId).set(body.uqid, { socket: ws })
+                  const peer = createPeer();
+                  // peers.get(body.uqid).username = body.username;
+                  rooms.get(body.projectId).get(body.uqid).username = body.username;
+                  // peers.get(body.uqid).peer = peer;
+                  rooms.get(body.projectId).get(body.uqid).peer = peer;
+                  peer.ontrack = (e) => { handleTrackEvent(e, body.uqid, ws, body.projectId) };
+                  const desc = new webrtc.RTCSessionDescription(body.sdp);
+                  await peer.setRemoteDescription(desc);
+                  const answer = await peer.createAnswer();
+                  await peer.setLocalDescription(answer);
+                  console.log(`conn id : ${body.uqid}, conn projectId : ${body.projectId}`);
+                  console.log(`connected, rooms : ${!rooms.get(body.projectId).get(body.uqid)}`)
 
 
-                const payload = {
-                    type: 'answer',
-                    sdp: peer.localDescription
+                  const payload = {
+                      type: 'answer',
+                      sdp: peer.localDescription
+                  }
+
+                  ws.send(JSON.stringify(payload));
+                }catch(e){
+                  console.log(e);
                 }
-
-                ws.send(JSON.stringify(payload));
                 break;
             case 'getPeers':
+              try{
                 let uuid = body.uqid;
                 let projectId = body.projectId;
                 const list = [];
@@ -196,7 +200,11 @@ wss.on('connection', function (ws) {
                 }
 
                 ws.send(JSON.stringify(peersPayload));
-                break;
+              }catch(e){
+                console.log(e);
+              }
+                
+              break;
             case 'ice':
                 console.log('ice 실제 : ', !rooms.get(body.projectId).get(body.uqid));
                 const user = rooms.get(body.projectId).get(body.uqid);
