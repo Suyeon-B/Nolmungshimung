@@ -1,4 +1,6 @@
 FROM node:16.16-alpine3.16
+RUN apk update
+RUN apk add gcompat
 
 RUN mkdir -p /app
 WORKDIR "/app"
