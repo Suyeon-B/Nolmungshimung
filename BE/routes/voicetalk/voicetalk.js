@@ -175,6 +175,7 @@ wss.on('connection', function (ws) {
                 }
                 break;
             case 'getPeers':
+              try{
                 let uuid = body.uqid;
                 let projectId = body.projectId;
                 const list = [];
@@ -199,7 +200,11 @@ wss.on('connection', function (ws) {
                 }
 
                 ws.send(JSON.stringify(peersPayload));
-                break;
+              }catch(e){
+                console.log(e);
+              }
+                
+              break;
             case 'ice':
                 console.log('ice 실제 : ', !rooms.get(body.projectId).get(body.uqid));
                 const user = rooms.get(body.projectId).get(body.uqid);
