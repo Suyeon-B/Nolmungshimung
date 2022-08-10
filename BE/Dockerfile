@@ -5,7 +5,7 @@ WORKDIR "/app"
 
 COPY ./BE .
 
-RUN npm install
+RUN npm install --force
 
 # COPY . .
 
