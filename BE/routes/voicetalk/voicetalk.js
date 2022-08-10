@@ -21,8 +21,8 @@ let serverOptions = {
     useHttps: true,
     // httpsCertFile: '/home/ubuntu/simple_sfu/ssl/cert/ssl.crt',
     // httpsKeyFile: '/home/ubuntu/simple_sfu/ssl/key/ssl.key',
-    httpsCertFile: "nolshimung.pem",
-    httpsKeyFile: "nolshimung-key.pem"
+    httpsCertFile: process.env.certFile || "nolshimung.pem",
+    httpsKeyFile: process.env.keyFile || "nolshimung-key.pem"
 };
 
 let sslOptions = {};
@@ -105,7 +105,13 @@ function createPeer() {
 }
 
 // Create a server for handling websocket calls
-const wss = new WebSocketServer({ server: webServer });
+const wss = new WebSocketServer({ server: webServer },
+  {
+    cors: {
+      origin: "*",
+      credentials: true,
+    },
+  });
 
 
 wss.on('connection', function (ws) {
