@@ -105,7 +105,13 @@ function createPeer() {
 }
 
 // Create a server for handling websocket calls
-const wss = new WebSocketServer({ server: webServer });
+const wss = new WebSocketServer({ server: webServer },
+  {
+    cors: {
+      origin: "*",
+      credentials: true,
+    },
+  });
 
 
 wss.on('connection', function (ws) {
