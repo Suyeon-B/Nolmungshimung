@@ -8,7 +8,8 @@ import Search from "../search/Search";
 const SpotRoute = React.lazy(() => import("../spotRoute/SpotRoute"));
 import styled from "styled-components";
 import { BrowserRouter as Routes, Route, Navigate } from "react-router-dom";
-import Voicetalk from "../../components/voiceTalk/voiceTalk";
+// import Voicetalk from "../../components/voiceTalk/voiceTalk";
+import Sfu from "../../components/voiceTalk/voiceTalk-SFU"
 import { ConnectuserContext } from "../../context/ConnectUserContext";
 import { useAuth } from "../../components/auth/Auth";
 import useNotification from "../../atomics/Notification";
@@ -37,15 +38,15 @@ const ProjectPage = (props) => {
   const [connectUser, setConnectUser] = useState({});
   const [attentionIndex, setAttentionIndex] = useState(-1);
 
-  // const joinVoice = new Voicetalk(projectId);
+  const joinVoice = new Sfu(projectId);
 
-  // useEffect(() => {  
-  //   console.log('App Start');
-  //   joinVoice.on("onConnected", () => {
-  //     console.log('connect!!!!');
-  //     joinVoice.connect();
-  //   })
-  // }, [])
+  useEffect(() => {  
+    console.log('App Start');
+    joinVoice.on("onConnected", () => {
+      console.log('connect!!!!');
+      joinVoice.connect();
+    })
+  }, [])
 
   useEffect(() => {
     window.addEventListener("beforeunload", (event) => {
@@ -245,7 +246,7 @@ const ProjectPage = (props) => {
           // </Suspense>
         )}
       </PlanSection>
-      {auth.user && <Voicetalk projectId={projectId} auth={auth.user} />}
+      {/* {auth.user && <Voicetalk projectId={projectId} auth={auth.user} />} */}
     </ConnectuserContext.Provider>
   );
 };
