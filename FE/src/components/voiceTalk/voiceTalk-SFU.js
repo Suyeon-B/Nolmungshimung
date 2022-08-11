@@ -27,7 +27,7 @@ const _EVENTS = {
     constructor(options) {
         super(options);
       const defaultSettings = {
-        port: 3003,
+        port: 3005,
         configuration: {
           iceServers: [
             { urls: "stun:stun.l.google.com:19302" },
@@ -82,8 +82,7 @@ const _EVENTS = {
       console.log('SFu 진입 !!!!!!!!!!', this.projectId);
       const protocol = window.location.protocol === "https:" ? "wss" : "ws";
 
-//       const url = `${protocol}://${process.env.REACT_APP_SERVER_IP}:${3003}`;
-      const url = `${protocol}://${process.env.REACT_APP_SERVER_IP}:${3003}`;
+      const url = `${protocol}://${process.env.REACT_APP_SERVER_IP}:${3005}`;
       this.connection = new WebSocket(url);
       this.connection.onmessage = (data) => this.handleMessage(data); 
       this.connection.onclose = () => this.handleClose();
@@ -276,6 +275,7 @@ const _EVENTS = {
     
     removeUser({ id }) {
       const { username, consumerId } = this.clients.get(id);
+      console.log(`close ${username, consumerId}`);
       this.consumers.delete(consumerId);
       this.clients.delete(id);
       document.querySelector(`#remote_${username}`)?.srcObject.getTracks().forEach(track => track.stop());
