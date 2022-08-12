@@ -15,6 +15,9 @@
 ### 3. 내 계획을 자랑하고 싶다면, 업로드!
 <img src="https://user-images.githubusercontent.com/78828589/183706088-3f71bee1-8ee8-4010-ad6f-b6d2ae6dc50d.GIF"  width="70%">
 
+### 4. 서비스 시연 영상 [⬇️ youtube](https://youtu.be/XEffEqWXxaA)
+<a href="https://youtu.be/XEffEqWXxaA" target="_blank"><img src="https://user-images.githubusercontent.com/78828589/184359976-364eeca6-3cc5-4ee7-a2fb-8a8fddd55896.png" title="youtube로 이동" style="width:70%"></a>
+
 <br/>
 <br/>
 
