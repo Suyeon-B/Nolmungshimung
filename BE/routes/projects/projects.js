@@ -221,7 +221,7 @@ router.get("/:id", async (req, res, next) => {
     if (routes) {
       projectInfo.routes = JSON.parse(routes);
     }
-    await Redis.setEx(`${req.params.id}`, 10, JSON.stringify(projectInfo))
+    await Redis.setEx(`${req.params.id}`, 10, JSON.stringify(projectInfo.routes))
     return res.json(projectInfo);
   } catch (error) {
     console.log(`project find id: ${error}`);
