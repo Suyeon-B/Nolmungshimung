@@ -190,4 +190,4 @@ REACT_APP_GOOGLE_KEY = ${ GoogleMap API Key } // https://developers.google.com/m
 
 `npm start`
 
-Copyright to [@놀멍쉬멍](https://github.com/Suyeon-B/Nolmungshimung).
+Copyright to [@놀멍쉬멍](https://github.com/Suyeon-B/Nolmungshimung)
