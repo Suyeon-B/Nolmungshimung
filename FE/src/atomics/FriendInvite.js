@@ -113,7 +113,7 @@ function FriendInvite({ userEmail }) {
     deleteDiv.remove();
   };
 
-  const onDelete = async (event) => {
+  const onDelete = (event) => {
     // console.log("userEmail >>> ", userEmail);
     // console.log(event);
     if (userEmail === event) {
@@ -124,22 +124,22 @@ function FriendInvite({ userEmail }) {
     } else if (
       Modal.confirm({
         content: "프로젝트 멤버에서 삭제하시겠어요?",
+        onOk() {
+          deleteFriendDiv(event);
+          const data = {
+            email: event,
+          };
+          fetch(`https://${process.env.REACT_APP_SERVER_IP}:8443/projects/memberFriend/${projectId}`, {
+            method: "post",
+            headers: {
+              "content-type": "application/json",
+            },
+            body: JSON.stringify(data),
+          });
+          location.reload();
+        },
       })
     ) {
-      deleteFriendDiv(event);
-      const data = {
-        email: event,
-      };
-      const response = await fetch(
-        `https://${process.env.REACT_APP_SERVER_IP}:8443/projects/memberFriend/${projectId}`,
-        {
-          method: "post",
-          headers: {
-            "content-type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
     }
   };
 
